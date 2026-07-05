@@ -1,4 +1,3 @@
-console.log("Dashboard JS Loaded");
 const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
