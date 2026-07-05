@@ -8,11 +8,12 @@ if (logoutBtn) {
 
             window.location.href = "login.html";
 
-        }).catch((error) => {
+           }).catch((error) => {
 
-            console.error(error);
+             console.error(error);
+              alert(error.message);
 
-        });
+          });
 
     });
 
@@ -80,10 +81,10 @@ db.collection("stats").doc("visitors").get()
 });
 
 // Protect Dashboard
-//auth.onAuthStateChanged((user) => {
-//
-  //  if (!user) {
-    //    window.location.href = "login.html";
-   // }
+auth.onAuthStateChanged((user) => {
 
-//});
+    if (!user) {
+        window.location.replace("login.html");
+    }
+
+});
