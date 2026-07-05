@@ -9,35 +9,31 @@ document.getElementById("loginBtn").addEventListener("click", () => {
 
     auth.signInWithEmailAndPassword(email, password)
 
-        .then((userCredential) => {
+.then((userCredential) => {
 
-            error.style.color = "#00ff99";
-            error.innerHTML = "ACCESS GRANTED...";
+    error.style.color = "#00ff99";
+    error.innerHTML = "ACCESS GRANTED...";
 
-            document.getElementById("loginBtn").innerHTML =
-                '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+    document.getElementById("loginBtn").innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
 
-            auth.onAuthStateChanged((user) => {
-              if (user) {
-                 window.location.replace("dashboard.html");
-                }
-            });
+    setTimeout(() => {
+        window.location.replace("dashboard.html");
+    }, 800);
 
-        })
+})
 
-        .catch((err) => {
+.catch((err) => {
 
-            error.style.color = "#ff4444";
-            error.innerHTML = "Invalid Email or Password";
+    error.style.color = "#ff4444";
+    error.innerHTML = "Invalid Email or Password";
 
-            box.classList.add("shake");
+    box.classList.add("shake");
 
-            setTimeout(() => {
+    setTimeout(() => {
+        box.classList.remove("shake");
+    }, 500);
 
-                box.classList.remove("shake");
-
-            }, 500);
-
-        });
+});
 
 });
