@@ -81,27 +81,10 @@ db.collection("stats").doc("visitors").get()
 
 });
 
+
 // Protect Dashboard
-console.log("Waiting for auth...");
-
 auth.onAuthStateChanged((user) => {
-
-    console.log("Auth State:", user);
-
     if (!user) {
         window.location.replace("login.html");
     }
-
-});
-
-alert("Dashboard JS End");
-
-auth.onAuthStateChanged((user) => {
-
-    alert(user ? "Logged In" : "Not Logged In");
-
-    if (!user) {
-        window.location.replace("login.html");
-    }
-
 });
