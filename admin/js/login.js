@@ -17,11 +17,11 @@ document.getElementById("loginBtn").addEventListener("click", () => {
             document.getElementById("loginBtn").innerHTML =
                 '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
 
-            setTimeout(() => {
-
-                window.location.href = "dashboard.html";
-
-            }, 1000);
+            auth.onAuthStateChanged((user) => {
+              if (user) {
+                 window.location.replace("dashboard.html");
+                }
+            });
 
         })
 

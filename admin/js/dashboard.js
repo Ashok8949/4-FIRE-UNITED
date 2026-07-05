@@ -80,10 +80,10 @@ db.collection("stats").doc("visitors").get()
 });
 
 // Protect Dashboard
-auth.onAuthStateChanged((user) => {
+//auth.onAuthStateChanged((user) => {
+//
+  //  if (!user) {
+    //    window.location.href = "login.html";
+   // }
 
-    if (!user) {
-        window.location.href = "login.html";
-    }
-
-});
+//});
