@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>4 FIRE UNITED | Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<link rel="stylesheet" href="css/dashboard.css">
+
+</head>
+
+<body>
+
+     <script>
+if (sessionStorage.getItem("adminLoggedIn") !== "true") {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="sidebar">
+
+   
+
+<div class="logo">
+
+<img src="../images/logo/logo.png">
+
+<h2>4 FIRE UNITED</h2>
+
+</div>
+
+<ul>
+
+<ul>
+
+<li class="active">
+<a href="dashboard.html">
+<i class="fa-solid fa-house"></i>
+Dashboard
+</a>
+</li>
+
+<li>
+<a href="players.html">
+<i class="fa-solid fa-users"></i>
+Players
+</a>
+</li>
+
+<li>
+<a href="tournaments.html">
+<i class="fa-solid fa-trophy"></i>
+Tournaments
+</a>
+</li>
+
+<li>
+<a href="gallery.html">
+<i class="fa-solid fa-image"></i>
+Gallery
+</a>
+</li>
+
+<li>
+<a href="announcements.html">
+<i class="fa-solid fa-bullhorn"></i>
+Announcements
+</a>
+</li>
+
+<li>
+<a href="settings.html">
+<i class="fa-solid fa-gear"></i>
+Settings
+</a>
+</li>
+
+</ul>
+
+</ul>
+
+</div>
+
+<div class="main">
+
+<div class="topbar">
+
+<h1>CONTROL PANEL</h1>
+
+<div class="admin">
+
+<img src="../images/logo/logo.png">
+
+<span>Admin</span>
+
+<button id="logoutBtn" class="join-btn">
+    Logout
+</button>
+
+</div>
+
+</div>
+
+<div class="cards">
+
+    <div class="card">
+    <i class="fa-solid fa-users"></i>
+   <h2 id="totalPlayers">0</h2>
+    <p>Total Players</p>
+</div>
+
+<div class="card">
+    <i class="fa-solid fa-trophy"></i>
+   <h2 id="totalTournaments">0</h2>
+    <p>Tournaments</p>
+</div>
+
+<div class="card">
+    <i class="fa-solid fa-image"></i>
+    <h2 id="totalGallery">0</h2>
+    <p>Gallery Images</p>
+</div>
+
+<div class="card">
+    <i class="fa-solid fa-eye"></i>
+    <h2 id="totalVisitors">0</h2>
+    <p>Visitors</p>
+</div>
+
+<div class="dashboard-section">
+
+    <h2>Quick Actions</h2>
+
+    <div class="action-grid">
+
+        <div class="action-card" id="managePlayers">
+            <i class="fa-solid fa-users"></i>
+            <h3>Manage Players</h3>
+            <p>Add, Edit & Remove Players</p>
+        </div>
+
+        <div class="action-card" id="manageTournament">
+            <i class="fa-solid fa-trophy"></i>
+            <h3>Tournaments</h3>
+            <p>Manage Tournament Data</p>
+        </div>
+
+        <div class="action-card" id="manageGallery">
+            <i class="fa-solid fa-image"></i>
+            <h3>Gallery</h3>
+            <p>Upload Images</p>
+        </div>
+
+        <div class="action-card" id="manageNews">
+            <i class="fa-solid fa-bullhorn"></i>
+            <h3>Announcements</h3>
+            <p>Post Latest Updates</p>
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>

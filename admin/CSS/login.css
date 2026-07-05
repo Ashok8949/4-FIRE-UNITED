@@ -1,0 +1,620 @@
+/*==========================
+        RESET
+==========================*/
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    min-height:100vh;
+    overflow:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-family:'Poppins',sans-serif;
+
+    background:#050505;
+
+    position:relative;
+
+}
+
+/*==========================
+      BACKGROUND
+==========================*/
+
+body::before{
+
+content:"";
+
+position:absolute;
+inset:0;
+
+background:
+radial-gradient(circle at top,#ff5a00 0%,transparent 40%),
+radial-gradient(circle at bottom,#ff2200 0%,transparent 40%),
+#050505;
+
+filter:blur(60px);
+
+opacity:.55;
+
+animation:bgMove 10s linear infinite alternate;
+
+}
+
+@keyframes bgMove{
+
+0%{
+
+transform:scale(1);
+
+}
+
+100%{
+
+transform:scale(1.15);
+
+}
+
+}
+
+/*==========================
+        FIRE BALLS
+==========================*/
+
+.fire{
+
+position:absolute;
+
+width:260px;
+height:260px;
+
+background:radial-gradient(circle,#ff9d00,#ff4d00,#ff2200,transparent);
+
+filter:blur(60px);
+
+border-radius:50%;
+
+opacity:.45;
+
+animation:floatFire 9s ease-in-out infinite;
+
+}
+
+.fire2{
+
+top:8%;
+left:8%;
+
+animation-delay:2s;
+
+}
+
+.fire3{
+
+bottom:5%;
+right:8%;
+
+animation-delay:4s;
+
+}
+
+@keyframes floatFire{
+
+0%{
+
+transform:translateY(0px);
+
+}
+
+50%{
+
+transform:translateY(-50px);
+
+}
+
+100%{
+
+transform:translateY(0px);
+
+}
+
+}
+
+/*==========================
+      GLASS LOGIN
+==========================*/
+
+.login-container{
+
+position:relative;
+
+z-index:10;
+
+width:420px;
+
+padding:45px;
+
+border-radius:28px;
+
+background:rgba(20,20,20,.45);
+
+backdrop-filter:blur(22px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:
+0 0 25px rgba(255,90,0,.35),
+0 0 80px rgba(255,80,0,.15);
+
+}
+
+/*==========================
+        LOGO
+==========================*/
+
+.logo-box{
+
+text-align:center;
+
+margin-bottom:35px;
+
+}
+
+.logo-box img{
+
+width:95px;
+
+filter:
+drop-shadow(0 0 12px #ff5500)
+drop-shadow(0 0 25px #ff7700);
+
+animation:logoFloat 3s ease-in-out infinite;
+
+}
+
+@keyframes logoFloat{
+
+0%{
+
+transform:translateY(0px);
+
+}
+
+50%{
+
+transform:translateY(-8px);
+
+}
+
+100%{
+
+transform:translateY(0px);
+
+}
+
+}
+
+.logo-box h1{
+
+font-family:'Bebas Neue',sans-serif;
+
+font-size:52px;
+
+letter-spacing:3px;
+
+color:#fff;
+
+margin-top:18px;
+
+}
+
+.logo-box p{
+
+color:#ff8c2b;
+
+letter-spacing:2px;
+
+font-size:14px;
+
+}
+
+/*==========================
+      LOGIN TITLE
+==========================*/
+
+.login-box h2{
+
+text-align:center;
+
+font-size:34px;
+
+color:#fff;
+
+margin-bottom:25px;
+
+}
+
+/*==========================
+      INPUT BOX
+==========================*/
+
+.input-box{
+
+position:relative;
+
+margin-bottom:20px;
+
+}
+
+.input-box input{
+
+width:100%;
+
+padding:16px 50px;
+
+border:none;
+
+outline:none;
+
+border-radius:12px;
+
+background:rgba(255,255,255,.06);
+
+color:#fff;
+
+font-size:16px;
+
+border:1px solid rgba(255,255,255,.08);
+
+transition:.35s;
+
+}
+
+.input-box input:focus{
+
+border-color:#ff6600;
+
+box-shadow:
+0 0 15px rgba(255,100,0,.45);
+
+}
+
+.input-box i:first-child{
+
+position:absolute;
+
+left:18px;
+
+top:50%;
+
+transform:translateY(-50%);
+
+color:#ff7b00;
+
+}
+
+#eye{
+
+position:absolute;
+
+right:18px;
+
+top:50%;
+
+transform:translateY(-50%);
+
+cursor:pointer;
+
+color:#ff7b00;
+
+}
+
+/*==========================
+        OPTIONS
+==========================*/
+
+.options{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:22px;
+
+font-size:14px;
+
+}
+
+.options label{
+
+color:#ddd;
+
+}
+
+.options a{
+
+color:#ff8a00;
+
+text-decoration:none;
+
+}
+
+/*==========================
+      LOGIN BUTTON
+==========================*/
+
+#loginBtn{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+border-radius:12px;
+
+background:linear-gradient(45deg,#ff3300,#ff8800);
+
+font-size:17px;
+
+font-weight:700;
+
+color:#fff;
+
+cursor:pointer;
+
+transition:.35s;
+
+}
+
+#loginBtn:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+
+0 0 20px #ff5500,
+
+0 0 40px rgba(255,120,0,.45);
+
+}
+
+/*==========================
+      PARTICLES
+==========================*/
+
+.particles{
+
+position:absolute;
+
+inset:0;
+
+pointer-events:none;
+
+overflow:hidden;
+
+}
+
+.particles span{
+
+position:absolute;
+
+display:block;
+
+width:8px;
+height:8px;
+
+background:#ff7700;
+
+border-radius:50%;
+
+box-shadow:
+0 0 12px #ff7700,
+0 0 25px #ff5500;
+
+animation:particleUp 8s linear infinite;
+
+opacity:.7;
+
+}
+
+.particles span:nth-child(1){left:8%;animation-delay:0s;}
+.particles span:nth-child(2){left:20%;animation-delay:1s;}
+.particles span:nth-child(3){left:34%;animation-delay:2s;}
+.particles span:nth-child(4){left:48%;animation-delay:3s;}
+.particles span:nth-child(5){left:62%;animation-delay:4s;}
+.particles span:nth-child(6){left:76%;animation-delay:5s;}
+.particles span:nth-child(7){left:88%;animation-delay:6s;}
+.particles span:nth-child(8){left:95%;animation-delay:7s;}
+
+@keyframes particleUp{
+
+0%{
+
+transform:translateY(110vh) scale(.4);
+
+opacity:0;
+
+}
+
+15%{
+
+opacity:1;
+
+}
+
+100%{
+
+transform:translateY(-20vh) scale(1.4);
+
+opacity:0;
+
+}
+
+}
+
+/*==========================
+        ERROR
+==========================*/
+
+#error{
+
+margin-top:18px;
+
+text-align:center;
+
+font-weight:600;
+
+min-height:22px;
+
+}
+
+/*==========================
+        SHAKE
+==========================*/
+
+.shake{
+
+animation:shake .45s;
+
+}
+
+@keyframes shake{
+
+0%{transform:translateX(0);}
+20%{transform:translateX(-10px);}
+40%{transform:translateX(10px);}
+60%{transform:translateX(-8px);}
+80%{transform:translateX(8px);}
+100%{transform:translateX(0);}
+
+}
+
+/*==========================
+      FOOTER
+==========================*/
+
+.login-footer{
+
+margin-top:28px;
+
+text-align:center;
+
+color:#999;
+
+font-size:13px;
+
+letter-spacing:1px;
+
+}
+
+/*==========================
+      RESPONSIVE
+==========================*/
+
+@media(max-width:768px){
+
+.login-container{
+
+width:92%;
+
+padding:30px 22px;
+
+}
+
+.logo-box h1{
+
+font-size:42px;
+
+}
+
+.logo-box img{
+
+width:75px;
+
+}
+
+.login-box h2{
+
+font-size:28px;
+
+}
+
+.input-box input{
+
+padding:14px 45px;
+
+font-size:15px;
+
+}
+
+#loginBtn{
+
+padding:14px;
+
+font-size:16px;
+
+}
+
+.options{
+
+flex-direction:column;
+
+gap:12px;
+
+}
+
+}
+
+/*==========================
+      SCROLLBAR
+==========================*/
+
+::-webkit-scrollbar{
+
+width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+background:#ff5a00;
+
+border-radius:20px;
+
+}
+
+.mouse-glow{
+
+position:fixed;
+
+width:220px;
+height:220px;
+
+border-radius:50%;
+
+background:radial-gradient(circle,
+rgba(255,120,0,.35),
+transparent 70%);
+
+pointer-events:none;
+
+transform:translate(-50%,-50%);
+
+filter:blur(30px);
+
+z-index:1;
+
+transition:.05s;
+
+}

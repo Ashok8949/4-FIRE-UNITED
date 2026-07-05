@@ -1,0 +1,68 @@
+/*==========================
+    SCROLL REVEAL
+==========================*/
+
+.about,
+.players,
+.hall,
+.gallery-preview,
+.stats-section,
+.join-team,
+.player-profile{
+
+    opacity:0;
+    transform:translateY(60px);
+    transition:all .8s ease;
+
+}
+
+.show{
+
+    opacity:1;
+    transform:translateY(0);
+
+}
+
+/*==========================
+      FIRE PARTICLES
+==========================*/
+
+.hero{
+
+    overflow:hidden;
+    position:relative;
+
+}
+
+.particle{
+
+    position:absolute;
+    bottom:-30px;
+    width:6px;
+    height:6px;
+    background:#ff6a00;
+    border-radius:50%;
+    box-shadow:0 0 12px #ff3c00;
+    animation:fire linear infinite;
+    opacity:.8;
+    z-index:1;
+
+}
+
+@keyframes fire{
+
+    0%{
+        transform:translateY(0) scale(.5);
+        opacity:0;
+    }
+
+    20%{
+        opacity:1;
+    }
+
+    100%{
+        transform:translateY(-110vh) scale(1.8);
+        opacity:0;
+    }
+
+}

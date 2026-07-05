@@ -1,0 +1,93 @@
+/* ===========================
+      FIRE BORDER V1
+=========================== */
+
+.team-card,
+.player-card{
+
+    position:relative;
+    overflow:hidden;
+    border-radius:20px;
+
+}
+
+.team-card::before,
+.player-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-3px;
+
+    border-radius:22px;
+
+    background:
+    conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        #ff1e00 20deg,
+        #ff5a00 45deg,
+        #ffb300 70deg,
+        #ff5a00 95deg,
+        transparent 120deg,
+        transparent 360deg
+    );
+
+    animation:fireRotate 1.8s linear infinite;
+
+    z-index:0;
+
+}
+
+.team-card::after,
+.player-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:3px;
+
+    background:#090909;
+
+    border-radius:18px;
+
+    z-index:1;
+
+}
+
+.team-card>*,
+.player-card>*{
+
+    position:relative;
+    z-index:2;
+
+}
+
+@keyframes fireRotate{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+.team-card:hover::before,
+.player-card:hover::before{
+
+    filter:
+    blur(2px)
+    drop-shadow(0 0 10px #ff3c00)
+    drop-shadow(0 0 20px #ff6a00)
+    drop-shadow(0 0 35px #ff8a00);
+
+}

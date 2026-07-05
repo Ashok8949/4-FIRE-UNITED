@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Tournament | 4 FIRE UNITED</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<link rel="stylesheet" href="css/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="main">
+
+<div class="topbar">
+
+<h1>EDIT TOURNAMENT</h1>
+
+<a href="tournaments.html" class="back-btn">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+Back
+
+</a>
+
+</div>
+
+<div class="edit-box">
+
+<input type="text" id="title" placeholder="Tournament Title">
+
+<input type="text" id="game" placeholder="Game">
+
+<input type="text" id="mode" placeholder="Mode">
+
+<input type="text" id="date" placeholder="Date">
+
+<input type="text" id="time" placeholder="Time">
+
+<input type="text" id="prize" placeholder="Prize">
+
+<input type="text" id="status" placeholder="Status">
+
+<input type="text" id="registration" placeholder="Registration">
+
+<button id="updateTournament" class="save-btn">
+
+<i class="fa-solid fa-floppy-disk"></i>
+
+Update Tournament
+
+</button>
+
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+<script src="js/edit-tournament.js"></script>
+
+</body>
+
+</html>

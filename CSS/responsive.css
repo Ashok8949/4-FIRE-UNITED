@@ -1,0 +1,256 @@
+/* =========================================
+            TABLET (992px)
+========================================= */
+
+@media (max-width:992px){
+
+.navbar{
+    padding:12px 5%;
+}
+
+.nav-links{
+    gap:18px;
+}
+
+.hero-container,
+.about-container,
+.player-container,
+.player-wrapper,
+.join-section,
+.contact-section{
+    flex-direction:column;
+    grid-template-columns:1fr;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:70px;
+}
+
+.hero h3{
+    font-size:26px;
+}
+
+.hero-buttons{
+    justify-content:center;
+}
+
+.hero-stats{
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.players-container,
+.team-grid,
+.gallery-grid,
+.gallery-page,
+.stats-container,
+.hall-container,
+.tournament-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.player-left,
+.player-photo{
+    justify-content:center;
+}
+
+.player-right,
+.player-details{
+    text-align:center;
+}
+
+}
+
+
+/* =========================================
+            MOBILE (768px)
+========================================= */
+
+@media (max-width:768px){
+
+.menu-btn{
+    display:block;
+}
+
+.nav-buttons{
+    display:none;
+}
+
+.nav-links{
+
+position:fixed;
+
+top:90px;
+
+left:-100%;
+
+width:100%;
+
+height:calc(100vh - 90px);
+
+background:#050505;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:flex-start;
+
+padding-top:40px;
+
+gap:30px;
+
+transition:.4s;
+
+z-index:999;
+
+}
+
+.nav-links.active{
+
+left:0;
+
+}
+
+.hero{
+    padding:120px 6% 70px;
+}
+
+.hero h1{
+    font-size:55px;
+}
+
+.hero h3{
+    font-size:22px;
+}
+
+.subtitle{
+    font-size:14px;
+}
+
+.hero p{
+    font-size:16px;
+}
+
+.hero-buttons{
+    flex-direction:column;
+}
+
+.btn1,
+.btn2{
+    width:100%;
+    text-align:center;
+}
+
+.players-container,
+.team-grid,
+.gallery-grid,
+.gallery-page,
+.stats-container,
+.hall-container,
+.tournament-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+.section-title h2,
+.about-left h2,
+.join-left h2,
+.contact-info h2{
+
+    font-size:42px;
+
+}
+
+.team-header h1{
+
+    font-size:60px;
+
+}
+
+.player-right h1,
+.player-details h1{
+
+    font-size:60px;
+
+}
+
+.player-left img,
+.player-photo img{
+
+    max-width:320px;
+
+}
+
+footer{
+
+    padding:40px 20px;
+
+}
+
+.footer-links{
+
+    flex-direction:column;
+    gap:15px;
+
+}
+
+}
+
+
+/* =========================================
+            SMALL MOBILE (480px)
+========================================= */
+
+@media (max-width:480px){
+
+.hero h1{
+
+    font-size:42px;
+
+}
+
+.hero h3{
+
+    font-size:18px;
+
+}
+
+.hero p{
+
+    font-size:15px;
+
+}
+
+.hero-stats{
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+.stat-box{
+
+    width:100%;
+
+}
+
+.logo img{
+    width:120px;
+    height:auto;
+}
+
+.team-header{
+
+    padding:120px 20px 60px;
+
+}
+
+}

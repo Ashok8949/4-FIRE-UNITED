@@ -1,0 +1,689 @@
+/* =========================================
+      4 FIRE UNITED - CINEMATIC LOADER
+   PART 1 : BASE + BACKGROUND + FIRE CORE
+========================================= */
+
+#loader{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+    background:#000;
+    z-index:999999;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Background */
+
+.loader-bg{
+    position:absolute;
+    inset:0;
+
+    background:
+    radial-gradient(circle at center,
+    rgba(255,90,0,.18),
+    rgba(0,0,0,.95) 65%,
+    #000 100%);
+
+    animation:bgPulse 5s infinite alternate;
+}
+
+/* Smoke */
+
+.smoke{
+
+position:absolute;
+
+inset:0;
+
+opacity:.25;
+
+background:
+radial-gradient(circle,
+rgba(255,255,255,.08),
+transparent 70%);
+
+filter:blur(90px);
+
+animation:smokeMove 12s linear infinite;
+
+}
+
+/* Fire Particle Layer */
+
+.particles{
+
+position:absolute;
+
+inset:0;
+
+overflow:hidden;
+
+}
+
+/* Embers */
+
+.particles::before{
+
+content:"";
+
+position:absolute;
+
+width:5px;
+height:5px;
+
+background:#ff6a00;
+
+border-radius:50%;
+
+box-shadow:
+
+40px 90px #ff5500,
+120px 250px orange,
+220px 520px #ff7300,
+380px 700px orange,
+540px 400px #ff5500,
+700px 820px orange,
+900px 600px #ff7300,
+1100px 300px orange,
+1300px 650px #ff5500,
+1500px 500px orange,
+1700px 760px #ff7300;
+
+animation:embers 6s linear infinite;
+
+}
+
+/* Logo */
+
+.loader-content{
+
+position:absolute;
+
+text-align:center;
+
+opacity:0;
+
+transform:scale(.6);
+
+z-index:50;
+
+}
+
+.loader-content h1{
+
+font-family:'Bebas Neue',sans-serif;
+
+font-size:110px;
+
+letter-spacing:6px;
+
+color:#fff;
+
+text-shadow:
+
+0 0 20px #ff3c00,
+0 0 60px #ff5500,
+0 0 120px #ff7300;
+
+}
+
+.loader-content p{
+
+margin-top:18px;
+
+letter-spacing:5px;
+
+font-size:18px;
+
+color:#ffb36a;
+
+}
+
+/* Animations */
+
+@keyframes embers{
+
+0%{
+
+transform:translateY(120vh);
+
+opacity:0;
+
+}
+
+15%{
+
+opacity:1;
+
+}
+
+100%{
+
+transform:translateY(-120vh);
+
+opacity:0;
+
+}
+
+}
+
+@keyframes bgPulse{
+
+0%{
+
+filter:brightness(.9);
+
+}
+
+100%{
+
+filter:brightness(1.15);
+
+}
+
+}
+
+@keyframes smokeMove{
+
+0%{
+
+transform:translateX(-80px);
+
+}
+
+50%{
+
+transform:translateX(80px);
+
+}
+
+100%{
+
+transform:translateX(-80px);
+
+}
+
+}
+
+/* =========================================
+      PART 2 : BULLETS + TRAILS
+========================================= */
+
+.bullet{
+
+position:absolute;
+
+top:50%;
+
+width:170px;
+
+height:8px;
+
+border-radius:30px;
+
+background:linear-gradient(90deg,#ffffff,#ff7300);
+
+box-shadow:
+
+0 0 15px #ffffff,
+0 0 35px #ff5500,
+0 0 80px #ff3c00;
+
+z-index:30;
+
+}
+
+.bullet::before{
+
+content:"";
+
+position:absolute;
+
+right:100%;
+
+top:50%;
+
+width:260px;
+
+height:4px;
+
+transform:translateY(-50%);
+
+background:linear-gradient(to left,
+
+rgba(255,120,0,.8),
+
+transparent);
+
+filter:blur(4px);
+
+}
+
+.bullet-left{
+
+left:-250px;
+
+animation:bulletLeft 1.6s ease-in forwards;
+
+}
+
+.bullet-right{
+
+right:-250px;
+
+transform:rotate(180deg);
+
+animation:bulletRight 1.6s ease-in forwards;
+
+}
+
+/*=========================================
+            IMPACT FLASH
+=========================================*/
+
+.flash{
+
+position:absolute;
+
+top:50%;
+
+left:50%;
+
+width:30px;
+
+height:30px;
+
+border-radius:50%;
+
+transform:translate(-50%,-50%);
+
+background:white;
+
+opacity:0;
+
+box-shadow:
+
+0 0 80px white,
+0 0 180px orange,
+0 0 260px red;
+
+z-index:40;
+
+}
+
+/*=========================================
+            FIRE RING
+=========================================*/
+
+.fire-ring{
+
+position:absolute;
+
+top:50%;
+
+left:50%;
+
+width:40px;
+
+height:40px;
+
+border-radius:50%;
+
+border:4px solid #ff7300;
+
+transform:translate(-50%,-50%) scale(.2);
+
+opacity:0;
+
+z-index:35;
+
+}
+
+/*=========================================
+            SPARKS
+=========================================*/
+
+.sparks{
+
+position:absolute;
+
+top:50%;
+
+left:50%;
+
+width:12px;
+
+height:12px;
+
+transform:translate(-50%,-50%);
+
+border-radius:50%;
+
+background:#ff7300;
+
+opacity:0;
+
+z-index:38;
+
+}
+
+/*=========================================
+          BULLET ANIMATION
+=========================================*/
+
+@keyframes bulletLeft{
+
+0%{
+
+left:-250px;
+
+}
+
+100%{
+
+left:50%;
+
+margin-left:-90px;
+
+}
+
+}
+
+@keyframes bulletRight{
+
+0%{
+
+right:-250px;
+
+}
+
+100%{
+
+right:50%;
+
+margin-right:-90px;
+
+}
+
+}
+
+/* =========================================
+      PART 3 : EXPLOSION + CAMERA SHAKE
+=========================================*/
+
+/* Explosion */
+
+.explosion{
+
+position:absolute;
+
+top:50%;
+left:50%;
+
+transform:translate(-50%,-50%);
+
+width:30px;
+height:30px;
+
+pointer-events:none;
+
+z-index:45;
+
+}
+
+/* White Flash */
+
+.flash.active{
+
+animation:flashBlast .45s ease forwards;
+
+}
+
+@keyframes flashBlast{
+
+0%{
+
+opacity:0;
+transform:translate(-50%,-50%) scale(.2);
+
+}
+
+20%{
+
+opacity:1;
+transform:translate(-50%,-50%) scale(12);
+
+}
+
+100%{
+
+opacity:0;
+transform:translate(-50%,-50%) scale(30);
+
+}
+
+}
+
+/* Fire Ring */
+
+.fire-ring.active{
+
+animation:ringBlast .9s ease forwards;
+
+}
+
+@keyframes ringBlast{
+
+0%{
+
+opacity:1;
+
+transform:translate(-50%,-50%) scale(.1);
+
+border-width:8px;
+
+}
+
+100%{
+
+opacity:0;
+
+transform:translate(-50%,-50%) scale(18);
+
+border-width:1px;
+
+}
+
+}
+
+/* Sparks */
+
+.sparks.active{
+
+opacity:1;
+
+animation:sparkBlast .8s ease forwards;
+
+}
+
+.sparks::before,
+.sparks::after{
+
+content:"";
+
+position:absolute;
+
+top:50%;
+left:50%;
+
+width:8px;
+height:8px;
+
+background:#ff7300;
+
+border-radius:50%;
+
+box-shadow:
+
+0 -140px orange,
+140px 0 orange,
+0 140px orange,
+-140px 0 orange,
+
+100px -100px #ff3c00,
+-100px -100px #ff7300,
+100px 100px orange,
+-100px 100px #ff5500,
+
+70px -150px orange,
+-70px -150px orange,
+150px 70px orange,
+-150px 70px orange;
+
+}
+
+@keyframes sparkBlast{
+
+0%{
+
+opacity:1;
+
+transform:
+translate(-50%,-50%)
+scale(.1)
+rotate(0deg);
+
+}
+
+100%{
+
+opacity:0;
+
+transform:
+translate(-50%,-50%)
+scale(3)
+rotate(360deg);
+
+}
+
+}
+
+/* Camera Shake */
+
+.loader-shake{
+
+animation:cameraShake .35s linear;
+
+}
+
+@keyframes cameraShake{
+
+0%{transform:translate(0,0);}
+10%{transform:translate(-8px,5px);}
+20%{transform:translate(8px,-5px);}
+30%{transform:translate(-10px,6px);}
+40%{transform:translate(10px,-6px);}
+50%{transform:translate(-8px,4px);}
+60%{transform:translate(8px,-4px);}
+70%{transform:translate(-6px,3px);}
+80%{transform:translate(6px,-3px);}
+90%{transform:translate(-3px,2px);}
+100%{transform:translate(0,0);}
+
+}
+
+/* Fire Glow */
+
+.loader-content h1{
+
+animation:fireGlow 1.2s infinite alternate;
+
+}
+
+@keyframes fireGlow{
+
+0%{
+
+text-shadow:
+
+0 0 20px #ff3c00,
+0 0 60px #ff5500,
+0 0 120px #ff7300;
+
+}
+
+100%{
+
+text-shadow:
+
+0 0 35px #ff7a00,
+0 0 90px #ff3c00,
+0 0 180px red;
+
+}
+
+}
+
+/*=========================================
+        EMBERS
+=========================================*/
+
+.ember{
+
+position:absolute;
+
+bottom:-20px;
+
+background:#ff7300;
+
+border-radius:50%;
+
+box-shadow:
+
+0 0 10px #ff7300,
+
+0 0 20px #ff3c00;
+
+animation:emberFly linear infinite;
+
+}
+
+@keyframes emberFly{
+
+0%{
+
+transform:
+
+translateY(0)
+
+scale(.3);
+
+opacity:0;
+
+}
+
+15%{
+
+opacity:1;
+
+}
+
+100%{
+
+transform:
+
+translateY(-120vh)
+
+translateX(-60px)
+
+scale(1.6);
+
+opacity:0;
+
+}
+
+}
