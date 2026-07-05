@@ -4,9 +4,15 @@ if (logoutBtn) {
 
     logoutBtn.addEventListener("click", () => {
 
-        sessionStorage.removeItem("adminLoggedIn");
+        auth.signOut().then(() => {
 
-        window.location.href = "login.html";
+            window.location.href = "login.html";
+
+        }).catch((error) => {
+
+            console.error(error);
+
+        });
 
     });
 
@@ -43,6 +49,41 @@ db.collection("tournaments").get().then((snapshot) => {
 
 });
 
+// Total Gallery Images
+db.collection("gallery").get().then((snapshot) => {
+
+    document.getElementById("totalGallery").textContent = snapshot.size;
+
+}).catch((err) => {
+
+    console.error("Gallery Error:", err);
+
+});
+
 // Temporary Values
-document.getElementById("totalGallery").textContent = "0";
-document.getElementById("totalVisitors").textContent = "0";
+
+// Total Visitors
+db.collection("stats").doc("visitors").get()
+.then((doc) => {
+
+    if (doc.exists) {
+        document.getElementById("totalVisitors").textContent = doc.data().total;
+    } else {
+        document.getElementById("totalVisitors").textContent = "0";
+    }
+
+})
+.catch((err) => {
+
+    console.error("Visitors Error:", err);
+
+});
+
+// Protect Dashboard
+auth.onAuthStateChanged((user) => {
+
+    if (!user) {
+        window.location.href = "login.html";
+    }
+
+});

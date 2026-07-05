@@ -327,3 +327,11 @@ window.addEventListener("load", () => {
     });
 
 });
+
+// ===============================
+// Visitor Counter
+// ===============================
+
+db.collection("stats").doc("visitors").set({
+    total: firebase.firestore.FieldValue.increment(1)
+}, { merge: true });
