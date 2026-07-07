@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>View Message | 4 FIRE UNITED</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link rel="stylesheet" href="CSS/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="main">
+
+<div class="topbar">
+
+<h1>VIEW MESSAGE</h1>
+
+<a href="messages.html" class="back-btn">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+Back
+
+</a>
+
+</div>
+
+<div class="edit-card">
+
+<h2 id="subject"></h2>
+
+<p><strong>Name :</strong> <span id="name"></span></p>
+
+<p><strong>Email :</strong> <span id="email"></span></p>
+
+<p><strong>Date :</strong> <span id="date"></span></p>
+
+<p><strong>Status :</strong> <span id="status"></span></p>
+
+<hr style="margin:20px 0;">
+
+<p id="message"></p>
+
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/view-message.js"></script>
+
+</body>
+
+</html>

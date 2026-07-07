@@ -1,15 +1,42 @@
+let allPlayers = [];
+
+// =============================
+// Load Players
+// =============================
 db.collection("players")
 .get()
 .then((snapshot) => {
+
+    allPlayers = [];
+
+    snapshot.forEach((doc) => {
+
+        allPlayers.push({
+            id: doc.id,
+            ...doc.data()
+        });
+
+    });
+
+    renderPlayers(allPlayers);
+
+})
+.catch((error) => {
+
+    console.error(error);
+
+});
+
+// =============================
+// Render Players
+// =============================
+function renderPlayers(players){
 
     const table = document.getElementById("playerTable");
 
     table.innerHTML = "";
 
-    snapshot.forEach((doc) => {
-
-        const id = doc.id;
-        const p = doc.data();
+    players.forEach((p)=>{
 
         table.innerHTML += `
 
@@ -31,9 +58,18 @@ db.collection("players")
 
             <td>
 
-                <a href="edit-player.html?id=${id}" class="edit-btn">
-                    Edit
+                <a href="edit-player.html?id=${p.id}" class="edit-btn">
+                    <i class="fa-solid fa-pen"></i> Edit
                 </a>
+
+                <button class="delete-btn"
+                onclick="deletePlayer('${p.id}')">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete
+
+                </button>
 
             </td>
 
@@ -43,9 +79,57 @@ db.collection("players")
 
     });
 
-})
-.catch((error)=>{
+}
 
-    console.log(error);
+// =============================
+// Delete Player
+// =============================
+function deletePlayer(id){
+
+    if(confirm("Delete this player?")){
+
+        db.collection("players")
+        .doc(id)
+        .delete()
+        .then(()=>{
+
+            alert("Player Deleted Successfully");
+
+            allPlayers = allPlayers.filter(player => player.id !== id);
+
+            renderPlayers(allPlayers);
+
+        })
+        .catch((error)=>{
+
+            console.error(error);
+
+            alert("Delete Failed");
+
+        });
+
+    }
+
+}
+
+// =============================
+// Live Search
+// =============================
+document.getElementById("searchPlayer")
+.addEventListener("keyup", function(){
+
+    const value = this.value.toLowerCase();
+
+    const filtered = allPlayers.filter(player =>
+
+        player.name.toLowerCase().includes(value) ||
+
+        player.ign.toLowerCase().includes(value) ||
+
+        player.role.toLowerCase().includes(value)
+
+    );
+
+    renderPlayers(filtered);
 
 });

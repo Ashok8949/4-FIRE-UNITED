@@ -1,83 +1,216 @@
+// =====================================
+// LOGOUT
+// =====================================
+
 const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
 
     logoutBtn.addEventListener("click", () => {
 
-        auth.signOut().then(() => {
+        auth.signOut()
+        .then(() => {
 
             window.location.href = "login.html";
 
-           }).catch((error) => {
+        })
+        .catch((err) => {
 
-             console.error(error);
-              alert(error.message);
+            console.error(err);
 
-          });
+            alert(err.message);
+
+        });
 
     });
 
 }
 
-// ===============================
-// Dashboard Counts
-// ===============================
+// =====================================
+// COUNT FUNCTION
+// =====================================
 
-// Total Players
-db.collection("players").get().then((snapshot) => {
+function loadCount(collection, elementId) {
 
-    console.log("Players =", snapshot.size);
+    db.collection(collection)
+    .get()
+    .then((snapshot) => {
 
-    document.getElementById("totalPlayers").textContent = snapshot.size;
+        const el = document.getElementById(elementId);
 
-}).catch((err)=>{
+        if (el) {
 
-    console.error("Players Error:", err);
+            el.textContent = snapshot.size;
 
-});
+        }
 
+    })
+    .catch(console.error);
 
-// Total Tournaments
-db.collection("tournaments").get().then((snapshot) => {
+}
 
-    console.log("Tournaments =", snapshot.size);
+// =====================================
+// LIVE COUNTS
+// =====================================
 
-    document.getElementById("totalTournaments").textContent = snapshot.size;
+loadCount("players","totalPlayers");
+loadCount("tournaments","totalTournaments");
+loadCount("gallery","totalGallery");
+loadCount("contactMessages","totalMessages");
+loadCount("joinApplications","totalApplications");
 
-}).catch((err)=>{
+// Visitors
 
-    console.error("Tournament Error:", err);
+db.collection("stats")
+.doc("visitors")
+.get()
 
-});
+.then((doc)=>{
 
-// Total Gallery Images
-db.collection("gallery").get().then((snapshot) => {
+    const el=document.getElementById("totalVisitors");
 
-    document.getElementById("totalGallery").textContent = snapshot.size;
+    if(!el) return;
 
-}).catch((err) => {
+    if(doc.exists){
 
-    console.error("Gallery Error:", err);
+        el.textContent=doc.data().total || 0;
 
-});
+    }else{
 
-// Temporary Values
+        el.textContent=0;
 
-// Total Visitors
-db.collection("stats").doc("visitors").get()
-.then((doc) => {
-
-    if (doc.exists) {
-        document.getElementById("totalVisitors").textContent = doc.data().total;
-    } else {
-        document.getElementById("totalVisitors").textContent = "0";
     }
 
-})
-.catch((err) => {
+});
 
-    console.error("Visitors Error:", err);
+// =====================================
+// QUICK ACTIONS
+// =====================================
+
+function quickAction(id,page){
+
+    const btn=document.getElementById(id);
+
+    if(!btn) return;
+
+    btn.style.cursor="pointer";
+
+    btn.onclick=()=>{
+
+        window.location.href=page;
+
+    };
+
+}
+
+quickAction("managePlayers","players.html");
+quickAction("manageTournament","tournaments.html");
+quickAction("manageGallery","gallery.html");
+quickAction("manageNews","announcements.html");
+quickAction("manageMessages","messages.html");
+quickAction("manageApplications","applications.html");
+quickAction("manageSettings","settings.html");
+
+// =====================================
+// RECENT PLAYER
+// =====================================
+
+db.collection("players")
+.limit(1)
+.get()
+
+.then((snapshot)=>{
+
+    snapshot.forEach((doc)=>{
+
+        const p=doc.data();
+
+        const el=document.getElementById("latestPlayer");
+
+        if(el){
+
+            el.textContent=p.name+" ("+p.role+")";
+
+        }
+
+    });
 
 });
 
+// =====================================
+// RECENT TOURNAMENT
+// =====================================
 
+db.collection("tournaments")
+.limit(1)
+.get()
+
+.then((snapshot)=>{
+
+    snapshot.forEach((doc)=>{
+
+        const t=doc.data();
+
+        const el=document.getElementById("latestTournament");
+
+        if(el){
+
+            el.textContent=t.title;
+
+        }
+
+    });
+
+});
+
+// =====================================
+// RECENT MESSAGE
+// =====================================
+
+db.collection("contactMessages")
+.limit(1)
+.get()
+
+.then((snapshot)=>{
+
+    snapshot.forEach((doc)=>{
+
+        const m=doc.data();
+
+        const el=document.getElementById("latestMessage");
+
+        if(el){
+
+            el.textContent=m.name+" • "+m.subject;
+
+        }
+
+    });
+
+});
+
+// =====================================
+// RECENT APPLICATION
+// =====================================
+
+db.collection("joinApplications")
+.limit(1)
+.get()
+
+.then((snapshot)=>{
+
+    snapshot.forEach((doc)=>{
+
+        const a=doc.data();
+
+        const el=document.getElementById("latestApplication");
+
+        if(el){
+
+            el.textContent=a.name+" • "+a.rank;
+
+        }
+
+    });
+
+});

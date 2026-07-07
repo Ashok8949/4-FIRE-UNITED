@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tournament Manager | 4 FIRE UNITED</title>
+<title>Add Announcement | 4 FIRE UNITED</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
@@ -23,65 +23,63 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="topbar">
 
-    <h1>TOURNAMENT MANAGER</h1>
+<h1>ADD ANNOUNCEMENT</h1>
 
-    <div class="top-actions">
+<a href="announcements.html" class="back-btn">
 
-        <a href="dashboard.html" class="back-btn">
+<i class="fa-solid fa-arrow-left"></i>
 
-            <i class="fa-solid fa-arrow-left"></i>
+Back
 
-            Back Dashboard
-
-        </a>
-
-        <div class="search-box">
-
-            <i class="fa-solid fa-magnifying-glass"></i>
-
-            <input
-                type="text"
-                id="searchTournament"
-                placeholder="Search Tournament">
-
-        </div>
-
-        <a href="add-tournament.html" class="add-btn">
-
-            <i class="fa-solid fa-plus"></i>
-
-            Add Tournament
-
-        </a>
-
-    </div>
+</a>
 
 </div>
 
-<div class="table-box">
+<div class="edit-card">
 
-<table>
+<h2 class="section-title">
 
-<thead>
+ANNOUNCEMENT INFORMATION
 
-<tr>
+</h2>
 
-<th>Title</th>
-<th>Game</th>
-<th>Date</th>
-<th>Prize</th>
-<th>Status</th>
-<th>Action</th>
+<div class="form-grid">
 
-</tr>
+<input
+type="text"
+id="title"
+placeholder="Announcement Title">
 
-</thead>
+<input
+type="text"
+id="category"
+placeholder="Category">
 
-<tbody id="tournamentTable">
+<input
+type="date"
+id="date">
 
-</tbody>
+<input
+type="text"
+id="status"
+placeholder="Status">
 
-</table>
+</div>
+
+<textarea
+id="description"
+placeholder="Announcement Description"
+style="width:100%;height:180px;margin-top:20px;padding:15px;border:none;border-radius:12px;background:#1a1a1a;color:#fff;font-size:15px;resize:none;"></textarea>
+
+<button
+id="saveAnnouncement"
+class="save-btn">
+
+<i class="fa-solid fa-floppy-disk"></i>
+
+Save Announcement
+
+</button>
 
 </div>
 
@@ -93,7 +91,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <script src="js/firebase.js"></script>
 <script src="js/auth-guard.js"></script>
-<script src="js/tournament-manager.js"></script>
+<script src="js/add-announcement.js"></script>
 
 </body>
+
 </html>

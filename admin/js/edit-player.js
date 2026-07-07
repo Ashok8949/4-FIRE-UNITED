@@ -7,6 +7,7 @@ if (!playerId) {
 }
 
 const docRef = db.collection("players").doc(playerId);
+let selectedImage = null;
 
 // Load Player Data
 docRef.get().then((doc) => {
@@ -54,6 +55,8 @@ document.getElementById("saveBtn").addEventListener("click", () => {
 
     };
 
+    
+
     docRef.update(data)
     .then(() => {
 
@@ -70,3 +73,20 @@ document.getElementById("saveBtn").addEventListener("click", () => {
     });
 
 });
+
+const imageInput = document.getElementById("playerImage");
+const previewImage = document.getElementById("previewImage");
+
+if (imageInput && previewImage) {
+
+    imageInput.addEventListener("change", (e) => {
+
+        const file = e.target.files[0];
+
+        if (!file) return;
+        selectedImage = file;
+        previewImage.src = URL.createObjectURL(file);
+
+    });
+
+}

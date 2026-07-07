@@ -2555,3 +2555,80 @@ z-index:1001;
 
 }
 
+/*==============================
+    LATEST ANNOUNCEMENT
+==============================*/
+
+.latest-news{
+
+    padding:90px 8%;
+    text-align:center;
+
+}
+
+#announcement-box{
+
+    max-width:900px;
+    margin:40px auto 0;
+
+}
+
+.announcement-card{
+
+    background:#111;
+    border:2px solid rgba(255,106,0,.25);
+    border-radius:20px;
+    padding:35px;
+    transition:.35s;
+    box-shadow:0 0 25px rgba(255,106,0,.12);
+
+}
+
+.announcement-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:#ff6a00;
+
+    box-shadow:0 0 35px rgba(255,106,0,.35);
+
+}
+
+.announcement-card h3{
+
+    font-size:30px;
+    margin-bottom:18px;
+    color:#ff6a00;
+    font-family:'Bebas Neue',sans-serif;
+    letter-spacing:1px;
+
+}
+
+.announcement-card p{
+
+    color:#ddd;
+    line-height:1.8;
+    margin-bottom:20px;
+
+}
+
+.announcement-meta{
+
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap;
+    color:#ffb36a;
+    font-weight:600;
+
+}
+/*==============================
+ FEATURED TOURNAMENT
+==============================*/
+
+.featured-tournament{
+
+    padding:90px 8%;
+    text-align:center;
+
+}

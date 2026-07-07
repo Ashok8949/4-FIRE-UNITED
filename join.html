@@ -100,17 +100,17 @@ Become The Next Warrior Of 4 FIRE UNITED
 
 <div class="join-right">
 
-<form class="join-form">
+<form class="join-form" id="joinForm">
 
-<input type="text" placeholder="Full Name" required>
+<input type="text" id="name" placeholder="Full Name" required>
 
-<input type="text" placeholder="Game Name (IGN)" required>
+<input type="text" id="ign" placeholder="Game Name (IGN)" required>
 
-<input type="text" placeholder="Free Fire UID" required>
+<input type="text" id="uid" placeholder="Free Fire UID" required>
 
-<input type="number" placeholder="Level" required>
+<input type="number" id="level" placeholder="Level" required>
 
-<select>
+<select id="rank">
 
 <option>Current Rank</option>
 <option>Bronze</option>
@@ -123,9 +123,15 @@ Become The Next Warrior Of 4 FIRE UNITED
 
 </select>
 
-<textarea rows="6" placeholder="Tell us about yourself"></textarea>
+<textarea
+rows="6"
+id="about"
+placeholder="Tell us about yourself"></textarea>
 
-<button class="btn1">
+<button
+type="submit"
+id="applyBtn"
+class="btn1">
 
 Apply Now
 
@@ -173,6 +179,14 @@ Apply Now
 <script src="js/main.js"></script>
 <script src="js/animation.js"></script>
 <script src="js/particles.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+<script src="js/settings-loader.js"></script>
+<script src="js/join.js"></script>
+
 
 </body>
 

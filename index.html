@@ -280,6 +280,23 @@
 
 </section>
 
+
+<section class="latest-news" data-aos="fade-up">
+
+    <div class="section-title">
+
+        <h5>LATEST UPDATE</h5>
+
+        <h2>Latest Announcement</h2>
+
+    </div>
+
+    <div id="announcement-box">
+
+    </div>
+
+</section>
+
 <!--==========================
     FEATURED PLAYERS
 ===========================-->
@@ -295,6 +312,22 @@
     </div>
 
     <div class="players-container" id="featured-players">
+
+    </div>
+
+</section>
+
+<section class="featured-tournament" data-aos="fade-up">
+
+    <div class="section-title">
+
+        <h5>UPCOMING EVENT</h5>
+
+        <h2>Featured Tournament</h2>
+
+    </div>
+
+    <div id="featuredTournament">
 
     </div>
 
@@ -422,7 +455,7 @@
 
         <div class="stats-card">
 
-            <h1>06</h1>
+            <h1 id="totalPlayers">0</h1>
 
             <p>Elite Players</p>
 
@@ -430,23 +463,23 @@
 
         <div class="stats-card">
 
-            <h1>150+</h1>
+            <h1 id="totalVisitors">0</h1>
 
-            <p>Booyahs</p>
-
-        </div>
-
-        <div class="stats-card">
-
-            <h1>5000+</h1>
-
-            <p>Total Kills</p>
+            <p>Visitors</p>
 
         </div>
 
         <div class="stats-card">
 
-            <h1>25+</h1>
+            <h1 id="totalGallery">0</h1>
+
+            <p>Gallery Images</p>
+
+        </div>
+
+        <div class="stats-card">
+
+            <h1 id="totalTournaments">0</h1>
 
             <p>Tournaments</p>
 
@@ -566,6 +599,10 @@ AOS.init({
  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
 
  <script src="js/firebase.js"></script>
+ <script src="js/settings-loader.js"></script>
+
+ <script src="js/home.js"></script>
+ 
 
 </body>
 

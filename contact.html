@@ -152,17 +152,36 @@ Let's Build The Strongest Free Fire Community
 
 <div class="contact-form-box">
 
-<form class="contact-form">
+<form class="contact-form" id="contactForm">
 
-<input type="text" placeholder="Your Name" required>
+<input
+type="text"
+id="name"
+placeholder="Your Name"
+required>
 
-<input type="email" placeholder="Your Email" required>
+<input
+type="email"
+id="email"
+placeholder="Your Email"
+required>
 
-<input type="text" placeholder="Subject" required>
+<input
+type="text"
+id="subject"
+placeholder="Subject"
+required>
 
-<textarea rows="7" placeholder="Write your message..." required></textarea>
+<textarea
+rows="7"
+id="message"
+placeholder="Write your message..."
+required></textarea>
 
-<button type="submit" class="btn1">
+<button
+type="submit"
+id="sendMessage"
+class="btn1">
 
 Send Message
 
@@ -215,6 +234,13 @@ Forged In Fire. United In Victory.
 <script src="js/main.js"></script>
 <script src="js/animation.js"></script>
 <script src="js/particles.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+<script src="js/settings-loader.js"></script>
+<script src="js/contact.js"></script>
 
 </body>
 

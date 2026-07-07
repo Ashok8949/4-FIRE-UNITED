@@ -1,16 +1,38 @@
+let allGallery = [];
+
 db.collection("gallery")
 .get()
-.then((snapshot)=>{
+.then((snapshot) => {
 
-    const gallery=document.getElementById("galleryGrid");
+    allGallery = [];
 
-    gallery.innerHTML="";
+    snapshot.forEach((doc) => {
 
-    snapshot.forEach((doc)=>{
+        allGallery.push({
+            id: doc.id,
+            ...doc.data()
+        });
 
-        const g=doc.data();
+    });
 
-        gallery.innerHTML+=`
+    renderGallery(allGallery);
+
+})
+.catch((error) => {
+
+    console.error(error);
+
+});
+
+function renderGallery(list) {
+
+    const gallery = document.getElementById("galleryGrid");
+
+    gallery.innerHTML = "";
+
+    list.forEach((g) => {
+
+        gallery.innerHTML += `
 
         <div class="gallery-card">
 
@@ -22,15 +44,16 @@ db.collection("gallery")
 
                 <div class="gallery-buttons">
 
-                    <a href="edit-gallery.html?id=${doc.id}" class="edit-btn">
+                    <a href="edit-gallery.html?id=${g.id}" class="edit-btn">
 
-                        Edit
+                        <i class="fa-solid fa-pen"></i> Edit
 
                     </a>
 
-                    <button class="delete-btn" data-id="${doc.id}">
+                    <button class="delete-btn"
+                            onclick="deleteGallery('${g.id}')">
 
-                        Delete
+                        <i class="fa-solid fa-trash"></i> Delete
 
                     </button>
 
@@ -44,29 +67,30 @@ db.collection("gallery")
 
     });
 
-    document.querySelectorAll(".delete-btn").forEach(btn=>{
+}
 
-        btn.addEventListener("click",()=>{
+function deleteGallery(id) {
 
-            const id=btn.dataset.id;
+    if (!confirm("Delete this image?")) return;
 
-            if(confirm("Delete this image?")){
+    db.collection("gallery")
+    .doc(id)
+    .delete()
 
-                db.collection("gallery")
-                .doc(id)
-                .delete()
-                .then(()=>{
+    .then(() => {
 
-                    alert("Image Deleted");
+        alert("✅ Image Deleted Successfully!");
 
-                    location.reload();
+        location.reload();
 
-                });
+    })
 
-            }
+    .catch((err) => {
 
-        });
+        console.error(err);
+
+        alert("❌ Delete Failed!");
 
     });
 
-});
+}

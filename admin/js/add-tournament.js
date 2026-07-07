@@ -1,37 +1,60 @@
 document.getElementById("saveTournament").addEventListener("click", () => {
 
-    const data = {
+    const tournament = {
 
         title: document.getElementById("title").value.trim(),
         game: document.getElementById("game").value.trim(),
         mode: document.getElementById("mode").value.trim(),
-        date: document.getElementById("date").value.trim(),
-        time: document.getElementById("time").value.trim(),
+        date: document.getElementById("date").value,
+        time: document.getElementById("time").value,
         prize: document.getElementById("prize").value.trim(),
         status: document.getElementById("status").value.trim(),
         registration: document.getElementById("registration").value.trim()
 
     };
 
-    if (!data.title) {
-        alert("Please enter Tournament Title.");
+    if (
+        !tournament.title ||
+        !tournament.game ||
+        !tournament.mode ||
+        !tournament.date ||
+        !tournament.time
+    ) {
+
+        alert("Please fill all required fields.");
         return;
+
     }
 
+    const btn = document.getElementById("saveTournament");
+
+    btn.disabled = true;
+
+    btn.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
     db.collection("tournaments")
-        .add(data)
-        .then(() => {
+    .add(tournament)
 
-            alert("✅ Tournament Added Successfully!");
+    .then(() => {
 
-            window.location.href = "tournaments.html";
+        alert("✅ Tournament Added Successfully!");
 
-        })
-        .catch((error) => {
+        window.location.href = "tournaments.html";
 
-            console.error(error);
-            alert("❌ Failed to add tournament.");
+    })
 
-        });
+    .catch((error) => {
+
+        console.error(error);
+
+        btn.disabled = false;
+
+        btn.innerHTML =
+            '<i class="fa-solid fa-floppy-disk"></i> Save Tournament';
+
+        alert("❌ Failed to add Tournament.");
+
+    });
 
 });

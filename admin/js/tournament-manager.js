@@ -1,14 +1,36 @@
+let allTournaments = [];
+
 db.collection("tournaments")
 .get()
 .then((snapshot) => {
+
+    allTournaments = [];
+
+    snapshot.forEach((doc) => {
+
+        allTournaments.push({
+            id: doc.id,
+            ...doc.data()
+        });
+
+    });
+
+    renderTournaments(allTournaments);
+
+})
+.catch((error) => {
+
+    console.error(error);
+
+});
+
+function renderTournaments(list) {
 
     const table = document.getElementById("tournamentTable");
 
     table.innerHTML = "";
 
-    snapshot.forEach((doc) => {
-
-        const t = doc.data();
+    list.forEach((t) => {
 
         table.innerHTML += `
 
@@ -26,12 +48,13 @@ db.collection("tournaments")
 
             <td>
 
-                <a href="edit-tournament.html?id=${doc.id}" class="edit-btn">
-                    Edit
+                <a href="edit-tournament.html?id=${t.id}" class="edit-btn">
+                    <i class="fa-solid fa-pen"></i> Edit
                 </a>
 
-                <button class="delete-btn" data-id="${doc.id}">
-                    Delete
+                <button class="delete-btn"
+                        onclick="deleteTournament('${t.id}')">
+                    <i class="fa-solid fa-trash"></i> Delete
                 </button>
 
             </td>
@@ -42,42 +65,52 @@ db.collection("tournaments")
 
     });
 
-    // Delete Tournament
-    document.querySelectorAll(".delete-btn").forEach(btn => {
+}
 
-        btn.addEventListener("click", () => {
+function deleteTournament(id) {
 
-            const id = btn.getAttribute("data-id");
+    if (!confirm("Delete this tournament?")) return;
 
-            if (confirm("Delete this tournament?")) {
+    db.collection("tournaments")
+    .doc(id)
+    .delete()
+    .then(() => {
 
-                db.collection("tournaments")
-                .doc(id)
-                .delete()
-                .then(() => {
+        alert("✅ Tournament Deleted Successfully!");
 
-                    alert("✅ Tournament Deleted Successfully!");
+        location.reload();
 
-                    location.reload();
+    })
+    .catch((err) => {
 
-                })
-                .catch((err) => {
+        console.error(err);
 
-                    console.error(err);
-
-                    alert("❌ Delete Failed!");
-
-                });
-
-            }
-
-        });
+        alert("❌ Delete Failed!");
 
     });
 
-})
-.catch((error) => {
+}
 
-    console.error(error);
+const searchBox = document.getElementById("searchTournament");
 
-});
+if (searchBox) {
+
+    searchBox.addEventListener("keyup", () => {
+
+        const value = searchBox.value.toLowerCase();
+
+        const filtered = allTournaments.filter((t) => {
+
+            return (
+                (t.title || "").toLowerCase().includes(value) ||
+                (t.game || "").toLowerCase().includes(value) ||
+                (t.status || "").toLowerCase().includes(value)
+            );
+
+        });
+
+        renderTournaments(filtered);
+
+    });
+
+}

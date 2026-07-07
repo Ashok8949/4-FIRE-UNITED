@@ -1,22 +1,29 @@
 document.getElementById("saveGallery").addEventListener("click", () => {
 
-    const title = document.getElementById("title").value.trim();
-    const image = document.getElementById("image").value.trim();
+    const gallery = {
 
-    if (title === "" || image === "") {
+        title: document.getElementById("title").value.trim(),
+        image: document.getElementById("image").value.trim(),
+        createdAt: new Date()
 
-        alert("Please fill all fields.");
+    };
+
+    if (!gallery.title || !gallery.image) {
+
+        alert("Please fill all required fields.");
         return;
 
     }
 
-    db.collection("gallery").add({
+    const btn = document.getElementById("saveGallery");
 
-        title: title,
-        image: image,
-        createdAt: new Date()
+    btn.disabled = true;
 
-    })
+    btn.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+    db.collection("gallery")
+    .add(gallery)
 
     .then(() => {
 
@@ -29,6 +36,11 @@ document.getElementById("saveGallery").addEventListener("click", () => {
     .catch((error) => {
 
         console.error(error);
+
+        btn.disabled = false;
+
+        btn.innerHTML =
+            '<i class="fa-solid fa-floppy-disk"></i> Save Image';
 
         alert("❌ Failed to save image.");
 

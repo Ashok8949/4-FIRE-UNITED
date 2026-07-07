@@ -2,20 +2,28 @@ const params = new URLSearchParams(window.location.search);
 const tournamentId = params.get("id");
 
 if (!tournamentId) {
+
     alert("Tournament ID Missing!");
     window.location.href = "tournaments.html";
+
 }
 
 const docRef = db.collection("tournaments").doc(tournamentId);
 
-// Load Tournament Data
+// =========================
+// Load Tournament
+// =========================
+
 docRef.get()
+
 .then((doc) => {
 
     if (!doc.exists) {
+
         alert("Tournament Not Found!");
         window.location.href = "tournaments.html";
         return;
+
     }
 
     const t = doc.data();
@@ -30,29 +38,56 @@ docRef.get()
     document.getElementById("registration").value = t.registration || "";
 
 })
+
 .catch((err) => {
 
     console.error(err);
 
+    alert("Failed to load Tournament.");
+
 });
 
+// =========================
 // Update Tournament
+// =========================
+
 document.getElementById("updateTournament").addEventListener("click", () => {
 
-    const data = {
+    const tournament = {
 
         title: document.getElementById("title").value.trim(),
         game: document.getElementById("game").value.trim(),
         mode: document.getElementById("mode").value.trim(),
-        date: document.getElementById("date").value.trim(),
-        time: document.getElementById("time").value.trim(),
+        date: document.getElementById("date").value,
+        time: document.getElementById("time").value,
         prize: document.getElementById("prize").value.trim(),
         status: document.getElementById("status").value.trim(),
         registration: document.getElementById("registration").value.trim()
 
     };
 
-    docRef.update(data)
+    if (
+        !tournament.title ||
+        !tournament.game ||
+        !tournament.mode ||
+        !tournament.date ||
+        !tournament.time
+    ) {
+
+        alert("Please fill all required fields.");
+        return;
+
+    }
+
+    const btn = document.getElementById("updateTournament");
+
+    btn.disabled = true;
+
+    btn.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
+
+    docRef.update(tournament)
+
     .then(() => {
 
         alert("✅ Tournament Updated Successfully!");
@@ -60,9 +95,15 @@ document.getElementById("updateTournament").addEventListener("click", () => {
         window.location.href = "tournaments.html";
 
     })
+
     .catch((err) => {
 
         console.error(err);
+
+        btn.disabled = false;
+
+        btn.innerHTML =
+            '<i class="fa-solid fa-floppy-disk"></i> Update Tournament';
 
         alert("❌ Update Failed!");
 

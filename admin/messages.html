@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tournament Manager | 4 FIRE UNITED</title>
+<title>Messages | 4 FIRE UNITED</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
@@ -23,38 +23,30 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="topbar">
 
-    <h1>TOURNAMENT MANAGER</h1>
+<h1>CONTACT MESSAGES</h1>
 
-    <div class="top-actions">
+<div class="top-actions">
 
-        <a href="dashboard.html" class="back-btn">
+<a href="dashboard.html" class="back-btn">
 
-            <i class="fa-solid fa-arrow-left"></i>
+<i class="fa-solid fa-arrow-left"></i>
 
-            Back Dashboard
+Back Dashboard
 
-        </a>
+</a>
 
-        <div class="search-box">
+<div class="search-box">
 
-            <i class="fa-solid fa-magnifying-glass"></i>
+<i class="fa-solid fa-magnifying-glass"></i>
 
-            <input
-                type="text"
-                id="searchTournament"
-                placeholder="Search Tournament">
+<input
+type="text"
+id="searchMessage"
+placeholder="Search Message">
 
-        </div>
+</div>
 
-        <a href="add-tournament.html" class="add-btn">
-
-            <i class="fa-solid fa-plus"></i>
-
-            Add Tournament
-
-        </a>
-
-    </div>
+</div>
 
 </div>
 
@@ -66,10 +58,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <tr>
 
-<th>Title</th>
-<th>Game</th>
+<th>Name</th>
+<th>Email</th>
+<th>Subject</th>
 <th>Date</th>
-<th>Prize</th>
 <th>Status</th>
 <th>Action</th>
 
@@ -77,7 +69,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 </thead>
 
-<tbody id="tournamentTable">
+<tbody id="messageTable">
 
 </tbody>
 
@@ -93,7 +85,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <script src="js/firebase.js"></script>
 <script src="js/auth-guard.js"></script>
-<script src="js/tournament-manager.js"></script>
+<script src="js/message-manager.js"></script>
 
 </body>
+
 </html>

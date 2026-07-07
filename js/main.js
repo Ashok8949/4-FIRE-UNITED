@@ -332,6 +332,21 @@ window.addEventListener("load", () => {
 // Visitor Counter
 // ===============================
 
-db.collection("stats").doc("visitors").set({
-    total: firebase.firestore.FieldValue.increment(1)
-}, { merge: true });
+window.addEventListener("load", () => {
+
+    db.collection("stats")
+    .doc("visitors")
+    .set({
+
+        total: firebase.firestore.FieldValue.increment(1),
+        lastVisit: firebase.firestore.FieldValue.serverTimestamp()
+
+    }, { merge: true })
+
+    .catch((err) => {
+
+        console.error("Visitor Error:", err);
+
+    });
+
+});

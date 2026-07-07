@@ -8,10 +8,10 @@
 
 <title>Add Tournament | 4 FIRE UNITED</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="CSS/dashboard.css">
 
@@ -21,47 +21,50 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="main">
 
-<div class="topbar">
+    <div class="topbar">
 
-<h1>ADD TOURNAMENT</h1>
+        <h1>ADD TOURNAMENT</h1>
 
-<a href="tournaments.html" class="back-btn">
+        <a href="tournaments.html" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back
+        </a>
 
-<i class="fa-solid fa-arrow-left"></i>
+    </div>
 
-Back
+    <div class="edit-card">
 
-</a>
+        <h2 class="section-title">TOURNAMENT INFORMATION</h2>
 
-</div>
+        <div class="form-grid">
 
-<div class="edit-box">
+            <input type="text" id="title" placeholder="Tournament Title">
 
-<input type="text" id="title" placeholder="Tournament Title">
+            <input type="text" id="game" placeholder="Game">
 
-<input type="text" id="game" placeholder="Game">
+            <input type="text" id="mode" placeholder="Mode">
 
-<input type="text" id="mode" placeholder="Mode">
+            <input type="date" id="date">
 
-<input type="text" id="date" placeholder="Date">
+            <input type="time" id="time">
 
-<input type="text" id="time" placeholder="Time">
+            <input type="text" id="prize" placeholder="Prize Pool">
 
-<input type="text" id="prize" placeholder="Prize">
+            <input type="text" id="status" placeholder="Status">
 
-<input type="text" id="status" placeholder="Status">
+            <input type="text" id="registration" placeholder="Registration Link">
 
-<input type="text" id="registration" placeholder="Registration">
+        </div>
 
-<button id="saveTournament" class="save-btn">
+        <button id="saveTournament" class="save-btn">
 
-<i class="fa-solid fa-floppy-disk"></i>
+            <i class="fa-solid fa-floppy-disk"></i>
 
-Save Tournament
+            Save Tournament
 
-</button>
+        </button>
 
-</div>
+    </div>
 
 </div>
 
@@ -74,4 +77,5 @@ Save Tournament
 <script src="js/add-tournament.js"></script>
 
 </body>
+
 </html>

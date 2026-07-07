@@ -6,12 +6,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Player Manager | 4 FIRE UNITED</title>
+<title>Applications | 4 FIRE UNITED</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="CSS/dashboard.css">
 
@@ -23,30 +23,28 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="topbar">
 
-    <h1>PLAYER MANAGER</h1>
+<h1>JOIN APPLICATIONS</h1>
 
-    <div class="top-actions">
+<div class="top-actions">
 
-    <a href="dashboard.html" class="back-btn">
-        <i class="fa-solid fa-arrow-left"></i>
-        Back Dashboard
-    </a>
+<a href="dashboard.html" class="back-btn">
 
-    <div class="search-box">
+<i class="fa-solid fa-arrow-left"></i>
 
-        <i class="fa-solid fa-magnifying-glass"></i>
+Back Dashboard
 
-        <input
-            type="text"
-            id="searchPlayer"
-            placeholder="Search Player">
+</a>
 
-    </div>
+<div class="search-box">
 
-    <a href="add-player.html" class="add-btn">
-        <i class="fa-solid fa-plus"></i>
-        Add Player
-    </a>
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+type="text"
+id="searchApplication"
+placeholder="Search Application">
+
+</div>
 
 </div>
 
@@ -60,19 +58,18 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <tr>
 
-<th>Image</th>
 <th>Name</th>
 <th>IGN</th>
-<th>Role</th>
-<th>Level</th>
+<th>UID</th>
 <th>Rank</th>
+<th>Status</th>
 <th>Action</th>
 
 </tr>
 
 </thead>
 
-<tbody id="playerTable">
+<tbody id="applicationTable">
 
 </tbody>
 
@@ -80,14 +77,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 </div>
 
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
 
 <script src="js/firebase.js"></script>
 <script src="js/auth-guard.js"></script>
-<script src="js/player-manager.js"></script>
+<script src="js/application-manager.js"></script>
 
 </body>
 

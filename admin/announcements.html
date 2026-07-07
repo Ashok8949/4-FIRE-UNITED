@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add Gallery Image | 4 FIRE UNITED</title>
+<title>Announcements | 4 FIRE UNITED</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
@@ -21,53 +21,68 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="main">
 
-    <div class="topbar">
+<div class="topbar">
 
-        <h1>ADD GALLERY IMAGE</h1>
+    <h1>ANNOUNCEMENTS</h1>
 
-        <a href="gallery.html" class="back-btn">
+    <div class="top-actions">
+
+        <a href="dashboard.html" class="back-btn">
 
             <i class="fa-solid fa-arrow-left"></i>
 
-            Back
+            Back Dashboard
+
+        </a>
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="text"
+                id="searchAnnouncement"
+                placeholder="Search Announcement">
+
+        </div>
+
+        <a href="add-announcement.html" class="add-btn">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Announcement
 
         </a>
 
     </div>
 
-    <div class="edit-card">
+</div>
 
-        <h2 class="section-title">
+<div class="table-box">
 
-            GALLERY INFORMATION
+<table>
 
-        </h2>
+<thead>
 
-        <div class="form-grid">
+<tr>
 
-            <input
-                type="text"
-                id="title"
-                placeholder="Image Title">
+<th>Title</th>
+<th>Category</th>
+<th>Date</th>
+<th>Status</th>
+<th>Action</th>
 
-            <input
-                type="text"
-                id="image"
-                placeholder="Image Path (Example: images/gallery/img1.jpg)">
+</tr>
 
-        </div>
+</thead>
 
-        <button
-            id="saveGallery"
-            class="save-btn">
+<tbody id="announcementTable">
 
-            <i class="fa-solid fa-floppy-disk"></i>
+</tbody>
 
-            Save Image
+</table>
 
-        </button>
-
-    </div>
+</div>
 
 </div>
 
@@ -77,7 +92,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <script src="js/firebase.js"></script>
 <script src="js/auth-guard.js"></script>
-<script src="js/add-gallery.js"></script>
+<script src="js/announcement-manager.js"></script>
 
 </body>
 

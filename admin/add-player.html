@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add Player | 4 FIRE UNITED</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="CSS/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="main">
+
+    <div class="topbar">
+
+        <h1>ADD PLAYER</h1>
+
+        <a href="players.html" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back
+        </a>
+
+    </div>
+
+   <div class="edit-box">
+
+    <div class="player-image-box">
+
+        <img id="previewImage"
+             src="../images/logo/logo.png"
+             alt="Player">
+
+        <label for="image" class="upload-btn">
+            <i class="fa-solid fa-camera"></i>
+            Upload Player Image
+        </label>
+
+        <input
+            type="file"
+            id="image"
+            accept="image/*"
+            hidden>
+
+    </div>
+
+    <h2 class="section-title">BASIC INFORMATION</h2>
+
+    <div class="form-grid">
+
+        <input type="text" id="name" placeholder="Player Name">
+
+        <input type="text" id="ign" placeholder="IGN">
+
+        <input type="text" id="uid" placeholder="Free Fire UID">
+
+        <input type="text" id="guild" placeholder="Guild">
+
+        <input type="text" id="role" placeholder="Role">
+
+        <input type="text" id="language" placeholder="Language">
+
+    </div>
+
+    <h2 class="section-title">GAME INFORMATION</h2>
+
+    <div class="form-grid">
+
+        <input type="number" id="level" placeholder="Level">
+
+        <input type="text" id="rank" placeholder="Rank">
+
+        <input type="text" id="kd" placeholder="KD">
+
+        <input type="text" id="headshot" placeholder="Headshot %">
+
+    </div>
+
+    <button id="savePlayer" class="save-btn">
+
+        <i class="fa-solid fa-floppy-disk"></i>
+
+        Save Player
+
+    </button>
+
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/add-player.js"></script>
+
+</body>
+
+</html>

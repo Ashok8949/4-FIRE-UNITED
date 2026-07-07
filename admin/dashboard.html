@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>4 FIRE UNITED | Dashboard</title>
+<title>4 FIRE UNITED | Admin Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
@@ -19,69 +19,75 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <body>
 
-
-
 <div class="sidebar">
 
-   
+    <div class="logo">
 
-<div class="logo">
+        <img src="../images/logo/logo.png">
 
-<img src="../images/logo/logo.png">
+        <h2>4 FIRE UNITED</h2>
 
-<h2>4 FIRE UNITED</h2>
+    </div>
 
-</div>
+    <ul>
 
-<ul>
+        <li class="active">
+            <a href="dashboard.html">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+        </li>
 
-<ul>
+        <li>
+            <a href="players.html">
+                <i class="fa-solid fa-users"></i>
+                Players
+            </a>
+        </li>
 
-<li class="active">
-<a href="dashboard.html">
-<i class="fa-solid fa-house"></i>
-Dashboard
-</a>
-</li>
+        <li>
+            <a href="tournaments.html">
+                <i class="fa-solid fa-trophy"></i>
+                Tournaments
+            </a>
+        </li>
 
-<li>
-<a href="players.html">
-<i class="fa-solid fa-users"></i>
-Players
-</a>
-</li>
+        <li>
+            <a href="gallery.html">
+                <i class="fa-solid fa-image"></i>
+                Gallery
+            </a>
+        </li>
 
-<li>
-<a href="tournaments.html">
-<i class="fa-solid fa-trophy"></i>
-Tournaments
-</a>
-</li>
+        <li>
+            <a href="announcements.html">
+                <i class="fa-solid fa-bullhorn"></i>
+                Announcements
+            </a>
+        </li>
 
-<li>
-<a href="gallery.html">
-<i class="fa-solid fa-image"></i>
-Gallery
-</a>
-</li>
+        <li>
+            <a href="messages.html">
+                <i class="fa-solid fa-envelope"></i>
+                Messages
+            </a>
+        </li>
 
-<li>
-<a href="announcements.html">
-<i class="fa-solid fa-bullhorn"></i>
-Announcements
-</a>
-</li>
+        <li>
+            <a href="applications.html">
+                <i class="fa-solid fa-file-circle-check"></i>
+                Applications
+            </a>
+        </li>
 
-<li>
-<a href="settings.html">
-<i class="fa-solid fa-gear"></i>
-Settings
-</a>
-</li>
+        <li>
+            <a href="settings.html">
+                <i class="fa-solid fa-gear"></i>
+                Settings
+            </a>
+        </li>
 
-</ul>
-
-</ul>
+    </ul>
 
 </div>
 
@@ -89,47 +95,94 @@ Settings
 
 <div class="topbar">
 
-<h1>CONTROL PANEL</h1>
+    <h1>CONTROL PANEL</h1>
 
-<div class="admin">
+    <div class="admin">
 
-<img src="../images/logo/logo.png">
+        <img src="../images/logo/logo.png">
 
-<span>Admin</span>
+        <span>Administrator</span>
 
-<button id="logoutBtn" class="join-btn">
-    Logout
-</button>
+        <button id="logoutBtn" class="join-btn">
+
+            Logout
+
+        </button>
+
+    </div>
 
 </div>
 
-</div>
+<!-- Dashboard Statistics -->
 
 <div class="cards">
 
     <div class="card">
-    <i class="fa-solid fa-users"></i>
-   <h2 id="totalPlayers">0</h2>
-    <p>Total Players</p>
+
+        <i class="fa-solid fa-users"></i>
+
+        <h2 id="totalPlayers">0</h2>
+
+        <p>Total Players</p>
+
+    </div>
+
+    <div class="card">
+
+        <i class="fa-solid fa-trophy"></i>
+
+        <h2 id="totalTournaments">0</h2>
+
+        <p>Total Tournaments</p>
+
+    </div>
+
+    <div class="card">
+
+        <i class="fa-solid fa-image"></i>
+
+        <h2 id="totalGallery">0</h2>
+
+        <p>Gallery Images</p>
+
+    </div>
+
+    <div class="card">
+
+        <i class="fa-solid fa-eye"></i>
+
+        <h2 id="totalVisitors">0</h2>
+
+        <p>Total Visitors</p>
+
+    </div>
+
+    <div class="card">
+
+        <i class="fa-solid fa-envelope"></i>
+
+        <h2 id="totalMessages">0</h2>
+
+        <p>Messages</p>
+
+    </div>
+
+    <div class="card">
+
+        <i class="fa-solid fa-file-circle-check"></i>
+
+        <h2 id="totalApplications">0</h2>
+
+        <p>Applications</p>
+
+    </div>
+
 </div>
 
-<div class="card">
-    <i class="fa-solid fa-trophy"></i>
-   <h2 id="totalTournaments">0</h2>
-    <p>Tournaments</p>
-</div>
-
-<div class="card">
-    <i class="fa-solid fa-image"></i>
-    <h2 id="totalGallery">0</h2>
-    <p>Gallery Images</p>
-</div>
-
-<div class="card">
-    <i class="fa-solid fa-eye"></i>
-    <h2 id="totalVisitors">0</h2>
-    <p>Visitors</p>
-</div>
+<!-- Part 1A Ends Here -->
+ <!-- ==========================
+     QUICK ACTIONS
+=========================== -->
 
 <div class="dashboard-section">
 
@@ -139,26 +192,130 @@ Settings
 
         <div class="action-card" id="managePlayers">
             <i class="fa-solid fa-users"></i>
-            <h3>Manage Players</h3>
-            <p>Add, Edit & Remove Players</p>
+            <h3>Players</h3>
+            <p>Manage Team Players</p>
         </div>
 
         <div class="action-card" id="manageTournament">
             <i class="fa-solid fa-trophy"></i>
             <h3>Tournaments</h3>
-            <p>Manage Tournament Data</p>
+            <p>Manage Tournaments</p>
         </div>
 
         <div class="action-card" id="manageGallery">
             <i class="fa-solid fa-image"></i>
             <h3>Gallery</h3>
-            <p>Upload Images</p>
+            <p>Manage Gallery Images</p>
         </div>
 
         <div class="action-card" id="manageNews">
             <i class="fa-solid fa-bullhorn"></i>
             <h3>Announcements</h3>
-            <p>Post Latest Updates</p>
+            <p>Latest Updates</p>
+        </div>
+
+        <div class="action-card" id="manageMessages">
+            <i class="fa-solid fa-envelope"></i>
+            <h3>Messages</h3>
+            <p>View Contact Messages</p>
+        </div>
+
+        <div class="action-card" id="manageApplications">
+            <i class="fa-solid fa-file-circle-check"></i>
+            <h3>Applications</h3>
+            <p>Join Team Requests</p>
+        </div>
+
+        <div class="action-card" id="manageSettings">
+            <i class="fa-solid fa-gear"></i>
+            <h3>Settings</h3>
+            <p>Website Settings</p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================
+     RECENT ACTIVITY
+=========================== -->
+
+<div class="dashboard-section">
+
+    <h2>Recent Activity</h2>
+
+    <div class="activity-list">
+
+        <div class="activity-item">
+
+            <i class="fa-solid fa-users"></i>
+
+            <div>
+
+                <h4>Latest Player</h4>
+
+                <p id="latestPlayer">
+
+                    Loading...
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="activity-item">
+
+            <i class="fa-solid fa-trophy"></i>
+
+            <div>
+
+                <h4>Latest Tournament</h4>
+
+                <p id="latestTournament">
+
+                    Loading...
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="activity-item">
+
+            <i class="fa-solid fa-envelope"></i>
+
+            <div>
+
+                <h4>Latest Message</h4>
+
+                <p id="latestMessage">
+
+                    Loading...
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="activity-item">
+
+            <i class="fa-solid fa-file-circle-check"></i>
+
+            <div>
+
+                <h4>Latest Application</h4>
+
+                <p id="latestApplication">
+
+                    Loading...
+
+                </p>
+
+            </div>
+
         </div>
 
     </div>
@@ -167,7 +324,7 @@ Settings
 
 </div>
 
-</div>
+<!-- Firebase -->
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
@@ -175,10 +332,9 @@ Settings
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
 
 <script src="js/firebase.js"></script>
-
 <script src="js/auth-guard.js"></script>
-
 <script src="js/dashboard.js"></script>
 
 </body>
 </html>
+

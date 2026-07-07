@@ -1,38 +1,49 @@
 const settingsRef = db.collection("settings").doc("website");
 
-// ==============================
-// Load Settings
-// ==============================
+// =====================================
+// LOAD SETTINGS
+// =====================================
 
-settingsRef.get().then((doc) => {
+settingsRef.get()
 
-    if (doc.exists) {
+.then((doc) => {
 
-        const s = doc.data();
+    if (!doc.exists) return;
 
-        document.getElementById("teamName").value = s.teamName || "";
-        document.getElementById("email").value = s.email || "";
-        document.getElementById("phone").value = s.phone || "";
-        document.getElementById("address").value = s.address || "";
-        document.getElementById("logo").value = s.logo || "";
-        document.getElementById("instagram").value = s.instagram || "";
-        document.getElementById("youtube").value = s.youtube || "";
-        document.getElementById("discord").value = s.discord || "";
-        document.getElementById("facebook").value = s.facebook || "";
+    const s = doc.data();
 
-    }
+    document.getElementById("teamName").value = s.teamName || "";
+    document.getElementById("email").value = s.email || "";
+    document.getElementById("phone").value = s.phone || "";
+    document.getElementById("address").value = s.address || "";
+    document.getElementById("logo").value = s.logo || "";
+    document.getElementById("heroTitle").value = s.heroTitle || "";
+    document.getElementById("heroSubtitle").value = s.heroSubtitle || "";
+    document.getElementById("instagram").value = s.instagram || "";
+    document.getElementById("youtube").value = s.youtube || "";
+    document.getElementById("discord").value = s.discord || "";
+    document.getElementById("facebook").value = s.facebook || "";
 
-}).catch((err) => {
+})
 
-    console.log(err);
+.catch((err) => {
+
+    console.error(err);
 
 });
 
-// ==============================
-// Save Settings
-// ==============================
+// =====================================
+// SAVE SETTINGS
+// =====================================
 
 document.getElementById("saveSettings").addEventListener("click", () => {
+
+    const btn = document.getElementById("saveSettings");
+
+    btn.disabled = true;
+
+    btn.innerHTML =
+    '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
     settingsRef.set({
 
@@ -41,6 +52,8 @@ document.getElementById("saveSettings").addEventListener("click", () => {
         phone: document.getElementById("phone").value.trim(),
         address: document.getElementById("address").value.trim(),
         logo: document.getElementById("logo").value.trim(),
+        heroTitle: document.getElementById("heroTitle").value.trim(),
+        heroSubtitle: document.getElementById("heroSubtitle").value.trim(),
         instagram: document.getElementById("instagram").value.trim(),
         youtube: document.getElementById("youtube").value.trim(),
         discord: document.getElementById("discord").value.trim(),
@@ -52,13 +65,23 @@ document.getElementById("saveSettings").addEventListener("click", () => {
 
         alert("✅ Settings Saved Successfully!");
 
+        btn.disabled = false;
+
+        btn.innerHTML =
+        '<i class="fa-solid fa-floppy-disk"></i> Save Settings';
+
     })
 
     .catch((err) => {
 
-        console.log(err);
+        console.error(err);
 
         alert("❌ Failed to Save Settings!");
+
+        btn.disabled = false;
+
+        btn.innerHTML =
+        '<i class="fa-solid fa-floppy-disk"></i> Save Settings';
 
     });
 
