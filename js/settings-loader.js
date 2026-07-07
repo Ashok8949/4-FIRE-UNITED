@@ -52,7 +52,11 @@ db.collection("settings")
 
     document.querySelectorAll(".logo img").forEach((img) => {
 
-        if (s.logo) img.src = s.logo;
+        if (s.logo) {
+
+            img.src = s.logo;
+
+        }
 
     });
 
@@ -64,7 +68,7 @@ db.collection("settings")
 
     if (email) {
 
-        email.textContent = s.email;
+        email.textContent = s.email || "";
 
     }
 
@@ -76,7 +80,7 @@ db.collection("settings")
 
     if (phone) {
 
-        phone.textContent = s.phone;
+        phone.textContent = s.phone || "";
 
     }
 
@@ -88,7 +92,7 @@ db.collection("settings")
 
     if (address) {
 
-        address.textContent = s.address;
+        address.textContent = s.address || "";
 
     }
 
@@ -96,42 +100,56 @@ db.collection("settings")
     // Social Links
     // ==========================
 
-    const instagram = document.getElementById("instagramLink");
+    const socialLinks = [
 
-    if (instagram) {
+        {
+            id: "instagramLink",
+            url: s.instagram
+        },
 
-        instagram.href = s.instagram || "#";
+        {
+            id: "youtubeLink",
+            url: s.youtube
+        },
 
-    }
+        {
+            id: "discordLink",
+            url: s.discord
+        },
 
-    const youtube = document.getElementById("youtubeLink");
+        {
+            id: "facebookLink",
+            url: s.facebook
+        }
 
-    if (youtube) {
+    ];
 
-        youtube.href = s.youtube || "#";
+    socialLinks.forEach((social) => {
 
-    }
+        const link = document.getElementById(social.id);
 
-    const discord = document.getElementById("discordLink");
+        if (!link) return;
 
-    if (discord) {
+        if (social.url && social.url.trim() !== "") {
 
-        discord.href = s.discord || "#";
+            link.href = social.url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
 
-    }
+        } else {
 
-    const facebook = document.getElementById("facebookLink");
+            link.removeAttribute("href");
+            link.style.opacity = "0.5";
+            link.style.pointerEvents = "none";
 
-    if (facebook) {
+        }
 
-        facebook.href = s.facebook || "#";
-
-    }
+    });
 
 })
 
 .catch((err) => {
 
-    console.error(err);
+    console.error("Settings Loader Error:", err);
 
 });

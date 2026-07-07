@@ -2632,3 +2632,30 @@ z-index:1001;
     text-align:center;
 
 }
+.player-social{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:15px;
+
+margin:25px 0;
+
+}
+
+.player-social .btn1{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+}
+
+.player-social i{
+
+font-size:18px;
+
+}
