@@ -89,7 +89,15 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 
     anchor.addEventListener("click", (e) => {
 
-        const target = document.querySelector(anchor.getAttribute("href"));
+        const href = anchor.getAttribute("href");
+
+        // Ignore empty or placeholder links
+        if (!href || href === "#") return;
+
+        // Only handle in-page anchors
+        if (!href.startsWith("#")) return;
+
+        const target = document.querySelector(href);
 
         if (!target) return;
 
@@ -551,7 +559,17 @@ document.querySelectorAll("img").forEach((img) => {
 
     img.onerror = function () {
 
-        this.src = "images/logo/logo.png";
+        this.onerror = null;
+
+if (location.pathname.includes("/players/")) {
+
+    this.src = "../images/logo/logo.png";
+
+} else {
+
+    this.src = "images/logo/logo.png";
+
+}
 
     };
 
