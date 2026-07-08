@@ -23,21 +23,7 @@ window.addEventListener("load", () => {
 
     // Hide Loader
 
-    if (loader) {
-
-        requestAnimationFrame(() => {
-
-            loader.classList.add("hide");
-
-            setTimeout(() => {
-
-                loader.remove();
-
-            }, 300);
-
-        });
-
-    }
+   
 
     // Current Year
 
