@@ -83,7 +83,7 @@ if (logo) {
 
 if (particleBox) {
 
-    for (let i = 0; i < 180; i++) {
+    for (let i = 0; i < 30; i++) {
 
         const ember = document.createElement("span");
 
@@ -156,7 +156,7 @@ setTimeout(() => {
     if (pulseInterval) clearInterval(pulseInterval);
     if (glowInterval) clearInterval(glowInterval);
 
-}, 5200);
+}, 1800);
 
 /*==============================
       CLEANUP
