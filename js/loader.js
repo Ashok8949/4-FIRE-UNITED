@@ -1,5 +1,6 @@
 /*=========================================
-        4 FIRE UNITED LOADER V2
+      4 FIRE UNITED
+      BULLET LOADER V2
 =========================================*/
 
 window.addEventListener("load", () => {
@@ -10,20 +11,76 @@ window.addEventListener("load", () => {
 
     document.body.style.overflow = "hidden";
 
-    // Minimum smooth intro
-    setTimeout(() => {
+    /*==============================
+        BULLETS FIRE
+==============================*/
 
-        loader.style.opacity = "0";
-        loader.style.visibility = "hidden";
+setTimeout(() => {
 
-        document.body.style.overflow = "auto";
+    loader.classList.add("loader-start");
 
-        setTimeout(() => {
+},150);
 
-            loader.remove();
+/*==============================
+        IMPACT
+==============================*/
 
-        }, 450);
+setTimeout(() => {
 
-    }, 1600);
+    loader.classList.add("loader-impact");
+
+},1450);
+
+/*==============================
+        BULLETS REMOVE
+==============================*/
+
+const bullets=document.querySelectorAll(".bullet");
+
+setTimeout(()=>{
+
+bullets.forEach(b=>{
+
+b.style.transition=".18s";
+
+b.style.opacity="0";
+
+b.style.transform+=" scale(.65)";
+
+});
+
+},900);
+
+/*==============================
+        LOGO
+==============================*/
+
+setTimeout(()=>{
+
+loader.classList.add("loader-show");
+
+},1700);
+
+/*==============================
+        EXIT
+==============================*/
+
+setTimeout(()=>{
+
+loader.classList.add("loader-hide");
+
+document.body.style.overflow="auto";
+
+},4000);
+
+/*==============================
+        REMOVE
+==============================*/
+
+setTimeout(()=>{
+
+loader.remove();
+
+},4600);
 
 });

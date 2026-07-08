@@ -19,7 +19,7 @@ const year = document.getElementById("year");
             PAGE LOADED
 =========================================*/
 
-window.addEventListener("load", () => {
+
 
     // Hide Loader
 
@@ -27,21 +27,7 @@ window.addEventListener("load", () => {
 
     // Current Year
 
-    if (year) {
-
-        year.textContent = new Date().getFullYear();
-
-    }
-
-    // Lazy Loading
-
-    document.querySelectorAll("img").forEach((img) => {
-
-        img.loading = "lazy";
-
-    });
-
-});
+    
 
 /*=========================================
             MOBILE MENU
