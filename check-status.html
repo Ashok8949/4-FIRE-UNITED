@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contact | 4 FIRE UNITED</title>
+<title>Check Status | 4 FIRE UNITED</title>
 
 <link rel="stylesheet" href="CSS/style.css">
 <link rel="stylesheet" href="CSS/responsive.css">
@@ -24,9 +24,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <body>
 
 <div class="loader">
-
 <h1></h1>
-
 </div>
 
 <header>
@@ -46,12 +44,18 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <ul class="nav-links">
 
 <li><a href="index.html">Home</a></li>
+
 <li><a href="team.html">Team</a></li>
+
 <li><a href="tournaments.html">Tournaments</a></li>
+
 <li><a href="gallery.html">Gallery</a></li>
+
 <li><a href="join.html">Join Us</a></li>
-<li><a href="check-status.html">Check Status</a></li>
-<li><a href="contact.html" class="active">Contact</a></li>
+
+<li><a href="check-status.html" class="active">Check Status</a></li>
+
+<li><a href="contact.html">Contact</a></li>
 
 </ul>
 
@@ -77,120 +81,42 @@ Join Team
 
 <header class="team-header">
 
-<h1>CONTACT US</h1>
+<h1>CHECK APPLICATION STATUS</h1>
 
 <p>
 
-Let's Build The Strongest Free Fire Community
+Track your 4 FIRE UNITED application anytime.
 
 </p>
 
 </header>
 
-<section class="contact-section">
+<section class="status-section">
 
-<div class="contact-info">
+    <div class="status-box">
 
-<h2>Get In Touch</h2>
+        <h2>🔥 CHECK APPLICATION STATUS</h2>
 
-<div class="info-card">
+        <p>
+            Enter your Free Fire UID to check your application status.
+        </p>
 
-<i class="fa-solid fa-envelope"></i>
+        <input
+            type="text"
+            id="checkUID"
+            placeholder="Enter Free Fire UID">
 
-<div>
+        <button
+            id="checkStatusBtn"
+            class="btn1">
 
-<h3>Email</h3>
+            Check Status
 
-<p>4fireunited@gmail.com</p>
+        </button>
 
-</div>
+        <div id="statusResult"></div>
 
-</div>
-
-<div class="info-card">
-
-<i class="fa-brands fa-instagram"></i>
-
-<div>
-
-<h3>Instagram</h3>
-
-<p>@4fireunited</p>
-
-</div>
-
-</div>
-
-<div class="info-card">
-
-<i class="fa-brands fa-youtube"></i>
-
-<div>
-
-<h3>YouTube</h3>
-
-<p>4 FIRE UNITED</p>
-
-</div>
-
-</div>
-
-<div class="info-card">
-
-<i class="fa-brands fa-discord"></i>
-
-<div>
-
-<h3>Discord</h3>
-
-<p>Coming Soon</p>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="contact-form-box">
-
-<form class="contact-form" id="contactForm">
-
-<input
-type="text"
-id="name"
-placeholder="Your Name"
-required>
-
-<input
-type="email"
-id="email"
-placeholder="Your Email"
-required>
-
-<input
-type="text"
-id="subject"
-placeholder="Subject"
-required>
-
-<textarea
-rows="7"
-id="message"
-placeholder="Write your message..."
-required></textarea>
-
-<button
-type="submit"
-id="sendMessage"
-class="btn1">
-
-Send Message
-
-</button>
-
-</form>
-
-</div>
+    </div>
 
 </section>
 
@@ -198,11 +124,7 @@ Send Message
 
 <h2>4 FIRE UNITED</h2>
 
-<p>
-
-Forged In Fire. United In Victory.
-
-</p>
+<p>Forged In Fire. United In Victory.</p>
 
 <div class="footer-social">
 
@@ -230,7 +152,7 @@ Forged In Fire. United In Victory.
 <a href="team.html">Team</a>
 <a href="tournaments.html">Tournament</a>
 <a href="gallery.html">Gallery</a>
-<a href="join.html">Join</a>
+<a href="join.html">Join Us</a>
 <a href="contact.html">Contact</a>
 
 </div>
@@ -252,7 +174,7 @@ Forged In Fire. United In Victory.
 
 <script src="js/firebase.js"></script>
 <script src="js/settings-loader.js"></script>
-<script src="js/contact.js"></script>
+<script src="js/check-status.js"></script>
 
 </body>
 

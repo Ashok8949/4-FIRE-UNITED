@@ -2659,3 +2659,58 @@ gap:10px;
 font-size:18px;
 
 }
+
+/* ===============================
+   CHECK STATUS
+================================= */
+
+.status-section{
+    min-height:80vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:80px 20px;
+}
+
+.status-box{
+    width:100%;
+    max-width:550px;
+    background:#111;
+    border:2px solid #ff6a00;
+    border-radius:15px;
+    padding:40px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(255,106,0,.25);
+}
+
+.status-box h2{
+    color:#ff6a00;
+    margin-bottom:15px;
+    font-size:2rem;
+}
+
+.status-box p{
+    color:#ccc;
+    margin-bottom:25px;
+}
+
+.status-box input{
+    width:100%;
+    padding:15px;
+    border:none;
+    outline:none;
+    border-radius:8px;
+    background:#1b1b1b;
+    color:#fff;
+    margin-bottom:20px;
+    font-size:16px;
+}
+
+#statusResult{
+    margin-top:30px;
+    padding:20px;
+    border-radius:10px;
+    display:none;
+    font-weight:600;
+    line-height:1.7;
+}

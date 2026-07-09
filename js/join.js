@@ -11,6 +11,7 @@ document.getElementById("joinForm").addEventListener("submit", (e) => {
         name: document.getElementById("name").value.trim(),
         ign: document.getElementById("ign").value.trim(),
         uid: document.getElementById("uid").value.trim(),
+        email: document.getElementById("email").value.trim(),
         level: document.getElementById("level").value,
         rank: document.getElementById("rank").value,
         about: document.getElementById("about").value.trim(),
@@ -22,16 +23,15 @@ document.getElementById("joinForm").addEventListener("submit", (e) => {
     };
 
     if (
-        !application.name ||
-        !application.ign ||
-        !application.uid ||
-        !application.level
-    ) {
-
-        alert("Please fill all required fields.");
-        return;
-
-    }
+    !application.name ||
+    !application.ign ||
+    !application.uid ||
+    !application.email ||
+    !application.level
+) {
+    alert("Please fill all required fields.");
+    return;
+}
 
     const btn = document.getElementById("applyBtn");
 

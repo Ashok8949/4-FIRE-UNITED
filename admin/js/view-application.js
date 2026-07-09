@@ -28,6 +28,7 @@ docRef.get()
 
     const a = doc.data();
 
+    document.getElementById("adminMessage").value = a.message || "";
     document.getElementById("name").textContent = a.name;
     document.getElementById("ign").textContent = a.ign;
     document.getElementById("uid").textContent = a.uid;
@@ -42,5 +43,72 @@ docRef.get()
 .catch((err) => {
 
     console.error(err);
+
+});
+
+// ===============================
+// Accept Application
+// ===============================
+
+document.getElementById("acceptBtn").addEventListener("click", () => {
+
+    const message = document.getElementById("adminMessage").value.trim();
+
+    docRef.update({
+
+        status: "Accepted",
+        message: message
+
+    })
+
+    .then(() => {
+
+        alert("✅ Application Accepted!");
+
+        location.reload();
+
+    })
+
+    .catch((err) => {
+
+        console.error(err);
+
+        alert("❌ Failed!");
+
+    });
+
+});
+
+
+// ===============================
+// Reject Application
+// ===============================
+
+document.getElementById("rejectBtn").addEventListener("click", () => {
+
+    const message = document.getElementById("adminMessage").value.trim();
+
+    docRef.update({
+
+        status: "Rejected",
+        message: message
+
+    })
+
+    .then(() => {
+
+        alert("❌ Application Rejected!");
+
+        location.reload();
+
+    })
+
+    .catch((err) => {
+
+        console.error(err);
+
+        alert("❌ Failed!");
+
+    });
 
 });

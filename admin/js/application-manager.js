@@ -50,6 +50,8 @@ function renderApplications(list) {
 
             <td>${a.uid || "-"}</td>
 
+            <td>${a.email || "-"}</td>
+
             <td>${a.rank || "-"}</td>
 
             <td>${a.status || "Pending"}</td>
@@ -96,7 +98,7 @@ function renderApplications(list) {
 }
 
 // ===============================
-// Accept / Reject
+// Update Status
 // ===============================
 
 function updateStatus(id, status) {
@@ -128,12 +130,14 @@ function updateStatus(id, status) {
 }
 
 // ===============================
-// Delete
+// Delete Application
 // ===============================
 
 function deleteApplication(id) {
 
-    if (!confirm("Delete this application?")) return;
+    if (!confirm("Are you sure you want to delete this application?")) {
+        return;
+    }
 
     db.collection("joinApplications")
     .doc(id)
@@ -141,7 +145,7 @@ function deleteApplication(id) {
 
     .then(() => {
 
-        alert("✅ Application Deleted!");
+        alert("🗑️ Application Deleted Successfully!");
 
         location.reload();
 
@@ -151,7 +155,7 @@ function deleteApplication(id) {
 
         console.error(err);
 
-        alert("❌ Delete Failed!");
+        alert("❌ Failed to delete application!");
 
     });
 
@@ -176,6 +180,7 @@ if (search) {
                 (a.name || "").toLowerCase().includes(value) ||
                 (a.ign || "").toLowerCase().includes(value) ||
                 (a.uid || "").toLowerCase().includes(value) ||
+                (a.email || "").toLowerCase().includes(value) ||
                 (a.rank || "").toLowerCase().includes(value)
 
             );
