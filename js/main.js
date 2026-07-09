@@ -385,6 +385,7 @@ document.addEventListener("visibilitychange", () => {
     localStorage.setItem(KEY, now);
 
     if (typeof db === "undefined") return;
+    console.log("DB:", db);
 
     db.collection("stats")
         .doc("visitors")
@@ -400,6 +401,10 @@ document.addEventListener("visibilitychange", () => {
             merge: true
 
         })
+
+        .then(() => {
+        console.log("Visitor Updated");
+           })
 
         .catch((err) => {
 
