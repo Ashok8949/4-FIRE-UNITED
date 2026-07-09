@@ -1597,45 +1597,28 @@ cursor:pointer;
 ==========================*/
 
 #scrollTop{
-
-position:fixed;
-
-right:25px;
-
-bottom:25px;
-
-width:55px;
-
-height:55px;
-
-border:none;
-
-border-radius:50%;
-
-background:linear-gradient(45deg,#ff3c00,#ff7a00);
-
-color:#fff;
-
-font-size:22px;
-
-cursor:pointer;
-
-display:none;
-
-z-index:999;
-
-box-shadow:0 0 20px rgba(255,60,0,.4);
-
-transition:.4s;
-
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#ff6a00,#ff8c00);
+    color:#fff;
+    border:none;
+    cursor:pointer;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    font-size:22px;
+    z-index:9999;
+    box-shadow:0 0 20px rgba(255,106,0,.45);
+    transition:.3s;
 }
 
 #scrollTop:hover{
-
-transform:translateY(-6px);
-
+    transform:translateY(-4px) scale(1.08);
 }
-
 
 /*==========================
       BUTTON RIPPLE
