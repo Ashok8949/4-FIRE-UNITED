@@ -271,60 +271,7 @@ right:-260px;
 
 }
 
-.bullet-right::after{
 
-left:-16px;
-right:auto;
-
-}
-
-.bullet-right::before{
-
-left:100%;
-right:auto;
-
-background:
-
-linear-gradient(
-to right,
-rgba(255,180,0,.95),
-rgba(255,110,0,.65),
-rgba(255,70,0,.25),
-transparent
-);
-}
-
-.bullet-right::after{
-
-left:-16px;
-
-right:auto;
-
-}
-
-.bullet-right::before{
-
-left:100%;
-
-right:auto;
-
-background:
-
-linear-gradient(
-
-to right,
-
-rgba(255,180,0,.95),
-
-rgba(255,110,0,.65),
-
-rgba(255,70,0,.25),
-
-transparent
-
-);
-
-}
 
 /*=========================================
         BULLET MOVE
@@ -365,18 +312,16 @@ transform:translateX(calc(50vw + 150px));
 @keyframes bulletRight{
 
 0%{
-
-transform:translateX(0) rotate(180deg);
-
+    transform: translateX(0) scaleX(-1);
 }
 
 100%{
-
-transform:translateX(calc(-50vw - 150px)) rotate(180deg);
-
+    transform: translateX(calc(-50vw - 150px)) scaleX(-1);
 }
 
 }
+
+
 /*=========================================
         CINEMATIC IMPACT V2
 =========================================*/
