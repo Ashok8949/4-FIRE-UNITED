@@ -10,7 +10,7 @@ if (!playerId) {
 
 const docRef = db.collection("players").doc(playerId);
 
-let selectedImage = null;
+
 
 // ==========================================
 // LOAD PLAYER
@@ -36,6 +36,8 @@ docRef.get().then((doc) => {
     document.getElementById("rank").value = p.rank || "";
     document.getElementById("kd").value = p.kd || "";
     document.getElementById("headshot").value = p.headshot || "";
+    document.getElementById("matches").value = p.matches || 0;
+    document.getElementById("booyah").value = p.booyah || 0;
     document.getElementById("guild").value = p.guild || "";
     document.getElementById("language").value = p.language || "";
 
@@ -52,9 +54,12 @@ docRef.get().then((doc) => {
 
     if (p.image) {
 
-        previewImage.src = p.image;
+    previewImage.src = p.image;
 
-    }
+    document.getElementById("image").value =
+        p.image.split("/").pop();
+
+}
 
 })
 
@@ -80,6 +85,8 @@ document.getElementById("saveBtn").addEventListener("click", () => {
         rank: document.getElementById("rank").value.trim(),
         kd: document.getElementById("kd").value.trim(),
         headshot: document.getElementById("headshot").value.trim(),
+        matches: Number(document.getElementById("matches").value) || 0,
+        booyah: Number(document.getElementById("booyah").value) || 0,
         guild: document.getElementById("guild").value.trim(),
         language: document.getElementById("language").value.trim(),
 
@@ -88,9 +95,14 @@ document.getElementById("saveBtn").addEventListener("click", () => {
         instagram: document.getElementById("instagram").value.trim(),
         youtube: document.getElementById("youtube").value.trim(),
         discord: document.getElementById("discord").value.trim(),
-        facebook: document.getElementById("facebook").value.trim()
+        facebook: document.getElementById("facebook").value.trim(),
+
+        image: document.getElementById("image").value.trim()
+      ? "../images/" + document.getElementById("image").value.trim()
+      : "../images/logo/logo.png",
 
     };
+    
 
     docRef.update(data)
 
@@ -112,26 +124,4 @@ document.getElementById("saveBtn").addEventListener("click", () => {
 
 });
 
-// ==========================================
-// IMAGE PREVIEW
-// ==========================================
 
-const imageInput = document.getElementById("playerImage");
-
-const previewImage = document.getElementById("previewImage");
-
-if (imageInput && previewImage) {
-
-    imageInput.addEventListener("change", (e) => {
-
-        const file = e.target.files[0];
-
-        if (!file) return;
-
-        selectedImage = file;
-
-        previewImage.src = URL.createObjectURL(file);
-
-    });
-
-}

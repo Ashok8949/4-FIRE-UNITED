@@ -15,21 +15,21 @@ db.collection("players")
 
         <div class="team-card">
 
-            <img src="${p.image}" alt="${p.name}">
+            <img src="${p.image}" alt="${p.ign || p.name}">
 
             <div class="team-info">
 
-                <h2>${p.name}</h2>
+                <h2>${p.ign || p.name}</h2>
 
                 <span>${p.role}</span>
 
                 <div class="mini-stats">
 
-                    <p>❤️ Level ${p.level}</p>
+                    <p>❤️ Level ${p.level || "-"}</p>
 
-                    <p>🎯 HS ${p.headshot}</p>
+                    <p>🎯 HS ${p.headshot || "-"}</p>
 
-                    <p>⚔️ KD ${p.kd}</p>
+                    <p>⚔️ KD ${p.kd || "-"}</p>
 
                 </div>
 

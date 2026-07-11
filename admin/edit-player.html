@@ -15,6 +15,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <link rel="stylesheet" href="CSS/dashboard.css">
 
+<style>
+body{
+    visibility:hidden;
+}
+</style>
+
 </head>
 
 <body>
@@ -45,16 +51,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                  src="../images/logo/logo.png"
                  alt="Player">
 
-            <label for="playerImage" class="upload-btn">
-                <i class="fa-solid fa-camera"></i>
-                Upload Player Image
+            <label class="upload-btn">
+
+                  <i class="fa-solid fa-image"></i>
+
+               Player Image File Name
+
             </label>
 
-            <input
-                type="file"
-                id="playerImage"
-                accept="image/*"
-                hidden>
+            <input type="text" id="image" placeholder="player1.png">
 
         </div>
 
@@ -91,6 +96,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
             <input type="text" id="kd" placeholder="KD">
 
             <input type="text" id="headshot" placeholder="Headshot %">
+
+            <input type="number" id="matches" placeholder="Matches">
+
+            <input type="number" id="booyah" placeholder="Booyah">
 
         </div>
 

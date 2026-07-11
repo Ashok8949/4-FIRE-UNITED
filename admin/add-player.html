@@ -15,6 +15,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <link rel="stylesheet" href="CSS/dashboard.css">
 
+<style>
+body{
+    visibility:hidden;
+}
+</style>
+
 </head>
 
 <body>
@@ -40,16 +46,27 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
              src="../images/logo/logo.png"
              alt="Player">
 
-        <label for="image" class="upload-btn">
-            <i class="fa-solid fa-camera"></i>
-            Upload Player Image
-        </label>
+        <label class="upload-btn">
 
-        <input
-            type="file"
-            id="image"
-            accept="image/*"
-            hidden>
+    <i class="fa-solid fa-image"></i>
+
+    Player Image File Name
+
+</label>
+
+<select id="image">
+
+    <option value="">Select Player Image</option>
+
+    <option value="player1.png">player1.png</option>
+    <option value="player2.png">player2.png</option>
+    <option value="player3.png">player3.png</option>
+    <option value="player4.png">player4.png</option>
+    <option value="player5.png">player5.png</option>
+    <option value="player6.png">player6.png</option>
+    <option value="player7.png">player7.png</option>
+
+</select>
 
     </div>
 
@@ -73,6 +90,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <input type="text" id="language" placeholder="Language">
 
+        
+
     </div>
 
     <!-- ========================= -->
@@ -90,6 +109,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         <input type="text" id="kd" placeholder="KD">
 
         <input type="text" id="headshot" placeholder="Headshot %">
+
+        <input type="number" id="matches" placeholder="Matches">
+
+        <input type="number" id="booyah" placeholder="Booyah">
 
     </div>
 
