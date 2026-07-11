@@ -2,73 +2,105 @@ let players = [];
 let current = 0;
 
 db.collection("players")
+.where("featured", "==", true)
 .get()
-.then((snapshot)=>{
+.then((snapshot) => {
 
-    snapshot.forEach(doc=>{
+    snapshot.forEach((doc) => {
 
         players.push({
-            id:doc.id,
+            id: doc.id,
             ...doc.data()
         });
 
     });
 
+    // Sort players
+    players.sort((a, b) => {
+
+        // Owner always first
+        if (a.owner === true) return -1;
+        if (b.owner === true) return 1;
+
+        // Last edited player after owner
+        const editA = a.lastEdited?.toMillis
+            ? a.lastEdited.toMillis()
+            : new Date(a.lastEdited || 0).getTime();
+
+        const editB = b.lastEdited?.toMillis
+            ? b.lastEdited.toMillis()
+            : new Date(b.lastEdited || 0).getTime();
+
+        if (editA !== editB) {
+            return editB - editA;
+        }
+
+        // Remaining players by created date
+        const createA = a.createdAt?.toMillis
+            ? a.createdAt.toMillis()
+            : new Date(a.createdAt || 0).getTime();
+
+        const createB = b.createdAt?.toMillis
+            ? b.createdAt.toMillis()
+            : new Date(b.createdAt || 0).getTime();
+
+        return createA - createB;
+
+    });
+
     loadCards();
 
-    if(players.length>3){
-
-        let autoSlide = setInterval(nextSlide,5000);
-
-const container = document.getElementById("featured-players");
-
-container.addEventListener("mouseenter",()=>{
-
-    clearInterval(autoSlide);
+   
 
 });
 
-container.addEventListener("mouseleave",()=>{
-
-    autoSlide = setInterval(nextSlide,5000);
-
-});
-
-    }
-
-});
-
-function loadCards(){
+function loadCards() {
 
     const container = document.getElementById("featured-players");
 
-    const html = [];
+    container.innerHTML = "";
 
-    for(let i=0;i<3;i++){
+    players.slice(0,3).forEach(player=>{
 
-        const player = players[(current+i)%players.length];
+        container.innerHTML += card(player);
 
-        html.push(card(player));
-
-    }
-
-    container.innerHTML = html.join("");
+    });
 
 }
 
-function card(p){
+function card(p) {
 
     return `
-    <div class="player-card">
+    <div class="player-card ${p.owner ? "owner-card" : ""}">
 
-        <img src="${p.image.replace("../","")}" alt="${p.ign}">
+        <div class="player-image">
 
-        <div class="player-info">
+            <img src="${p.image.replace("../","")}" alt="${p.ign}">
 
-            <h3>${p.ign}</h3>
+            ${p.owner ? `
+                <div class="owner-crown">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+            ` : ""}
 
-            <span>${p.role}</span>
+        </div>
 
+             <div class="player-info">
+
+               <div class="player-title">
+
+    <h3>${p.ign}</h3>
+
+    ${p.owner ? `
+    <span class="owner-badge">
+        <i class="fa-solid fa-crown"></i>
+        OWNER
+    </span>
+    ` : ""}
+
+</div>
+
+    <span>${p.role}</span>
             <div class="mini-stats">
 
                 <p>❤️ Level ${p.level || "-"}</p>
@@ -90,32 +122,3 @@ function card(p){
 
 }
 
-function nextSlide(){
-
-    const container = document.getElementById("featured-players");
-
-    container.style.opacity = "0";
-    container.style.transform = "translateX(-60px)";
-
-    setTimeout(()=>{
-
-        current++;
-
-        if(current >= players.length){
-
-           current = 0;
-
-        }
-
-        if(current === players.length - 2){
-         current = 0;
-        }
-
-        loadCards();
-
-        container.style.opacity = "1";
-        container.style.transform = "translateX(0)";
-
-    },300);
-
-}

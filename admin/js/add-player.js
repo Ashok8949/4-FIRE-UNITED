@@ -27,6 +27,8 @@ document.getElementById("savePlayer").addEventListener("click", async () => {
      ? "../images/" + imageName
      : "../images/logo/logo.png",
 
+     featured: document.getElementById("featured").checked,
+
         createdAt:new Date()
 
     };

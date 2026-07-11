@@ -787,9 +787,15 @@ img{
 
 .team-info h2{
 
-    font-family:'Bebas Neue',sans-serif;
+    display:flex;
 
-    font-size:34px;
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:20px;
 
 }
 
@@ -2845,31 +2851,7 @@ font-size:18px;
 
 }
 
-.owner-badge{
 
-    display:inline-block;
-
-    margin-left:10px;
-
-    padding:4px 10px;
-
-    font-size:12px;
-
-    font-weight:700;
-
-    color:#111;
-
-    background:linear-gradient(135deg,#FFD700,#FFB300);
-
-    border-radius:30px;
-
-    vertical-align:middle;
-
-    box-shadow:0 0 12px rgba(255,215,0,.5);
-
-    animation:ownerGlow 2s infinite ease-in-out;
-
-}
 
 @keyframes ownerGlow{
 
@@ -2897,97 +2879,82 @@ font-size:18px;
 
     position:absolute;
 
-    top:15px;
+    top:-30px;
 
-    left:15px;
-
-    z-index:20;
-
-    background:linear-gradient(135deg,#FFD700,#FF8C00);
-
-    color:#111;
-
-    font-size:12px;
-
-    font-weight:700;
-
-    padding:8px 14px;
-
-    border-radius:30px;
+    left:-20px;
 
     display:flex;
 
     align-items:center;
 
-    gap:8px;
+    gap:5px;
 
-    box-shadow:0 0 20px rgba(255,170,0,.45);
+    padding:4px 8px;
 
-    animation:ownerGlow 2s infinite;
+    border-radius:20px;
+
+    background:linear-gradient(135deg,#FFD700,#FFA500);
+
+    color:#000;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    letter-spacing:.5px;
+
+    text-transform:uppercase;
+
+    border:1px solid rgba(255,255,255,.45);
+
+    box-shadow:
+        0 0 12px rgba(255,215,0,.9),
+        0 0 24px rgba(255,170,0,.6);
+
+    z-index:10;
+
+    transition:.3s ease;
 
 }
 
 .owner-tag i{
 
-    color:#fff;
+    color:#000;
 
-    font-size:13px;
+    font-size:12px;
+
+}
+
+.player-image{
+
+    position:relative;
 
 }
 
-@keyframes ownerGlow{
 
-    0%{
-        box-shadow:0 0 10px rgba(255,170,0,.4);
-    }
-
-    50%{
-        box-shadow:0 0 25px rgba(255,170,0,.9);
-    }
-
-    100%{
-        box-shadow:0 0 10px rgba(255,170,0,.4);
-    }
-
-}
+/*==========================
+      OWNER HOME CARD
+==========================*/
 
 .owner-card{
 
     border:2px solid #FFD700 !important;
 
     box-shadow:
-        0 0 15px rgba(255,215,0,.4),
-        0 0 35px rgba(255,140,0,.25);
+        0 0 15px rgba(255,215,0,.45),
+        0 0 40px rgba(255,170,0,.35);
 
-    animation:ownerBorder 2s ease-in-out infinite;
+    animation:ownerGlow 2s infinite ease-in-out;
 
 }
 
-@keyframes ownerBorder{
+.owner-card:hover{
 
-    0%{
+    transform:translateY(-12px);
 
-        box-shadow:
-            0 0 15px rgba(255,215,0,.35),
-            0 0 30px rgba(255,140,0,.20);
-
-    }
-
-    50%{
-
-        box-shadow:
-            0 0 30px rgba(255,215,0,.8),
-            0 0 60px rgba(255,140,0,.45);
-
-    }
-
-    100%{
-
-        box-shadow:
-            0 0 15px rgba(255,215,0,.35),
-            0 0 30px rgba(255,140,0,.20);
-
-    }
+    box-shadow:
+        0 0 25px rgba(255,215,0,.7),
+        0 0 60px rgba(255,170,0,.45);
 
 }
 
@@ -3001,9 +2968,9 @@ font-size:18px;
 
     position:absolute;
 
-    top:12px;
+    top:15px;
 
-    right:12px;
+    right:15px;
 
     width:42px;
 
@@ -3011,36 +2978,131 @@ font-size:18px;
 
     border-radius:50%;
 
-    display:flex;
+    background:linear-gradient(135deg,#FFD700,#FF9800);
 
-    align-items:center;
+    display:flex;
 
     justify-content:center;
 
-    background:linear-gradient(135deg,#FFD700,#FF8C00);
+    align-items:center;
 
     color:#fff;
 
     font-size:18px;
 
-    box-shadow:0 0 20px rgba(255,170,0,.6);
-
-    animation:crownFloat 2s ease-in-out infinite;
+    box-shadow:0 0 18px rgba(255,170,0,.6);
 
 }
 
-@keyframes crownFloat{
+.player-title{
 
-    0%,100%{
+    position:relative;
 
-        transform:translateY(0);
+    display:flex;
 
-    }
+    justify-content:center;
 
-    50%{
+    align-items:center;
 
-        transform:translateY(-5px);
-
-    }
+    width:100%;
 
 }
+
+.player-title h3{
+
+    margin:0;
+
+    font-size:34px;
+
+    font-family:'Bebas Neue',sans-serif;
+
+}
+
+.owner-card .owner-badge{
+
+    position:absolute;
+
+    left:55px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+    background:linear-gradient(135deg,#FFD700,#FF9800);
+
+    color:#111;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    box-shadow:0 0 10px rgba(255,180,0,.5);
+
+}
+
+.owner-card .player-info{
+
+    align-items:center;
+
+}
+
+.owner-card .player-title{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.owner-card .owner-badge{
+
+    margin-left:-55px;
+
+    margin-right:8px;
+
+}
+
+.owner-card .player-title h3{
+
+    margin:0;
+
+}
+
+.owner-card:hover img{
+
+    transform:scale(1.05);
+
+}
+
+.owner-name{
+
+    position:relative;
+
+    width:100%;
+
+}
+
+.owner-name h2{
+
+    margin:0;
+
+    text-align:center;
+
+}
+

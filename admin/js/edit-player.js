@@ -41,6 +41,8 @@ docRef.get().then((doc) => {
     document.getElementById("guild").value = p.guild || "";
     document.getElementById("language").value = p.language || "";
 
+    document.getElementById("featured").checked = p.featured || false;
+
     // ==========================
     // Social Media
     // ==========================
@@ -89,6 +91,7 @@ document.getElementById("saveBtn").addEventListener("click", () => {
         booyah: Number(document.getElementById("booyah").value) || 0,
         guild: document.getElementById("guild").value.trim(),
         language: document.getElementById("language").value.trim(),
+        featured: document.getElementById("featured").checked,
 
         // Social Media
 

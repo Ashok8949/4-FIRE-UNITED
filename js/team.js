@@ -71,16 +71,20 @@ db.collection("players")
 
             <div class="team-info">
 
-              <h2>
-                ${p.ign || p.name}
+            
 
-               ${p.owner ? `
-               <div class="owner-tag">
-                 <i class="fa-solid fa-crown"></i> TEAM OWNER
-                </div>
-               ` : ""}
+ <div class="owner-name">
 
-              </h2>
+    ${p.owner ? `
+    <span class="owner-tag">
+        <i class="fa-solid fa-crown"></i>
+        TEAM OWNER
+    </span>
+    ` : ""}
+
+    <h2>${p.ign || p.name}</h2>
+
+</div>
 
                 <span>${p.role}</span>
 
