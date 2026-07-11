@@ -1,39 +1,121 @@
-fetch("data/players.json")
-.then(res => res.json())
-.then(data => {
+let players = [];
+let current = 0;
+
+db.collection("players")
+.get()
+.then((snapshot)=>{
+
+    snapshot.forEach(doc=>{
+
+        players.push({
+            id:doc.id,
+            ...doc.data()
+        });
+
+    });
+
+    loadCards();
+
+    if(players.length>3){
+
+        let autoSlide = setInterval(nextSlide,5000);
+
+const container = document.getElementById("featured-players");
+
+container.addEventListener("mouseenter",()=>{
+
+    clearInterval(autoSlide);
+
+});
+
+container.addEventListener("mouseleave",()=>{
+
+    autoSlide = setInterval(nextSlide,5000);
+
+});
+
+    }
+
+});
+
+function loadCards(){
 
     const container = document.getElementById("featured-players");
 
-    container.innerHTML = "";
+    const html = [];
 
-    let count = 0;
+    for(let i=0;i<3;i++){
 
-    Object.keys(data).forEach(key => {
+        const player = players[(current+i)%players.length];
 
-        if(count >= 3) return;
+        html.push(card(player));
 
-        const p = data[key];
+    }
 
-        container.innerHTML += `
+    container.innerHTML = html.join("");
 
-        <div class="player-card">
+}
 
-            <img src="${p.image.replace("../","")}" alt="${p.name}">
+function card(p){
 
-            <h3>${p.name}</h3>
+    return `
+    <div class="player-card">
 
-            <p>${p.role}</p>
+        <img src="${p.image.replace("../","")}" alt="${p.ign}">
 
-            <a href="players/player.html?id=${key}">
+        <div class="player-info">
+
+            <h3>${p.ign}</h3>
+
+            <span>${p.role}</span>
+
+            <div class="mini-stats">
+
+                <p>❤️ Level ${p.level || "-"}</p>
+
+                <p>🎯 HS ${p.headshot || "-"}</p>
+
+                <p>⚔️ KD ${p.kd || "-"}</p>
+
+            </div>
+
+            <a href="players/player.html?id=${p.id}" class="btn1">
                 View Profile
             </a>
 
         </div>
 
-        `;
+    </div>
+    `;
 
-        count++;
+}
 
-    });
+function nextSlide(){
 
-});
+    const container = document.getElementById("featured-players");
+
+    container.style.opacity = "0";
+    container.style.transform = "translateX(-60px)";
+
+    setTimeout(()=>{
+
+        current++;
+
+        if(current >= players.length){
+
+           current = 0;
+
+        }
+
+        if(current === players.length - 2){
+         current = 0;
+        }
+
+        loadCards();
+
+        container.style.opacity = "1";
+        container.style.transform = "translateX(0)";
+
+    },300);
+
+}

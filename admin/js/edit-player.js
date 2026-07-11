@@ -101,6 +101,8 @@ document.getElementById("saveBtn").addEventListener("click", () => {
       ? "../images/" + document.getElementById("image").value.trim()
       : "../images/logo/logo.png",
 
+      lastEdited: new Date()
+
     };
     
 
