@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add Clip | 4 FIRE UNITED</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="CSS/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="main">
+
+    <div class="topbar">
+
+        <h1>ADD CLIP</h1>
+
+        <a href="clips.html" class="back-btn">
+            ← Back
+        </a>
+
+    </div>
+
+    <div class="edit-box">
+
+        <input type="text" id="title" placeholder="Clip Title">
+
+        <input type="text" id="playerName" placeholder="Player Name">
+
+        <input type="file"
+       id="thumbnail"
+       accept="image/*">
+
+        <input type="file"
+       id="videoFile"
+       accept="video/mp4,video/webm,video/quicktime">
+
+        <input type="text" id="category" placeholder="Category">
+
+        <select id="clipType">
+
+    <option value="video">Upload Video</option>
+
+    <option value="youtube">YouTube</option>
+
+    <option value="instagram">Instagram Reel</option>
+
+</select>
+
+<input type="url"
+       id="videoUrl"
+       placeholder="Paste YouTube / Instagram URL"
+       style="display:none;">
+
+        <textarea id="description" placeholder="Description"></textarea>
+
+        <progress
+    id="uploadProgress"
+    value="0"
+    max="100"
+    style="width:100%;display:none;margin:15px 0;">
+</progress>
+
+<p id="uploadStatus"
+   style="display:none;
+          margin-top:10px;
+          color:#ff8a00;
+          font-weight:600;">
+</p>
+
+        <button class="save-btn" id="saveClip">
+
+            Save Clip
+
+        </button>
+
+    </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+
+<script src="js/firebase.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/add-clip.js"></script>
+
+</body>
+
+</html>

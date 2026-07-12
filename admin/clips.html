@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Manage Clips | 4 FIRE UNITED</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="CSS/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="main">
+
+    <div class="topbar">
+
+        <h1>GAMEPLAY CLIPS</h1>
+
+        <a href="add-clip.html" class="add-btn">
+
+            + Add Clip
+
+        </a>
+
+    </div>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>Thumbnail</th>
+
+                <th>Title</th>
+
+                <th>Player</th>
+
+                <th>Category</th>
+
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="clipsTable">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/clips.js"></script>
+
+</body>
+
+</html>

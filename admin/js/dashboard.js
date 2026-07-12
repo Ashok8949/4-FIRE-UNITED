@@ -106,6 +106,7 @@ function quickAction(id,page){
 quickAction("managePlayers","players.html");
 quickAction("manageTournament","tournaments.html");
 quickAction("manageGallery","gallery.html");
+quickAction("manageClips","clips.html");
 quickAction("manageNews","announcements.html");
 quickAction("manageMessages","messages.html");
 quickAction("manageApplications","applications.html");

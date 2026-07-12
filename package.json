@@ -1,0 +1,21 @@
+{
+  "name": "4fu",
+  "version": "1.0.0",
+  "description": "A premium esports team website with a complete Firebase-powered Admin CMS.",
+  "main": "update-version.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ashok8949/4-FIRE-UNITED.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ashok8949/4-FIRE-UNITED/issues"
+  },
+  "homepage": "https://github.com/Ashok8949/4-FIRE-UNITED#readme"
+}

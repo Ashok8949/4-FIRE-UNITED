@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Clip | 4 FIRE UNITED</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="CSS/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="main">
+
+    <div class="topbar">
+
+        <h1>EDIT CLIP</h1>
+
+        <a href="clips.html" class="back-btn">← Back</a>
+
+    </div>
+
+    <div class="edit-box">
+
+        <input type="text" id="title" placeholder="Clip Title">
+
+        <input type="text" id="playerName" placeholder="Player Name">
+
+        <input type="text" id="thumbnail" placeholder="Thumbnail URL">
+
+        <input type="url" id="videoUrl" placeholder="YouTube Link">
+
+        <input type="text" id="category" placeholder="Category">
+
+        <textarea id="description" placeholder="Description"></textarea>
+
+        <button id="updateClip" class="save-btn">
+            Update Clip
+        </button>
+
+    </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/edit-clip.js"></script>
+
+</body>
+</html>
