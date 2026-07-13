@@ -1,6 +1,4 @@
-db.collection("gallery")
-.get()
-.then((snapshot) => {
+document.addEventListener("homeDataReady", () => {
 
     const gallery = document.getElementById("gallery-grid");
 
@@ -8,7 +6,7 @@ db.collection("gallery")
 
     let html = "";
 
-    snapshot.forEach((doc) => {
+    window.homeData.gallery.forEach((doc) => {
 
         const g = doc.data();
 
@@ -35,10 +33,5 @@ db.collection("gallery")
     });
 
     gallery.innerHTML = html;
-
-})
-.catch((error) => {
-
-    console.error("Gallery Error:", error);
 
 });

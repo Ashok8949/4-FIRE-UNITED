@@ -1,12 +1,10 @@
 let players = [];
-let current = 0;
 
-db.collection("players")
-.where("featured", "==", true)
-.get()
-.then((snapshot) => {
+document.addEventListener("homeDataReady", () => {
 
-    snapshot.forEach((doc) => {
+    players = [];
+
+    window.homeData.players.forEach((doc) => {
 
         players.push({
             id: doc.id,
@@ -15,31 +13,27 @@ db.collection("players")
 
     });
 
-    // Sort players
-   players.sort((a, b) => {
+    players.sort((a, b) => {
 
-    // Owner hamesha first
-    if (a.owner === true) return -1;
-    if (b.owner === true) return 1;
+        // Owner hamesha first
+        if (a.owner === true) return -1;
+        if (b.owner === true) return 1;
 
-    // Display Order
-    const orderA = Number(a.displayOrder || 9999);
-    const orderB = Number(b.displayOrder || 9999);
+        // Display Order
+        const orderA = Number(a.displayOrder || 9999);
+        const orderB = Number(b.displayOrder || 9999);
 
-    if (orderA !== orderB) {
+        if (orderA !== orderB) {
 
-        return orderA - orderB;
+            return orderA - orderB;
 
-    }
+        }
 
-    // Same order ho to name se sort
-    return (a.name || "").localeCompare(b.name || "");
+        return (a.name || "").localeCompare(b.name || "");
 
-});
+    });
 
     loadCards();
-
-   
 
 });
 
@@ -47,11 +41,11 @@ function loadCards() {
 
     const container = document.getElementById("featured-players");
 
-    container.innerHTML = "";
+    if (!container) return;
 
     let html = "";
 
-    players.slice(0,3).forEach(player => {
+    players.slice(0, 3).forEach((player) => {
 
         html += card(player);
 
@@ -64,15 +58,16 @@ function loadCards() {
 function card(p) {
 
     return `
+
     <div class="player-card ${p.owner ? "owner-card" : ""}">
 
         <div class="player-image">
 
             <img
-    src="${p.image.replace("../","")}"
-    alt="${p.ign}"
-    loading="lazy"
-    decoding="async">
+                src="${p.image.replace("../","")}"
+                alt="${p.ign}"
+                loading="lazy"
+                decoding="async">
 
             ${p.owner ? `
                 <div class="owner-crown">
@@ -82,22 +77,23 @@ function card(p) {
 
         </div>
 
-             <div class="player-info">
+        <div class="player-info">
 
-               <div class="player-title">
+            <div class="player-title">
 
-    <h3>${p.ign}</h3>
+                <h3>${p.ign}</h3>
 
-    ${p.owner ? `
-    <span class="owner-badge">
-        <i class="fa-solid fa-crown"></i>
-        OWNER
-    </span>
-    ` : ""}
+                ${p.owner ? `
+                    <span class="owner-badge">
+                        <i class="fa-solid fa-crown"></i>
+                        OWNER
+                    </span>
+                ` : ""}
 
-</div>
+            </div>
 
-    <span>${p.role}</span>
+            <span>${p.role}</span>
+
             <div class="mini-stats">
 
                 <p>❤️ Level ${p.level || "-"}</p>
@@ -109,13 +105,15 @@ function card(p) {
             </div>
 
             <a href="players/player.html?id=${p.id}" class="btn1">
+
                 View Profile
+
             </a>
 
         </div>
 
     </div>
+
     `;
 
 }
-

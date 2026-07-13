@@ -1,209 +1,146 @@
-// ===============================
-// LATEST ANNOUNCEMENT
-// ===============================
+document.addEventListener("homeDataReady", () => {
 
-db.collection("announcements")
-.orderBy("date", "desc")
-.limit(1)
-.get()
+    // ===============================
+    // Latest Announcement
+    // ===============================
 
-.then((snapshot) => {
+    const announcementBox = document.getElementById("announcement-box");
 
-    const box = document.getElementById("announcement-box");
+    if (announcementBox) {
 
-    if (!box) return;
+        if (window.homeData.announcement.empty) {
 
-    if (snapshot.empty) {
+            announcementBox.innerHTML = `
+                <div class="announcement-card">
+                    <h3>No Announcement</h3>
+                    <p>No latest announcements available.</p>
+                </div>
+            `;
 
-        box.innerHTML = `
+        } else {
 
-        <div class="announcement-card">
+            const a = window.homeData.announcement.docs[0].data();
 
-            <h3>No Announcement</h3>
+            announcementBox.innerHTML = `
+                <div class="announcement-card">
 
-            <p>No latest announcements available.</p>
+                    <h3>${a.title}</h3>
 
-        </div>
+                    <p>${a.description}</p>
 
-        `;
+                    <div class="announcement-meta">
 
-        return;
+                        <span>
+                            <i class="fa-solid fa-tag"></i>
+                            ${a.category}
+                        </span>
 
-    }
+                        <span>
+                            <i class="fa-solid fa-calendar"></i>
+                            ${a.date}
+                        </span>
 
-    snapshot.forEach((doc) => {
+                        <span>
+                            <i class="fa-solid fa-circle-check"></i>
+                            ${a.status}
+                        </span>
 
-        const a = doc.data();
+                    </div>
 
-        box.innerHTML = `
-
-        <div class="announcement-card">
-
-            <h3>${a.title}</h3>
-
-            <p>${a.description}</p>
-
-            <div class="announcement-meta">
-
-                <span>
-                    <i class="fa-solid fa-tag"></i>
-                    ${a.category}
-                </span>
-
-                <span>
-                    <i class="fa-solid fa-calendar"></i>
-                    ${a.date}
-                </span>
-
-                <span>
-                    <i class="fa-solid fa-circle-check"></i>
-                    ${a.status}
-                </span>
-
-            </div>
-
-        </div>
-
-        `;
-
-    });
-
-})
-
-.catch((err) => {
-
-    console.error(err);
-
-});
-
-
-// ===============================
-// FEATURED TOURNAMENT
-// ===============================
-
-db.collection("tournaments")
-.orderBy("date", "desc")
-.limit(1)
-.get()
-
-.then((snapshot) => {
-
-    const box = document.getElementById("featuredTournament");
-
-    if (!box) return;
-
-    if (snapshot.empty) {
-
-        box.innerHTML = `
-
-        <div class="announcement-card">
-
-            <h3>No Tournament Available</h3>
-
-            <p>No tournament found.</p>
-
-        </div>
-
-        `;
-
-        return;
+                </div>
+            `;
+        }
 
     }
 
-    snapshot.forEach((doc) => {
+    // ===============================
+    // Featured Tournament
+    // ===============================
 
-        const t = doc.data();
+    const tournamentBox = document.getElementById("featuredTournament");
 
-        box.innerHTML = `
+    if (tournamentBox) {
 
-        <div class="announcement-card">
+        if (window.homeData.tournament.empty) {
 
-            <h3>${t.title}</h3>
+            tournamentBox.innerHTML = `
+                <div class="announcement-card">
+                    <h3>No Tournament Available</h3>
+                    <p>No tournament found.</p>
+                </div>
+            `;
 
-            <p>
+        } else {
 
-                <strong>🎮 Game:</strong> ${t.game}<br>
-                <strong>👥 Mode:</strong> ${t.mode}<br>
-                <strong>🏆 Prize:</strong> ${t.prize}
+            const t = window.homeData.tournament.docs[0].data();
 
-            </p>
+            tournamentBox.innerHTML = `
+                <div class="announcement-card">
 
-            <div class="announcement-meta">
+                    <h3>${t.title}</h3>
 
-                <span>
-                    <i class="fa-solid fa-calendar"></i>
-                    ${t.date}
-                </span>
+                    <p>
 
-                <span>
-                    <i class="fa-solid fa-clock"></i>
-                    ${t.time}
-                </span>
+                        <strong>🎮 Game:</strong> ${t.game}<br>
 
-                <span>
-                    <i class="fa-solid fa-circle-check"></i>
-                    ${t.status}
-                </span>
+                        <strong>👥 Mode:</strong> ${t.mode}<br>
 
-            </div>
+                        <strong>🏆 Prize:</strong> ${t.prize}
 
-        </div>
+                    </p>
 
-        `;
+                    <div class="announcement-meta">
 
-    });
+                        <span>
 
-})
+                            <i class="fa-solid fa-calendar"></i>
 
-.catch((err) => {
+                            ${t.date}
 
-    console.error(err);
+                        </span>
 
-});
-// ===============================
-// LIVE STATISTICS
-// ===============================
+                        <span>
 
-// Players
-db.collection("players")
-.get()
-.then((snapshot) => {
+                            <i class="fa-solid fa-clock"></i>
+
+                            ${t.time}
+
+                        </span>
+
+                        <span>
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            ${t.status}
+
+                        </span>
+
+                    </div>
+
+                </div>
+            `;
+
+        }
+
+    }
+
+    // ===============================
+    // Statistics
+    // ===============================
 
     document.getElementById("totalPlayers").textContent =
-        snapshot.size;
-
-});
-
-// Tournaments
-db.collection("tournaments")
-.get()
-.then((snapshot) => {
+        window.homeData.players.size;
 
     document.getElementById("totalTournaments").textContent =
-        snapshot.size;
-
-});
-
-// Gallery
-db.collection("gallery")
-.get()
-.then((snapshot) => {
+        window.homeData.allTournaments.size;
 
     document.getElementById("totalGallery").textContent =
-        snapshot.size;
+        window.homeData.gallery.size;
 
-});
-
-// Visitors
-db.collection("stats")
-.doc("visitors")
-.get()
-.then((doc) => {
-
-    if (doc.exists) {
+    if (window.homeData.visitors.exists) {
 
         document.getElementById("totalVisitors").textContent =
-            doc.data().total || 0;
+            window.homeData.visitors.data().total || 0;
 
     }
 

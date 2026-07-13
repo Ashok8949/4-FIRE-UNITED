@@ -11,4 +11,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
+db.enablePersistence({
+    synchronizeTabs: true
+}).catch((err) => {
+
+    console.warn("Firestore Cache:", err.code);
+
+});
 const auth = firebase.auth();

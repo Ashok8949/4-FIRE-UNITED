@@ -367,34 +367,35 @@ document.addEventListener("visibilitychange", () => {
         VISITOR COUNTER
 =========================================*/
 
-(function () {
+window.addEventListener("load", () => {
 
-    const KEY = "4fu-last-visit";
+    setTimeout(() => {
 
-    const now = Date.now();
+        const KEY = "4fu-last-visit";
 
-    const lastVisit = Number(localStorage.getItem(KEY)) || 0;
+        const now = Date.now();
 
-    // Count only once every 30 minutes
-    if (now - lastVisit < 30 * 60 * 1000) {
+        const lastVisit =
+            Number(localStorage.getItem(KEY)) || 0;
 
-        return;
+        if (now - lastVisit < 30 * 60 * 1000) {
 
-    }
+            return;
 
-    localStorage.setItem(KEY, now);
+        }
 
-    if (typeof db === "undefined") return;
-    console.log("DB:", db);
+        localStorage.setItem(KEY, now);
 
-    db.collection("stats")
+        if (typeof db === "undefined") return;
+
+        db.collection("stats")
         .doc("visitors")
         .set({
 
             total: firebase.firestore.FieldValue.increment(1),
 
             lastVisit:
-                firebase.firestore.FieldValue.serverTimestamp()
+            firebase.firestore.FieldValue.serverTimestamp()
 
         }, {
 
@@ -402,17 +403,11 @@ document.addEventListener("visibilitychange", () => {
 
         })
 
-        .then(() => {
-        console.log("Visitor Updated");
-           })
+        .catch(console.error);
 
-        .catch((err) => {
+    },5000);
 
-            console.error("Visitor Error:", err);
-
-        });
-
-})();
+});
 
 /*=========================================
         DISABLE RIGHT CLICK
