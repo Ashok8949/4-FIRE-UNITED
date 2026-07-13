@@ -37,7 +37,10 @@ if (!playerKey) {
         document.getElementById("player-guild").textContent = p.guild || "";
         document.getElementById("player-language").textContent = p.language || "";
 
-        document.getElementById("player-image").src = "../" + p.image;
+        document.getElementById("player-image").src =
+    p.image.startsWith("http")
+        ? p.image
+        : "../" + p.image;
 
         // ==========================
         // PLAYER SOCIAL MEDIA
