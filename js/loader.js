@@ -3,11 +3,13 @@
       BULLET LOADER V2
 =========================================*/
 
-window.addEventListener("load", () => {
+document.addEventListener("DOMContentLoaded", () => {
 
     const loader = document.getElementById("loader");
 
     if (!loader) return;
+
+    loader.style.display = "flex";
 
     document.body.style.overflow = "hidden";
 
@@ -71,7 +73,7 @@ loader.classList.add("loader-hide");
 
 document.body.style.overflow="auto";
 
-},4000);
+},2200);
 
 /*==============================
         REMOVE
@@ -81,6 +83,6 @@ setTimeout(()=>{
 
 loader.remove();
 
-},4600);
+},2800);
 
 });
