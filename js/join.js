@@ -45,6 +45,22 @@ document.getElementById("joinForm").addEventListener("submit", (e) => {
 
     .then(() => {
 
+        db.collection("notifications").add({
+
+    title: "New Team Application",
+
+    message: `${application.gameName} applied to join the team`,
+
+    type: "application",
+
+    link: "applications.html",
+
+    isRead: false,
+
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+});
+
         alert("✅ Application Submitted Successfully!");
 
         document.getElementById("joinForm").reset();

@@ -18,11 +18,18 @@ db.collection("clips")
         return;
     }
 
-    const firstClip = snapshot.docs[0];
+    let featuredDoc =
+    snapshot.docs.find(doc => doc.data().featured === true);
 
-if (firstClip) {
+if (!featuredDoc) {
 
-    const featured = firstClip.data();
+    featuredDoc = snapshot.docs[0];
+
+}
+
+if (featuredDoc) {
+
+    const featured = featuredDoc.data();
 
     const banner = document.querySelector(".featured-clip");
 

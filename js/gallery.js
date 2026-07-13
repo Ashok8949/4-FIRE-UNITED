@@ -1,6 +1,7 @@
 db.collection("gallery")
 .get()
 .then((snapshot) => {
+    
 
     const gallery = document.getElementById("gallery-grid");
 

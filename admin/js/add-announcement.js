@@ -31,13 +31,30 @@ document.getElementById("saveAnnouncement").addEventListener("click", () => {
     db.collection("announcements")
     .add(announcement)
 
-    .then(() => {
+    .then(async () => {
 
-        alert("✅ Announcement Added Successfully!");
+    await db.collection("notifications").add({
 
-        window.location.href = "announcements.html";
+        title: "New Announcement",
 
-    })
+        message: announcement.title,
+
+        type: "announcement",
+
+        link: "announcements.html",
+
+        isRead: false,
+
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+    });
+
+    alert("✅ Announcement Added Successfully!");
+
+    window.location.href = "announcements.html";
+
+})
 
     .catch((err) => {
 

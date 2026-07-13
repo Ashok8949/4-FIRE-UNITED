@@ -43,7 +43,13 @@ function renderPlayers(players){
         <tr>
 
             <td>
-                <img src="../${p.image}" width="70">
+                <img
+    src="${
+        p.image.startsWith("http")
+            ? p.image
+            : "../" + p.image
+    }"
+    width="70">
             </td>
 
             <td>${p.name}</td>

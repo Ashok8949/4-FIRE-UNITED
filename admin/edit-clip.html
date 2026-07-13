@@ -32,13 +32,65 @@
 
         <input type="text" id="playerName" placeholder="Player Name">
 
-        <input type="text" id="thumbnail" placeholder="Thumbnail URL">
+       <label>Thumbnail</label>
 
-        <input type="url" id="videoUrl" placeholder="YouTube Link">
+<input
+    type="file"
+    id="thumbnail"
+    accept="image/*">
+
+        <label>Clip Type</label>
+
+<select id="clipType">
+
+    <option value="youtube">YouTube</option>
+
+    <option value="instagram">Instagram Reel</option>
+
+    <option value="video">Upload Video</option>
+
+</select>
+
+<input
+    type="url"
+    id="videoUrl"
+    placeholder="Video URL">
+
+<input
+    type="file"
+    id="videoFile"
+    accept="video/*"
+    style="display:none;">
 
         <input type="text" id="category" placeholder="Category">
 
         <textarea id="description" placeholder="Description"></textarea>
+
+        <div class="featured-option">
+
+    <label>
+
+        <input
+            type="checkbox"
+            id="featured">
+
+        ⭐ Make this Featured Clip
+
+    </label>
+
+</div>
+
+        <progress
+    id="uploadProgress"
+    value="0"
+    max="100"
+    style="display:none;width:100%;margin:15px 0;">
+</progress>
+
+<p
+    id="uploadStatus"
+    style="display:none;color:#ff7b00;font-weight:600;margin-bottom:15px;">
+</p>
 
         <button id="updateClip" class="save-btn">
             Update Clip

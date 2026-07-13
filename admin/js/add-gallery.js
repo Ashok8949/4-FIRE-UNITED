@@ -27,6 +27,22 @@ document.getElementById("saveGallery").addEventListener("click", () => {
 
     .then(() => {
 
+        db.collection("notifications").add({
+
+    title: "New Gallery Image",
+
+    message: "A new image was added to the gallery.",
+
+    type: "gallery",
+
+    link: "gallery.html",
+
+    isRead: false,
+
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+});
+
         alert("✅ Gallery Image Added Successfully!");
 
         window.location.href = "gallery.html";

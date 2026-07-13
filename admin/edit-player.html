@@ -53,13 +53,16 @@ body{
 
             <label class="upload-btn">
 
-                  <i class="fa-solid fa-image"></i>
+    <i class="fa-solid fa-image"></i>
 
-               Player Image File Name
+    Choose Player Image
 
-            </label>
+</label>
 
-            <input type="text" id="image" placeholder="player1.png">
+<input
+    type="file"
+    id="image"
+    accept="image/*">
 
         </div>
 
@@ -80,6 +83,11 @@ body{
             <input type="text" id="role" placeholder="Role">
 
             <input type="text" id="language" placeholder="Language">
+
+            <input
+    type="number"
+    id="displayOrder"
+    placeholder="Display Order (1,2,3...)">
 
             <div class="checkbox-group">
 
@@ -142,6 +150,27 @@ body{
                 placeholder="Facebook Profile Link">
 
         </div>
+
+        <progress
+    id="uploadProgress"
+    value="0"
+    max="100"
+    style="
+        width:100%;
+        display:none;
+        margin:18px 0;
+    ">
+</progress>
+
+<p
+    id="uploadStatus"
+    style="
+        display:none;
+        color:#ff8a00;
+        font-weight:600;
+        margin-bottom:15px;
+    ">
+</p>
 
         <button class="save-btn" id="saveBtn">
 

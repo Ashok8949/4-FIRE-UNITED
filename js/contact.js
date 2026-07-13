@@ -41,6 +41,22 @@ document.getElementById("contactForm").addEventListener("submit", (e) => {
 
     .then(() => {
 
+        db.collection("notifications").add({
+
+    title: "New Contact Message",
+
+    message: `${message.name} sent a message`,
+
+    type: "contact",
+
+    link: "messages.html",
+
+    isRead: false,
+
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+});
+
         alert("✅ Message Sent Successfully!");
 
         document.getElementById("contactForm").reset();

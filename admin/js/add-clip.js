@@ -139,6 +139,9 @@ saveBtn.addEventListener("click", async () => {
         const description =
             document.getElementById("description").value.trim();
 
+            const featured =
+    document.getElementById("featured").checked;
+
         if(title===""){
 
             alert("Enter Title");
@@ -276,6 +279,28 @@ saveBtn.addEventListener("click", async () => {
     thumbnail = "";
 
 }
+if (featured) {
+
+    const oldFeatured = await db.collection("clips")
+        .where("featured", "==", true)
+        .get();
+
+    const batch = db.batch();
+
+    oldFeatured.forEach(doc => {
+
+        batch.update(doc.ref, {
+
+            featured: false
+
+        });
+
+    });
+
+    await batch.commit();
+
+}
+            
 
         showProgress("Saving Clip...");
 
@@ -296,6 +321,8 @@ saveBtn.addEventListener("click", async () => {
             category:category,
 
             description:description,
+
+            featured: featured,
 
             createdAt:
             firebase.firestore.FieldValue.serverTimestamp()

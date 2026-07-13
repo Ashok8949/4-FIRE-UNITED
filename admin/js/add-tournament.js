@@ -36,13 +36,30 @@ document.getElementById("saveTournament").addEventListener("click", () => {
     db.collection("tournaments")
     .add(tournament)
 
-    .then(() => {
+    .then(async () => {
 
-        alert("✅ Tournament Added Successfully!");
+    await db.collection("notifications").add({
 
-        window.location.href = "tournaments.html";
+        title: "New Tournament Added",
 
-    })
+        message: tournament.title,
+
+        type: "tournament",
+
+        link: "tournaments.html",
+
+        isRead: false,
+
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+    });
+
+    alert("✅ Tournament Added Successfully!");
+
+    window.location.href = "tournaments.html";
+
+})
 
     .catch((error) => {
 

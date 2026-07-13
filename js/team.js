@@ -24,18 +24,14 @@ db.collection("players")
     if (a.owner === true) return -1;
     if (b.owner === true) return 1;
 
-    // Last edited player owner ke baad
-    const editA = a.lastEdited?.toMillis
-        ? a.lastEdited.toMillis()
-        : new Date(a.lastEdited || 0).getTime();
+    const orderA = Number(a.displayOrder || 9999);
+const orderB = Number(b.displayOrder || 9999);
 
-    const editB = b.lastEdited?.toMillis
-        ? b.lastEdited.toMillis()
-        : new Date(b.lastEdited || 0).getTime();
+if (orderA !== orderB) {
 
-    if (editA !== editB) {
-        return editB - editA; // sabse recently edited pehle
-    }
+    return orderA - orderB;
+
+}
 
     // Baaki players purane order me
     const createA = a.createdAt?.toMillis

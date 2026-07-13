@@ -112,17 +112,64 @@ body{
 
     <div class="admin">
 
-        <img src="../images/logo/logo.png">
+    <div class="notification">
 
-        <span>Administrator</span>
+        <i class="fa-solid fa-bell" id="notificationBell"></i>
 
-        <button id="logoutBtn" class="join-btn">
+        <span id="notificationCount">0</span>
 
-            Logout
+        <div class="notification-dropdown" id="notificationDropdown">
 
-        </button>
+           <div class="notification-header">
+
+    <h3>Notifications</h3>
+
+    <button id="clearReadBtn">
+
+        Clear Read
+
+    </button>
+
+</div>
+
+            <div id="notificationList">
+
+                <p class="empty-notification">
+
+                    No Notifications
+
+                </p>
+
+            </div>
+
+            <div style="padding:15px;text-align:center;">
+
+    <a href="notifications.html"
+       style="color:#ff7b00;
+              font-weight:600;
+              text-decoration:none;">
+
+        View All Notifications →
+
+    </a>
+
+</div>
+
+        </div>
 
     </div>
+
+    <img src="../images/logo/logo.png">
+
+    <span>Administrator</span>
+
+    <button id="logoutBtn" class="join-btn">
+
+        Logout
+
+    </button>
+
+</div>
 
 </div>
 
@@ -353,6 +400,11 @@ body{
 <script src="js/firebase.js?v=1783829699314"></script>
 <script src="js/auth-guard.js?v=1783829699314"></script>
 <script src="js/dashboard.js?v=1783829699314"></script>
+<script src="js/notifications.js"></script>
+
+<audio id="notificationSound" preload="auto">
+    <source src="sounds/notification.mp3" type="audio/mpeg">
+</audio>
 
 </body>
 </html>

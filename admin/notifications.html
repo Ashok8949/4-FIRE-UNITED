@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Notifications | 4 FIRE UNITED</title>
+
+<link rel="stylesheet" href="CSS/dashboard.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="main">
+
+    <div class="topbar">
+
+        <h1>NOTIFICATIONS</h1>
+
+        <div class="notification-toolbar">
+
+    <input
+        type="text"
+        id="notificationSearch"
+        placeholder="🔍 Search notifications...">
+
+    <select id="notificationFilter">
+
+        <option value="all">All</option>
+        <option value="unread">Unread</option>
+        <option value="read">Read</option>
+
+    </select>
+
+    <button id="markAllRead">
+
+        <i class="fa-solid fa-check-double"></i>
+
+        Mark All Read
+
+    </button>
+
+    <button id="clearReadBtn">
+
+        <i class="fa-solid fa-trash"></i>
+
+        Clear Read
+
+    </button>
+
+</div>
+
+       <a href="dashboard.html" class="dashboard-back-btn">
+
+    <i class="fa-solid fa-arrow-left"></i>
+
+    Dashboard
+
+</a>
+
+    </div>
+
+    <div id="allNotifications">
+
+    </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/notifications-page.js"></script>
+
+</body>
+
+</html>
