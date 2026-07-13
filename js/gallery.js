@@ -6,28 +6,35 @@ db.collection("gallery")
     const gallery = document.getElementById("gallery-grid");
 
     gallery.innerHTML = "";
+    let html = "";
 
     snapshot.forEach((doc) => {
 
         const g = doc.data();
 
-        gallery.innerHTML += `
+        html += `
 
-        <div class="gallery-box">
+<div class="gallery-box">
 
-            <img src="${g.image}" alt="${g.title}">
+    <img
+        src="${g.image}"
+        alt="${g.title}"
+        loading="lazy"
+        decoding="async">
 
-            <div class="gallery-overlay">
+    <div class="gallery-overlay">
 
-                <h3>${g.title}</h3>
+        <h3>${g.title}</h3>
 
-            </div>
+    </div>
 
-        </div>
+</div>
 
-        `;
+`;
 
     });
+
+    gallery.innerHTML = html;
 
 })
 .catch((error) => {

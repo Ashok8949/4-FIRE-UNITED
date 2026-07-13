@@ -73,7 +73,7 @@ loader.classList.add("loader-hide");
 
 document.body.style.overflow="auto";
 
-},2200);
+},4000);
 
 /*==============================
         REMOVE
@@ -83,6 +83,6 @@ setTimeout(()=>{
 
 loader.remove();
 
-},2800);
+},4600);
 
 });

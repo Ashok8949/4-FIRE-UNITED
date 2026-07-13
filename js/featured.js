@@ -16,37 +16,26 @@ db.collection("players")
     });
 
     // Sort players
-    players.sort((a, b) => {
+   players.sort((a, b) => {
 
-        // Owner always first
-        if (a.owner === true) return -1;
-        if (b.owner === true) return 1;
+    // Owner hamesha first
+    if (a.owner === true) return -1;
+    if (b.owner === true) return 1;
 
-        // Last edited player after owner
-        const editA = a.lastEdited?.toMillis
-            ? a.lastEdited.toMillis()
-            : new Date(a.lastEdited || 0).getTime();
+    // Display Order
+    const orderA = Number(a.displayOrder || 9999);
+    const orderB = Number(b.displayOrder || 9999);
 
-        const editB = b.lastEdited?.toMillis
-            ? b.lastEdited.toMillis()
-            : new Date(b.lastEdited || 0).getTime();
+    if (orderA !== orderB) {
 
-        if (editA !== editB) {
-            return editB - editA;
-        }
+        return orderA - orderB;
 
-        // Remaining players by created date
-        const createA = a.createdAt?.toMillis
-            ? a.createdAt.toMillis()
-            : new Date(a.createdAt || 0).getTime();
+    }
 
-        const createB = b.createdAt?.toMillis
-            ? b.createdAt.toMillis()
-            : new Date(b.createdAt || 0).getTime();
+    // Same order ho to name se sort
+    return (a.name || "").localeCompare(b.name || "");
 
-        return createA - createB;
-
-    });
+});
 
     loadCards();
 
@@ -60,11 +49,15 @@ function loadCards() {
 
     container.innerHTML = "";
 
-    players.slice(0,3).forEach(player=>{
+    let html = "";
 
-        container.innerHTML += card(player);
+    players.slice(0,3).forEach(player => {
+
+        html += card(player);
 
     });
+
+    container.innerHTML = html;
 
 }
 
@@ -75,7 +68,11 @@ function card(p) {
 
         <div class="player-image">
 
-            <img src="${p.image.replace("../","")}" alt="${p.ign}">
+            <img
+    src="${p.image.replace("../","")}"
+    alt="${p.ign}"
+    loading="lazy"
+    decoding="async">
 
             ${p.owner ? `
                 <div class="owner-crown">
