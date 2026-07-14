@@ -1,9 +1,11 @@
 const imageInput = document.getElementById("image");
+const weaponImageInput = document.getElementById("weaponImage");
 const progress = document.getElementById("uploadProgress");
 const status = document.getElementById("uploadStatus");
 const previewImage = document.getElementById("previewImage");
 
 let imageUrl = "../images/logo/logo.png";
+let weaponImageUrl = "";
 
 function showProgress(text){
 
@@ -107,7 +109,7 @@ imageInput.addEventListener("change", () => {
 document.getElementById("savePlayer").addEventListener("click", async () => {
 
    
-    showProgress("Uploading Image...");
+   showProgress("Uploading Player Image...");
     if (imageInput.files.length > 0) {
 
     const upload = await uploadToCloudinary(
@@ -120,6 +122,17 @@ document.getElementById("savePlayer").addEventListener("click", async () => {
 
 }
 
+if (weaponImageInput.files.length > 0) {
+    showProgress("Uploading Weapon Image...");
+
+    const upload = await uploadToCloudinary(
+        weaponImageInput.files[0]
+    );
+
+    weaponImageUrl = upload.secure_url;
+
+}
+
     const player = {
 
         name: document.getElementById("name").value.trim(),
@@ -128,6 +141,9 @@ document.getElementById("savePlayer").addEventListener("click", async () => {
         guild: document.getElementById("guild").value.trim(),
         role: document.getElementById("role").value.trim(),
         language: document.getElementById("language").value.trim(),
+        country: document.getElementById("country").value.trim(),
+
+since: document.getElementById("since").value.trim(),
 
         displayOrder: Number(
     document.getElementById("displayOrder").value
@@ -139,6 +155,12 @@ document.getElementById("savePlayer").addEventListener("click", async () => {
         headshot:document.getElementById("headshot").value.trim(),
         matches: Number(document.getElementById("matches").value) || 0,
         booyah: Number(document.getElementById("booyah").value) || 0,
+        weaponName: document.getElementById("weaponName").value.trim(),
+        weaponType: document.getElementById("weaponType").value.trim(),
+
+weaponQuote: document.getElementById("weaponQuote").value.trim(),
+
+weaponImage: weaponImageUrl,
 
         instagram:document.getElementById("instagram").value.trim(),
         youtube:document.getElementById("youtube").value.trim(),

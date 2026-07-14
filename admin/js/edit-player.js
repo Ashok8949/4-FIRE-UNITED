@@ -11,11 +11,13 @@ if (!playerId) {
 const docRef = db.collection("players").doc(playerId);
 
 const imageInput = document.getElementById("image");
+const weaponImageInput = document.getElementById("weaponImage");
 const previewImage = document.getElementById("previewImage");
 const progress = document.getElementById("uploadProgress");
 const status = document.getElementById("uploadStatus");
 
 let imageUrl = "";
+let weaponImageUrl = "";
 function showProgress(text){
 
     progress.style.display = "block";
@@ -142,6 +144,14 @@ docRef.get().then((doc) => {
     document.getElementById("booyah").value = p.booyah || 0;
     document.getElementById("guild").value = p.guild || "";
     document.getElementById("language").value = p.language || "";
+    document.getElementById("country").value = p.country || "";
+
+document.getElementById("since").value = p.since || "";
+    document.getElementById("weaponName").value = p.weaponName || "";
+
+document.getElementById("weaponType").value = p.weaponType || "";
+
+document.getElementById("weaponQuote").value = p.weaponQuote || "";
 
 document.getElementById("displayOrder").value =
     p.displayOrder || "";
@@ -162,6 +172,7 @@ document.getElementById("displayOrder").value =
    if (p.image) {
 
     imageUrl = p.image;
+    weaponImageUrl = p.weaponImage || "";
 
     previewImage.src = p.image;
 
@@ -183,7 +194,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
 
     if (imageInput.files.length > 0) {
 
-    showProgress("Uploading Image...");
+   showProgress("Uploading Player Image...");
 
     const upload = await uploadToCloudinary(
         imageInput.files[0]
@@ -197,17 +208,20 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
 
 }
 
-    if (imageInput.files.length > 0) {
+showProgress("Uploading Weapon Image...");
+
+if (weaponImageInput.files.length > 0) {
 
     const upload = await uploadToCloudinary(
-
-        imageInput.files[0]
-
+        weaponImageInput.files[0]
     );
 
-    imageUrl = upload.secure_url;
+    weaponImageUrl = upload.secure_url;
 
 }
+
+showProgress("Updating Player...");
+
 
     const data = {
 
@@ -221,8 +235,19 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
         headshot: document.getElementById("headshot").value.trim(),
         matches: Number(document.getElementById("matches").value) || 0,
         booyah: Number(document.getElementById("booyah").value) || 0,
+        weaponName: document.getElementById("weaponName").value.trim(),
+
+weaponType: document.getElementById("weaponType").value.trim(),
+
+weaponQuote: document.getElementById("weaponQuote").value.trim(),
+
+weaponImage: weaponImageUrl,
         guild: document.getElementById("guild").value.trim(),
         language: document.getElementById("language").value.trim(),
+
+        country: document.getElementById("country").value.trim(),
+
+since: document.getElementById("since").value.trim(),
         displayOrder: Number(
     document.getElementById("displayOrder").value
 ) || 9999,
@@ -241,9 +266,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
 
     };
 
-    setProgress(100, "Image Uploaded Successfully");
-
-showProgress("Updating Player...");
+   
     
 
     docRef.update(data)

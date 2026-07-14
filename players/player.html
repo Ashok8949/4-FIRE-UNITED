@@ -71,60 +71,171 @@ Join Team
 </header>
 
 <section class="player-banner">
+    <div class="hero-bg">
+    <div class="glow glow1"></div>
+    <div class="glow glow2"></div>
+    <div class="grid-overlay"></div>
+</div>
 
 <div class="player-overlay"></div>
+<div class="hero-effects">
+
+    <span class="fire fire1"></span>
+    <span class="fire fire2"></span>
+    <span class="fire fire3"></span>
+    <span class="fire fire4"></span>
+
+    <div class="light-beam beam1"></div>
+    <div class="light-beam beam2"></div>
+
+</div>
 
 <div class="player-container">
 
     <div class="player-left">
 
-    <img id="player-image"
-         src="../images/players/player1.png"
-         alt="4fu-Ashok.">
+    <div class="player-image-box">
+
+        <div class="player-ring"></div>
+
+        <div class="player-ring ring2"></div>
+
+        <div class="player-image-glow"></div>
+
+        <img
+    id="player-image"
+    src="../images/logo/logo.png"
+    alt="4fu-Ashok.">
+
+        <div class="player-level-badge">
+
+            <i class="fa-solid fa-fire"></i>
+
+            LV <span id="player-level-badge">70</span>
+
+        </div>
+
+    </div>
 
 </div>
 
 <div class="player-right">
+    <div class="player-info-panel">
 
-    <h5 id="player-role">Primary Rusher</h5>
+    <div class="player-top">
+
+    <img src="../images/logo/logo.png"
+         class="team-logo"
+         alt="4 FIRE UNITED">
+
+    <span class="verified-player">
+
+        <i class="fa-solid fa-circle-check"></i>
+
+        OFFICIAL PLAYER
+
+    </span>
+
+</div>
+
+    <div class="role-badge">
+
+<i class="fa-solid fa-crosshairs"></i>
+
+<span id="player-role">Primary Rusher</span>
+
+</div>
+
+<div class="player-ribbon">
+
+    <i class="fa-solid fa-shield-halved"></i>
+
+    OFFICIAL 4 FIRE UNITED PLAYER
+
+</div>
 
     <h1 id="player-name">4fu-Ashok.</h1>
+    <div class="player-meta">
 
-    <p><strong>UID :</strong>
-        <span id="player-uid">2156033329</span>
-    </p>
+    <span>
+    <i class="fa-solid fa-location-dot"></i>
+    <img
+    id="player-flag"
+    src=""
+    alt="Flag"
+    class="country-flag">
 
-    <p><strong>Level :</strong>
-        <span id="player-level">70</span>
-    </p>
+<span id="player-country">India</span>
+</span>
 
-    <p><strong>Rank :</strong>
+<span>
+    <i class="fa-solid fa-calendar"></i>
+    Since <span id="player-since">2024</span>
+</span>
+
+</div>
+
+    <div class="player-stats-grid">
+
+    <div class="stat-card rank-card">
+
+    <div id="player-rank-badge" class="rank-badge heroic">
+
+        <i class="fa-solid fa-crown"></i>
+
         <span id="player-rank">Heroic</span>
-    </p>
 
-    <p><strong>KD :</strong>
-        <span id="player-kd">5.82</span>
-    </p>
+    </div>
 
-    <p><strong>Headshot :</strong>
-        <span id="player-headshot">81%</span>
-    </p>
+    <small>Current Rank</small>
 
-    <p><strong>Booyah :</strong>
-        <span id="player-booyah">158</span>
-    </p>
+</div>
 
-    <p><strong>Matches :</strong>
-        <span id="player-matches">520</span>
-    </p>
+    <div class="stat-card">
+        <h2 id="player-level">70</h2>
+        <span>Level</span>
+    </div>
 
-    <p><strong>Guild :</strong>
-        <span id="player-guild">BL!zereXE</span>
-    </p>
+    <div class="stat-card">
+        <h2 id="player-kd">5.82</h2>
+        <span>KD</span>
+    </div>
 
-    <p><strong>Language :</strong>
-        <span id="player-language">English</span>
-    </p>
+    <div class="stat-card">
+        <h2 id="player-headshot">81%</h2>
+        <span>Headshot</span>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="player-matches">520</h2>
+        <span>Matches</span>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="player-booyah">158</h2>
+        <span>Booyah</span>
+    </div>
+
+</div>
+
+<div class="player-info-bar">
+
+    <div>
+        <strong>UID</strong>
+        <p id="player-uid">2156033329</p>
+    </div>
+
+    <div>
+        <strong>Guild</strong>
+        <p id="player-guild">BL!zereXE</p>
+    </div>
+
+    <div>
+        <strong>Language</strong>
+        <p id="player-language">English</p>
+    </div>
+
+</div>
 
     <br>
 
@@ -184,9 +295,92 @@ Join Team
 
 </a>
 
-</div>
+</div> <!-- player-info-panel -->
 
-</div>
+</div> <!-- player-right -->
+
+</div> <!-- player-container -->
+
+</section>
+
+
+
+<section class="career-section">
+
+    <div class="section-title">
+
+        <h5>PLAYER OVERVIEW</h5>
+
+        <h2>Career Highlights</h2>
+
+    </div>
+
+    <div class="career-grid">
+
+        <div class="career-card">
+            <i class="fa-solid fa-crosshairs"></i>
+            <h3 id="player-kd-copy">5.82</h3>
+            <p>Kill / Death Ratio</p>
+        </div>
+
+        <div class="career-card">
+            <i class="fa-solid fa-bullseye"></i>
+            <h3 id="player-headshot-copy">81%</h3>
+            <p>Headshot Rate</p>
+        </div>
+
+        <div class="career-card">
+            <i class="fa-solid fa-trophy"></i>
+            <h3 id="player-booyah-copy">158</h3>
+            <p>Booyah Wins</p>
+        </div>
+
+        <div class="career-card">
+            <i class="fa-solid fa-gamepad"></i>
+            <h3 id="player-matches-copy">520</h3>
+            <p>Total Matches</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="favorite-weapon">
+
+    <div class="section-title">
+        <h5>LOADOUT</h5>
+        <h2>Favorite Weapon</h2>
+    </div>
+
+    <div class="weapon-card">
+
+        <div class="weapon-image">
+
+            <img id="player-weapon-image"
+                 src="../images/logo/logo.png"
+                 alt="Weapon">
+
+        </div>
+
+        <div class="weapon-info">
+
+            <h2 id="player-weapon">M1887</h2>
+
+            <h4 id="player-weapon-type">
+                SHOTGUN
+            </h4>
+
+            <div class="weapon-stars">
+                ★★★★★
+            </div>
+
+            <p id="player-weapon-quote">
+                One Tap King
+            </p>
+
+        </div>
+
+    </div>
 
 </section>
 

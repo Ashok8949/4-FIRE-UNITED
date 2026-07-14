@@ -71,6 +71,18 @@
 
 @media (max-width:768px){
 
+    .player-right h1{
+
+    font-size:46px;
+
+    line-height:1.15;
+
+    white-space:nowrap;
+
+    text-align:center;
+
+}
+
 .menu-btn{
     display:block;
 }
@@ -177,7 +189,10 @@ left:0;
 .player-right h1,
 .player-details h1{
 
-    font-size:60px;
+    font-size:46px;
+    line-height:1.15;
+    white-space:nowrap;
+    text-align:center;
 
 }
 
