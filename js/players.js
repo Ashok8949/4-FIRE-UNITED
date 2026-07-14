@@ -46,46 +46,81 @@ if (badge) {
 }
         document.getElementById("player-rank").textContent = p.rank || "";
         const rankBadge = document.getElementById("player-rank-badge");
+        const rankIcon = document.getElementById("rank-icon");
 
-if(rankBadge){
+if (rankBadge && rankIcon) {
 
     rankBadge.className = "rank-badge";
 
     const rank = (p.rank || "").toLowerCase();
 
-    if(rank.includes("heroic")){
+    if (rank.includes("bronze")) {
 
-        rankBadge.classList.add("heroic");
-
-    }
-
-    else if(rank.includes("grand")){
-
-        rankBadge.classList.add("grandmaster");
+        rankBadge.classList.add("bronze");
+        rankIcon.className = "fa-solid fa-medal";
 
     }
 
-    else if(rank.includes("master")){
+    else if (rank.includes("silver")) {
 
-        rankBadge.classList.add("master");
-
-    }
-
-    else if(rank.includes("diamond")){
-
-        rankBadge.classList.add("diamond");
+        rankBadge.classList.add("silver");
+        rankIcon.className = "fa-solid fa-shield-halved";
 
     }
 
-    else if(rank.includes("platinum")){
-
-        rankBadge.classList.add("platinum");
-
-    }
-
-    else{
+    else if (rank.includes("gold")) {
 
         rankBadge.classList.add("gold");
+        rankIcon.className = "fa-solid fa-trophy";
+
+    }
+
+    else if (rank.includes("platinum")) {
+
+        rankBadge.classList.add("platinum");
+        rankIcon.className = "fa-solid fa-gem";
+
+    }
+
+    else if (rank.includes("diamond")) {
+
+        rankBadge.classList.add("diamond");
+        rankIcon.className = "fa-solid fa-gem";
+
+    }
+
+    else if (rank.includes("elite")) {
+
+    rankBadge.classList.add("elite-heroic");
+    rankIcon.className = "fa-solid fa-bolt";
+
+}
+
+else if (rank.includes("heroic")) {
+
+    rankBadge.classList.add("heroic");
+    rankIcon.className = "fa-solid fa-fire";
+
+}
+
+    else if (rank.includes("grandmaster")) {
+
+    rankBadge.classList.add("grandmaster");
+    rankIcon.className = "fa-solid fa-star";
+
+}
+
+else if (rank.includes("master")) {
+
+    rankBadge.classList.add("master");
+    rankIcon.className = "fa-solid fa-crown";
+
+}
+
+    else {
+
+        rankBadge.classList.add("bronze");
+        rankIcon.className = "fa-solid fa-medal";
 
     }
 

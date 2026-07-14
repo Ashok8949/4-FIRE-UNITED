@@ -4074,85 +4074,207 @@ font-size:18px;
 
 }
 
+
 .rank-badge{
 
     display:flex;
+
     align-items:center;
-    gap:10px;
 
-    padding:10px 22px;
+    justify-content:center;
 
-    border-radius:50px;
+    gap:14px;
 
-    font-weight:700;
+    width:fit-content;
 
-    font-size:15px;
+    margin:auto;
 
-    margin-bottom:12px;
+    padding:14px 22px;
 
-    transition:.35s;
-
-}
-
-/* HEROIC */
-
-.rank-badge.heroic{
+    border-radius:22px;
 
     background:linear-gradient(135deg,#ff5a00,#ff9800);
 
-    color:#fff;
+    box-shadow:
+        0 0 25px rgba(255,120,0,.30);
+
+    transition:.35s;
+    position: relative;
+overflow: hidden;
+
+}
+.rank-badge::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-40%;
+
+    left:-150%;
+
+    width:60%;
+
+    height:200%;
+
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.45),
+        transparent
+    );
+
+    transform:rotate(25deg);
+
+    animation:rankShine 4s linear infinite;
 
 }
 
-/* GRANDMASTER */
+.rank-badge.bronze{
 
-.rank-badge.grandmaster{
+    background:linear-gradient(135deg,#6d4c41,#b87333);
 
-    background:linear-gradient(135deg,#7b2cff,#b24dff);
-
-    color:#fff;
-
-}
-
-/* MASTER */
-
-.rank-badge.master{
-
-    background:linear-gradient(135deg,#ff2d2d,#ff5b5b);
-
-    color:#fff;
+    box-shadow:
+        0 0 22px rgba(184,115,51,.45);
 
 }
 
-/* DIAMOND */
+.rank-badge.bronze i{
 
-.rank-badge.diamond{
+    color:#ffd3a1;
 
-    background:linear-gradient(135deg,#1ba8ff,#55d7ff);
+}
+.rank-badge.silver{
 
-    color:#fff;
+    background:linear-gradient(135deg,#7f8c8d,#dfe6e9);
+
+    box-shadow:
+        0 0 22px rgba(223,230,233,.45);
 
 }
 
-/* PLATINUM */
+.rank-badge.silver i{
 
-.rank-badge.platinum{
-
-    background:linear-gradient(135deg,#00b894,#55efc4);
-
-    color:#fff;
+    color:#ffffff;
 
 }
-
-/* GOLD */
-
 .rank-badge.gold{
 
     background:linear-gradient(135deg,#ffb300,#ffd54f);
 
-    color:#111;
+    box-shadow:
+        0 0 24px rgba(255,193,7,.45);
 
 }
+
+.rank-badge.gold i{
+
+    color:#fff4c4;
+
+}
+.rank-badge.platinum{
+
+    background:linear-gradient(135deg,#00c6ff,#00e5ff);
+
+    box-shadow:
+        0 0 24px rgba(0,229,255,.45);
+
+}
+
+.rank-badge.platinum i{
+
+    color:#ffffff;
+
+}
+.rank-badge.diamond{
+
+    background:linear-gradient(135deg,#2962ff,#42a5f5);
+
+    box-shadow:
+        0 0 25px rgba(41,98,255,.50);
+
+}
+
+.rank-badge.diamond i{
+
+    color:#eaf5ff;
+
+}
+.rank-badge.heroic{
+
+    background:linear-gradient(135deg,#ff4d00,#ff9800);
+
+    box-shadow:
+        0 0 28px rgba(255,98,0,.60);
+
+        animation:heroicPulse 2s ease-in-out infinite;
+
+}
+
+.rank-badge.heroic i{
+
+    color:#fff8e8;
+
+}
+.rank-badge.elite-heroic{
+
+    background:linear-gradient(135deg,#ff004d,#ff6a00);
+
+    box-shadow:
+        0 0 28px rgba(255,0,77,.55);
+
+}
+
+.rank-badge.elite-heroic i{
+
+    color:#ffffff;
+
+}
+.rank-badge.master{
+
+    background:linear-gradient(135deg,#7b1fa2,#ab47bc);
+
+    box-shadow:
+        0 0 28px rgba(171,71,188,.55);
+
+        animation:masterPulse 2s ease-in-out infinite;
+
+}
+
+.rank-badge.master i{
+
+    color:#fff3ff;
+
+}
+.rank-badge.grandmaster{
+
+    background:linear-gradient(135deg,#d50000,#ffb300);
+
+    box-shadow:
+        0 0 30px rgba(255,179,0,.60);
+
+        animation:grandPulse 2.2s ease-in-out infinite;
+
+}
+
+.rank-badge.grandmaster i{
+
+    color:#fffde7;
+
+}
+.rank-badge{
+
+    transition:.35s ease;
+
+}
+
+.rank-badge:hover{
+
+    transform:translateY(-3px) scale(1.05);
+
+}
+
+
 
 .rank-badge i{
 
@@ -4535,5 +4657,111 @@ font-size:18px;
     vertical-align:middle;
 
     display:inline-block;
+
+}
+
+
+.rank-badge i{
+
+    font-size:24px;
+
+}
+
+.rank-badge span{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+@keyframes rankShine{
+
+    0%{
+
+        left:-150%;
+
+    }
+
+    100%{
+
+        left:180%;
+
+    }
+
+}
+
+@keyframes heroicPulse{
+
+    0%{
+
+        box-shadow:
+            0 0 20px rgba(255,90,0,.45);
+
+    }
+
+    50%{
+
+        box-shadow:
+            0 0 40px rgba(255,120,0,.9);
+
+    }
+
+    100%{
+
+        box-shadow:
+            0 0 20px rgba(255,90,0,.45);
+
+    }
+
+}
+
+@keyframes grandPulse{
+
+    0%{
+
+        box-shadow:
+            0 0 25px rgba(255,180,0,.45);
+
+    }
+
+    50%{
+
+        box-shadow:
+            0 0 55px rgba(255,80,0,.9);
+
+    }
+
+    100%{
+
+        box-shadow:
+            0 0 25px rgba(255,180,0,.45);
+
+    }
+
+}
+
+@keyframes masterPulse{
+
+    0%{
+
+        box-shadow:
+            0 0 22px rgba(171,71,188,.45);
+
+    }
+
+    50%{
+
+        box-shadow:
+            0 0 45px rgba(171,71,188,.95);
+
+    }
+
+    100%{
+
+        box-shadow:
+            0 0 22px rgba(171,71,188,.45);
+
+    }
 
 }
