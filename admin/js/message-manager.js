@@ -1,4 +1,6 @@
 let allMessages = [];
+let selectedMessages = [];
+let allSelected = false;
 
 // Load Messages
 db.collection("contactMessages")
@@ -28,6 +30,19 @@ db.collection("contactMessages")
 // Render Table
 function renderMessages(list) {
 
+    allSelected = false;
+
+selectedMessages = [];
+
+const btn = document.getElementById("selectAllBtn");
+
+if(btn){
+
+    btn.innerHTML =
+    `<i class="fa-solid fa-check-double"></i> Select All`;
+
+}
+
     const table = document.getElementById("messageTable");
 
     table.innerHTML = "";
@@ -38,7 +53,17 @@ function renderMessages(list) {
 
         <tr>
 
-            <td>${m.name || "-"}</td>
+    <td>
+
+        <input
+        type="checkbox"
+        class="message-check"
+        value="${m.id}"
+        onchange="toggleMessage('${m.id}',this.checked)">
+
+    </td>
+
+    <td>${m.name || "-"}</td>
 
             <td>${m.email || "-"}</td>
 
@@ -130,3 +155,99 @@ if (searchBox) {
     });
 
 }
+
+function toggleMessage(id, checked){
+
+    if(checked){
+
+        if(!selectedMessages.includes(id)){
+
+            selectedMessages.push(id);
+
+        }
+
+    }
+
+    else{
+
+        selectedMessages =
+            selectedMessages.filter(x=>x!==id);
+
+    }
+
+}
+
+
+document.getElementById("selectAllBtn").onclick = () => {
+
+    const checks = document.querySelectorAll(".message-check");
+
+    selectedMessages = [];
+
+    allSelected = !allSelected;
+
+    checks.forEach(c => {
+
+        c.checked = allSelected;
+
+        if (allSelected) {
+
+            selectedMessages.push(c.value);
+
+        }
+
+    });
+
+    document.getElementById("selectAllBtn").innerHTML = allSelected
+
+        ? `<i class="fa-solid fa-square-minus"></i> Unselect All`
+
+        : `<i class="fa-solid fa-check-double"></i> Select All`;
+
+};
+document.getElementById("deleteSelectedBtn").onclick=async()=>{
+
+    if(selectedMessages.length===0){
+
+        alert("Select messages first.");
+
+        return;
+
+    }
+
+    if(!confirm(`Delete ${selectedMessages.length} selected message(s)?`)){
+
+        return;
+
+    }
+
+    const batch=db.batch();
+
+    selectedMessages.forEach(id=>{
+
+        batch.delete(
+
+            db.collection("contactMessages").doc(id)
+
+        );
+
+    });
+
+    try{
+
+    await batch.commit();
+
+    alert("✅ Selected messages deleted.");
+
+    location.reload();
+
+}
+catch(err){
+
+    console.error(err);
+
+    alert("❌ Failed to delete messages.");
+
+}
+
+};

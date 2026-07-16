@@ -1,4 +1,5 @@
 let notifications = [];
+let selectedNotifications = [];
 const container = document.getElementById("allNotifications");
 
 db.collection("notifications")
@@ -127,36 +128,113 @@ function renderNotifications() {
 
         container.innerHTML += `
 
-        <div class="dashboard-section">
+<div class="dashboard-section">
 
-            <div class="activity-item ${n.isRead ? "" : "unread"}">
+    <div class="activity-item ${n.isRead ? "" : "unread"}">
 
-                <i class="fa-solid fa-bell"></i>
+        <input
+            type="checkbox"
+            class="notification-check"
+            value="${n.id}"
+            onchange="toggleNotification('${n.id}',this.checked)">
 
-                <div style="flex:1">
+        <i class="fa-solid fa-bell"></i>
 
-                    <h4>${n.title}</h4>
+        <div style="flex:1">
 
-                    <p>${n.message}</p>
+            <h4>${n.title}</h4>
 
-                </div>
-
-                <button
-    class="notification-open-btn"
-    onclick="window.location='${n.link}'">
-
-    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-    Open
-
-</button>
-
-            </div>
+            <p>${n.message}</p>
 
         </div>
 
-        `;
+        <button
+            class="notification-open-btn"
+            onclick="window.location='${n.link}'">
+
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+            Open
+
+        </button>
+
+    </div>
+
+</div>
+
+`;
 
     });
 
 }
+
+function toggleNotification(id, checked){
+
+    if(checked){
+
+        if(!selectedNotifications.includes(id)){
+
+            selectedNotifications.push(id);
+
+        }
+
+    }
+
+    else{
+
+        selectedNotifications =
+            selectedNotifications.filter(x => x !== id);
+
+    }
+
+}
+
+document.getElementById("deleteSelectedBtn").onclick = async ()=>{
+
+    if(selectedNotifications.length===0){
+
+        alert("Select notifications first.");
+
+        return;
+
+    }
+
+    if(!confirm(`Delete ${selectedNotifications.length} notification(s)?`)){
+
+        return;
+
+    }
+
+    const batch = db.batch();
+
+    selectedNotifications.forEach(id=>{
+
+        batch.delete(
+
+            db.collection("notifications").doc(id)
+
+        );
+
+    });
+
+    await batch.commit();
+
+    alert("Notifications deleted.");
+
+};
+
+document.getElementById("selectAllBtn").onclick = ()=>{
+
+    selectedNotifications=[];
+
+    document
+    .querySelectorAll(".notification-check")
+    .forEach(c=>{
+
+        c.checked=true;
+
+        selectedNotifications.push(c.value);
+
+    });
+
+};

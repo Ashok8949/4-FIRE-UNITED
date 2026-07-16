@@ -1,4 +1,6 @@
 let allApplications = [];
+let selectedApplications = [];
+let allSelected = false;
 
 // ===============================
 // Load Applications
@@ -34,6 +36,18 @@ db.collection("joinApplications")
 
 function renderApplications(list) {
 
+    allSelected = false;
+selectedApplications = [];
+
+const btn = document.getElementById("selectAllBtn");
+
+if(btn){
+
+    btn.innerHTML =
+    `<i class="fa-solid fa-check-double"></i> Select All`;
+
+}
+
     const table = document.getElementById("applicationTable");
 
     table.innerHTML = "";
@@ -44,7 +58,17 @@ function renderApplications(list) {
 
         <tr>
 
-            <td>${a.name || "-"}</td>
+    <td>
+
+        <input
+            type="checkbox"
+            class="application-check"
+            value="${a.id}"
+            onchange="toggleApplication('${a.id}',this.checked)">
+
+    </td>
+
+    <td>${a.name || "-"}</td>
 
             <td>${a.ign || "-"}</td>
 
@@ -192,3 +216,69 @@ if (search) {
     });
 
 }
+
+function toggleApplication(id, checked){
+
+    if(checked){
+
+        if(!selectedApplications.includes(id)){
+
+            selectedApplications.push(id);
+
+        }
+
+    }else{
+
+        selectedApplications =
+        selectedApplications.filter(x=>x!==id);
+
+    }
+
+}
+
+document.getElementById("deleteSelectedBtn").onclick = async()=>{
+
+    if(selectedApplications.length===0){
+
+        alert("Select applications first.");
+
+        return;
+
+    }
+
+    if(!confirm(`Delete ${selectedApplications.length} selected application(s)?`)){
+
+        return;
+
+    }
+
+    const batch = db.batch();
+
+    selectedApplications.forEach(id=>{
+
+        batch.delete(
+
+            db.collection("joinApplications").doc(id)
+
+        );
+
+    });
+
+    try{
+
+        await batch.commit();
+
+        alert("✅ Selected applications deleted.");
+
+        location.reload();
+
+    }
+    catch(err){
+
+        console.error(err);
+
+        alert("❌ Failed to delete applications.");
+
+    }
+
+};

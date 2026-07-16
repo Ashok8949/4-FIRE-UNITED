@@ -5,16 +5,45 @@ const count = document.getElementById("notificationCount");
 const clearReadBtn = document.getElementById("clearReadBtn");
 
 const notificationAudio = new Audio("sounds/notification.mp3");
+if ("Notification" in window &&
+    Notification.permission !== "granted") {
+
+    Notification.requestPermission();
+
+}
 notificationAudio.preload = "auto";
 
+function showBrowserNotification(title, message) {
+
+    if (
+        "Notification" in window &&
+        Notification.permission === "granted"
+    ) {
+
+        new Notification(title, {
+
+            body: message,
+
+            icon: "../images/logo/logo.png"
+
+        });
+
+    }
+
+}
+
 let notifications = [];
-let lastUnreadCount = 0;
+
 
 function playNotificationSound() {
 
+    console.log("🔔 Sound Called");
+
     notificationAudio.currentTime = 0;
 
-    notificationAudio.play().catch(() => {});
+    notificationAudio.play()
+        .then(() => console.log("✅ Sound Playing"))
+        .catch(err => console.error("❌", err));
 
 }
 
@@ -58,16 +87,9 @@ function renderNotifications() {
     const unreadCount =
         notifications.filter(n => !n.isRead).length;
 
-    if (
-        unreadCount > lastUnreadCount &&
-        lastUnreadCount !== 0
-    ) {
 
-        playNotificationSound();
 
-    }
-
-    lastUnreadCount = unreadCount;
+  
 
     if (unreadCount > 0) {
 
@@ -100,6 +122,8 @@ function renderNotifications() {
     });
 
 }
+let firstSnapshot = true;
+
 
 db.collection("notifications")
 .orderBy("createdAt", "desc")
@@ -107,6 +131,26 @@ db.collection("notifications")
 .onSnapshot((snapshot) => {
 
     notifications = [];
+
+    snapshot.docChanges().forEach((change) => {
+
+        if (!firstSnapshot && change.type === "added") {
+
+            const data = change.doc.data();
+
+            playNotificationSound();
+
+            showBrowserNotification(
+
+                data.title || "Notification",
+
+                data.message || ""
+
+            );
+
+        }
+
+    });
 
     snapshot.forEach((doc) => {
 
@@ -131,6 +175,8 @@ db.collection("notifications")
     });
 
     renderNotifications();
+
+    firstSnapshot = false;
 
 });
 
