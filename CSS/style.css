@@ -50,21 +50,31 @@ img{
     top:0;
     left:0;
     width:100%;
-    height:110px;
+    height:100px;
 
     display:flex;
     justify-content:space-between;
     align-items:center;
 
-    padding:0 8%;
+    padding:0 7%;
+
     z-index:1000;
 
-    background:rgba(0,0,0,.45);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
+    background:rgba(8,8,8,.72);
 
-    border-bottom:1px solid rgba(255,255,255,.08);
-    transition:.35s;
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+
+    border-bottom:1px solid rgba(255,106,0,.15);
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.35),
+        inset 0 -1px rgba(255,255,255,.04);
+
+    transition:
+        background .35s,
+        box-shadow .35s,
+        border-color .35s;
 }
 
 /* Logo */
@@ -102,34 +112,132 @@ img{
 }
 
 .nav-links a{
+    position:relative;
+
     color:#fff;
+
     font-size:16px;
-    font-weight:500;
-    transition:.3s;
+
+    font-weight:600;
+
+    letter-spacing:.5px;
+
+    transition:.35s;
 }
 
 .nav-links a:hover,
 .nav-links a.active{
-    color:#ff3c00;
+
+    color:#ff7a00;
+
+}
+.nav-links a::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    bottom:-8px;
+
+    width:0;
+
+    height:2px;
+
+    border-radius:20px;
+
+    background:linear-gradient(
+        90deg,
+        #ff5a00,
+        #ff9800
+    );
+
+    transition:.35s;
+
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after{
+
+    width:100%;
+
 }
 
 /* Join Button */
 
 .join-btn{
-    background:linear-gradient(45deg,#ff3c00,#ff7a00);
-    color:#fff;
+   position: relative;
+isolation: isolate;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:14px 30px;
+
     border:none;
-    padding:14px 28px;
-    border-radius:35px;
+    border-radius:50px;
+
+    background:linear-gradient(135deg,#ff5a00,#ff9800);
+
+    color:#fff;
+
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:.5px;
+
     cursor:pointer;
-    font-weight:600;
-    transition:.3s;
+
+    overflow:hidden;
+
+    transition:
+        transform .35s,
+        box-shadow .35s;
+}
+
+.join-btn::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:-120%;
+
+    width:60%;
+    height:100%;
+
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.35),
+        transparent
+    );
+
+    transform:skewX(-25deg);
+
+    transition:1s;
+    pointer-events: none;
+
 }
 
 .join-btn:hover{
-    transform:translateY(-3px);
-    box-shadow:0 0 20px rgba(255,60,0,.5);
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 10px 25px rgba(255,106,0,.35),
+        0 0 30px rgba(255,106,0,.25);
+
 }
+
+.join-btn:hover::before{
+
+    left:160%;
+
+}
+
+
 
 /* Mobile */
 
@@ -4764,4 +4872,38 @@ overflow: hidden;
 
     }
 
+}
+.tournament-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+    flex-wrap:wrap;
+}
+
+.register-btn,
+.live-btn{
+    flex:1;
+    text-align:center;
+    padding:10px 15px;
+    border-radius:8px;
+    text-decoration:none;
+    color:#fff;
+    font-weight:600;
+    transition:.3s;
+}
+
+.register-btn{
+    background:#ff9800;
+}
+
+.register-btn:hover{
+    transform:translateY(-2px);
+}
+
+.live-btn{
+    background:#e53935;
+}
+
+.live-btn:hover{
+    transform:translateY(-2px);
 }

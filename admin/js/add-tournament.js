@@ -9,7 +9,9 @@ document.getElementById("saveTournament").addEventListener("click", () => {
         time: document.getElementById("time").value,
         prize: document.getElementById("prize").value.trim(),
         status: document.getElementById("status").value.trim(),
-        registration: document.getElementById("registration").value.trim()
+        registration: document.getElementById("registration").value.trim(),
+        liveLink: document.getElementById("liveLink").value.trim(),
+        liveStatus: document.getElementById("liveStatus").value,
 
     };
 

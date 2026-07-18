@@ -28,6 +28,26 @@ db.collection("tournaments")
 
             <span>${t.status}</span>
 
+            <div class="tournament-buttons">
+
+                ${
+                    t.registration
+                    ? `<a href="${t.registration}" target="_blank" class="register-btn">
+                        📝 Register Now
+                       </a>`
+                    : ""
+                }
+
+                ${
+                    t.liveLink
+                    ? `<a href="${t.liveLink}" target="_blank" class="live-btn">
+                        🔴 Watch Live
+                       </a>`
+                    : ""
+                }
+
+            </div>
+
         </div>
 
         `;

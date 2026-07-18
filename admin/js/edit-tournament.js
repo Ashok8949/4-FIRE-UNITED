@@ -36,6 +36,8 @@ docRef.get()
     document.getElementById("prize").value = t.prize || "";
     document.getElementById("status").value = t.status || "";
     document.getElementById("registration").value = t.registration || "";
+    document.getElementById("liveLink").value = t.liveLink || "";
+document.getElementById("liveStatus").value = t.liveStatus || "Upcoming";
 
 })
 
@@ -53,18 +55,21 @@ docRef.get()
 
 document.getElementById("updateTournament").addEventListener("click", () => {
 
-    const tournament = {
+   const tournament = {
 
-        title: document.getElementById("title").value.trim(),
-        game: document.getElementById("game").value.trim(),
-        mode: document.getElementById("mode").value.trim(),
-        date: document.getElementById("date").value,
-        time: document.getElementById("time").value,
-        prize: document.getElementById("prize").value.trim(),
-        status: document.getElementById("status").value.trim(),
-        registration: document.getElementById("registration").value.trim()
+    title: document.getElementById("title").value.trim(),
+    game: document.getElementById("game").value.trim(),
+    mode: document.getElementById("mode").value.trim(),
+    date: document.getElementById("date").value,
+    time: document.getElementById("time").value,
+    prize: document.getElementById("prize").value.trim(),
+    status: document.getElementById("status").value.trim(),
+    registration: document.getElementById("registration").value.trim(),
 
-    };
+    liveLink: document.getElementById("liveLink").value.trim(),
+    liveStatus: document.getElementById("liveStatus").value
+
+};
 
     if (
         !tournament.title ||
