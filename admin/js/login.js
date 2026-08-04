@@ -37,3 +37,43 @@ document.getElementById("loginBtn").addEventListener("click", () => {
 });
 
 });
+// ================================
+// Forgot Password
+// ================================
+
+document.getElementById("forgotPassword").addEventListener("click", async (e) => {
+
+    e.preventDefault();
+
+    const email = document.getElementById("username").value.trim();
+
+    if (!email) {
+        alert("Please enter your admin email first.");
+        return;
+    }
+
+    try {
+
+        await auth.sendPasswordResetEmail(email);
+
+        alert("Password reset link has been sent to your email.");
+
+    } catch (err) {
+
+        switch (err.code) {
+
+            case "auth/user-not-found":
+                alert("No account found with this email.");
+                break;
+
+            case "auth/invalid-email":
+                alert("Please enter a valid email.");
+                break;
+
+            default:
+                alert(err.message);
+        }
+
+    }
+
+});
