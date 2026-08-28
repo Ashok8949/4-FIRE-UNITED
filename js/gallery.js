@@ -1,44 +1,83 @@
 db.collection("gallery")
-.get()
-.then((snapshot) => {
+    .orderBy("createdAt", "desc")
+    .get()
+    .then((snapshot) => {
 
-    const gallery = document.getElementById("gallery-grid");
+        const gallery =
+            document.getElementById("gallery-grid");
 
-    if (!gallery) return;
+        if (!gallery) return;
 
-    let html = "";
+        let html = "";
 
-    snapshot.forEach((doc) => {
+        snapshot.forEach((doc) => {
 
-        const g = doc.data();
+            const g = doc.data();
 
-        html += `
+            html += `
 
-        <div class="gallery-box">
+                <div class="gallery-box">
 
-            <img
-                src="${g.image}"
-                alt="${g.title}"
-                loading="lazy"
-                decoding="async">
+                    <img
+                        src="${g.image}"
+                        alt="${g.title || "Gallery"}"
+                        loading="lazy"
+                        decoding="async">
 
-            <div class="gallery-overlay">
+                    <div class="gallery-overlay">
 
-                <h3>${g.title}</h3>
+                        <h3>
+                            ${g.title || ""}
+                        </h3>
 
-            </div>
+                        ${
+                            g.playerName
+                                ? `
+                                <p>
+                                    <i class="fa-solid fa-user"></i>
+                                    ${g.playerName}
+                                </p>
+                                `
+                                : ""
+                        }
 
-        </div>
+                    </div>
 
-        `;
+                </div>
+
+            `;
+
+        });
+
+
+        if (!snapshot.empty) {
+
+            gallery.innerHTML = html;
+
+        } else {
+
+            gallery.innerHTML = `
+
+                <div class="no-gallery">
+
+                    <h2>No Gallery Available</h2>
+
+                    <p>
+                        Team memories will appear here soon.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    })
+    .catch((error) => {
+
+        console.error(
+            "Gallery Error:",
+            error
+        );
 
     });
-
-    gallery.innerHTML = html;
-
-})
-.catch((error) => {
-
-    console.error("Gallery Error:", error);
-
-});

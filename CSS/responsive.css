@@ -322,3 +322,232 @@ footer{
 }
 
 }
+
+/* =========================================================
+   NAVBAR FIX - DESKTOP + MOBILE
+   ========================================================= */
+
+.navbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.navbar .logo {
+    flex-shrink: 0;
+}
+
+.navbar .logo img {
+    display: block;
+    max-width: 150px;
+    height: auto;
+}
+
+.nav-links {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    list-style: none;
+    flex-shrink: 0;
+}
+
+.nav-links a {
+    white-space: nowrap;
+}
+
+.nav-buttons {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-buttons a {
+    white-space: nowrap;
+}
+
+.menu-btn {
+    display: none;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .navbar {
+        gap: 15px;
+    }
+
+    .navbar .logo img {
+        max-width: 125px;
+    }
+
+    .nav-links {
+        gap: 18px;
+    }
+
+    .nav-links a {
+        font-size: 15px;
+    }
+
+    .nav-buttons {
+        gap: 6px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    header {
+        width: 100%;
+    }
+
+    .navbar {
+        position: relative;
+        width: 100%;
+        min-height: 80px;
+        padding: 8px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0;
+    }
+
+    .navbar .logo {
+        display: flex;
+        align-items: center;
+        z-index: 1001;
+    }
+
+    .navbar .logo img {
+        width: 115px;
+        max-width: 115px;
+        height: auto;
+    }
+
+    /* Hide desktop navigation */
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        gap: 25px;
+
+        margin: 0;
+        padding: 100px 20px 40px;
+
+        background: #080808;
+
+        transition: right 0.35s ease;
+
+        z-index: 1000;
+        overflow-y: auto;
+    }
+
+    /* JS usually adds this class when menu opens */
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links a {
+        display: inline-block;
+        font-size: 25px;
+        padding: 8px 10px;
+        white-space: normal;
+    }
+
+    /* Hide desktop buttons on mobile */
+    .nav-buttons {
+        display: none;
+    }
+
+    /* Hamburger */
+    .menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 48px;
+        height: 48px;
+
+        cursor: pointer;
+        z-index: 1002;
+
+        flex-shrink: 0;
+    }
+
+    .menu-btn i {
+        font-size: 32px;
+    }
+
+    /* Prevent page horizontal scrolling */
+    body {
+        overflow-x: hidden;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    .navbar {
+        min-height: 72px;
+        padding: 6px 14px;
+    }
+
+    .navbar .logo img {
+        width: 100px;
+        max-width: 100px;
+    }
+
+    .menu-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    .menu-btn i {
+        font-size: 29px;
+    }
+
+    .nav-links {
+        gap: 19px;
+        padding-top: 85px;
+    }
+
+    .nav-links a {
+        font-size: 22px;
+    }
+
+}
