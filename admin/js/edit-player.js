@@ -157,6 +157,10 @@ document.getElementById("displayOrder").value =
     p.displayOrder || "";
 
     document.getElementById("featured").checked = p.featured || false;
+    document.getElementById("loginEmail").value =
+    p.loginEmail || "";
+
+    
 
     // ==========================
     // Social Media
@@ -252,6 +256,8 @@ since: document.getElementById("since").value.trim(),
     document.getElementById("displayOrder").value
 ) || 9999,
         featured: document.getElementById("featured").checked,
+        loginEmail:
+    document.getElementById("loginEmail").value.trim(),
 
         // Social Media
 

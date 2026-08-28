@@ -4907,3 +4907,27 @@ overflow: hidden;
 .live-btn:hover{
     transform:translateY(-2px);
 }
+
+.status{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:7px;
+    margin-top:12px;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:1px;
+}
+
+.status-dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 10px #22c55e;
+}
+
+.status.offline .status-dot{
+    background:#777;
+    box-shadow:none;
+}

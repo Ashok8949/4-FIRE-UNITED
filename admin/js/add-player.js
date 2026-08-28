@@ -137,6 +137,7 @@ if (weaponImageInput.files.length > 0) {
 
         name: document.getElementById("name").value.trim(),
         ign: document.getElementById("ign").value.trim(),
+        loginEmail: document.getElementById("loginEmail").value.trim(),
         uid: document.getElementById("uid").value.trim(),
         guild: document.getElementById("guild").value.trim(),
         role: document.getElementById("role").value.trim(),

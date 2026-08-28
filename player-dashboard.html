@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>4FU | Player Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #050505;
+            color: #fff;
+            font-family: Poppins, Arial, sans-serif;
+            padding: 30px;
+        }
+
+        .dashboard {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ff7200;
+        }
+
+        .logout {
+            border: 1px solid #ff6200;
+            background: transparent;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .logout:hover {
+            background: #ff6200;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .edit-profile {
+            border: 1px solid #ff7200;
+            background: #ff7200;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .edit-profile:hover {
+            background: #ff6200;
+        }
+
+        @media(max-width:700px) {
+
+            .topbar {
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .top-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 {
+            font-size: 36px;
+        }
+
+        .welcome span {
+            color: #ff7200;
+        }
+
+        .profile {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 18px;
+            padding: 25px;
+        }
+
+        .profile-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 20px;
+            border: 3px solid #ff6200;
+        }
+
+        .ign {
+            text-align: center;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .role {
+            text-align: center;
+            color: #ff7200;
+            margin-top: 5px;
+        }
+
+        .status {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 7px;
+            margin-top: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .status.offline .status-dot {
+            background: #777;
+            box-shadow: none;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat {
+            background: #181818;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat i {
+            color: #ff7200;
+            font-size: 20px;
+        }
+
+        .stat p {
+            color: #999;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .stat h2 {
+            margin-top: 3px;
+        }
+
+        .info {
+            margin-top: 25px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .info-row span:first-child {
+            color: #888;
+        }
+
+        .achievements {
+            margin-top: 25px;
+        }
+
+        .achievement-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .achievement {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #181818;
+            border: 1px solid #252525;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .achievement i {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #24170d;
+            color: #ff7200;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+
+        .achievement h3 {
+            font-size: 15px;
+        }
+
+        .achievement p {
+            color: #888;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .achievement {
+            opacity: 0.35;
+            transition: 0.3s;
+        }
+
+        .achievement.unlocked {
+            opacity: 1;
+            border-color: #ff7200;
+            box-shadow: 0 0 15px rgba(255, 114, 0, 0.15);
+        }
+
+        .achievement.unlocked i {
+            box-shadow: 0 0 12px rgba(255, 114, 0, 0.35);
+        }
+
+        @media(max-width:700px) {
+
+            .achievement-list {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+
+        @media(max-width:700px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .profile {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome h1 {
+                font-size: 27px;
+            }
+
+        }
+
+        /* =========================
+   EDIT PROFILE MODAL
+========================= */
+
+        .edit-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 9999;
+        }
+
+        .edit-modal.active {
+            display: flex;
+        }
+
+        .edit-modal-box {
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #111;
+            border: 1px solid #292929;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .edit-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .edit-modal-header h2 {
+            font-size: 22px;
+        }
+
+        .edit-modal-header h2 i {
+            color: #ff7200;
+            margin-right: 8px;
+        }
+
+        .close-edit {
+            width: 38px;
+            height: 38px;
+            border: 1px solid #333;
+            background: #181818;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .close-edit:hover {
+            background: #ff7200;
+            border-color: #ff7200;
+        }
+
+        .edit-profile-content {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 25px;
+        }
+
+        .edit-photo {
+            text-align: center;
+        }
+
+        .edit-photo img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ff7200;
+            display: block;
+            margin: 0 auto 15px;
+        }
+
+        .edit-photo label {
+            display: inline-block;
+            background: #181818;
+            border: 1px solid #ff7200;
+            color: #fff;
+            padding: 9px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .edit-photo label:hover {
+            background: #ff7200;
+        }
+
+        #editImage {
+            display: none;
+        }
+
+        .edit-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .edit-fields label {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .edit-fields input {
+            width: 100%;
+            padding: 12px;
+            background: #181818;
+            border: 1px solid #292929;
+            color: #fff;
+            border-radius: 8px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .edit-fields input:focus {
+            border-color: #ff7200;
+        }
+
+        #editStatus {
+            min-height: 20px;
+            margin-top: 18px;
+            color: #ff7200;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .edit-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .cancel-edit,
+        .save-edit {
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .cancel-edit {
+            background: #181818;
+            border: 1px solid #333;
+            color: #fff;
+        }
+
+        .save-edit {
+            background: #ff7200;
+            border: 1px solid #ff7200;
+            color: #fff;
+        }
+
+        .save-edit:hover {
+            background: #ff6200;
+        }
+
+        @media(max-width:700px) {
+
+            .edit-profile-content {
+                grid-template-columns: 1fr;
+            }
+
+            .edit-photo {
+                margin-bottom: 5px;
+            }
+
+            .edit-modal-box {
+                padding: 20px;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <div class="topbar">
+
+    <div class="logo">
+        4 FIRE UNITED
+    </div>
+
+    <div style="display:flex; gap:10px; align-items:center;">
+
+        <a href="player-edit-profile.html"
+           class="logout"
+           style="text-decoration:none;">
+            <i class="fa-solid fa-user-pen"></i>
+            Edit Profile
+        </a>
+
+        <button class="logout" id="logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </button>
+
+    </div>
+
+</div>
+
+        </div>
+        <div class="welcome">
+
+            <h1>
+                Welcome back,
+                <span id="playerName">Player</span>
+            </h1>
+
+        </div>
+
+        <div class="profile">
+
+            <div class="card">
+
+                <img id="playerImage" class="profile-image" src="images/logo/logo.png" alt="Player">
+
+                <div id="playerIgn" class="ign">
+                    Loading...
+                </div>
+
+                <div id="playerRole" class="role">
+                    -
+                </div>
+
+                <div id="playerStatus" class="status">
+                    <span class="status-dot"></span>
+                    <span>ONLINE</span>
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="card">
+
+                    <h2>PLAYER PERFORMANCE</h2>
+
+                    <br>
+
+                    <div class="stats">
+
+                        <div class="stat">
+                            <i class="fa-solid fa-crosshairs"></i>
+                            <p>KD</p>
+                            <h2 id="kd">-</h2>
+                        </div>
+
+                        <div class="stat">
+                            <i class="fa-solid fa-skull"></i>
+                            <p>HEADSHOT</p>
+                            <h2 id="headshot">-</h2>
+                        </div>
+
+                        <div class="stat">
+                            <i class="fa-solid fa-gamepad"></i>
+                            <p>MATCHES</p>
+                            <h2 id="matches">-</h2>
+                        </div>
+
+                        <div class="stat">
+                            <i class="fa-solid fa-trophy"></i>
+                            <p>BOOYAH</p>
+                            <h2 id="booyah">-</h2>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card info">
+
+                    <h2>PLAYER INFORMATION</h2>
+
+                    <div class="info-row">
+                        <span>IGN</span>
+                        <span id="infoIgn">-</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>UID</span>
+                        <span id="uid">-</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Guild</span>
+                        <span id="guild">-</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Rank</span>
+                        <span id="rank">-</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Country</span>
+                        <span id="country">-</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card achievements">
+
+            <h2>🏆 ACHIEVEMENTS</h2>
+
+            <div class="achievement-list">
+
+                <div class="achievement" id="achievementBooyah">
+                    <i class="fa-solid fa-fire"></i>
+                    <div>
+                        <h3>First Booyah</h3>
+                        <p>First Booyah achieved</p>
+                    </div>
+                </div>
+
+                <div class="achievement" id="achievementHeadshot">
+                    <i class="fa-solid fa-crosshairs"></i>
+                    <div>
+                        <h3>Headshot Master</h3>
+                        <p>High headshot accuracy</p>
+                    </div>
+                </div>
+
+                <div class="achievement" id="achievementMatches">
+                    <i class="fa-solid fa-gamepad"></i>
+                    <div>
+                        <h3>100 Matches</h3>
+                        <p>Completed 100 matches</p>
+                    </div>
+                </div>
+
+                <div class="achievement" id="achievementRank">
+                    <i class="fa-solid fa-crown"></i>
+                    <div>
+                        <h3>Rank Master</h3>
+                        <p>Reached a high rank</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- EDIT PROFILE MODAL -->
+        <!-- ========================= -->
+
+        <div class="edit-modal" id="editModal">
+
+            <div class="edit-modal-box">
+
+                <div class="edit-modal-header">
+
+                    <h2>
+                        <i class="fa-solid fa-user-pen"></i>
+                        EDIT PROFILE
+                    </h2>
+
+                    <button id="closeEdit" class="close-edit">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+                </div>
+
+                <div class="edit-profile-content">
+
+                    <div class="edit-photo">
+
+                        <img id="editPreviewImage" src="images/logo/logo.png" alt="Profile">
+
+                        <label for="editImage">
+                            <i class="fa-solid fa-camera"></i>
+                            Change Photo
+                        </label>
+
+                        <input type="file" id="editImage" accept="image/*">
+
+                    </div>
+
+                    <div class="edit-fields">
+
+                        <label>Display Name</label>
+
+                        <input type="text" id="editName" placeholder="Your Name">
+
+                        <label>Language</label>
+
+                        <input type="text" id="editLanguage" placeholder="Language">
+
+                        <label>Instagram</label>
+
+                        <input type="url" id="editInstagram" placeholder="Instagram Profile Link">
+
+                        <label>YouTube</label>
+
+                        <input type="url" id="editYoutube" placeholder="YouTube Channel Link">
+
+                        <label>Discord</label>
+
+                        <input type="url" id="editDiscord" placeholder="Discord Profile / Invite Link">
+
+                        <label>Facebook</label>
+
+                        <input type="url" id="editFacebook" placeholder="Facebook Profile Link">
+
+                    </div>
+
+                </div>
+
+                <p id="editStatus"></p>
+
+                <div class="edit-buttons">
+
+                    <button id="cancelEdit" class="cancel-edit">
+                        Cancel
+                    </button>
+
+                    <button id="saveEdit" class="save-edit">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
+
+    <script src="js/firebase.js"></script>
+
+    <script>
+
+        auth.onAuthStateChanged(async (user) => {
+
+            if (!user) {
+
+                window.location.href = "player-login.html";
+
+                return;
+
+            }
+
+            try {
+
+                const snapshot = await db
+                    .collection("players")
+                    .where("loginEmail", "==", user.email)
+                    .limit(1)
+                    .get();
+
+                if (snapshot.empty) {
+
+                    await auth.signOut();
+
+                    window.location.href = "player-login.html";
+
+                    return;
+
+                }
+
+                const playerDoc = snapshot.docs[0];
+
+                const player = playerDoc.data();
+
+                currentPlayerDocId = playerDoc.id;
+
+                currentPlayerData = player;
+                // ===============================
+                // DYNAMIC ACHIEVEMENTS
+                // ===============================
+
+                const booyah = Number(player.booyah || 0);
+                const matches = Number(player.matches || 0);
+                const headshot = parseFloat(player.headshot) || 0;
+                const rank = (player.rank || "").toLowerCase();
+
+                const achievementBooyah =
+                    document.getElementById("achievementBooyah");
+
+                const achievementHeadshot =
+                    document.getElementById("achievementHeadshot");
+
+                const achievementMatches =
+                    document.getElementById("achievementMatches");
+
+                const achievementRank =
+                    document.getElementById("achievementRank");
+
+
+                // FIRST BOOYAH
+                if (booyah >= 1) {
+
+                    achievementBooyah.classList.add("unlocked");
+
+                } else {
+
+                    achievementBooyah.querySelector("p").textContent =
+                        "Get your first Booyah to unlock";
+
+                }
+
+
+                // HEADSHOT MASTER
+                if (headshot >= 30) {
+
+                    achievementHeadshot.classList.add("unlocked");
+
+                } else {
+
+                    achievementHeadshot.querySelector("p").textContent =
+                        "Reach 30% headshot rate to unlock";
+
+                }
+
+
+                // 100 MATCHES
+                if (matches >= 100) {
+
+                    achievementMatches.classList.add("unlocked");
+
+                } else {
+
+                    achievementMatches.querySelector("p").textContent =
+                        `Play ${100 - matches} more matches to unlock`;
+
+                }
+
+
+                // RANK MASTER
+                if (
+                    rank.includes("heroic") ||
+                    rank.includes("master") ||
+                    rank.includes("grandmaster")
+                ) {
+
+                    achievementRank.classList.add("unlocked");
+
+                } else {
+
+                    achievementRank.querySelector("p").textContent =
+                        "Reach Heroic or higher to unlock";
+
+                }
+
+                playerStatus.classList.remove("offline");
+
+                document.getElementById("playerName").textContent =
+                    player.name || player.ign || "Player";
+
+                document.getElementById("playerIgn").textContent =
+                    player.ign || "-";
+
+                document.getElementById("playerRole").textContent =
+                    player.role || "PLAYER";
+
+                document.getElementById("playerImage").src =
+                    player.image || "images/logo/logo.png";
+
+                document.getElementById("kd").textContent =
+                    player.kd || "-";
+
+                document.getElementById("headshot").textContent =
+                    player.headshot || "-";
+
+                document.getElementById("matches").textContent =
+                    player.matches ?? 0;
+
+                document.getElementById("booyah").textContent =
+                    player.booyah ?? 0;
+
+                document.getElementById("infoIgn").textContent =
+                    player.ign || "-";
+
+                document.getElementById("uid").textContent =
+                    player.uid || "-";
+
+                document.getElementById("guild").textContent =
+                    player.guild || "-";
+
+                document.getElementById("rank").textContent =
+                    player.rank || "-";
+
+                document.getElementById("country").textContent =
+                    player.country || "-";
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert("Unable to load player profile.");
+
+            }
+
+        });
+
+        document.getElementById("logout").addEventListener("click", async () => {
+
+            await auth.signOut();
+
+            window.location.href = "player-login.html";
+
+        });
+
+        // ===============================
+        // EDIT PROFILE
+        // ===============================
+
+        let currentPlayerDocId = null;
+        let currentPlayerData = null;
+
+        const editModal = document.getElementById("editModal");
+        const editProfileBtn = document.getElementById("editProfile");
+        const closeEdit = document.getElementById("closeEdit");
+        const cancelEdit = document.getElementById("cancelEdit");
+        const saveEdit = document.getElementById("saveEdit");
+        const editImage = document.getElementById("editImage");
+        const editPreviewImage = document.getElementById("editPreviewImage");
+        const editStatus = document.getElementById("editStatus");
+
+
+        // OPEN EDIT PROFILE
+        editProfileBtn.addEventListener("click", () => {
+
+            if (!currentPlayerData) {
+                alert("Player profile is still loading.");
+                return;
+            }
+
+            editModal.classList.add("active");
+
+            document.getElementById("editName").value =
+                currentPlayerData.name || "";
+
+            document.getElementById("editLanguage").value =
+                currentPlayerData.language || "";
+
+            document.getElementById("editInstagram").value =
+                currentPlayerData.instagram || "";
+
+            document.getElementById("editYoutube").value =
+                currentPlayerData.youtube || "";
+
+            document.getElementById("editDiscord").value =
+                currentPlayerData.discord || "";
+
+            document.getElementById("editFacebook").value =
+                currentPlayerData.facebook || "";
+
+            editPreviewImage.src =
+                currentPlayerData.image || "images/logo/logo.png";
+
+            editStatus.textContent = "";
+
+        });
+
+
+        // CLOSE MODAL
+        closeEdit.addEventListener("click", () => {
+
+            editModal.classList.remove("active");
+
+        });
+
+        cancelEdit.addEventListener("click", () => {
+
+            editModal.classList.remove("active");
+
+        });
+
+
+        // CLICK OUTSIDE MODAL
+        editModal.addEventListener("click", (event) => {
+
+            if (event.target === editModal) {
+
+                editModal.classList.remove("active");
+
+            }
+
+        });
+
+
+        // IMAGE PREVIEW
+        editImage.addEventListener("change", () => {
+
+            const file = editImage.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            if (!file.type.startsWith("image/")) {
+
+                alert("Please select an image.");
+
+                editImage.value = "";
+
+                return;
+
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+
+                editPreviewImage.src = event.target.result;
+
+            };
+
+            reader.readAsDataURL(file);
+
+        });
+
+
+        // SAVE PROFILE
+        saveEdit.addEventListener("click", async () => {
+
+            if (!currentPlayerDocId) {
+
+                editStatus.textContent =
+                    "Player profile not found.";
+
+                return;
+
+            }
+
+            try {
+
+                saveEdit.disabled = true;
+
+                editStatus.textContent =
+                    "Saving changes...";
+
+                let imageUrl = currentPlayerData.image || "";
+
+
+                // =========================
+                // UPLOAD NEW IMAGE
+                // =========================
+
+                const file = editImage.files[0];
+
+                if (file) {
+
+                    editStatus.textContent =
+                        "Uploading profile photo...";
+
+                    const storageRef = firebase
+                        .storage()
+                        .ref(
+                            "player-profiles/" +
+                            currentPlayerDocId +
+                            "/" +
+                            Date.now() +
+                            "_" +
+                            file.name
+                        );
+
+                    await storageRef.put(file);
+
+                    imageUrl =
+                        await storageRef.getDownloadURL();
+
+                }
+
+
+                // =========================
+                // UPDATE FIRESTORE
+                // =========================
+
+                await db
+                    .collection("players")
+                    .doc(currentPlayerDocId)
+                    .update({
+
+                        name:
+                            document.getElementById("editName").value.trim(),
+
+                        language:
+                            document.getElementById("editLanguage").value.trim(),
+
+                        instagram:
+                            document.getElementById("editInstagram").value.trim(),
+
+                        youtube:
+                            document.getElementById("editYoutube").value.trim(),
+
+                        discord:
+                            document.getElementById("editDiscord").value.trim(),
+
+                        facebook:
+                            document.getElementById("editFacebook").value.trim(),
+
+                        image: imageUrl
+
+                    });
+
+
+                // UPDATE LOCAL DATA
+
+                currentPlayerData.name =
+                    document.getElementById("editName").value.trim();
+
+                currentPlayerData.language =
+                    document.getElementById("editLanguage").value.trim();
+
+                currentPlayerData.instagram =
+                    document.getElementById("editInstagram").value.trim();
+
+                currentPlayerData.youtube =
+                    document.getElementById("editYoutube").value.trim();
+
+                currentPlayerData.discord =
+                    document.getElementById("editDiscord").value.trim();
+
+                currentPlayerData.facebook =
+                    document.getElementById("editFacebook").value.trim();
+
+                currentPlayerData.image = imageUrl;
+
+
+                // UPDATE DASHBOARD
+
+                document.getElementById("playerName").textContent =
+                    currentPlayerData.name ||
+                    currentPlayerData.ign ||
+                    "Player";
+
+                document.getElementById("playerImage").src =
+                    imageUrl ||
+                    "images/logo/logo.png";
+
+
+                editStatus.textContent =
+                    "Profile updated successfully!";
+
+
+                setTimeout(() => {
+
+                    editModal.classList.remove("active");
+
+                }, 1000);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                editStatus.textContent =
+                    "Unable to save profile.";
+
+            } finally {
+
+                saveEdit.disabled = false;
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>

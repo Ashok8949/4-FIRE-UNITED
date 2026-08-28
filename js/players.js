@@ -1,5 +1,43 @@
 const params = new URLSearchParams(window.location.search);
 const playerKey = params.get("id");
+auth.onAuthStateChanged((user) => {
+
+    if (!user) return;
+
+    db.collection("players")
+        .doc(playerKey)
+        .get()
+        .then((doc) => {
+
+            if (!doc.exists) return;
+
+            const player = doc.data();
+
+            if (
+                player.loginEmail &&
+                player.loginEmail.toLowerCase() === user.email.toLowerCase()
+            ) {
+
+                const editArea =
+                    document.getElementById("player-edit-area");
+
+                const editButton =
+                    document.getElementById("edit-player-btn");
+
+                if (editArea && editButton) {
+
+                    editArea.style.display = "block";
+
+                    editButton.href =
+                        `../player-edit-profile.html?id=${playerKey}`;
+
+                }
+
+            }
+
+        });
+
+});
 
 if (!playerKey) {
 

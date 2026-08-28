@@ -1,4 +1,16 @@
+// ==========================================
+// ADMIN EMAILS
+// ==========================================
+
+const ADMIN_EMAILS = [
+    "aks303603@gmail.com"
+];
+
+
+// ==========================================
 // Login with Firebase
+// ==========================================
+
 document.getElementById("loginBtn").addEventListener("click", () => {
 
     const email = document.getElementById("username").value.trim();
@@ -9,37 +21,57 @@ document.getElementById("loginBtn").addEventListener("click", () => {
 
     auth.signInWithEmailAndPassword(email, password)
 
-.then((userCredential) => {
+    .then((userCredential) => {
 
-    error.style.color = "#00ff99";
-    error.innerHTML = "ACCESS GRANTED...";
+        const user = userCredential.user;
 
-    document.getElementById("loginBtn").innerHTML =
-        '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+        // Check Admin
+        if (!ADMIN_EMAILS.includes(user.email.toLowerCase())) {
 
-    setTimeout(() => {
-        window.location.replace("dashboard.html");
-    }, 800);
+            auth.signOut();
 
-})
+            error.style.color = "#ff4444";
+            error.innerHTML = "Admin access denied.";
 
-.catch((err) => {
+            return;
 
-    error.style.color = "#ff4444";
-    error.innerHTML = "Invalid Email or Password";
+        }
 
-    box.classList.add("shake");
+        error.style.color = "#00ff99";
+        error.innerHTML = "ACCESS GRANTED...";
 
-    setTimeout(() => {
-        box.classList.remove("shake");
-    }, 500);
+        document.getElementById("loginBtn").innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+
+        setTimeout(() => {
+
+            window.location.replace("dashboard.html");
+
+        }, 800);
+
+    })
+
+    .catch((err) => {
+
+        error.style.color = "#ff4444";
+        error.innerHTML = "Invalid Email or Password";
+
+        box.classList.add("shake");
+
+        setTimeout(() => {
+
+            box.classList.remove("shake");
+
+        }, 500);
+
+    });
 
 });
 
-});
-// ================================
+
+// ==========================================
 // Forgot Password
-// ================================
+// ==========================================
 
 document.getElementById("forgotPassword").addEventListener("click", async (e) => {
 
@@ -48,8 +80,11 @@ document.getElementById("forgotPassword").addEventListener("click", async (e) =>
     const email = document.getElementById("username").value.trim();
 
     if (!email) {
+
         alert("Please enter your admin email first.");
+
         return;
+
     }
 
     try {
@@ -63,15 +98,21 @@ document.getElementById("forgotPassword").addEventListener("click", async (e) =>
         switch (err.code) {
 
             case "auth/user-not-found":
+
                 alert("No account found with this email.");
+
                 break;
 
             case "auth/invalid-email":
+
                 alert("Please enter a valid email.");
+
                 break;
 
             default:
+
                 alert(err.message);
+
         }
 
     }

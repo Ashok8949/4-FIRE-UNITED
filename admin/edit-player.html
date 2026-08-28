@@ -3,288 +3,254 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Edit Player | 4 FIRE UNITED</title>
+    <title>Edit Player | 4 FIRE UNITED</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap"
+        rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
 
-<link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
+    <link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
 
-<style>
-body{
-    visibility:hidden;
-}
-</style>
+    <style>
+        body {
+            visibility: hidden;
+        }
+    </style>
 
 </head>
 
 <body>
 
-<div class="main">
+    <div class="main">
 
-    <div class="topbar">
+        <div class="topbar">
 
-        <h1>EDIT PLAYER</h1>
+            <h1>EDIT PLAYER</h1>
 
-        <a href="players.html" class="back-btn">
+            <a href="players.html" class="back-btn">
 
-            <i class="fa-solid fa-arrow-left"></i>
+                <i class="fa-solid fa-arrow-left"></i>
 
-            Back
+                Back
 
-        </a>
-
-    </div>
-
-    <div class="edit-box">
-
-        <!-- Player Image -->
-
-        <div class="player-image-box">
-
-            <img id="previewImage"
-                 src="../images/logo/logo.png"
-                 alt="Player">
-
-            <label class="upload-btn">
-
-    <i class="fa-solid fa-image"></i>
-
-    Choose Player Image
-
-</label>
-
-<input
-    type="file"
-    id="image"
-    accept="image/*">
+            </a>
 
         </div>
 
-        <!-- BASIC INFORMATION -->
+        <div class="edit-box">
 
-        <h2 class="section-title">BASIC INFORMATION</h2>
+            <!-- Player Image -->
 
-        <div class="form-grid">
+            <div class="player-image-box">
 
-            <input type="text" id="name" placeholder="Player Name">
+                <img id="previewImage" src="../images/logo/logo.png" alt="Player">
 
-            <input type="text" id="ign" placeholder="IGN">
+                <label class="upload-btn">
 
-            <input type="text" id="uid" placeholder="Free Fire UID">
+                    <i class="fa-solid fa-image"></i>
 
-            <input type="text" id="guild" placeholder="Guild">
+                    Choose Player Image
 
-            <input type="text" id="role" placeholder="Role">
+                </label>
 
-            <input type="text" id="language" placeholder="Language">
+                <input type="file" id="image" accept="image/*">
 
-            <select id="country">
+            </div>
 
-    <option value="">Select Country</option>
+            <!-- BASIC INFORMATION -->
 
-    <option value="India">🇮🇳 India</option>
+            <h2 class="section-title">BASIC INFORMATION</h2>
 
-    <option value="Bangladesh">🇧🇩 Bangladesh</option>
+            <div class="form-grid">
 
-    <option value="Nepal">🇳🇵 Nepal</option>
+                <input type="text" id="name" placeholder="Player Name">
 
-    <option value="Pakistan">🇵🇰 Pakistan</option>
+                <input type="text" id="ign" placeholder="IGN">
 
-    <option value="Brazil">🇧🇷 Brazil</option>
+                <input type="text" id="uid" placeholder="Free Fire UID">
 
-    <option value="Indonesia">🇮🇩 Indonesia</option>
+                <input type="text" id="guild" placeholder="Guild">
 
-    <option value="Thailand">🇹🇭 Thailand</option>
+                <input type="text" id="role" placeholder="Role">
 
-    <option value="Vietnam">🇻🇳 Vietnam</option>
+                <input type="text" id="language" placeholder="Language">
 
-    <option value="United States">🇺🇸 United States</option>
+                <select id="country">
 
-    <option value="Russia">🇷🇺 Russia</option>
+                    <option value="">Select Country</option>
 
-</select>
+                    <option value="India">🇮🇳 India</option>
 
-<input
-    type="number"
-    id="since"
-    placeholder="Joined Since (e.g. 2024)">
+                    <option value="Bangladesh">🇧🇩 Bangladesh</option>
 
-            <input
-    type="number"
-    id="displayOrder"
-    placeholder="Display Order (1,2,3...)">
+                    <option value="Nepal">🇳🇵 Nepal</option>
 
-            <div class="checkbox-group">
+                    <option value="Pakistan">🇵🇰 Pakistan</option>
 
-    <label>
+                    <option value="Brazil">🇧🇷 Brazil</option>
 
-        <input type="checkbox" id="featured">
+                    <option value="Indonesia">🇮🇩 Indonesia</option>
 
-        Show on Home Page
+                    <option value="Thailand">🇹🇭 Thailand</option>
 
-    </label>
+                    <option value="Vietnam">🇻🇳 Vietnam</option>
 
-</div>
+                    <option value="United States">🇺🇸 United States</option>
 
-        </div>
+                    <option value="Russia">🇷🇺 Russia</option>
 
-        <!-- GAME INFORMATION -->
+                </select>
 
-        <h2 class="section-title">GAME INFORMATION</h2>
+                <input type="number" id="since" placeholder="Joined Since (e.g. 2024)">
 
-        <div class="form-grid">
+                <input type="number" id="displayOrder" placeholder="Display Order (1,2,3...)">
 
-            <input type="number" id="level" placeholder="Level">
+                <div class="checkbox-group">
 
-            <select id="rank">
+                    <label>
 
-    <option value="">Select Rank</option>
+                        <input type="checkbox" id="featured">
 
-    <option value="Bronze">Bronze</option>
+                        Show on Home Page
 
-    <option value="Silver I">Silver I</option>
-    <option value="Silver II">Silver II</option>
-    <option value="Silver III">Silver III</option>
+                    </label>
 
-    <option value="Gold I">Gold I</option>
-    <option value="Gold II">Gold II</option>
-    <option value="Gold III">Gold III</option>
-    <option value="Gold IV">Gold IV</option>
+                    <div class="form-group">
+                        <label for="loginEmail">Player Login Email</label>
+                        <input type="email" id="loginEmail" placeholder="player@example.com">
+                    </div>
 
-    <option value="Platinum I">Platinum I</option>
-    <option value="Platinum II">Platinum II</option>
-    <option value="Platinum III">Platinum III</option>
-    <option value="Platinum IV">Platinum IV</option>
+                </div>
 
-    <option value="Diamond I">Diamond I</option>
-    <option value="Diamond II">Diamond II</option>
-    <option value="Diamond III">Diamond III</option>
-    <option value="Diamond IV">Diamond IV</option>
-    <option value="Diamond V">Diamond V</option>
+            </div>
 
-    <option value="Heroic">Heroic</option>
+            <!-- GAME INFORMATION -->
 
-    <option value="Elite Heroic">Elite Heroic</option>
+            <h2 class="section-title">GAME INFORMATION</h2>
 
-    <option value="Master">Master</option>
+            <div class="form-grid">
 
-    <option value="Grandmaster">Grandmaster</option>
+                <input type="number" id="level" placeholder="Level">
 
-</select>
+                <select id="rank">
 
-            <input type="text" id="kd" placeholder="KD">
+                    <option value="">Select Rank</option>
 
-            <input type="text" id="headshot" placeholder="Headshot %">
+                    <option value="Bronze">Bronze</option>
 
-            <input type="number" id="matches" placeholder="Matches">
+                    <option value="Silver I">Silver I</option>
+                    <option value="Silver II">Silver II</option>
+                    <option value="Silver III">Silver III</option>
 
-            <input type="number" id="booyah" placeholder="Booyah">
+                    <option value="Gold I">Gold I</option>
+                    <option value="Gold II">Gold II</option>
+                    <option value="Gold III">Gold III</option>
+                    <option value="Gold IV">Gold IV</option>
 
-            <input
-    type="text"
-    id="weaponName"
-    placeholder="Favorite Weapon">
+                    <option value="Platinum I">Platinum I</option>
+                    <option value="Platinum II">Platinum II</option>
+                    <option value="Platinum III">Platinum III</option>
+                    <option value="Platinum IV">Platinum IV</option>
 
-<input
-    type="text"
-    id="weaponType"
-    placeholder="Weapon Type (Shotgun, AR, SMG...)">
+                    <option value="Diamond I">Diamond I</option>
+                    <option value="Diamond II">Diamond II</option>
+                    <option value="Diamond III">Diamond III</option>
+                    <option value="Diamond IV">Diamond IV</option>
+                    <option value="Diamond V">Diamond V</option>
 
-<input
-    type="text"
-    id="weaponQuote"
-    placeholder="Weapon Quote">
+                    <option value="Heroic">Heroic</option>
 
-<label class="upload-btn">
+                    <option value="Elite Heroic">Elite Heroic</option>
 
-    <i class="fa-solid fa-gun"></i>
+                    <option value="Master">Master</option>
 
-    Choose Weapon Image
+                    <option value="Grandmaster">Grandmaster</option>
 
-</label>
+                </select>
 
-<input
-    type="file"
-    id="weaponImage"
-    accept="image/*">
+                <input type="text" id="kd" placeholder="KD">
 
-        </div>
+                <input type="text" id="headshot" placeholder="Headshot %">
 
-        <!-- SOCIAL MEDIA -->
+                <input type="number" id="matches" placeholder="Matches">
 
-        <h2 class="section-title">SOCIAL MEDIA</h2>
+                <input type="number" id="booyah" placeholder="Booyah">
 
-        <div class="form-grid">
+                <input type="text" id="weaponName" placeholder="Favorite Weapon">
 
-            <input
-                type="url"
-                id="instagram"
-                placeholder="Instagram Profile Link">
+                <input type="text" id="weaponType" placeholder="Weapon Type (Shotgun, AR, SMG...)">
 
-            <input
-                type="url"
-                id="youtube"
-                placeholder="YouTube Channel Link">
+                <input type="text" id="weaponQuote" placeholder="Weapon Quote">
 
-            <input
-                type="url"
-                id="discord"
-                placeholder="Discord Profile / Invite Link">
+                <label class="upload-btn">
 
-            <input
-                type="url"
-                id="facebook"
-                placeholder="Facebook Profile Link">
+                    <i class="fa-solid fa-gun"></i>
 
-        </div>
+                    Choose Weapon Image
 
-        <progress
-    id="uploadProgress"
-    value="0"
-    max="100"
-    style="
+                </label>
+
+                <input type="file" id="weaponImage" accept="image/*">
+
+            </div>
+
+            <!-- SOCIAL MEDIA -->
+
+            <h2 class="section-title">SOCIAL MEDIA</h2>
+
+            <div class="form-grid">
+
+                <input type="url" id="instagram" placeholder="Instagram Profile Link">
+
+                <input type="url" id="youtube" placeholder="YouTube Channel Link">
+
+                <input type="url" id="discord" placeholder="Discord Profile / Invite Link">
+
+                <input type="url" id="facebook" placeholder="Facebook Profile Link">
+
+            </div>
+
+            <progress id="uploadProgress" value="0" max="100" style="
         width:100%;
         display:none;
         margin:18px 0;
     ">
-</progress>
+            </progress>
 
-<p
-    id="uploadStatus"
-    style="
+            <p id="uploadStatus" style="
         display:none;
         color:#ff8a00;
         font-weight:600;
         margin-bottom:15px;
     ">
-</p>
+            </p>
 
-        <button class="save-btn" id="saveBtn">
+            <button class="save-btn" id="saveBtn">
 
-            <i class="fa-solid fa-floppy-disk"></i>
+                <i class="fa-solid fa-floppy-disk"></i>
 
-            Save Player
+                Save Player
 
-        </button>
+            </button>
+
+        </div>
 
     </div>
 
-</div>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
 
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
-
-<script src="js/firebase.js?v=1783829699314"></script>
-<script src="js/auth-guard.js?v=1783829699314"></script>
-<script src="js/edit-player.js?v=1783829699314"></script>
+    <script src="js/firebase.js?v=1783829699314"></script>
+    <script src="js/auth-guard.js?v=1783829699314"></script>
+    <script src="js/edit-player.js?v=1783829699314"></script>
 
 </body>
 

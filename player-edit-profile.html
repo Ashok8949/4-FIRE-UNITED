@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Profile | 4 FIRE UNITED</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #050505;
+            color: #fff;
+            font-family: Poppins, Arial, sans-serif;
+            padding: 30px;
+        }
+
+        .main {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid #ff6200;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: .3s;
+        }
+
+        .back-btn:hover {
+            background: #ff6200;
+        }
+
+        .edit-box {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 18px;
+            padding: 30px;
+        }
+
+        .player-image-box {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        #previewImage {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #ff6200;
+            display: block;
+            margin: 0 auto 18px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 11px 18px;
+            border: 1px solid #ff6200;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            background: #181818;
+        }
+
+        .upload-btn:hover {
+            background: #ff6200;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .section-title {
+            color: #ff7200;
+            font-size: 20px;
+            margin: 30px 0 18px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-grid input,
+        .form-grid select {
+            width: 100%;
+            padding: 13px 14px;
+            background: #181818;
+            border: 1px solid #292929;
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-grid input:focus,
+        .form-grid select:focus {
+            border-color: #ff7200;
+        }
+
+        select option {
+            background: #181818;
+            color: #fff;
+        }
+
+        .weapon-image-box {
+            margin-top: 15px;
+        }
+
+        .weapon-preview {
+            display: none;
+            width: 150px;
+            height: 100px;
+            object-fit: contain;
+            background: #181818;
+            border: 1px solid #292929;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .save-btn {
+            width: 100%;
+            margin-top: 30px;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #ff7200;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #ff6200;
+        }
+
+        .save-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        #uploadProgress {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        #uploadStatus {
+            color: #ff8a00;
+            font-weight: 600;
+            margin-top: 12px;
+            display: none;
+        }
+
+        @media(max-width:700px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .topbar {
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .topbar h1 {
+                font-size: 24px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .edit-box {
+                padding: 20px;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="main">
+
+        <div class="topbar">
+
+            <a href="player-dashboard.html" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </a>
+
+
+
+        </div>
+
+    </div>
+
+    </div>
+
+
+    <div class="edit-box">
+
+
+        <!-- ========================= -->
+        <!-- PLAYER IMAGE -->
+        <!-- ========================= -->
+
+        <div class="player-image-box">
+
+            <img id="previewImage" src="images/logo/logo.png" alt="Player">
+
+            <label class="upload-btn" for="image">
+
+                <i class="fa-solid fa-camera"></i>
+
+                Change Profile Photo
+
+            </label>
+
+            <input type="file" id="image" accept="image/*">
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- BASIC INFORMATION -->
+        <!-- ========================= -->
+
+        <h2 class="section-title">
+            BASIC INFORMATION
+        </h2>
+
+        <div class="form-grid">
+
+            <input type="text" id="name" placeholder="Player Name">
+
+            <input type="text" id="ign" placeholder="IGN">
+
+            
+
+            <input type="text" id="uid" placeholder="Free Fire UID">
+
+            <input type="text" id="guild" placeholder="Guild">
+
+            <input type="text" id="role" placeholder="Role">
+
+            <input type="text" id="language" placeholder="Language">
+
+            <select id="country">
+
+                <option value="">Select Country</option>
+
+                <option value="India">🇮🇳 India</option>
+                <option value="Bangladesh">🇧🇩 Bangladesh</option>
+                <option value="Nepal">🇳🇵 Nepal</option>
+                <option value="Pakistan">🇵🇰 Pakistan</option>
+                <option value="Brazil">🇧🇷 Brazil</option>
+                <option value="Indonesia">🇮🇩 Indonesia</option>
+                <option value="Thailand">🇹🇭 Thailand</option>
+                <option value="Vietnam">🇻🇳 Vietnam</option>
+                <option value="United States">🇺🇸 United States</option>
+                <option value="Russia">🇷🇺 Russia</option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- GAME INFORMATION -->
+        <!-- ========================= -->
+
+        <h2 class="section-title">
+            GAME INFORMATION
+        </h2>
+
+        <div class="form-grid">
+
+            <input type="number" id="level" placeholder="Level">
+
+            <select id="rank">
+
+                <option value="">Select Rank</option>
+
+                <option value="Bronze">Bronze</option>
+
+                <option value="Silver I">Silver I</option>
+                <option value="Silver II">Silver II</option>
+                <option value="Silver III">Silver III</option>
+
+                <option value="Gold I">Gold I</option>
+                <option value="Gold II">Gold II</option>
+                <option value="Gold III">Gold III</option>
+                <option value="Gold IV">Gold IV</option>
+
+                <option value="Platinum I">Platinum I</option>
+                <option value="Platinum II">Platinum II</option>
+                <option value="Platinum III">Platinum III</option>
+                <option value="Platinum IV">Platinum IV</option>
+
+                <option value="Diamond I">Diamond I</option>
+                <option value="Diamond II">Diamond II</option>
+                <option value="Diamond III">Diamond III</option>
+                <option value="Diamond IV">Diamond IV</option>
+                <option value="Diamond V">Diamond V</option>
+
+                <option value="Heroic">Heroic</option>
+                <option value="Elite Heroic">Elite Heroic</option>
+                <option value="Master">Master</option>
+                <option value="Grandmaster">Grandmaster</option>
+
+            </select>
+
+            <input type="text" id="kd" placeholder="KD">
+
+            <input type="text" id="headshot" placeholder="Headshot %">
+
+            <input type="number" id="matches" placeholder="Matches">
+
+            <input type="number" id="booyah" placeholder="Booyah">
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- WEAPON INFORMATION -->
+        <!-- ========================= -->
+
+        <h2 class="section-title">
+            WEAPON INFORMATION
+        </h2>
+
+        <div class="form-grid">
+
+            <input type="text" id="weaponName" placeholder="Favorite Weapon">
+
+            <input type="text" id="weaponType" placeholder="Weapon Type (Shotgun, AR, SMG...)">
+
+            <input type="text" id="weaponQuote" placeholder="Weapon Quote">
+
+        </div>
+
+        <div class="weapon-image-box">
+
+            <img id="weaponPreview" class="weapon-preview" src="" alt="Weapon">
+
+            <label class="upload-btn" for="weaponImage">
+
+                <i class="fa-solid fa-gun"></i>
+
+                Choose Weapon Image
+
+            </label>
+
+            <input type="file" id="weaponImage" accept="image/*">
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- SOCIAL MEDIA -->
+        <!-- ========================= -->
+
+        <h2 class="section-title">
+            SOCIAL MEDIA
+        </h2>
+
+        <div class="form-grid">
+
+            <input type="url" id="instagram" placeholder="Instagram Profile Link">
+
+            <input type="url" id="youtube" placeholder="YouTube Channel Link">
+
+            <input type="url" id="discord" placeholder="Discord Profile / Invite Link">
+
+            <input type="url" id="facebook" placeholder="Facebook Profile Link">
+
+            
+
+        </div>
+
+       <h2 class="section-title">
+    ACCOUNT SECURITY
+</h2>
+
+<div class="form-grid">
+
+    <!-- Current / Old Email -->
+   <input
+    type="email"
+    id="currentEmail"
+    placeholder="Current Email"
+    autocomplete="email"
+    readonly
+>
+
+<input
+    type="email"
+    id="loginEmail"
+    placeholder="Enter New Email"
+    autocomplete="email"
+>
+    <!-- Current Password -->
+    <input
+        type="password"
+        id="currentPassword"
+        placeholder="Current Password"
+        autocomplete="current-password"
+    >
+
+    <!-- New Password -->
+    <input
+        type="password"
+        id="newPassword"
+        placeholder="New Password"
+        autocomplete="new-password"
+    >
+
+    <!-- Confirm Password -->
+    <input
+        type="password"
+        id="confirmPassword"
+        placeholder="Confirm New Password"
+        autocomplete="new-password"
+    >
+
+</div>
+
+
+        <!-- ========================= -->
+        <!-- UPLOAD STATUS -->
+        <!-- ========================= -->
+
+        <progress id="uploadProgress" value="0" max="100" style="display:none;">
+        </progress>
+
+        <p id="uploadStatus"></p>
+
+
+        <!-- ========================= -->
+        <!-- SAVE -->
+        <!-- ========================= -->
+
+        <button class="save-btn" id="saveBtn">
+
+            <i class="fa-solid fa-floppy-disk"></i>
+
+            Save Changes
+
+        </button>
+
+    </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- FIREBASE -->
+    <!-- ========================= -->
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
+
+
+    <script src="js/firebase.js"></script>
+
+    <script src="js/player-edit-profile.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>4 FIRE UNITED | PLAYER LOGIN</title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            background: #050505;
+            overflow: hidden;
+            position: relative;
+            color: #fff;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: -20%;
+            background:
+                radial-gradient(circle at 20% 20%, #ff5a00 0%, transparent 25%),
+                radial-gradient(circle at 80% 80%, #ff2200 0%, transparent 25%),
+                #050505;
+            filter: blur(70px);
+            opacity: .55;
+            animation: bgMove 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgMove {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.15);
+            }
+        }
+
+        .fire {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                    #ffb000,
+                    #ff5500,
+                    #ff2200,
+                    transparent 70%);
+            filter: blur(55px);
+            opacity: .35;
+            animation: floatFire 7s ease-in-out infinite;
+        }
+
+        .fire.one {
+            top: -80px;
+            left: -70px;
+        }
+
+        .fire.two {
+            bottom: -80px;
+            right: -70px;
+            animation-delay: 2s;
+        }
+
+        @keyframes floatFire {
+            50% {
+                transform: translateY(-35px);
+            }
+        }
+
+        .particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .particles span {
+            position: absolute;
+            bottom: -20px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ff7600;
+            box-shadow: 0 0 15px #ff5500;
+            animation: particle 7s linear infinite;
+        }
+
+        .particles span:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .particles span:nth-child(2) {
+            left: 25%;
+            animation-delay: 2s;
+        }
+
+        .particles span:nth-child(3) {
+            left: 40%;
+            animation-delay: 4s;
+        }
+
+        .particles span:nth-child(4) {
+            left: 55%;
+            animation-delay: 1s;
+        }
+
+        .particles span:nth-child(5) {
+            left: 70%;
+            animation-delay: 3s;
+        }
+
+        .particles span:nth-child(6) {
+            left: 85%;
+            animation-delay: 5s;
+        }
+
+        @keyframes particle {
+
+            0% {
+                transform: translateY(0) scale(.4);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-110vh) scale(1.4);
+                opacity: 0;
+            }
+
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 5;
+            width: 420px;
+            padding: 42px;
+            border-radius: 26px;
+            background: rgba(15, 15, 15, .58);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow:
+                0 0 30px rgba(255, 70, 0, .35),
+                0 0 100px rgba(255, 70, 0, .12);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo img {
+            width: 92px;
+            filter:
+                drop-shadow(0 0 12px #ff5500) drop-shadow(0 0 28px #ff7700);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .logo h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 50px;
+            letter-spacing: 3px;
+            margin-top: 12px;
+        }
+
+        .logo p {
+            color: #ff8b2b;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 25px;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .input-box i {
+            position: absolute;
+            left: 17px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff7600;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 54px;
+            padding: 0 48px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            outline: none;
+            background: rgba(255, 255, 255, .06);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            transition: .3s;
+        }
+
+        .input-box input:focus {
+            border-color: #ff6500;
+            box-shadow: 0 0 18px rgba(255, 90, 0, .3);
+        }
+
+        #togglePassword {
+            left: auto;
+            right: 17px;
+            cursor: pointer;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0 20px;
+            font-size: 13px;
+        }
+
+        .login-options label {
+            color: #ccc;
+        }
+
+        .login-options a {
+            color: #ff8a22;
+            text-decoration: none;
+        }
+
+        #loginBtn {
+            width: 100%;
+            height: 54px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #ff3200, #ff8800);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        #loginBtn:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 0 20px #ff5500,
+                0 0 40px rgba(255, 100, 0, .4);
+        }
+
+        #loginBtn:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #error {
+            min-height: 22px;
+            margin-top: 15px;
+            text-align: center;
+            color: #ff5555;
+            font-size: 13px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            color: #777;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        @media(max-width:500px) {
+
+            .login-container {
+                width: 92%;
+                padding: 30px 22px;
+            }
+
+            .logo h1 {
+                font-size: 42px;
+            }
+
+            .logo img {
+                width: 75px;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="fire one"></div>
+    <div class="fire two"></div>
+
+    <div class="particles">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="login-container">
+
+        <div class="logo">
+
+            <img src="images/logo/logo.png" alt="4 FIRE UNITED">
+
+            <h1>4 FIRE UNITED</h1>
+
+            <p>PLAYER ACCESS</p>
+
+        </div>
+
+        <h2 class="login-title">
+            PLAYER LOGIN
+        </h2>
+
+        <div class="input-box">
+
+            <i class="fa-solid fa-user"></i>
+
+            <input type="email" id="email" placeholder="Player Email" autocomplete="email">
+
+        </div>
+
+        <div class="input-box">
+
+            <i class="fa-solid fa-lock"></i>
+
+            <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+
+            <i class="fa-solid fa-eye" id="togglePassword">
+            </i>
+
+        </div>
+
+        <div class="login-options">
+
+            <label>
+                <input type="checkbox" id="remember">
+                Remember Me
+            </label>
+
+            <a href="#" id="forgotPassword">
+                Forgot Password?
+            </a>
+
+        </div>
+
+        <button id="loginBtn">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            &nbsp; LOGIN
+        </button>
+
+        <p id="error"></p>
+
+        <div class="footer">
+            AUTHORIZED 4FU PLAYERS ONLY
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+    <script src="js/firebase.js"></script>
+
+    <script>
+
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const loginBtn = document.getElementById("loginBtn");
+        const errorBox = document.getElementById("error");
+        const togglePassword = document.getElementById("togglePassword");
+        const forgotPassword = document.getElementById("forgotPassword");
+
+        togglePassword.addEventListener("click", () => {
+
+            if (passwordInput.type === "password") {
+
+                passwordInput.type = "text";
+
+                togglePassword.classList.remove("fa-eye");
+                togglePassword.classList.add("fa-eye-slash");
+
+            } else {
+
+                passwordInput.type = "password";
+
+                togglePassword.classList.remove("fa-eye-slash");
+                togglePassword.classList.add("fa-eye");
+
+            }
+
+        });
+
+        loginBtn.addEventListener("click", async () => {
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            errorBox.textContent = "";
+
+            if (!email || !password) {
+
+                errorBox.textContent = "Please enter email and password.";
+
+                return;
+
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin"></i> LOGIN...';
+
+            try {
+
+                const result =
+                    await auth.signInWithEmailAndPassword(
+                        email,
+                        password
+                    );
+
+                const user = result.user;
+
+                let playerSnapshot =
+                    await db.collection("players")
+                        .where("authUid", "==", user.uid)
+                        .limit(1)
+                        .get();
+
+                if (playerSnapshot.empty) {
+                    playerSnapshot =
+                        await db.collection("players")
+                            .where("loginEmail", "==", user.email)
+                            .limit(1)
+                            .get();
+                }
+
+                if (playerSnapshot.empty) {
+
+                    await auth.signOut();
+
+                    throw new Error(
+                        "PLAYER_ACCOUNT_NOT_LINKED"
+                    );
+
+                }
+
+                const playerDoc =
+                    playerSnapshot.docs[0];
+
+                sessionStorage.setItem(
+                    "4fuPlayerId",
+                    playerDoc.id
+                );
+
+                sessionStorage.setItem(
+                    "4fuPlayerUid",
+                    user.uid
+                );
+
+                window.location.href =
+                    "player-dashboard.html";
+
+            } catch (error) {
+
+                console.error(error);
+
+                if (error.message === "PLAYER_ACCOUNT_NOT_LINKED") {
+
+                    errorBox.textContent =
+                        "Your account is not linked with a 4FU player.";
+
+                } else {
+
+                    switch (error.code) {
+
+                        case "auth/invalid-credential":
+                        case "auth/wrong-password":
+                        case "auth/user-not-found":
+
+                            errorBox.textContent =
+                                "Invalid email or password.";
+
+                            break;
+
+                        case "auth/too-many-requests":
+
+                            errorBox.textContent =
+                                "Too many attempts. Try again later.";
+
+                            break;
+
+                        default:
+
+                            errorBox.textContent =
+                                "Login failed. Please try again.";
+
+                    }
+
+                }
+
+                loginBtn.disabled = false;
+
+                loginBtn.innerHTML =
+                    '<i class="fa-solid fa-right-to-bracket"></i> &nbsp; LOGIN';
+
+            }
+
+        });
+
+        forgotPassword.addEventListener("click", async (event) => {
+
+            event.preventDefault();
+
+            const email = emailInput.value.trim();
+
+            if (!email) {
+
+                errorBox.textContent =
+                    "Enter your email first.";
+
+                return;
+
+            }
+
+            try {
+
+                await auth.sendPasswordResetEmail(email);
+
+                errorBox.style.color = "#55ff99";
+
+                errorBox.textContent =
+                    "Password reset email sent.";
+
+            } catch (error) {
+
+                errorBox.style.color = "#ff5555";
+
+                errorBox.textContent =
+                    "Unable to send reset email.";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
