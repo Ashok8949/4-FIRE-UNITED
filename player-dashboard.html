@@ -1693,6 +1693,156 @@ body.horror-active::after {
  .horror-sound{right:10px;top:10px;padding:8px 10px;font-size:9px}
 }
 
+
+
+/* =====================================================
+   REAL-TIME PLAYERS ONLINE
+===================================================== */
+
+.online-players-card {
+    margin-top: 25px;
+}
+
+.online-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.online-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.online-title i {
+    color: #ff7200;
+}
+
+.online-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 11px;
+    border: 1px solid #2b2b2b;
+    border-radius: 999px;
+    background: #151515;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.online-count-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 10px #22c55e;
+    animation: onlinePulse 1.4s infinite;
+}
+
+.online-player-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.online-player {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px;
+    background: #151515;
+    border: 1px solid #292929;
+    border-radius: 12px;
+    transition: .25s;
+}
+
+.online-player:hover {
+    border-color: #ff7200;
+    transform: translateY(-2px);
+}
+
+.online-player-image {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ff7200;
+    background: #090909;
+}
+
+.online-player-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.online-player-name {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.online-player-role {
+    color: #888;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.online-live {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #22c55e;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.online-live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px #22c55e;
+}
+
+.online-empty {
+    grid-column: 1 / -1;
+    padding: 25px;
+    text-align: center;
+    color: #777;
+    border: 1px dashed #292929;
+    border-radius: 12px;
+}
+
+@keyframes onlinePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.35); opacity: .55; }
+}
+
+@media (max-width: 900px) {
+    .online-player-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .online-header {
+        align-items: flex-start;
+    }
+
+    .online-player-list {
+        grid-template-columns: 1fr;
+    }
+}
+
 </style>
 
 <body>
@@ -2106,6 +2256,43 @@ body.horror-active::after {
 
                 </div>
 
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+    <!-- =========================================
+         REAL-TIME PLAYERS ONLINE
+    ========================================== -->
+
+    <div class="online-players-card card">
+
+        <div class="online-header">
+
+            <div class="online-title">
+                <h2 style="margin:0;">
+                    <i class="fa-solid fa-signal"></i>
+                    Players Online
+                </h2>
+            </div>
+
+            <div class="online-count">
+                <span class="online-count-dot"></span>
+                <span id="onlinePlayerCount">0</span> ONLINE
+            </div>
+
+        </div>
+
+        <div
+            class="online-player-list"
+            id="onlinePlayerList">
+
+            <div class="online-empty">
+                Checking who's online...
             </div>
 
         </div>
@@ -2589,6 +2776,7 @@ body.horror-active::after {
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
 
 <script src="../js/firebase.js"></script>
@@ -2725,6 +2913,11 @@ firebase.auth().onAuthStateChanged(async (user) => {
         loadMyContent(
             currentPlayer
         );
+
+
+        startOnlinePresence();
+
+        startOnlinePlayersListener();
 
 
     } catch (error) {
@@ -3047,7 +3240,7 @@ document.getElementById("cancelEdit")?.addEventListener(
 
 document.getElementById(
     "editImage"
-).addEventListener(
+)?.addEventListener(
     "change",
     (event) => {
 
@@ -3086,7 +3279,7 @@ document.getElementById(
 
 document.getElementById(
     "saveEdit"
-).addEventListener(
+)?.addEventListener(
     "click",
     async () => {
 
@@ -3247,6 +3440,352 @@ document.getElementById(
 );
 
 
+
+
+/* =========================================
+   REAL-TIME ONLINE PRESENCE
+   Firebase Realtime Database + onDisconnect
+========================================= */
+
+let onlinePresenceRef = null;
+let onlinePlayersRef = null;
+let onlinePlayersListener = null;
+let onlinePresenceStarted = false;
+
+async function startOnlinePresence() {
+
+    if (!currentPlayer || !currentPlayer.id) {
+        return;
+    }
+
+    if (typeof firebase.database !== "function") {
+        console.error(
+            "Firebase Realtime Database SDK is not loaded."
+        );
+        return;
+    }
+
+    try {
+
+        const presenceDb =
+            firebase.database();
+
+        /*
+         * One presence record per player document.
+         * Realtime Database handles disconnects server-side.
+         */
+        onlinePresenceRef =
+            presenceDb
+                .ref("presence/" + currentPlayer.id);
+
+        /*
+         * IMPORTANT:
+         * onDisconnect is registered BEFORE setting online=true.
+         * Firebase will automatically write false if this
+         * connection disappears, including tab/browser close.
+         */
+        await onlinePresenceRef
+            .onDisconnect()
+            .set(false);
+
+        await onlinePresenceRef
+            .set({
+                online: true,
+                name:
+                    currentPlayer.name ||
+                    currentPlayer.ign ||
+                    "Player",
+                lastSeen:
+                    firebase.database.ServerValue.TIMESTAMP
+            });
+
+        onlinePresenceStarted = true;
+
+        /*
+         * Keep lastSeen fresh while the page is connected.
+         * This is only a heartbeat display value now;
+         * onDisconnect is responsible for the instant offline state.
+         */
+        onlinePresenceRef
+            .onDisconnect()
+            .set(false);
+
+    } catch (error) {
+
+        console.error(
+            "Realtime presence start error:",
+            error
+        );
+    }
+}
+
+async function setMyPlayerOffline() {
+
+    if (!onlinePresenceRef) {
+        return;
+    }
+
+    try {
+
+        await onlinePresenceRef
+            .set(false);
+
+    } catch (error) {
+
+        console.error(
+            "Realtime presence offline error:",
+            error
+        );
+    }
+}
+
+async function loadOnlinePlayerDetails(
+    presenceSnapshot
+) {
+
+    const list =
+        document.getElementById(
+            "onlinePlayerList"
+        );
+
+    const count =
+        document.getElementById(
+            "onlinePlayerCount"
+        );
+
+    if (!list || !count) {
+        return;
+    }
+
+    const onlineIds = [];
+
+    presenceSnapshot.forEach(
+        (child) => {
+
+            const value =
+                child.val();
+
+            if (
+                value &&
+                typeof value === "object" &&
+                value.online === true
+            ) {
+                onlineIds.push({
+                    id: child.key,
+                    lastSeen:
+                        Number(value.lastSeen) || 0
+                });
+            }
+
+        }
+    );
+
+    count.textContent =
+        onlineIds.length;
+
+    if (!onlineIds.length) {
+
+        list.innerHTML =
+            '<div class="online-empty">No players are online right now.</div>';
+
+        return;
+    }
+
+    /*
+     * Fetch the existing player profiles from Firestore
+     * so no profile data is duplicated into presence.
+     */
+    const players =
+        await Promise.all(
+            onlineIds.map(
+                async (presence) => {
+
+                    try {
+
+                        const doc =
+                            await db
+                                .collection("players")
+                                .doc(presence.id)
+                                .get();
+
+                        if (!doc.exists) {
+                            return null;
+                        }
+
+                        return {
+                            id: doc.id,
+                            ...doc.data(),
+                            _lastSeen:
+                                presence.lastSeen
+                        };
+
+                    } catch (error) {
+
+                        console.error(
+                            "Online player profile error:",
+                            error
+                        );
+
+                        return null;
+                    }
+
+                }
+            )
+        );
+
+    const validPlayers =
+        players.filter(Boolean);
+
+    validPlayers.sort(
+        (a, b) =>
+            (b._lastSeen || 0) -
+            (a._lastSeen || 0)
+    );
+
+    count.textContent =
+        validPlayers.length;
+
+    list.innerHTML =
+        validPlayers
+            .map((player) => {
+
+                const name =
+                    player.name ||
+                    player.ign ||
+                    "Player";
+
+                const role =
+                    player.role ||
+                    "Player";
+
+                const image =
+                    player.image ||
+                    player.photo ||
+                    "../images/logo/logo.png";
+
+                return `
+                    <div class="online-player">
+
+                        <img
+                            class="online-player-image"
+                            src="${image}"
+                            alt="${name}"
+                            onerror="this.src='../images/logo/logo.png'">
+
+                        <div class="online-player-info">
+
+                            <div class="online-player-name">
+                                ${name}
+                            </div>
+
+                            <div class="online-player-role">
+                                ${role}
+                            </div>
+
+                        </div>
+
+                        <div class="online-live">
+                            <span class="online-live-dot"></span>
+                            LIVE
+                        </div>
+
+                    </div>
+                `;
+
+            })
+            .join("");
+}
+
+function startOnlinePlayersListener() {
+
+    if (
+        typeof firebase.database !== "function"
+    ) {
+        console.error(
+            "Firebase Realtime Database SDK is not loaded."
+        );
+        return;
+    }
+
+    try {
+
+        const presenceDb =
+            firebase.database();
+
+        onlinePlayersRef =
+            presenceDb.ref("presence");
+
+        if (onlinePlayersListener) {
+            onlinePlayersRef.off(
+                "value",
+                onlinePlayersListener
+            );
+        }
+
+        onlinePlayersListener =
+            (snapshot) => {
+
+                loadOnlinePlayerDetails(
+                    snapshot
+                );
+
+            };
+
+        onlinePlayersRef.on(
+            "value",
+            onlinePlayersListener,
+            (error) => {
+
+                console.error(
+                    "Realtime online listener error:",
+                    error
+                );
+
+                const list =
+                    document.getElementById(
+                        "onlinePlayerList"
+                    );
+
+                const count =
+                    document.getElementById(
+                        "onlinePlayerCount"
+                    );
+
+                if (count) {
+                    count.textContent = "0";
+                }
+
+                if (list) {
+
+                    list.innerHTML =
+                        '<div class="online-empty">Unable to load online players.</div>';
+                }
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Realtime Database error:",
+            error
+        );
+    }
+}
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        /*
+         * Do NOT depend on this for presence.
+         * Firebase onDisconnect() is the real disconnect mechanism.
+         */
+        setMyPlayerOffline();
+
+    }
+);
+
+
 /* =========================================
    LOGOUT
 ========================================= */
@@ -3258,6 +3797,8 @@ document.getElementById(
     async () => {
 
         try {
+
+            await setMyPlayerOffline();
 
             await firebase
                 .auth()
@@ -4084,46 +4625,6 @@ window.deletePlayerContent =
     deletePlayerContent;
 
 </script>
-
-<script>
-/* =====================================================
-   LOGOUT SAFETY HANDLER
-   Added only for the Logout button.
-   This is intentionally a separate script so other
-   dashboard JS errors cannot stop Logout from working.
-===================================================== */
-(function () {
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    if (!logoutBtn) return;
-
-    logoutBtn.addEventListener("click", async function (event) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        try {
-            logoutBtn.disabled = true;
-
-            await firebase.auth().signOut();
-
-            window.location.replace("../player-login.html");
-
-        } catch (error) {
-            console.error("Logout Error:", error);
-
-            logoutBtn.disabled = false;
-
-            alert(
-                "Logout failed:\n\n" +
-                (error && error.message
-                    ? error.message
-                    : "Unable to logout.")
-            );
-        }
-    });
-})();
-</script>
-
 
 <!-- =========================================
      PLAYER DASHBOARD END

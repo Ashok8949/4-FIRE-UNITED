@@ -5,7 +5,8 @@ const firebaseConfig = {
   storageBucket: "fire-united.firebasestorage.app",
   messagingSenderId: "643603449722",
   appId: "1:643603449722:web:8a8952c317a3cecffe78c3",
-  measurementId: "G-JC6K4S3R9C"
+  measurementId: "G-JC6K4S3R9C",
+  databaseURL: "https://fire-united-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -18,4 +19,5 @@ db.enablePersistence({
     console.warn("Firestore Cache:", err.code);
 
 });
+
 const auth = firebase.auth();
