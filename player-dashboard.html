@@ -254,174 +254,7 @@ body {
 }
 
 
-/* =====================================================
-   EDIT PROFILE
-===================================================== */
 
-.edit-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.82);
-    backdrop-filter: blur(8px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    z-index: 9999;
-}
-
-.edit-modal.active {
-    display: flex;
-}
-
-.edit-modal-box {
-    width: 100%;
-    max-width: 650px;
-    max-height: 90vh;
-    overflow-y: auto;
-    background: #111;
-    border: 1px solid #292929;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 0 40px rgba(0,0,0,.7);
-}
-
-.edit-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
-.edit-modal-header h2 {
-    font-size: 22px;
-}
-
-.edit-modal-header h2 i {
-    color: #ff7200;
-    margin-right: 8px;
-}
-
-.close-edit {
-    width: 38px;
-    height: 38px;
-    border: 1px solid #333;
-    background: #181818;
-    color: #fff;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-}
-
-.close-edit:hover {
-    background: #ff7200;
-    border-color: #ff7200;
-}
-
-.edit-profile-content {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 25px;
-}
-
-.edit-photo {
-    text-align: center;
-}
-
-.edit-photo img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #ff7200;
-    display: block;
-    margin: 0 auto 15px;
-}
-
-.edit-photo label {
-    display: inline-block;
-    background: #181818;
-    border: 1px solid #ff7200;
-    color: #fff;
-    padding: 9px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.edit-photo label:hover {
-    background: #ff7200;
-}
-
-#editImage {
-    display: none;
-}
-
-.edit-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.edit-fields label {
-    color: #aaa;
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-.edit-fields input {
-    width: 100%;
-    padding: 12px;
-    background: #181818;
-    border: 1px solid #292929;
-    color: #fff;
-    border-radius: 8px;
-    outline: none;
-    font-family: inherit;
-}
-
-.edit-fields input:focus {
-    border-color: #ff7200;
-}
-
-#editStatus {
-    min-height: 20px;
-    margin-top: 18px;
-    color: #ff7200;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.edit-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.cancel-edit,
-.save-edit {
-    padding: 11px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.cancel-edit {
-    background: #181818;
-    border: 1px solid #333;
-    color: #fff;
-}
-
-.save-edit {
-    background: #ff7200;
-    border: 1px solid #ff7200;
-    color: #fff;
-}
-
-.save-edit:hover {
-    background: #ff6200;
-}
 
 
 /* =====================================================
@@ -617,25 +450,150 @@ body {
 @media(max-width:700px) {
 
     body {
-        padding: 15px;
+        padding: 14px 12px 30px;
+        overflow-x: hidden;
     }
 
+    .dashboard {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* MOBILE TOP AREA
+       Keeps the horror sound button fixed at the top
+       without covering Edit Profile / Logout. */
     .topbar {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
         align-items: flex-start;
-        gap: 15px;
+        gap: 0;
+        margin-bottom: 30px;
+        padding-top: 2px;
+    }
+
+    .logo {
+        width: 100%;
+        padding-right: 155px;
+        font-size: clamp(23px, 7vw, 30px);
+        line-height: 1.05;
+        white-space: nowrap;
     }
 
     .top-actions {
-        flex-direction: column;
+        width: 100%;
+        margin-top: 22px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
         align-items: stretch;
+    }
+
+    .edit-profile,
+    .logout {
+        width: 100%;
+        min-height: 48px;
+        padding: 10px 8px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    /* Horror sound stays at the top-right and never
+       pushes or overlaps the normal dashboard controls. */
+    .horror-sound {
+        right: 10px !important;
+        top: 10px !important;
+        max-width: 47vw;
+        padding: 9px 10px !important;
+        font-size: 8px !important;
+        letter-spacing: .7px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-radius: 10px;
+    }
+
+    .horror-sound i {
+        margin-right: 4px;
+    }
+
+    .welcome {
+        margin-bottom: 20px;
+    }
+
+    .welcome h1 {
+        font-size: clamp(26px, 8vw, 34px);
+        line-height: 1.1;
+    }
+
+    .welcome p {
+        font-size: 14px;
+        line-height: 1.55;
+        margin-top: 7px;
     }
 
     .profile {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
 
-    .welcome h1 {
-        font-size: 27px;
+    .card {
+        width: 100%;
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .profile-image {
+        width: min(185px, 58vw);
+        height: min(185px, 58vw);
+        margin-bottom: 17px;
+    }
+
+    .ign {
+        font-size: 25px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .stat {
+        min-width: 0;
+        padding: 15px 12px;
+    }
+
+    .stat h2 {
+        font-size: 22px;
+        word-break: break-word;
+    }
+
+    .stat p {
+        font-size: 11px;
+    }
+
+    /* Keep the horror entity visible but out of the
+       statistics text/cards. */
+    .horror-entity {
+        right: 5px !important;
+        bottom: 7px !important;
+        transform: scale(.56) !important;
+        transform-origin: bottom right !important;
+        pointer-events: none;
+        z-index: 9007;
+    }
+
+    .horror-eyes {
+        top: 22%;
+        transform: translateX(-50%) scale(.68);
+        pointer-events: none;
+    }
+
+    .horror-warning {
+        width: 92vw;
+        padding: 0 10px;
+        font-size: clamp(25px, 9vw, 44px);
+        letter-spacing: 3px;
     }
 
     .achievement-list {
@@ -654,16 +612,56 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .edit-profile-content {
-        grid-template-columns: 1fr;
+}
+
+@media(max-width:430px) {
+
+    body {
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
-    .edit-photo {
-        margin-bottom: 5px;
+    .logo {
+        padding-right: 145px;
+        font-size: 23px;
     }
 
-    .edit-modal-box {
-        padding: 20px;
+    .top-actions {
+        margin-top: 20px;
+        gap: 8px;
+    }
+
+    .edit-profile,
+    .logout {
+        min-height: 45px;
+        font-size: 12px;
+        padding: 9px 5px;
+    }
+
+    .horror-sound {
+        max-width: 45vw;
+        padding: 8px 8px !important;
+        font-size: 7.5px !important;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .stats {
+        gap: 8px;
+    }
+
+    .stat {
+        padding: 13px 10px;
+    }
+
+    .stat i {
+        font-size: 17px;
+    }
+
+    .stat h2 {
+        font-size: 20px;
     }
 
 }
@@ -1601,6 +1599,100 @@ body {
     transform: scale(1.15);
 }
 
+
+/* =====================================================
+   HORROR ENTITY — HIGH INTENSITY LAYER
+===================================================== */
+body.horror-active::before {
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:9000;
+    background:radial-gradient(circle at 50% 35%, transparent 0 28%, rgba(70,0,0,.10) 55%, rgba(0,0,0,.78) 100%);
+    mix-blend-mode:multiply;
+}
+body.horror-active::after {
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:9001;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 4px);
+    opacity:.18;
+    animation:horrorScan .12s steps(2) infinite;
+}
+@keyframes horrorScan { 50%{transform:translateY(2px);opacity:.28} }
+
+.horror-eyes {
+    position:fixed; z-index:9002; pointer-events:none;
+    width:210px; height:85px; left:50%; top:18%; transform:translateX(-50%);
+    opacity:0; filter:drop-shadow(0 0 12px #b00000);
+    animation:eyeStare 8s infinite;
+}
+.horror-eyes::before,.horror-eyes::after {
+    content:""; position:absolute; width:62px; height:28px; top:28px;
+    background:radial-gradient(ellipse at center, #fff 0 7%, #ff2b2b 8% 25%, #650000 35%, transparent 70%);
+    border-radius:50%;
+    box-shadow:0 0 20px rgba(255,0,0,.85),0 0 50px rgba(160,0,0,.55);
+}
+.horror-eyes::before { left:25px; transform:rotate(8deg); }
+.horror-eyes::after { right:25px; transform:rotate(-8deg); }
+@keyframes eyeStare {
+  0%,44%,100%{opacity:0;transform:translateX(-50%) scale(.8)}
+  47%,53%{opacity:.95;transform:translateX(-50%) scale(1)}
+  50%{opacity:.25}
+  55%{opacity:0}
+  72%,76%{opacity:.7}
+}
+
+.horror-entity {
+    position:fixed; right:34px; bottom:34px; width:190px; height:240px;
+    z-index:9005; pointer-events:none; filter:drop-shadow(0 0 18px rgba(150,0,0,.6));
+    animation:entityFloat 4s ease-in-out infinite;
+}
+@keyframes entityFloat { 50%{transform:translateY(-7px)} }
+.horror-entity .entity-aura {
+    position:absolute; inset:8px; border-radius:50%;
+    background:radial-gradient(circle, rgba(120,0,0,.28), transparent 65%);
+    filter:blur(14px); animation:auraPulse 2.2s ease-in-out infinite;
+}
+@keyframes auraPulse { 50%{transform:scale(1.18);opacity:.55} }
+.horror-entity svg { position:absolute; inset:12px 0 auto; width:190px; height:150px; overflow:visible; }
+.horror-entity .blood { transform-origin:50% 0; animation:bloodPulse 1.7s ease-in-out infinite; }
+.horror-entity .b1{animation-delay:-.2s}.horror-entity .b2{animation-delay:.35s}.horror-entity .b3{animation-delay:.7s}.horror-entity .b4{animation-delay:1s}
+@keyframes bloodPulse {
+  0%,100%{transform:scaleY(.35);opacity:.72}
+  48%{transform:scaleY(1);opacity:1}
+  70%{transform:scaleY(1.15);opacity:.9}
+}
+.horror-entity .drop { animation:dropFall 2.1s linear infinite; }
+.horror-entity .d2{animation-delay:.55s}.horror-entity .d3{animation-delay:1.1s}.horror-entity .d4{animation-delay:1.55s}
+@keyframes dropFall { 0%{transform:translateY(0) scale(.4);opacity:0} 18%{opacity:1} 82%{opacity:.95} 100%{transform:translateY(82px) scale(.9);opacity:0} }
+.horror-entity .entity-caption {
+    position:absolute; left:0; right:0; bottom:0; text-align:center;
+    font:700 10px/1.2 Poppins,sans-serif; letter-spacing:3px; color:#ff3030;
+    text-shadow:0 0 12px #a00000; animation:captionFlicker 3s infinite;
+}
+@keyframes captionFlicker { 0%,92%,100%{opacity:1} 93%{opacity:.2} 95%{opacity:1} }
+
+.horror-sound {
+    position:fixed; right:22px; top:22px; z-index:9010;
+    border:1px solid rgba(255,40,40,.5); background:rgba(8,0,0,.82); color:#fff;
+    padding:10px 14px; border-radius:10px; font:700 11px Poppins,sans-serif;
+    letter-spacing:1px; cursor:pointer; box-shadow:0 0 20px rgba(150,0,0,.25); backdrop-filter:blur(8px);
+}
+.horror-sound i{color:#ff3030;margin-right:7px}
+.horror-sound.on{border-color:#ff3030;box-shadow:0 0 25px rgba(255,0,0,.35)}
+.horror-warning {
+    position:fixed; left:50%; top:50%; transform:translate(-50%,-50%) scale(.8);
+    z-index:9008; pointer-events:none; opacity:0;
+    color:#ff2020; font:800 clamp(22px,5vw,58px)/1 'Bebas Neue',sans-serif;
+    letter-spacing:7px; text-align:center; text-shadow:0 0 10px #600,0 0 35px #f00;
+}
+.horror-warning.show{animation:warningFlash 1.15s ease forwards}
+@keyframes warningFlash { 0%{opacity:0;transform:translate(-50%,-50%) scale(.75)} 15%,65%{opacity:1;transform:translate(-50%,-50%) scale(1)} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)} }
+
+@media(max-width:600px){
+ .horror-entity{right:8px;bottom:8px;transform:scale(.72);transform-origin:bottom right;}
+ .horror-eyes{top:22%;transform:translateX(-50%) scale(.75)}
+ .horror-sound{right:10px;top:10px;padding:8px 10px;font-size:9px}
+}
+
 </style>
 
 <body>
@@ -1694,6 +1786,55 @@ body {
 
 </div>
 
+
+
+<!-- =====================================================
+     ☠ HORROR ENTITY / BLOOD ALTAR
+===================================================== -->
+<div class="horror-eyes" aria-hidden="true"></div>
+
+<div class="horror-entity" aria-hidden="true">
+    <div class="entity-aura"></div>
+    <svg viewBox="0 0 190 170" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <filter id="bloodWobble">
+                <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="8" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3"/>
+            </filter>
+            <radialGradient id="skullShade" cx="50%" cy="40%">
+                <stop offset="0" stop-color="#2b2b2b"/>
+                <stop offset=".7" stop-color="#080808"/>
+                <stop offset="1" stop-color="#000"/>
+            </radialGradient>
+            <linearGradient id="bloodGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop stop-color="#ff2525"/>
+                <stop offset=".35" stop-color="#a40000"/>
+                <stop offset="1" stop-color="#390000"/>
+            </linearGradient>
+        </defs>
+        <!-- horned horror mask -->
+        <path d="M55 53 L25 18 L62 35 Q95 18 128 35 L165 18 L135 55 L145 86 Q140 124 95 139 Q50 124 45 86Z" fill="url(#skullShade)" stroke="#4b0000" stroke-width="3"/>
+        <path d="M60 74 Q75 56 88 74 Q75 91 60 74Z" fill="#ff1010"/>
+        <path d="M102 74 Q115 56 130 74 Q115 91 102 74Z" fill="#ff1010"/>
+        <circle cx="76" cy="74" r="5" fill="#fff"/><circle cx="114" cy="74" r="5" fill="#fff"/>
+        <path d="M74 104 Q95 118 116 104 L109 128 L81 128Z" fill="#000" stroke="#600" stroke-width="2"/>
+        <path d="M64 101 L72 111 M80 106 L84 118 M106 106 L102 118 M120 101 L112 111" stroke="#d00000" stroke-width="3"/>
+        <!-- blood flowing from eyes/mouth -->
+        <g filter="url(#bloodWobble)" fill="url(#bloodGrad)">
+            <path class="blood b1" d="M71 81 C69 96 73 108 69 124 C67 135 70 146 68 158 C74 151 77 139 75 127 C73 111 77 96 74 82Z"/>
+            <path class="blood b2" d="M119 81 C117 98 122 110 118 127 C116 140 120 149 117 163 C124 151 126 139 123 126 C121 110 125 96 122 82Z"/>
+            <path class="blood b3" d="M91 125 C89 137 92 146 90 157 C89 163 91 166 94 169 C97 160 97 149 95 137 L96 125Z"/>
+            <path class="blood b4" d="M100 125 C102 137 99 149 102 160 C104 166 107 167 109 170 C111 158 107 145 105 126Z"/>
+        </g>
+        <g fill="#ff2020">
+            <circle class="drop d1" cx="69" cy="155" r="3.5"/><circle class="drop d2" cx="118" cy="157" r="3"/>
+            <circle class="drop d3" cx="93" cy="163" r="3.5"/><circle class="drop d4" cx="106" cy="163" r="2.8"/>
+        </g>
+    </svg>
+    <div class="entity-caption">DO NOT LOOK AWAY</div>
+</div>
+
+<div class="horror-warning" id="horrorWarning">SOMETHING IS WATCHING</div>
 
 <!-- =========================================
      🔥 ORIGINAL PLAYER DASHBOARD
@@ -2440,181 +2581,7 @@ body {
 </div>
 
 
-<!-- =========================================
-     EDIT PROFILE MODAL
-========================================= -->
 
-<div
-    class="edit-modal"
-    id="editModal">
-
-    <div class="edit-modal-box">
-
-        <div class="edit-modal-header">
-
-            <h2>
-
-                <i class="fa-solid fa-user-pen"></i>
-
-                Edit Profile
-
-            </h2>
-
-            <button
-                type="button"
-                class="close-edit"
-                id="closeEdit">
-
-                <i class="fa-solid fa-xmark"></i>
-
-            </button>
-
-        </div>
-
-
-        <div class="edit-profile-content">
-
-
-            <div class="edit-photo">
-
-                <img
-                    id="editPreview"
-                    src="../images/logo/logo.png"
-                    alt="Profile">
-
-                <label for="editImage">
-
-                    <i class="fa-solid fa-camera"></i>
-
-                    Change Photo
-
-                </label>
-
-                <input
-                    type="file"
-                    id="editImage"
-                    accept="image/*">
-
-            </div>
-
-
-            <div class="edit-fields">
-
-                <label>
-                    Player Name
-                </label>
-
-                <input
-                    type="text"
-                    id="editName"
-                    placeholder="Player Name">
-
-
-                <label>
-                    Role
-                </label>
-
-                <input
-                    type="text"
-                    id="editRole"
-                    placeholder="Player Role">
-
-
-                <label>
-                    Guild
-                </label>
-
-                <input
-                    type="text"
-                    id="editGuild"
-                    placeholder="Guild">
-
-
-                <label>
-                    Language
-                </label>
-
-                <input
-                    type="text"
-                    id="editLanguage"
-                    placeholder="Language">
-
-
-                <label>
-                    Instagram
-                </label>
-
-                <input
-                    type="url"
-                    id="editInstagram"
-                    placeholder="Instagram URL">
-
-
-                <label>
-                    YouTube
-                </label>
-
-                <input
-                    type="url"
-                    id="editYoutube"
-                    placeholder="YouTube URL">
-
-
-                <label>
-                    Discord
-                </label>
-
-                <input
-                    type="url"
-                    id="editDiscord"
-                    placeholder="Discord URL">
-
-
-                <label>
-                    Facebook
-                </label>
-
-                <input
-                    type="url"
-                    id="editFacebook"
-                    placeholder="Facebook URL">
-
-
-                <p id="editStatus"></p>
-
-
-                <div class="edit-buttons">
-
-                    <button
-                        type="button"
-                        class="cancel-edit"
-                        id="cancelEdit">
-
-                        Cancel
-
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="save-edit"
-                        id="saveEdit">
-
-                        <i class="fa-solid fa-floppy-disk"></i>
-
-                        Save Changes
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 <!-- =========================================
      FIREBASE
 ========================================= -->
@@ -3046,105 +3013,11 @@ function checkAchievements(player) {
 }
 
 
-/* =========================================
-   EDIT PROFILE
-========================================= */
-
-const editModal =
-    document.getElementById(
-        "editModal"
-    );
-
-
-document.getElementById(
-    "editProfileBtn"
-).addEventListener(
-    "click",
-    () => {
-
-        if (!currentPlayer)
-            return;
-
-
-        document.getElementById(
-            "editName"
-        ).value =
-            currentPlayer.name ||
-            currentPlayer.playerName ||
-            currentPlayer.ign ||
-            "";
-
-
-        document.getElementById(
-            "editRole"
-        ).value =
-            currentPlayer.role ||
-            "";
-
-
-        document.getElementById(
-            "editGuild"
-        ).value =
-            currentPlayer.guild ||
-            "";
-
-
-        document.getElementById(
-            "editLanguage"
-        ).value =
-            currentPlayer.language ||
-            "";
-
-
-        document.getElementById(
-            "editInstagram"
-        ).value =
-            currentPlayer.instagram ||
-            "";
-
-
-        document.getElementById(
-            "editYoutube"
-        ).value =
-            currentPlayer.youtube ||
-            "";
-
-
-        document.getElementById(
-            "editDiscord"
-        ).value =
-            currentPlayer.discord ||
-            "";
-
-
-        document.getElementById(
-            "editFacebook"
-        ).value =
-            currentPlayer.facebook ||
-            "";
-
-
-        document.getElementById(
-            "editPreview"
-        ).src =
-            currentPlayer.image ||
-            currentPlayer.photo ||
-            "../images/logo/logo.png";
-
-
-        editModal.classList.add(
-            "active"
-        );
-
-    }
-);
 
 
 /* CLOSE EDIT */
 
-document.getElementById(
-    "closeEdit"
-).addEventListener(
+document.getElementById("closeEdit")?.addEventListener(
     "click",
     () => {
 
@@ -3156,9 +3029,7 @@ document.getElementById(
 );
 
 
-document.getElementById(
-    "cancelEdit"
-).addEventListener(
+document.getElementById("cancelEdit")?.addEventListener(
     "click",
     () => {
 
@@ -4258,5 +4129,139 @@ window.deletePlayerContent =
 </section>
 
 <script src="../js/player-chat.js"></script>
+
+<script>
+/* =====================================================
+   HORROR ENTITY ENGINE
+   Existing visual effects preserved.
+   Audio uses ONLY: audio/horror-scream.mp3
+===================================================== */
+(function(){
+    document.body.classList.add('horror-active');
+
+    const editBtn = document.getElementById('editProfileBtn');
+    if(editBtn){
+        editBtn.addEventListener('click', function(){
+            window.location.href = 'player-edit-profile.html';
+        });
+    }
+
+    const warning = document.getElementById('horrorWarning');
+
+    /* REAL LOCAL AUDIO ONLY */
+
+    /* REAL VIEWPORT CONTROL
+       A fixed full-width overlay is used so the button is
+       independent of every scrolling dashboard container. */
+    const horrorTopLayer = document.createElement('div');
+    horrorTopLayer.id = 'horrorTopLayer';
+
+    horrorTopLayer.innerHTML =
+        '<button class="horror-sound" id="horrorSoundBtn" type="button" aria-label="Toggle horror sound">' +
+        '<i class="fa-solid fa-volume-xmark"></i>' +
+        '</button>';
+
+    document.body.appendChild(horrorTopLayer);
+
+    const soundBtn = document.getElementById('horrorSoundBtn');
+    const horrorAudio = document.createElement('audio');
+    horrorAudio.id = 'realHorrorAudio';
+    horrorAudio.preload = 'auto';
+    horrorAudio.src = 'audio/horror-scream.mp3';
+    horrorAudio.volume = 0.90;
+    document.body.appendChild(horrorAudio);
+
+    let soundOn = false;
+    let screamTimer = null;
+
+    function updateSoundButton(){
+        if(soundOn){
+            soundBtn.classList.add('on');
+            soundBtn.innerHTML =
+                '<i class="fa-solid fa-volume-high"></i>';
+        }else{
+            soundBtn.classList.remove('on');
+            soundBtn.innerHTML =
+                '<i class="fa-solid fa-volume-xmark"></i>';
+        }
+    }
+
+    function playRealScream(){
+        if(!soundOn) return;
+
+        horrorAudio.pause();
+        horrorAudio.currentTime = 0;
+        horrorAudio.volume = 0.90;
+
+        horrorAudio.play().catch(function(){
+            /* Browser/mobile can block audio until the button is tapped. */
+        });
+    }
+
+    function scheduleScream(){
+        clearTimeout(screamTimer);
+
+        if(!soundOn) return;
+
+        screamTimer = setTimeout(function(){
+            if(!soundOn) return;
+
+            playRealScream();
+            scheduleScream();
+
+        }, 12000 + Math.random() * 18000);
+    }
+
+    soundBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        if(soundOn){
+            soundOn = false;
+
+            clearTimeout(screamTimer);
+
+            horrorAudio.pause();
+            horrorAudio.currentTime = 0;
+
+            updateSoundButton();
+
+        }else{
+            soundOn = true;
+
+            updateSoundButton();
+
+            /* User click unlocks audio on desktop + mobile. */
+            playRealScream();
+            scheduleScream();
+        }
+    });
+
+    function scare(){
+        if(Math.random() > .72){
+            warning.classList.remove('show');
+            void warning.offsetWidth;
+            warning.classList.add('show');
+
+            /* Never transform BODY: a transformed body can create
+               a containing block and break fixed-position controls. */
+            const horrorFlash = document.createElement('div');
+            horrorFlash.className = 'horror-screen-shake';
+            document.body.appendChild(horrorFlash);
+            setTimeout(() => horrorFlash.remove(), 300);
+        }
+
+        setTimeout(scare, 9000 + Math.random()*12000);
+    }
+
+    updateSoundButton();
+    setTimeout(scare, 7000);
+})();
+</script>
+
+
+
+
+
 </body>
 </html>

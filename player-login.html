@@ -1,402 +1,339 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>4 FIRE UNITED — The Forbidden Haveli</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Creepster&family=Nosifer&family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#020202}
+body{overflow:hidden;color:#eee;font-family:Poppins,sans-serif;isolation:isolate}
+button,input{font:inherit}
+#scene{position:fixed;inset:0;overflow:hidden;background:#020202}
+#scene:before{content:"";position:absolute;inset:-20%;background:
+radial-gradient(ellipse at 50% 45%,rgba(94,0,0,.36),transparent 38%),
+radial-gradient(ellipse at 50% 100%,rgba(255,0,0,.08),transparent 45%),
+linear-gradient(90deg,#010101,#090202 50%,#010101);filter:blur(1px);animation:breath 7s ease-in-out infinite}
+@keyframes breath{50%{filter:brightness(.55) blur(2px)}}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+/* ancient corridor */
+.arch{position:absolute;inset:0;perspective:1000px}
+.arch:before{content:"";position:absolute;left:50%;top:-10%;width:74vw;height:130vh;transform:translateX(-50%) rotateX(4deg);
+background:
+linear-gradient(90deg,transparent 0 10%,rgba(70,0,0,.5) 10.2% 10.5%,transparent 10.7% 89.3%,rgba(70,0,0,.5) 89.5% 89.8%,transparent 90%),
+repeating-linear-gradient(0deg,rgba(50,0,0,.35) 0 2px,transparent 2px 72px);
+box-shadow:inset 0 0 120px #000;animation:corridor 10s ease-in-out infinite}
+@keyframes corridor{50%{transform:translateX(-50%) scale(1.06)}}
 
-    <title>4 FIRE UNITED | PLAYER LOGIN</title>
+/* tiled floor leading into screen */
+.floor{position:absolute;left:-20%;right:-20%;bottom:-5%;height:47%;transform:perspective(380px) rotateX(58deg);transform-origin:bottom;
+background:repeating-linear-gradient(90deg,transparent 0 8vw,rgba(130,0,0,.16) 8.1vw 8.25vw),
+repeating-linear-gradient(0deg,transparent 0 7vh,rgba(130,0,0,.15) 7.1vh 7.25vh);animation:floor 5s linear infinite}
+@keyframes floor{to{background-position:8.25vw 0,0 7.25vh}}
 
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap">
+/* floating lanterns */
+.lantern{position:absolute;width:34px;height:52px;border:1px solid #650000;border-radius:45% 45% 35% 35%;background:#120000;box-shadow:0 0 30px rgba(255,0,0,.25)}
+.lantern:after{content:"";position:absolute;left:50%;top:50%;width:9px;height:18px;transform:translate(-50%,-50%);background:#e00000;border-radius:50%;box-shadow:0 0 28px #f00}
+.l1{left:10%;top:20%;animation:swing 4s infinite}.l2{right:10%;top:27%;animation:swing 5s 1s infinite}
+@keyframes swing{50%{transform:rotate(5deg) translateY(-8px);filter:brightness(1.6)}}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+/* THE HIDDEN WOMAN SILHOUETTE */
+.ghost{position:absolute;left:50%;top:14%;width:130px;height:300px;transform:translateX(-50%);opacity:.0;filter:blur(1px);animation:ghost 12s infinite}
+.ghost:before{content:"";position:absolute;left:25px;top:0;width:80px;height:92px;border-radius:50%;background:#070000;box-shadow:0 0 25px #300}
+.ghost:after{content:"";position:absolute;left:0;top:65px;width:130px;height:235px;background:linear-gradient(#070000,#000);clip-path:polygon(30% 0,70% 0,100% 100%,0 100%);box-shadow:0 0 35px #210000}
+@keyframes ghost{0%,58%,100%{opacity:0;transform:translateX(-50%) scale(.75)}63%{opacity:.72}66%{opacity:.18}69%{opacity:.7}73%{opacity:0;transform:translateX(-50%) scale(1.08)}}
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* three impossible doors */
+.door{position:absolute;width:125px;height:215px;background:linear-gradient(90deg,#030000,#100000,#030000);border:2px solid #3e0000;box-shadow:inset 0 0 35px #000,0 0 30px rgba(255,0,0,.1);opacity:.38}
+.door i{position:absolute;right:12px;top:50%;width:6px;height:6px;background:#d00000;border-radius:50%;box-shadow:0 0 14px red}
+.door span{position:absolute;bottom:9px;left:0;right:0;text-align:center;color:#400;font:9px monospace;letter-spacing:3px}
+.dA{left:3%;top:50%;transform:rotate(-7deg);animation:doorA 9s infinite}
+.dB{right:3%;top:38%;transform:rotate(7deg);animation:doorB 11s 2s infinite}
+@keyframes doorA{50%{transform:rotate(-7deg) translateX(25px);opacity:.7}}@keyframes doorB{50%{transform:rotate(7deg) translateX(-25px);opacity:.65}}
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Poppins', sans-serif;
-            background: #050505;
-            overflow: hidden;
-            position: relative;
-            color: #fff;
-        }
+/* giant eye */
+.eye{position:absolute;left:50%;top:31%;width:min(300px,38vw);height:min(150px,19vw);transform:translate(-50%,-50%);border:1px solid #650000;border-radius:50%;opacity:.35;box-shadow:0 0 50px rgba(255,0,0,.12),inset 0 0 40px #120000;animation:eye 5s infinite}
+.eye b{position:absolute;left:50%;top:50%;width:13px;height:82%;transform:translate(-50%,-50%);background:#d00;border-radius:50%;box-shadow:0 0 20px red,0 0 65px red;animation:eyeblink 4s infinite}
+@keyframes eye{50%{transform:translate(-50%,-50%) scale(1.12)}}@keyframes eyeblink{0%,42%,48%,100%{height:82%}45%{height:3%}}
 
-        body::before {
-            content: "";
-            position: absolute;
-            inset: -20%;
-            background:
-                radial-gradient(circle at 20% 20%, #ff5a00 0%, transparent 25%),
-                radial-gradient(circle at 80% 80%, #ff2200 0%, transparent 25%),
-                #050505;
-            filter: blur(70px);
-            opacity: .55;
-            animation: bgMove 10s ease-in-out infinite alternate;
-        }
+/* corner/border maze */
+.border{position:fixed;inset:8px;z-index:80;border:1px solid rgba(130,0,0,.35);pointer-events:none}
+.border:before{content:"";position:absolute;inset:-1px;background:
+linear-gradient(90deg,transparent,#f00000,transparent) top left/180px 2px no-repeat,
+linear-gradient(180deg,transparent,#f00000,transparent) top right/2px 180px no-repeat,
+linear-gradient(270deg,transparent,#f00000,transparent) bottom right/180px 2px no-repeat,
+linear-gradient(0deg,transparent,#f00000,transparent) bottom left/2px 180px no-repeat;animation:frame 2.8s linear infinite}
+@keyframes frame{to{filter:hue-rotate(20deg);background-position:calc(100% - 180px) 0,100% calc(100% - 180px),0 100%,0 0}}
+.border:after{content:"4FU • 4FU • 4FU • 4FU • 4FU • 4FU";position:absolute;left:50%;top:3px;transform:translateX(-50%);font:7px monospace;color:#450000;letter-spacing:4px}
 
-        @keyframes bgMove {
-            from {
-                transform: scale(1);
-            }
+/* central parchment / door */
+.panel{position:absolute;z-index:30;left:50%;top:50%;transform:translate(-50%,-50%);width:430px;
+padding:27px 30px 23px;background:
+linear-gradient(135deg,rgba(18,6,5,.98),rgba(3,2,2,.98));
+border:1px solid #6a0000;box-shadow:0 0 0 5px rgba(0,0,0,.65),0 0 55px rgba(255,0,0,.18),inset 0 0 45px #080000;
+clip-path:polygon(3% 0,97% 0,100% 3%,100% 97%,97% 100%,3% 100%,0 97%,0 3%);
+animation:appear 1s cubic-bezier(.2,1,.2,1)}
+@keyframes appear{from{opacity:0;transform:translate(-50%,-50%) scale(.65) rotateX(18deg)}to{opacity:1;transform:translate(-50%,-50%) scale(1) rotateX(0)}}
+.panel:before{content:"";position:absolute;inset:8px;border:1px solid #260000;pointer-events:none}
+.panel:after{content:"";position:absolute;left:-60%;top:0;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,0,0,.12),transparent);transform:skewX(-20deg);animation:sweep 4s infinite}
+@keyframes sweep{to{left:140%}}
 
-            to {
-                transform: scale(1.15);
-            }
-        }
+.crest{width:78px;height:78px;margin:3px auto 10px;border:1px solid #780000;display:grid;place-items:center;transform:rotate(45deg);box-shadow:0 0 28px rgba(255,0,0,.18)}
+.crest b{width:24px;height:42px;background:#c00;border-radius:50% 50% 48% 48%;transform:rotate(-45deg);box-shadow:0 0 22px red}
+.brand{text-align:center;font:400 41px 'Bebas Neue',sans-serif;letter-spacing:6px}.brand em{font-style:normal;color:#d00000;text-shadow:0 0 15px red}
+.sub{text-align:center;color:#5c4141;font:700 8px monospace;letter-spacing:4px}
+.heading{margin:20px 0 14px;text-align:center}.heading small{display:block;color:#8a0000;font:700 8px monospace;letter-spacing:3px}.heading strong{display:block;font-family:Creepster,cursive;font-size:27px;font-weight:400;color:#ddd;letter-spacing:2px;text-shadow:0 0 14px rgba(255,0,0,.25)}
 
-        .fire {
-            position: absolute;
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            background: radial-gradient(circle,
-                    #ffb000,
-                    #ff5500,
-                    #ff2200,
-                    transparent 70%);
-            filter: blur(55px);
-            opacity: .35;
-            animation: floatFire 7s ease-in-out infinite;
-        }
+.field{position:relative;margin:10px 0}.field>i:first-child{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#7d0000;z-index:2}
+.field input{width:100%;height:53px;padding:0 46px;background:#050202;border:1px solid #351313;outline:none;color:#fff;font:500 12px monospace;letter-spacing:1px;transition:.25s}
+.field input:focus{border-color:#c00000;box-shadow:0 0 22px rgba(255,0,0,.16),inset 0 0 18px rgba(255,0,0,.04)}
+#togglePassword{position:absolute;right:15px;left:auto;color:#665858;cursor:pointer}
+.opts{display:flex;justify-content:space-between;align-items:center;margin:7px 0 15px;color:#675858;font:700 9px monospace}.opts a{color:#9d0000;text-decoration:none}
 
-        .fire.one {
-            top: -80px;
-            left: -70px;
-        }
+#loginBtn{position:relative;width:100%;height:57px;border:1px solid #bd0000;background:#100000;color:#eee;cursor:pointer;font:900 11px monospace;letter-spacing:4px;overflow:hidden;transition:.2s}
+#loginBtn:before{content:"";position:absolute;inset:-100% 45%;background:#f00000;filter:blur(16px);opacity:.18;transform:rotate(25deg);animation:buttonlight 2.3s linear infinite}
+@keyframes buttonlight{to{transform:translateX(250px) rotate(25deg)}}#loginBtn:hover{box-shadow:0 0 40px rgba(255,0,0,.35);background:#190000}#loginBtn:active{transform:scale(.97)}
+#error{min-height:19px;text-align:center;color:#e33;font:700 10px monospace;margin:9px 0 0}.foot{display:flex;justify-content:space-between;border-top:1px solid #210d0d;padding-top:11px;margin-top:11px;color:#493939;font:700 7px monospace;letter-spacing:2px}
 
-        .fire.two {
-            bottom: -80px;
-            right: -70px;
-            animation-delay: 2s;
-        }
+#warning{position:fixed;z-index:200;top:7%;left:50%;transform:translateX(-50%);font:900 10px monospace;letter-spacing:5px;color:#f00000;text-shadow:0 0 18px red;opacity:0;pointer-events:none;white-space:nowrap}
+#warning.on{animation:warn .9s steps(2)}@keyframes warn{0%{opacity:0}20%,70%{opacity:1}100%{opacity:0}}
+#flash{position:fixed;inset:0;z-index:190;background:#f00;opacity:0;pointer-events:none}#flash.on{animation:flash .35s steps(3)}@keyframes flash{0%,100%{opacity:0}40%{opacity:.2}}
+#grain{position:fixed;inset:0;z-index:150;pointer-events:none;opacity:.045;background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 5px);animation:grain .12s steps(2) infinite}@keyframes grain{50%{transform:translateY(2px)}}
 
-        @keyframes floatFire {
-            50% {
-                transform: translateY(-35px);
-            }
-        }
+@media(max-width:600px){
+ body{overflow:auto}.panel{position:relative;left:auto;top:auto;transform:none!important;width:calc(100% - 24px);margin:auto;padding:22px 17px 19px}.panel:after{display:none}
+ .eye{top:23%;width:68vw;height:35vw}.ghost{top:7%;transform:translateX(-50%) scale(.75)}.door{transform:scale(.65)}.floor{height:35%}
+ .brand{font-size:35px}.heading strong{font-size:23px}.crest{width:65px;height:65px}.field input,#loginBtn{height:51px}
+ .border{inset:6px}.border:after{display:none}#warning{top:2.5%;font-size:8px;letter-spacing:3px}
+}
+</style>
 
-        .particles {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-        }
+<style id="ghost-loader-css">
+#horrorLoader{
+ position:fixed;inset:0;z-index:999999;background:#010101;
+ display:grid;place-items:center;overflow:hidden;
+ transition:opacity .8s ease,visibility .8s ease;
+}
+#horrorLoader.hide{opacity:0;visibility:hidden;pointer-events:none}
+.loader-room{
+ position:relative;width:100%;height:100%;display:grid;place-items:center;
+ background:
+ radial-gradient(circle at 50% 35%,rgba(110,0,0,.16),transparent 25%),
+ radial-gradient(ellipse at 50% 80%,rgba(255,0,0,.08),transparent 38%),#010101;
+ overflow:hidden;
+}
+.loader-room:before{
+ content:"";position:absolute;inset:0;
+ background:repeating-linear-gradient(90deg,transparent 0 7%,rgba(80,0,0,.06) 7.1% 7.2%);
+ transform:perspective(500px) rotateX(55deg);
+ transform-origin:bottom;animation:loaderMaze 5s linear infinite;
+}
+@keyframes loaderMaze{to{background-position:0 110px}}
 
-        .particles span {
-            position: absolute;
-            bottom: -20px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #ff7600;
-            box-shadow: 0 0 15px #ff5500;
-            animation: particle 7s linear infinite;
-        }
+.loader-moon{
+ position:absolute;top:13%;left:50%;width:170px;height:170px;
+ transform:translateX(-50%);border-radius:50%;
+ background:radial-gradient(circle at 38% 35%,#340000,#090000 58%,transparent 70%);
+ box-shadow:0 0 70px rgba(160,0,0,.16);
+ animation:moon 4s ease-in-out infinite;
+}
+@keyframes moon{50%{transform:translateX(-50%) scale(1.08);filter:brightness(1.5)}}
 
-        .particles span:nth-child(1) {
-            left: 10%;
-            animation-delay: 0s;
-        }
+.ghost-loader{
+ position:absolute;left:50%;top:26%;width:180px;height:330px;
+ transform:translateX(-50%);animation:ghostFloat 3.2s ease-in-out infinite;
+ filter:drop-shadow(0 0 22px rgba(255,0,0,.25));
+}
+.ghost-head{
+ position:absolute;left:35px;top:0;width:110px;height:115px;
+ border-radius:50% 50% 45% 45%;
+ background:radial-gradient(circle at 50% 30%,#292929,#080808 67%);
+ box-shadow:inset 0 -20px 25px #000,0 0 30px rgba(255,0,0,.08);
+}
+.ghost-eye{
+ position:absolute;top:49px;width:15px;height:29px;border-radius:50%;
+ background:#d90000;box-shadow:0 0 13px red,0 0 30px red;
+ animation:ghostEyes 2.4s infinite;
+}
+.ghost-eye.left{left:28px}.ghost-eye.right{right:28px}
+@keyframes ghostEyes{0%,43%,49%,100%{height:29px}46%{height:3px}}
+.ghost-body{
+ position:absolute;left:12px;top:82px;width:156px;height:210px;
+ background:linear-gradient(180deg,#0c0c0c,#030303);
+ clip-path:polygon(20% 0,80% 0,92% 45%,100% 100%,72% 88%,50% 100%,27% 87%,0 100%,9% 45%);
+ border-radius:45% 45% 0 0;
+ box-shadow:inset 0 0 30px #000;
+}
+.ghost-tail{position:absolute;bottom:0;width:58px;height:65px;background:#030303;clip-path:polygon(0 0,100% 0,50% 100%)}
+.ghost-tail.t1{left:15px}.ghost-tail.t2{left:62px}.ghost-tail.t3{right:15px}
+@keyframes ghostFloat{
+ 0%,100%{transform:translateX(-50%) translateY(5px)}
+ 50%{transform:translateX(-50%) translateY(-16px) scale(1.025)}
+}
 
-        .particles span:nth-child(2) {
-            left: 25%;
-            animation-delay: 2s;
-        }
+.loader-shadow{
+ position:absolute;left:50%;top:66%;width:250px;height:38px;
+ transform:translateX(-50%);border-radius:50%;
+ background:#000;filter:blur(15px);animation:shadow 3.2s ease-in-out infinite;
+}
+@keyframes shadow{50%{width:310px;opacity:.55}}
 
-        .particles span:nth-child(3) {
-            left: 40%;
-            animation-delay: 4s;
-        }
+.loader-title{
+ position:absolute;top:69%;font:400 43px 'Bebas Neue',sans-serif;
+ letter-spacing:7px;color:#ddd;text-shadow:0 0 20px rgba(255,0,0,.22);
+}
+.loader-title b{color:#d00000}
+.loader-status{
+ position:absolute;top:76%;font:700 9px monospace;letter-spacing:4px;
+ color:#8c0000;animation:status 1s steps(2) infinite;
+}
+@keyframes status{50%{opacity:.25}}
+.loader-progress{
+ position:absolute;top:80%;width:240px;height:2px;background:#180000;overflow:hidden;
+}
+.loader-progress i{
+ display:block;width:25%;height:100%;background:#d00000;box-shadow:0 0 14px red;
+ animation:progress 2.7s cubic-bezier(.2,.7,.2,1) forwards;
+}
+@keyframes progress{to{width:100%}}
+.loader-tip{
+ position:absolute;bottom:7%;font:700 8px monospace;letter-spacing:3px;color:#382525;
+ animation:tip 2s infinite;
+}
+@keyframes tip{50%{color:#900}}
+.loader-fog{
+ position:absolute;width:65vw;height:180px;border-radius:50%;
+ background:rgba(100,0,0,.055);filter:blur(35px);bottom:12%;
+}
+.fog-a{left:-15%;animation:fog 10s linear infinite}.fog-b{right:-15%;animation:fog 13s linear reverse infinite}
+@keyframes fog{to{transform:translateX(45vw)}}
 
-        .particles span:nth-child(4) {
-            left: 55%;
-            animation-delay: 1s;
-        }
+@media(max-width:600px){
+ .loader-moon{width:125px;height:125px;top:13%}
+ .ghost-loader{transform:translateX(-50%) scale(.72);top:27%}
+ .ghost-loader{animation:ghostFloatMobile 3.2s ease-in-out infinite}
+ @keyframes ghostFloatMobile{
+  0%,100%{transform:translateX(-50%) translateY(5px) scale(.72)}
+  50%{transform:translateX(-50%) translateY(-12px) scale(.74)}
+ }
+ .loader-title{top:69%;font-size:35px;letter-spacing:5px}
+ .loader-status{top:76%;font-size:8px;letter-spacing:3px}
+ .loader-progress{width:190px;top:80%}
+ .loader-tip{font-size:7px;letter-spacing:2px}
+}
+</style>
 
-        .particles span:nth-child(5) {
-            left: 70%;
-            animation-delay: 3s;
-        }
+<style id="login-only-visual">
+/* ONLY LOGIN VISUALS — existing loader untouched */
+.login-container{
+position:relative!important;width:min(430px,calc(100% - 24px))!important;padding:30px!important;
+background:linear-gradient(145deg,rgba(17,4,4,.97),rgba(3,2,2,.97))!important;
+border:1px solid #720000!important;
+box-shadow:0 0 0 5px #010101,0 0 55px rgba(255,0,0,.2),inset 0 0 45px #090000!important;
+}
+.login-container:before{content:"";position:absolute;inset:8px;border:1px solid #2b0000;pointer-events:none}
+.login-container:after{content:"";position:absolute;left:-50%;top:0;width:25%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,0,0,.12),transparent);transform:skewX(-18deg);animation:loginSweep 4s infinite;pointer-events:none}
+@keyframes loginSweep{to{left:140%}}
+.login-container h1,.login-container .logo h1{font-family:"Bebas Neue",sans-serif!important;letter-spacing:6px!important;text-shadow:0 0 15px rgba(255,0,0,.2)}
+.login-container h1 em{color:#d00000}
+.login-container input{background:#040202!important;border-color:#351313!important;color:#fff!important}
+.login-container input:focus{border-color:#c00000!important;box-shadow:0 0 22px rgba(255,0,0,.18)!important}
+.login-container button,#loginBtn{
+background:#100000!important;border:1px solid #bd0000!important;color:#eee!important;
+box-shadow:none;transition:.2s!important
+}
+.login-container button:hover,#loginBtn:hover{background:#190000!important;box-shadow:0 0 35px rgba(255,0,0,.3)!important}
+.login-container a{color:#a00000!important}
+@media(max-width:600px){
+ .login-container{width:calc(100% - 20px)!important;padding:22px 16px!important}
+ .login-container input,.login-container button,#loginBtn{min-height:51px}
+}
+</style>
 
-        .particles span:nth-child(6) {
-            left: 85%;
-            animation-delay: 5s;
-        }
+<style id="custom-login-logo">
+.custom-4fu-logo{position:relative;width:82px;height:82px;margin:0 auto 14px;border:1px solid #850000;transform:rotate(45deg);background:linear-gradient(145deg,#180000,#030202 70%);box-shadow:0 0 0 4px #050101,0 0 30px rgba(255,0,0,.3),inset 0 0 25px #000}
+.custom-4fu-logo:before{content:"";position:absolute;inset:8px;border:1px solid #350000}.custom-4fu-logo:after{content:"";position:absolute;inset:18px;border:1px solid #720000;opacity:.5}
+.logo-four{position:absolute;left:17px;top:13px;transform:rotate(-45deg);font:43px "Bebas Neue";color:#d90000;text-shadow:0 0 15px red}
+.logo-fu{position:absolute;right:10px;bottom:9px;transform:rotate(-45deg);font:900 17px monospace;color:#eee;text-shadow:0 0 10px red}
+.logo-eye{position:absolute;left:25px;top:34px;width:43px;height:22px;border:2px solid #b00000;border-radius:50%;transform:rotate(-45deg);box-shadow:0 0 13px red}
+.logo-eye i{position:absolute;left:50%;top:50%;width:7px;height:14px;transform:translate(-50%,-50%);border-radius:50%;background:#e00000;box-shadow:0 0 12px red;animation:customEye 3s infinite}
+@keyframes customEye{0%,43%,49%,100%{height:14px}46%{height:2px}}
+@media(max-width:600px){.custom-4fu-logo{width:70px;height:70px}.logo-four{font-size:36px;left:14px;top:11px}.logo-fu{font-size:15px}.logo-eye{left:21px;top:29px;width:37px;height:19px}}
+</style>
+</head><body>
+<!-- HORROR GHOST LOADER -->
+<div id="horrorLoader">
+  <div class="loader-room">
+    <div class="loader-moon"></div>
+    <div class="loader-fog fog-a"></div>
+    <div class="loader-fog fog-b"></div>
 
-        @keyframes particle {
-
-            0% {
-                transform: translateY(0) scale(.4);
-                opacity: 0;
-            }
-
-            20% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-110vh) scale(1.4);
-                opacity: 0;
-            }
-
-        }
-
-        .login-container {
-            position: relative;
-            z-index: 5;
-            width: 420px;
-            padding: 42px;
-            border-radius: 26px;
-            background: rgba(15, 15, 15, .58);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, .08);
-            box-shadow:
-                0 0 30px rgba(255, 70, 0, .35),
-                0 0 100px rgba(255, 70, 0, .12);
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .logo img {
-            width: 92px;
-            filter:
-                drop-shadow(0 0 12px #ff5500) drop-shadow(0 0 28px #ff7700);
-            animation: logoFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes logoFloat {
-            50% {
-                transform: translateY(-8px);
-            }
-        }
-
-        .logo h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 50px;
-            letter-spacing: 3px;
-            margin-top: 12px;
-        }
-
-        .logo p {
-            color: #ff8b2b;
-            font-size: 13px;
-            letter-spacing: 2px;
-        }
-
-        .login-title {
-            text-align: center;
-            font-size: 30px;
-            margin-bottom: 25px;
-        }
-
-        .input-box {
-            position: relative;
-            margin-bottom: 18px;
-        }
-
-        .input-box i {
-            position: absolute;
-            left: 17px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #ff7600;
-        }
-
-        .input-box input {
-            width: 100%;
-            height: 54px;
-            padding: 0 48px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, .08);
-            outline: none;
-            background: rgba(255, 255, 255, .06);
-            color: #fff;
-            font-family: 'Poppins', sans-serif;
-            font-size: 15px;
-            transition: .3s;
-        }
-
-        .input-box input:focus {
-            border-color: #ff6500;
-            box-shadow: 0 0 18px rgba(255, 90, 0, .3);
-        }
-
-        #togglePassword {
-            left: auto;
-            right: 17px;
-            cursor: pointer;
-        }
-
-        .login-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 5px 0 20px;
-            font-size: 13px;
-        }
-
-        .login-options label {
-            color: #ccc;
-        }
-
-        .login-options a {
-            color: #ff8a22;
-            text-decoration: none;
-        }
-
-        #loginBtn {
-            width: 100%;
-            height: 54px;
-            border: 0;
-            border-radius: 12px;
-            background: linear-gradient(45deg, #ff3200, #ff8800);
-            color: #fff;
-            font-size: 16px;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        #loginBtn:hover {
-            transform: translateY(-2px);
-            box-shadow:
-                0 0 20px #ff5500,
-                0 0 40px rgba(255, 100, 0, .4);
-        }
-
-        #loginBtn:disabled {
-            opacity: .65;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        #error {
-            min-height: 22px;
-            margin-top: 15px;
-            text-align: center;
-            color: #ff5555;
-            font-size: 13px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 24px;
-            color: #777;
-            font-size: 12px;
-            letter-spacing: 1px;
-        }
-
-        @media(max-width:500px) {
-
-            .login-container {
-                width: 92%;
-                padding: 30px 22px;
-            }
-
-            .logo h1 {
-                font-size: 42px;
-            }
-
-            .logo img {
-                width: 75px;
-            }
-
-        }
-    </style>
-
-</head>
-
-<body>
-
-    <div class="fire one"></div>
-    <div class="fire two"></div>
-
-    <div class="particles">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
+    <div class="ghost-loader">
+      <div class="ghost-head">
+        <span class="ghost-eye left"></span>
+        <span class="ghost-eye right"></span>
+      </div>
+      <div class="ghost-body"></div>
+      <div class="ghost-tail t1"></div>
+      <div class="ghost-tail t2"></div>
+      <div class="ghost-tail t3"></div>
     </div>
 
-    <div class="login-container">
+    <div class="loader-shadow"></div>
+    <div class="loader-title">4 FIRE <b>UNITED</b></div>
+    <div class="loader-status" id="loaderStatus">THE GHOST IS WAKING...</div>
+    <div class="loader-progress"><i></i></div>
+    <div class="loader-tip">DO NOT LOOK BEHIND YOU</div>
+  </div>
+</div>
 
-        <div class="logo">
+<div id="scene">
+ <div class="arch"><div class="floor"></div><div class="lantern l1"></div><div class="lantern l2"></div><div class="ghost"></div>
+  <div class="door dA"><i></i><span>DOOR 01</span></div><div class="door dB"><i></i><span>DOOR 02</span></div>
+  <div class="eye"><b></b></div>
+ </div>
+ <div class="border"></div><div id="grain"></div><div id="flash"></div>
+ <div id="warning">THE HAVELI KNOWS YOU ARE HERE</div>
 
-            <img src="images/logo/logo.png" alt="4 FIRE UNITED">
+ <main class="panel" id="loginCard">
+  <div class="custom-4fu-logo">
+    <span class="logo-four">4</span>
+    <span class="logo-fu">FU</span>
+    <span class="logo-eye"><i></i></span>
+  </div>
+  <div class="brand">4 FIRE <em>UNITED</em></div>
+  <div class="sub">THE FORBIDDEN HAVELI • PLAYER GATE</div>
+  <div class="heading"><small>THE DOOR REMEMBERS EVERYONE</small><strong>ENTER THE HAUNTED GATE</strong></div>
 
-            <h1>4 FIRE UNITED</h1>
+  <div class="field"><i class="fa-solid fa-user"></i><input type="email" id="email" placeholder="PLAYER EMAIL" autocomplete="email"></div>
+  <div class="field"><i class="fa-solid fa-key"></i><input type="password" id="password" placeholder="ACCESS PASSWORD" autocomplete="current-password"><i class="fa-solid fa-eye" id="togglePassword"></i></div>
 
-            <p>PLAYER ACCESS</p>
+  <div class="opts"><label><input type="checkbox" id="remember"> REMEMBER</label><a href="#" id="forgotPassword">FORGOT PASSWORD?</a></div>
+  <button id="loginBtn"><span>OPEN THE FORBIDDEN DOOR</span> <i class="fa-solid fa-door-open"></i></button>
+  <p id="error"></p>
+  <div class="foot"><span>4FU // NIGHT ACCESS</span><span>EXIT UNKNOWN</span></div>
+</main>
+</div>
 
-        </div>
-
-        <h2 class="login-title">
-            PLAYER LOGIN
-        </h2>
-
-        <div class="input-box">
-
-            <i class="fa-solid fa-user"></i>
-
-            <input type="email" id="email" placeholder="Player Email" autocomplete="email">
-
-        </div>
-
-        <div class="input-box">
-
-            <i class="fa-solid fa-lock"></i>
-
-            <input type="password" id="password" placeholder="Password" autocomplete="current-password">
-
-            <i class="fa-solid fa-eye" id="togglePassword">
-            </i>
-
-        </div>
-
-        <div class="login-options">
-
-            <label>
-                <input type="checkbox" id="remember">
-                Remember Me
-            </label>
-
-            <a href="#" id="forgotPassword">
-                Forgot Password?
-            </a>
-
-        </div>
-
-        <button id="loginBtn">
-            <i class="fa-solid fa-right-to-bracket"></i>
-            &nbsp; LOGIN
-        </button>
-
-        <p id="error"></p>
-
-        <div class="footer">
-            AUTHORIZED 4FU PLAYERS ONLY
-        </div>
-
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script>
+(()=> {
+ const card=document.getElementById("loginCard"), flash=document.getElementById("flash"), warning=document.getElementById("warning");
+ const msgs=["THE HAVELI KNOWS YOU ARE HERE","DON'T OPEN DOOR 03","SHE IS BEHIND YOU","THE CORRIDOR MOVED","THERE IS NO EXIT"];
+ function shock(){
+  flash.classList.remove("on");void flash.offsetWidth;flash.classList.add("on");
+  const r=document.createElement("div");r.style.cssText="position:fixed;left:50%;top:50%;width:3px;height:3px;border:1px solid #f00;border-radius:50%;z-index:999;box-shadow:0 0 20px red;pointer-events:none";
+  document.body.appendChild(r);r.animate([{transform:"translate(-50%,-50%) scale(1)",opacity:1},{transform:"translate(-50%,-50%) scale(120)",opacity:0}],{duration:850,easing:"cubic-bezier(.1,.7,.2,1)"}).onfinish=()=>r.remove();
+ }
+ document.addEventListener("pointermove",e=>{
+  if(innerWidth>600){let x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;card.style.transform=`translate(-50%,-50%) perspective(1200px) rotateY(${x*4}deg) rotateX(${-y*4}deg)`}
+ });
+ document.addEventListener("pointerdown",()=>{shock();if(Math.random()>.25){warning.textContent=msgs[Math.floor(Math.random()*msgs.length)];warning.classList.remove("on");void warning.offsetWidth;warning.classList.add("on")}});
+ document.querySelectorAll("input").forEach(x=>x.addEventListener("focus",()=>document.querySelector(".eye").animate([{opacity:.3},{opacity:.95},{opacity:.3}],{duration:550})));
+ document.getElementById("loginBtn").addEventListener("pointerdown",()=>document.body.animate([{filter:"brightness(1)"},{filter:"brightness(2.8)"},{filter:"brightness(.08)"},{filter:"brightness(1)"}],{duration:330,easing:"steps(4)"}));
+})();
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 
@@ -586,6 +523,26 @@
 
     </script>
 
+
+<script id="ghost-loader-js">
+(() => {
+ const loader=document.getElementById("horrorLoader");
+ const status=document.getElementById("loaderStatus");
+ const texts=["THE GHOST IS WAKING...","IT CAN SEE YOU...","THE DOOR IS OPEN...","RUN...","WELCOME TO 4FU"];
+ let n=0;
+ const timer=setInterval(()=>{
+   n++;
+   if(n<texts.length) status.textContent=texts[n];
+ },600);
+ window.addEventListener("load",()=>{
+   setTimeout(()=>{
+     clearInterval(timer);
+     status.textContent="WELCOME TO 4FU";
+     setTimeout(()=>loader.classList.add("hide"),450);
+   },2800);
+ });
+})();
+</script>
 </body>
 
 </html>
