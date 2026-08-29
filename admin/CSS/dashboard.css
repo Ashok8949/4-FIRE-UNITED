@@ -1567,3 +1567,303 @@ table td{
     appearance:none;
 
 }
+
+/* =========================================
+   SEND NOTIFICATION PANEL
+========================================= */
+
+.send-notification-section {
+    margin-top: 30px;
+    padding: 25px;
+    background: #111;
+    border: 1px solid #292929;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.35);
+}
+
+.send-notification-section h2 {
+    margin: 0 0 20px;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.notification-form {
+    display: grid;
+    gap: 16px;
+}
+
+.notification-form label {
+    display: block;
+    margin-bottom: 7px;
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.notification-form input,
+.notification-form textarea,
+.notification-form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+
+    background: #181818;
+    color: #fff;
+
+    border: 1px solid #333;
+    border-radius: 9px;
+
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+
+    transition: .25s ease;
+}
+
+.notification-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.notification-form input:focus,
+.notification-form textarea:focus,
+.notification-form select:focus {
+    border-color: #ff7b00;
+    box-shadow: 0 0 0 2px rgba(255,123,0,.08);
+}
+
+.notification-form select {
+    cursor: pointer;
+}
+
+.notification-form select option {
+    background: #181818;
+    color: #fff;
+}
+
+
+/* Send Button */
+
+#sendNotificationBtn {
+    width: fit-content;
+
+    margin-top: 5px;
+
+    padding: 12px 22px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #ff7b00;
+    color: #111;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+}
+
+#sendNotificationBtn:hover {
+    background: #ff9638;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255,123,0,.2);
+}
+
+#sendNotificationBtn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* Form Row */
+
+.notification-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .send-notification-section {
+        padding: 18px;
+    }
+
+    .notification-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    #sendNotificationBtn {
+        width: 100%;
+    }
+
+}
+/* ==========================================
+   SEND NOTIFICATION UI
+========================================== */
+
+#sendNotificationSection {
+    margin-top: 30px;
+}
+
+#sendNotificationSection > h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#sendNotificationSection > h2 i {
+    color: #ff7b00;
+}
+
+.notification-send-box {
+    margin-top: 20px;
+    padding: 24px;
+
+    background: #111;
+    border: 1px solid #292929;
+    border-radius: 14px;
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+.notification-send-box .form-group {
+    margin-bottom: 18px;
+}
+
+.notification-send-box label {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.notification-send-box input,
+.notification-send-box textarea,
+.notification-send-box select {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 13px 15px;
+
+    background: #181818;
+    color: #fff;
+
+    border: 1px solid #333;
+    border-radius: 8px;
+
+    outline: none;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    transition: 0.25s ease;
+}
+
+.notification-send-box textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.notification-send-box input::placeholder,
+.notification-send-box textarea::placeholder {
+    color: #666;
+}
+
+.notification-send-box input:focus,
+.notification-send-box textarea:focus,
+.notification-send-box select:focus {
+    border-color: #ff7b00;
+
+    box-shadow:
+        0 0 0 2px rgba(255, 123, 0, 0.08);
+}
+
+.notification-send-box select {
+    cursor: pointer;
+}
+
+.notification-send-box select option {
+    background: #181818;
+    color: #fff;
+}
+
+
+/* Send Button */
+
+#sendNotificationBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    margin-top: 3px;
+    padding: 12px 22px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #ff7b00;
+    color: #111;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+#sendNotificationBtn:hover {
+    background: #ff9133;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(255, 123, 0, 0.18);
+}
+
+#sendNotificationBtn:active {
+    transform: translateY(0);
+}
+
+#sendNotificationBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* Status */
+
+#notificationSendStatus {
+    margin: 12px 0 0;
+
+    font-size: 12px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .notification-send-box {
+        padding: 18px;
+    }
+
+    #sendNotificationBtn {
+        width: 100%;
+    }
+
+}

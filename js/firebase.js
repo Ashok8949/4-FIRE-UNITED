@@ -12,6 +12,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
+
 db.enablePersistence({
     synchronizeTabs: true
 }).catch((err) => {

@@ -3,382 +3,487 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>4 FIRE UNITED | Admin Dashboard</title>
+    <title>4 FIRE UNITED | Admin Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap"
+        rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
 
-<link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
+    <link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
 
-<style>
-body{
-    visibility:hidden;
-}
-</style>
+    <style>
+        body {
+            visibility: hidden;
+        }
+    </style>
 
 </head>
 
 <body>
 
-<div class="sidebar">
+    <div class="sidebar">
 
-    <div class="logo">
+        <div class="logo">
 
-        <img src="../images/logo/logo.png">
+            <img src="../images/logo/logo.png">
 
-        <h2>4 FIRE UNITED</h2>
+            <h2>4 FIRE UNITED</h2>
+
+        </div>
+
+        <ul>
+
+            <li class="active">
+                <a href="dashboard.html">
+                    <i class="fa-solid fa-house"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="players.html">
+                    <i class="fa-solid fa-users"></i>
+                    Players
+                </a>
+            </li>
+
+            <li>
+                <a href="tournaments.html">
+                    <i class="fa-solid fa-trophy"></i>
+                    Tournaments
+                </a>
+            </li>
+
+            <li>
+                <a href="gallery.html">
+                    <i class="fa-solid fa-image"></i>
+                    Gallery
+                </a>
+            </li>
+
+            <li>
+                <a href="clips.html">
+                    <i class="fa-solid fa-film"></i>
+                    Clips
+                </a>
+            </li>
+
+            <li>
+                <a href="announcements.html">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    Announcements
+                </a>
+            </li>
+
+            <li>
+                <a href="messages.html">
+                    <i class="fa-solid fa-envelope"></i>
+                    Messages
+                </a>
+            </li>
+
+            <li>
+                <a href="applications.html">
+                    <i class="fa-solid fa-file-circle-check"></i>
+                    Applications
+                </a>
+            </li>
+
+            <li>
+                <a href="settings.html">
+                    <i class="fa-solid fa-gear"></i>
+                    Settings
+                </a>
+            </li>
+
+        </ul>
 
     </div>
 
-    <ul>
+    <div class="main">
 
-        <li class="active">
-            <a href="dashboard.html">
-                <i class="fa-solid fa-house"></i>
-                Dashboard
-            </a>
-        </li>
+        <div class="topbar">
 
-        <li>
-            <a href="players.html">
-                <i class="fa-solid fa-users"></i>
-                Players
-            </a>
-        </li>
+            <h1>CONTROL PANEL</h1>
 
-        <li>
-            <a href="tournaments.html">
-                <i class="fa-solid fa-trophy"></i>
-                Tournaments
-            </a>
-        </li>
+            <div class="admin">
 
-        <li>
-            <a href="gallery.html">
-                <i class="fa-solid fa-image"></i>
-                Gallery
-            </a>
-        </li>
+                <div class="notification">
 
-        <li>
-            <a href="clips.html">
-                <i class="fa-solid fa-film"></i>
-                Clips
-            </a>
-        </li>
+                    <i class="fa-solid fa-bell" id="notificationBell"></i>
 
-        <li>
-            <a href="announcements.html">
-                <i class="fa-solid fa-bullhorn"></i>
-                Announcements
-            </a>
-        </li>
+                    <span id="notificationCount">0</span>
 
-        <li>
-            <a href="messages.html">
-                <i class="fa-solid fa-envelope"></i>
-                Messages
-            </a>
-        </li>
+                    <div class="notification-dropdown" id="notificationDropdown">
 
-        <li>
-            <a href="applications.html">
-                <i class="fa-solid fa-file-circle-check"></i>
-                Applications
-            </a>
-        </li>
+                        <div class="notification-header">
 
-        <li>
-            <a href="settings.html">
-                <i class="fa-solid fa-gear"></i>
-                Settings
-            </a>
-        </li>
+                            <h3>Notifications</h3>
 
-    </ul>
+                            <button id="clearReadBtn">
 
-</div>
+                                Clear Read
 
-<div class="main">
+                            </button>
 
-<div class="topbar">
+                        </div>
 
-    <h1>CONTROL PANEL</h1>
+                        <div id="notificationList">
 
-    <div class="admin">
+                            <p class="empty-notification">
 
-    <div class="notification">
+                                No Notifications
 
-        <i class="fa-solid fa-bell" id="notificationBell"></i>
+                            </p>
 
-        <span id="notificationCount">0</span>
+                        </div>
 
-        <div class="notification-dropdown" id="notificationDropdown">
+                        <div style="padding:15px;text-align:center;">
 
-           <div class="notification-header">
-
-    <h3>Notifications</h3>
-
-    <button id="clearReadBtn">
-
-        Clear Read
-
-    </button>
-
-</div>
-
-            <div id="notificationList">
-
-                <p class="empty-notification">
-
-                    No Notifications
-
-                </p>
-
-            </div>
-
-            <div style="padding:15px;text-align:center;">
-
-    <a href="notifications.html"
-       style="color:#ff7b00;
+                            <a href="notifications.html" style="color:#ff7b00;
               font-weight:600;
               text-decoration:none;">
 
-        View All Notifications →
+                                View All Notifications →
 
-    </a>
+                            </a>
 
-</div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <img src="../images/logo/logo.png">
+
+                <span>Administrator</span>
+
+                <button id="logoutBtn" class="join-btn">
+
+                    Logout
+
+                </button>
+
+            </div>
 
         </div>
 
-    </div>
+        <!-- Dashboard Statistics -->
 
-    <img src="../images/logo/logo.png">
+        <div class="cards">
 
-    <span>Administrator</span>
+            <div class="card">
 
-    <button id="logoutBtn" class="join-btn">
+                <i class="fa-solid fa-users"></i>
 
-        Logout
+                <h2 id="totalPlayers">0</h2>
 
-    </button>
+                <p>Total Players</p>
 
-</div>
+            </div>
 
-</div>
+            <div class="card">
 
-<!-- Dashboard Statistics -->
+                <i class="fa-solid fa-trophy"></i>
 
-<div class="cards">
+                <h2 id="totalTournaments">0</h2>
 
-    <div class="card">
+                <p>Total Tournaments</p>
 
-        <i class="fa-solid fa-users"></i>
+            </div>
 
-        <h2 id="totalPlayers">0</h2>
+            <div class="card">
 
-        <p>Total Players</p>
+                <i class="fa-solid fa-image"></i>
 
-    </div>
+                <h2 id="totalGallery">0</h2>
 
-    <div class="card">
+                <p>Gallery Images</p>
 
-        <i class="fa-solid fa-trophy"></i>
+            </div>
 
-        <h2 id="totalTournaments">0</h2>
+            <div class="card">
 
-        <p>Total Tournaments</p>
+                <i class="fa-solid fa-eye"></i>
 
-    </div>
+                <h2 id="totalVisitors">0</h2>
 
-    <div class="card">
+                <p>Total Visitors</p>
 
-        <i class="fa-solid fa-image"></i>
+            </div>
 
-        <h2 id="totalGallery">0</h2>
+            <div class="card">
 
-        <p>Gallery Images</p>
+                <i class="fa-solid fa-envelope"></i>
 
-    </div>
+                <h2 id="totalMessages">0</h2>
 
-    <div class="card">
+                <p>Messages</p>
 
-        <i class="fa-solid fa-eye"></i>
+            </div>
 
-        <h2 id="totalVisitors">0</h2>
+            <div class="card">
 
-        <p>Total Visitors</p>
+                <i class="fa-solid fa-file-circle-check"></i>
 
-    </div>
+                <h2 id="totalApplications">0</h2>
 
-    <div class="card">
+                <p>Applications</p>
 
-        <i class="fa-solid fa-envelope"></i>
+            </div>
 
-        <h2 id="totalMessages">0</h2>
+        </div>
 
-        <p>Messages</p>
-
-    </div>
-
-    <div class="card">
-
-        <i class="fa-solid fa-file-circle-check"></i>
-
-        <h2 id="totalApplications">0</h2>
-
-        <p>Applications</p>
-
-    </div>
-
-</div>
-
-<!-- Part 1A Ends Here -->
- <!-- ==========================
+        <!-- Part 1A Ends Here -->
+        <!-- ==========================
      QUICK ACTIONS
 =========================== -->
 
-<div class="dashboard-section">
+        <div class="dashboard-section">
 
-    <h2>Quick Actions</h2>
+            <h2>Quick Actions</h2>
 
-    <div class="action-grid">
+            <div class="action-grid">
 
-        <div class="action-card" id="managePlayers">
-            <i class="fa-solid fa-users"></i>
-            <h3>Players</h3>
-            <p>Manage Team Players</p>
+                <div class="action-card" id="managePlayers">
+                    <i class="fa-solid fa-users"></i>
+                    <h3>Players</h3>
+                    <p>Manage Team Players</p>
+                </div>
+
+                <div class="action-card" id="manageTournament">
+                    <i class="fa-solid fa-trophy"></i>
+                    <h3>Tournaments</h3>
+                    <p>Manage Tournaments</p>
+                </div>
+
+                <div class="action-card" id="manageGallery">
+                    <i class="fa-solid fa-image"></i>
+                    <h3>Gallery</h3>
+                    <p>Manage Gallery Images</p>
+                </div>
+
+                <div class="action-card" id="manageClips">
+                    <i class="fa-solid fa-film"></i>
+                    <h3>Clips</h3>
+                    <p>Manage Gameplay Clips</p>
+                </div>
+
+                <div class="action-card" id="manageNews">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <h3>Announcements</h3>
+                    <p>Latest Updates</p>
+                </div>
+
+                <div class="action-card" id="manageMessages">
+                    <i class="fa-solid fa-envelope"></i>
+                    <h3>Messages</h3>
+                    <p>View Contact Messages</p>
+                </div>
+
+                <div class="action-card" id="manageApplications">
+                    <i class="fa-solid fa-file-circle-check"></i>
+                    <h3>Applications</h3>
+                    <p>Join Team Requests</p>
+                </div>
+
+                <div class="action-card" id="manageSettings">
+                    <i class="fa-solid fa-gear"></i>
+                    <h3>Settings</h3>
+                    <p>Website Settings</p>
+                </div>
+
+                <div class="action-card" id="sendNotification">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <h3>Send Notification</h3>
+                    <p>Send Push Notification</p>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="action-card" id="manageTournament">
-            <i class="fa-solid fa-trophy"></i>
-            <h3>Tournaments</h3>
-            <p>Manage Tournaments</p>
+        <!-- ==========================
+     SEND NOTIFICATION
+=========================== -->
+
+<div class="dashboard-section" id="sendNotificationSection">
+
+    <h2>
+        <i class="fa-solid fa-paper-plane"></i>
+        Send Notification
+    </h2>
+
+    <div class="notification-send-box">
+
+        <div class="form-group">
+
+            <label for="notificationTitle">
+                Notification Title
+            </label>
+
+            <input
+                type="text"
+                id="notificationTitle"
+                placeholder="Enter notification title"
+            >
+
         </div>
 
-        <div class="action-card" id="manageGallery">
-            <i class="fa-solid fa-image"></i>
-            <h3>Gallery</h3>
-            <p>Manage Gallery Images</p>
+
+        <div class="form-group">
+
+            <label for="notificationMessage">
+                Message
+            </label>
+
+            <textarea
+                id="notificationMessage"
+                rows="5"
+                placeholder="Enter notification message"
+            ></textarea>
+
         </div>
 
-        <div class="action-card" id="manageClips">
-            <i class="fa-solid fa-film"></i>
-            <h3>Clips</h3>
-            <p>Manage Gameplay Clips</p>
+
+        <div class="form-group">
+
+            <label for="notificationTarget">
+                Send To
+            </label>
+
+            <select id="notificationTarget">
+
+                <option value="ALL">
+                    All Players
+                </option>
+
+            </select>
+
         </div>
 
-        <div class="action-card" id="manageNews">
-            <i class="fa-solid fa-bullhorn"></i>
-            <h3>Announcements</h3>
-            <p>Latest Updates</p>
+
+        <div class="form-group">
+
+            <label for="notificationLink">
+                Open Page
+            </label>
+
+            <input
+                type="text"
+                id="notificationLink"
+                value="/player-dashboard.html"
+                placeholder="/player-dashboard.html"
+            >
+
         </div>
 
-        <div class="action-card" id="manageMessages">
-            <i class="fa-solid fa-envelope"></i>
-            <h3>Messages</h3>
-            <p>View Contact Messages</p>
-        </div>
 
-        <div class="action-card" id="manageApplications">
-            <i class="fa-solid fa-file-circle-check"></i>
-            <h3>Applications</h3>
-            <p>Join Team Requests</p>
-        </div>
+        <button
+            type="button"
+            id="sendNotificationBtn"
+            class="join-btn"
+        >
 
-        <div class="action-card" id="manageSettings">
-            <i class="fa-solid fa-gear"></i>
-            <h3>Settings</h3>
-            <p>Website Settings</p>
-        </div>
+            <i class="fa-solid fa-paper-plane"></i>
+
+            Send Notification
+
+        </button>
+
+        <p id="notificationSendStatus"></p>
 
     </div>
 
 </div>
 
-<!-- ==========================
+        <!-- ==========================
      RECENT ACTIVITY
 =========================== -->
 
-<div class="dashboard-section">
+        <div class="dashboard-section">
 
-    <h2>Recent Activity</h2>
+            <h2>Recent Activity</h2>
 
-    <div class="activity-list">
+            <div class="activity-list">
 
-        <div class="activity-item">
+                <div class="activity-item">
 
-            <i class="fa-solid fa-users"></i>
+                    <i class="fa-solid fa-users"></i>
 
-            <div>
+                    <div>
 
-                <h4>Latest Player</h4>
+                        <h4>Latest Player</h4>
 
-                <p id="latestPlayer">
+                        <p id="latestPlayer">
 
-                    Loading...
+                            Loading...
 
-                </p>
+                        </p>
 
-            </div>
+                    </div>
 
-        </div>
+                </div>
 
-        <div class="activity-item">
+                <div class="activity-item">
 
-            <i class="fa-solid fa-trophy"></i>
+                    <i class="fa-solid fa-trophy"></i>
 
-            <div>
+                    <div>
 
-                <h4>Latest Tournament</h4>
+                        <h4>Latest Tournament</h4>
 
-                <p id="latestTournament">
+                        <p id="latestTournament">
 
-                    Loading...
+                            Loading...
 
-                </p>
+                        </p>
 
-            </div>
+                    </div>
 
-        </div>
+                </div>
 
-        <div class="activity-item">
+                <div class="activity-item">
 
-            <i class="fa-solid fa-envelope"></i>
+                    <i class="fa-solid fa-envelope"></i>
 
-            <div>
+                    <div>
 
-                <h4>Latest Message</h4>
+                        <h4>Latest Message</h4>
 
-                <p id="latestMessage">
+                        <p id="latestMessage">
 
-                    Loading...
+                            Loading...
 
-                </p>
+                        </p>
 
-            </div>
+                    </div>
 
-        </div>
+                </div>
 
-        <div class="activity-item">
+                <div class="activity-item">
 
-            <i class="fa-solid fa-file-circle-check"></i>
+                    <i class="fa-solid fa-file-circle-check"></i>
 
-            <div>
+                    <div>
 
-                <h4>Latest Application</h4>
+                        <h4>Latest Application</h4>
 
-                <p id="latestApplication">
+                        <p id="latestApplication">
 
-                    Loading...
+                            Loading...
 
-                </p>
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -386,26 +491,22 @@ body{
 
     </div>
 
-</div>
+    <!-- Firebase -->
 
-</div>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
 
-<!-- Firebase -->
+    <script src="js/firebase.js?v=1783829699314"></script>
+    <script src="js/auth-guard.js?v=1783829699314"></script>
+    <script src="js/dashboard.js?v=1783829699314"></script>
+    <script src="js/notifications.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
-
-<script src="js/firebase.js?v=1783829699314"></script>
-<script src="js/auth-guard.js?v=1783829699314"></script>
-<script src="js/dashboard.js?v=1783829699314"></script>
-<script src="js/notifications.js"></script>
-
-<audio id="notificationSound" preload="auto">
-    <source src="sounds/notification.mp3" type="audio/mpeg">
-</audio>
+    <audio id="notificationSound" preload="auto">
+        <source src="sounds/notification.mp3" type="audio/mpeg">
+    </audio>
 
 </body>
-</html>
 
+</html>

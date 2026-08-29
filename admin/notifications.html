@@ -13,7 +13,164 @@
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
+<style>
+
+.push-notification-section {
+
+    margin: 30px;
+
+    padding: 25px;
+
+    background: #111;
+
+    border: 1px solid rgba(255,123,0,.25);
+
+    border-radius: 16px;
+
+}
+
+.push-notification-section h2 {
+
+    margin: 0 0 20px;
+
+    color: #fff;
+
+}
+
+.push-notification-form {
+
+    display: grid;
+
+    gap: 16px;
+
+    max-width: 700px;
+
+}
+
+.push-notification-form label {
+
+    color: #fff;
+
+    font-weight: 600;
+
+}
+
+.push-notification-form input,
+.push-notification-form textarea,
+.push-notification-form select {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 13px;
+
+    margin-top: 7px;
+
+    border-radius: 8px;
+
+    border: 1px solid #333;
+
+    background: #181818;
+
+    color: #fff;
+
+    font-family: Poppins, sans-serif;
+
+    outline: none;
+
+}
+
+.push-notification-form input:focus,
+.push-notification-form textarea:focus,
+.push-notification-form select:focus {
+
+    border-color: #ff7b00;
+
+}
+
+.push-notification-form textarea {
+
+    min-height: 120px;
+
+    resize: vertical;
+
+}
+
+.send-push-btn {
+
+    padding: 13px 20px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #ff7b00;
+
+    color: #fff;
+
+    font-weight: 700;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+}
+
+.send-push-btn:hover {
+
+    background: #ff8c1a;
+
+}
+
+.send-push-btn:disabled {
+
+    opacity: .6;
+
+    cursor: not-allowed;
+
+}
+
+#pushStatus {
+
+    display: none;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    font-weight: 500;
+
+}
+
+.push-success {
+
+    display: block !important;
+
+    background: rgba(0,180,80,.12);
+
+    border: 1px solid rgba(0,180,80,.3);
+
+    color: #55e695;
+
+}
+
+.push-error {
+
+    display: block !important;
+
+    background: rgba(255,60,60,.12);
+
+    border: 1px solid rgba(255,60,60,.3);
+
+    color: #ff7777;
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
@@ -25,62 +182,188 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <div class="notification-toolbar">
 
-    <input
-        type="text"
-        id="notificationSearch"
-        placeholder="🔍 Search notifications...">
+            <input
+                type="text"
+                id="notificationSearch"
+                placeholder="🔍 Search notifications...">
 
-    <select id="notificationFilter">
+            <select id="notificationFilter">
 
-        <option value="all">All</option>
-        <option value="unread">Unread</option>
-        <option value="read">Read</option>
+                <option value="all">All</option>
 
-    </select>
+                <option value="unread">Unread</option>
 
-    <button id="markAllRead">
+                <option value="read">Read</option>
 
-        <i class="fa-solid fa-check-double"></i>
+            </select>
 
-        Mark All Read
+            <button id="markAllRead">
 
-    </button>
+                <i class="fa-solid fa-check-double"></i>
 
-    <button id="selectAllBtn">
+                Mark All Read
 
-    <i class="fa-solid fa-check-square"></i>
+            </button>
 
-    Select All
+            <button id="selectAllBtn">
 
-</button>
+                <i class="fa-solid fa-check-square"></i>
 
-<button id="deleteSelectedBtn">
+                Select All
 
-    <i class="fa-solid fa-trash-can"></i>
+            </button>
 
-    Delete Selected
+            <button id="deleteSelectedBtn">
 
-</button>
+                <i class="fa-solid fa-trash-can"></i>
 
-    <button id="clearReadBtn">
+                Delete Selected
 
-        <i class="fa-solid fa-trash"></i>
+            </button>
 
-        Clear Read
+            <button id="clearReadBtn">
 
-    </button>
+                <i class="fa-solid fa-trash"></i>
 
-</div>
+                Clear Read
 
-       <a href="dashboard.html" class="dashboard-back-btn">
+            </button>
 
-    <i class="fa-solid fa-arrow-left"></i>
+        </div>
 
-    Dashboard
 
-</a>
+        <a href="dashboard.html" class="dashboard-back-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Dashboard
+
+        </a>
 
     </div>
+
+
+    <!-- =====================================
+         SEND PUSH NOTIFICATION
+    ====================================== -->
+
+    <div class="push-notification-section">
+
+        <h2>
+
+            <i class="fa-solid fa-paper-plane"></i>
+
+            Send Push Notification
+
+        </h2>
+
+
+        <div class="push-notification-form">
+
+
+            <!-- PLAYER -->
+
+            <div>
+
+                <label for="pushPlayer">
+
+                    Select Player
+
+                </label>
+
+                <select id="pushPlayer">
+
+                    <option value="">
+
+                        Loading players...
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <div>
+
+                <label for="pushTitle">
+
+                    Notification Title
+
+                </label>
+
+                <input
+                    type="text"
+                    id="pushTitle"
+                    maxlength="100"
+                    placeholder="Enter notification title">
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div>
+
+                <label for="pushMessage">
+
+                    Message
+
+                </label>
+
+                <textarea
+                    id="pushMessage"
+                    maxlength="500"
+                    placeholder="Enter notification message"></textarea>
+
+            </div>
+
+
+            <!-- LINK -->
+
+            <div>
+
+                <label for="pushLink">
+
+                    Open Page
+
+                </label>
+
+                <input
+                    type="text"
+                    id="pushLink"
+                    value="/player-dashboard.html"
+                    placeholder="/player-dashboard.html">
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <button
+                type="button"
+                id="sendPushBtn"
+                class="send-push-btn">
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+                Send Notification
+
+            </button>
+
+
+            <div id="pushStatus"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         EXISTING NOTIFICATIONS
+    ====================================== -->
 
     <div id="allNotifications">
 
@@ -88,13 +371,383 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 </div>
 
+
+<!-- FIREBASE -->
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 
+
 <script src="js/firebase.js"></script>
+
 <script src="js/auth-guard.js"></script>
+
 <script src="js/notifications-page.js"></script>
+
+
+<!-- =====================================
+     PUSH NOTIFICATION UI
+====================================== -->
+
+<script>
+
+const pushPlayer =
+    document.getElementById("pushPlayer");
+
+const pushTitle =
+    document.getElementById("pushTitle");
+
+const pushMessage =
+    document.getElementById("pushMessage");
+
+const pushLink =
+    document.getElementById("pushLink");
+
+const sendPushBtn =
+    document.getElementById("sendPushBtn");
+
+const pushStatus =
+    document.getElementById("pushStatus");
+
+
+let pushPlayers = [];
+
+
+// ============================================
+// LOAD PLAYERS
+// ============================================
+
+async function loadPushPlayers() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("players")
+                .get();
+
+
+        pushPlayers = [];
+
+
+        snapshot.forEach(doc => {
+
+            pushPlayers.push({
+
+                id: doc.id,
+
+                ...doc.data()
+
+            });
+
+        });
+
+
+        pushPlayers.sort((a, b) => {
+
+            const nameA =
+                (
+                    a.name ||
+                    a.ign ||
+                    ""
+                ).toLowerCase();
+
+
+            const nameB =
+                (
+                    b.name ||
+                    b.ign ||
+                    ""
+                ).toLowerCase();
+
+
+            return nameA.localeCompare(nameB);
+
+        });
+
+
+        pushPlayer.innerHTML = "";
+
+
+        const allOption =
+            document.createElement("option");
+
+        allOption.value = "ALL";
+
+        allOption.textContent =
+            "All Players";
+
+        pushPlayer.appendChild(
+            allOption
+        );
+
+
+        pushPlayers.forEach(player => {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                player.id;
+
+            option.textContent =
+                player.name ||
+                player.ign ||
+                "Unknown Player";
+
+            pushPlayer.appendChild(
+                option
+            );
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ Failed to load players:",
+            error
+        );
+
+
+        pushPlayer.innerHTML = `
+
+            <option value="">
+
+                Failed to load players
+
+            </option>
+
+        `;
+
+    }
+
+}
+
+
+// ============================================
+// SEND BUTTON
+// ============================================
+
+sendPushBtn.addEventListener(
+    "click",
+    async () => {
+
+        const target =
+            pushPlayer.value;
+
+        const title =
+            pushTitle.value.trim();
+
+        const message =
+            pushMessage.value.trim();
+
+        const link =
+            pushLink.value.trim() ||
+            "/player-dashboard.html";
+
+
+        if (!target) {
+
+            showPushStatus(
+                "Please select a player.",
+                false
+            );
+
+            return;
+
+        }
+
+
+        if (!title) {
+
+            showPushStatus(
+                "Please enter a notification title.",
+                false
+            );
+
+            return;
+
+        }
+
+
+        if (!message) {
+
+            showPushStatus(
+                "Please enter a notification message.",
+                false
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            sendPushBtn.disabled =
+                true;
+
+
+            sendPushBtn.innerHTML = `
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                Sending...
+
+            `;
+
+
+            /*
+             * IMPORTANT
+             *
+             * Ye existing Firestore notification
+             * system me notification record create
+             * karega.
+             *
+             * Actual FCM push sending next step me
+             * secure Firebase backend se connect hoga.
+             */
+
+
+            await db
+                .collection("notifications")
+                .add({
+
+                    title:
+                        title,
+
+                    message:
+                        message,
+
+                    link:
+                        link,
+
+                    target:
+                        target,
+
+                    isRead:
+                        false,
+
+                    type:
+                        "push",
+
+                    createdAt:
+                        firebase.firestore
+                            .FieldValue
+                            .serverTimestamp(),
+
+                    createdBy:
+                        auth.currentUser?.email ||
+                        "Admin"
+
+                });
+
+
+            showPushStatus(
+                "Notification created successfully.",
+                true
+            );
+
+
+            pushTitle.value = "";
+
+            pushMessage.value = "";
+
+
+        } catch (error) {
+
+            console.error(
+                "❌ Push notification error:",
+                error
+            );
+
+
+            showPushStatus(
+                error.message ||
+                "Failed to create notification.",
+                false
+            );
+
+        } finally {
+
+            sendPushBtn.disabled =
+                false;
+
+
+            sendPushBtn.innerHTML = `
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+                Send Notification
+
+            `;
+
+        }
+
+    }
+);
+
+
+// ============================================
+// STATUS
+// ============================================
+
+function showPushStatus(
+    message,
+    success
+) {
+
+    pushStatus.textContent =
+        message;
+
+
+    pushStatus.className =
+        success
+            ? "push-success"
+            : "push-error";
+
+}
+
+
+// ============================================
+// LOAD
+// ============================================
+
+firebase.auth().onAuthStateChanged(
+    async user => {
+
+        if (!user) {
+
+            return;
+
+        }
+
+
+        if (
+            user.email !==
+            "aks303603@gmail.com"
+        ) {
+
+            return;
+
+        }
+
+
+        document.body.style.visibility =
+            "visible";
+
+
+        await loadPushPlayers();
+
+    }
+);
+
+</script>
+
 
 </body>
 
