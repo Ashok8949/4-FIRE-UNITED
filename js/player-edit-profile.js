@@ -74,6 +74,16 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById("role").value =
             playerData.role || "";
 
+        // 🔒 ROLE LOCK - PLAYER CANNOT CHANGE ROLE
+        const roleField = document.getElementById("role");
+
+        if (roleField) {
+            roleField.disabled = true;
+            roleField.readOnly = true;
+            roleField.style.pointerEvents = "none";
+            roleField.style.cursor = "not-allowed";
+        }
+
         document.getElementById("language").value =
             playerData.language || "";
 
@@ -539,16 +549,16 @@ document.getElementById("saveBtn").addEventListener(
             // EMAIL CHANGE
             // ==========================================
 
-          if (changingEmail) {
+            if (changingEmail) {
 
-    await currentUser.updateEmail(newEmail);
+                await currentUser.updateEmail(newEmail);
 
-    alert(
-        "Email changed successfully to " +
-        newEmail
-    );
+                alert(
+                    "Email changed successfully to " +
+                    newEmail
+                );
 
-}
+            }
 
             // ==========================================
             // UPDATE FIRESTORE
@@ -583,11 +593,10 @@ document.getElementById("saveBtn").addEventListener(
                             .value
                             .trim(),
 
+                    // 🔒 ROLE LOCK
+                    // Always keep the role assigned by admin
                     role:
-                        document
-                            .getElementById("role")
-                            .value
-                            .trim(),
+                        playerData.role || "",
 
                     language:
                         document
