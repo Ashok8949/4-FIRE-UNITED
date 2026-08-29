@@ -4085,6 +4085,46 @@ window.deletePlayerContent =
 
 </script>
 
+<script>
+/* =====================================================
+   LOGOUT SAFETY HANDLER
+   Added only for the Logout button.
+   This is intentionally a separate script so other
+   dashboard JS errors cannot stop Logout from working.
+===================================================== */
+(function () {
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (!logoutBtn) return;
+
+    logoutBtn.addEventListener("click", async function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        try {
+            logoutBtn.disabled = true;
+
+            await firebase.auth().signOut();
+
+            window.location.replace("../player-login.html");
+
+        } catch (error) {
+            console.error("Logout Error:", error);
+
+            logoutBtn.disabled = false;
+
+            alert(
+                "Logout failed:\n\n" +
+                (error && error.message
+                    ? error.message
+                    : "Unable to logout.")
+            );
+        }
+    });
+})();
+</script>
+
+
 <!-- =========================================
      PLAYER DASHBOARD END
 ========================================= -->
