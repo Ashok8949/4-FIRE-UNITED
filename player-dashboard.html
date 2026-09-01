@@ -383,6 +383,37 @@
             background: #ff6200;
         }
 
+        .upload-actions {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .upload-actions .upload-submit {
+            flex: 1;
+        }
+
+        .upload-cancel {
+            padding: 12px 18px;
+            background: #222;
+            border: 1px solid #ff7200;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .upload-cancel:hover {
+            background: #3a1b00;
+        }
+
+        .upload-cancel:disabled,
+        .upload-submit:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
         .upload-status {
             margin-top: 12px;
             color: #ff7200;
@@ -3025,18 +3056,25 @@
                 </select>
 
 
-                <label>
-                    Video / Reel
-                </label>
+                <div id="playerClipVideoGroup">
 
-                <input type="file" id="playerClipVideo" accept="video/mp4,video/webm,video/quicktime">
+                    <label>
+                        Video / Reel
+                    </label>
 
+                    <input type="file" id="playerClipVideo" accept="video/mp4,video/webm,video/quicktime">
 
-                <label>
-                    Video URL
-                </label>
+                </div>
 
-                <input type="url" id="playerClipUrl" placeholder="YouTube / Instagram URL">
+                <div id="playerClipUrlGroup" style="display:none;">
+
+                    <label>
+                        Video URL
+                    </label>
+
+                    <input type="url" id="playerClipUrl" placeholder="YouTube / Instagram URL">
+
+                </div>
 
 
                 <label>
@@ -3054,14 +3092,25 @@
             </textarea>
 
 
-                <button type="button" class="upload-submit" id="uploadPlayerClip">
+                <div class="upload-actions">
 
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <button type="button" class="upload-submit" id="uploadPlayerClip">
 
-                    Upload Clip
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
 
-                </button>
+                        Upload Clip
 
+                    </button>
+
+                    <button type="button" class="upload-cancel" id="cancelPlayerClip" style="display:none;">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                        Cancel Upload
+
+                    </button>
+
+                </div>
 
                 <p class="upload-status" id="clipUploadStatus">
                 </p>
@@ -3087,14 +3136,25 @@
                 <input type="text" id="playerGalleryTitle" placeholder="Enter image title">
 
 
-                <button type="button" class="upload-submit" id="uploadPlayerGallery">
+                <div class="upload-actions">
 
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <button type="button" class="upload-submit" id="uploadPlayerGallery">
 
-                    Upload Gallery Image
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
 
-                </button>
+                        Upload Gallery Image
 
+                    </button>
+
+                    <button type="button" class="upload-cancel" id="cancelPlayerGallery" style="display:none;">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                        Cancel Upload
+
+                    </button>
+
+                </div>
 
                 <p class="upload-status" id="galleryUploadStatus">
                 </p>
@@ -4197,263 +4257,577 @@
 
 
         /* =========================================
+   PLAYER CONTENT UPLOAD SYSTEM
+   Cloudinary Upload + Firestore
+========================================= */
+
+        let activeUploadXHR = null;
+        let uploadCancelled = false;
+
+
+        /* =========================================
            CONTENT BOXES
         ========================================= */
 
-        document.getElementById(
-            "showClipUpload"
-        ).addEventListener(
-            "click",
-            () => {
+        const showClipUpload =
+            document.getElementById("showClipUpload");
 
-                document
-                    .getElementById(
-                        "clipUploadBox"
-                    )
-                    .classList.toggle(
-                        "active"
-                    );
+        const showGalleryUpload =
+            document.getElementById("showGalleryUpload");
 
-                document
-                    .getElementById(
-                        "galleryUploadBox"
-                    )
-                    .classList.remove(
-                        "active"
-                    );
+        const clipUploadBox =
+            document.getElementById("clipUploadBox");
 
-            }
-        );
+        const galleryUploadBox =
+            document.getElementById("galleryUploadBox");
 
 
-        document.getElementById(
-            "showGalleryUpload"
-        ).addEventListener(
-            "click",
-            () => {
+        if (showClipUpload) {
 
-                document
-                    .getElementById(
-                        "galleryUploadBox"
-                    )
-                    .classList.toggle(
-                        "active"
-                    );
+            showClipUpload.addEventListener("click", () => {
 
-                document
-                    .getElementById(
-                        "clipUploadBox"
-                    )
-                    .classList.remove(
-                        "active"
-                    );
+                clipUploadBox.classList.toggle("active");
 
-            }
-        );
+                galleryUploadBox.classList.remove("active");
+
+            });
+
+        }
+
+
+        if (showGalleryUpload) {
+
+            showGalleryUpload.addEventListener("click", () => {
+
+                galleryUploadBox.classList.toggle("active");
+
+                clipUploadBox.classList.remove("active");
+
+            });
+
+        }
+
+
+        /* =========================================
+           ADD CANCEL BUTTONS
+        ========================================= */
+
+        function createCancelButton(container, id) {
+
+            if (!container) return;
+
+            if (document.getElementById(id)) return;
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+            button.id = id;
+
+            button.innerHTML =
+                '<i class="fa-solid fa-xmark"></i> Cancel';
+
+            button.style.width = "100%";
+            button.style.marginTop = "10px";
+            button.style.padding = "12px";
+            button.style.background = "transparent";
+            button.style.border = "1px solid #ff3b30";
+            button.style.color = "#ff3b30";
+            button.style.borderRadius = "8px";
+            button.style.cursor = "pointer";
+            button.style.fontWeight = "700";
+
+            container.appendChild(button);
+
+            return button;
+        }
+
+
+        const clipCancelBtn =
+            createCancelButton(
+                clipUploadBox,
+                "cancelPlayerClipUpload"
+            );
+
+
+        const galleryCancelBtn =
+            createCancelButton(
+                galleryUploadBox,
+                "cancelPlayerGalleryUpload"
+            );
 
 
         /* =========================================
            CLIP TYPE
         ========================================= */
 
-        document.getElementById(
-            "playerClipType"
-        ).addEventListener(
-            "change",
-            function () {
+        const playerClipType =
+            document.getElementById("playerClipType");
+
+        const playerClipVideo =
+            document.getElementById("playerClipVideo");
+
+        const playerClipUrl =
+            document.getElementById("playerClipUrl");
 
 
-                const videoFile =
-                    document.getElementById(
-                        "playerClipVideo"
-                    );
+        function updateClipType() {
 
+            if (!playerClipType) return;
 
-                const videoUrl =
-                    document.getElementById(
-                        "playerClipUrl"
-                    );
+            if (playerClipType.value === "video") {
 
+                playerClipVideo.style.display = "block";
 
-                if (this.value === "video") {
+                playerClipUrl.style.display = "none";
 
-                    videoFile.style.display =
-                        "block";
+                /* Hide URL label also */
+                const urlLabel =
+                    playerClipUrl.previousElementSibling;
 
-                    videoUrl.style.display =
-                        "none";
+                if (urlLabel) {
+                    urlLabel.style.display = "none";
+                }
 
-                } else {
+            } else {
 
-                    videoFile.style.display =
-                        "none";
+                playerClipVideo.style.display = "none";
 
-                    videoUrl.style.display =
-                        "block";
+                playerClipUrl.style.display = "block";
 
+                /* Show URL label */
+                const urlLabel =
+                    playerClipUrl.previousElementSibling;
+
+                if (urlLabel) {
+                    urlLabel.style.display = "block";
                 }
 
             }
-        );
+
+        }
+
+
+        if (playerClipType) {
+
+            playerClipType.addEventListener(
+                "change",
+                updateClipType
+            );
+
+            updateClipType();
+
+        }
+
+
+        /* =========================================
+           CLOUDINARY UPLOAD
+        ========================================= */
+
+        function uploadPlayerFileToCloudinary(
+            file,
+            resourceType,
+            onProgress
+        ) {
+
+            return new Promise(
+                (resolve, reject) => {
+
+                    if (!file) {
+
+                        reject(
+                            new Error("File not selected.")
+                        );
+
+                        return;
+                    }
+
+
+                    const formData =
+                        new FormData();
+
+                    formData.append(
+                        "file",
+                        file
+                    );
+
+                    formData.append(
+                        "upload_preset",
+                        "4fu_clips"
+                    );
+
+
+                    const xhr =
+                        new XMLHttpRequest();
+
+                    activeUploadXHR = xhr;
+
+                    xhr.open(
+                        "POST",
+                        `https://api.cloudinary.com/v1_1/vuto9fey/${resourceType}/upload`
+                    );
+
+
+                    xhr.upload.onprogress =
+                        (event) => {
+
+                            if (
+                                event.lengthComputable &&
+                                typeof onProgress === "function"
+                            ) {
+
+                                const percent =
+                                    Math.round(
+                                        (
+                                            event.loaded /
+                                            event.total
+                                        ) * 100
+                                    );
+
+                                onProgress(percent);
+
+                            }
+
+                        };
+
+
+                    xhr.onload = () => {
+
+                        activeUploadXHR = null;
+
+
+                        if (
+                            xhr.status >= 200 &&
+                            xhr.status < 300
+                        ) {
+
+                            try {
+
+                                const result =
+                                    JSON.parse(
+                                        xhr.responseText
+                                    );
+
+                                resolve(result);
+
+                            } catch (error) {
+
+                                reject(
+                                    new Error(
+                                        "Invalid Cloudinary response."
+                                    )
+                                );
+
+                            }
+
+                        } else {
+
+                            let message =
+                                "Cloudinary upload failed.";
+
+                            try {
+
+                                const result =
+                                    JSON.parse(
+                                        xhr.responseText
+                                    );
+
+                                if (
+                                    result.error &&
+                                    result.error.message
+                                ) {
+
+                                    message =
+                                        result.error.message;
+
+                                }
+
+                            } catch (e) { }
+
+                            reject(
+                                new Error(message)
+                            );
+
+                        }
+
+                    };
+
+
+                    xhr.onerror = () => {
+
+                        activeUploadXHR = null;
+
+                        reject(
+                            new Error(
+                                "Network error while uploading."
+                            )
+                        );
+
+                    };
+
+
+                    xhr.onabort = () => {
+
+                        activeUploadXHR = null;
+
+                        reject(
+                            new Error(
+                                "UPLOAD_CANCELLED"
+                            )
+                        );
+
+                    };
+
+
+                    xhr.send(formData);
+
+                }
+            );
+
+        }
+
+
+        /* =========================================
+           CLIP STATUS
+        ========================================= */
+
+        const clipStatus =
+            document.getElementById(
+                "clipUploadStatus"
+            );
+
+
+        function clipMessage(text) {
+
+            if (clipStatus) {
+
+                clipStatus.textContent =
+                    text;
+
+            }
+
+        }
+
+
+        /* =========================================
+           CANCEL CLIP UPLOAD
+        ========================================= */
+
+        if (clipCancelBtn) {
+
+            clipCancelBtn.addEventListener(
+                "click",
+                () => {
+
+                    uploadCancelled = true;
+
+                    if (activeUploadXHR) {
+
+                        activeUploadXHR.abort();
+
+                    }
+
+                    clipMessage(
+                        "❌ Upload cancelled."
+                    );
+
+                    const button =
+                        document.getElementById(
+                            "uploadPlayerClip"
+                        );
+
+                    if (button) {
+
+                        button.disabled = false;
+
+                        button.innerHTML =
+                            '<i class="fa-solid fa-cloud-arrow-up"></i> Upload Clip';
+
+                    }
+
+                }
+            );
+
+        }
 
 
         /* =========================================
            UPLOAD PLAYER CLIP
         ========================================= */
 
-        document.getElementById(
-            "uploadPlayerClip"
-        ).addEventListener(
-            "click",
-            async () => {
+        const uploadPlayerClip =
+            document.getElementById(
+                "uploadPlayerClip"
+            );
 
 
-                if (!currentPlayer)
-                    return;
+        if (uploadPlayerClip) {
 
+            uploadPlayerClip.addEventListener(
+                "click",
+                async () => {
 
-                const status =
-                    document.getElementById(
-                        "clipUploadStatus"
-                    );
+                    if (!currentPlayer) {
 
-
-                try {
-
-
-                    const title =
-                        document.getElementById(
-                            "playerClipTitle"
-                        ).value.trim();
-
-
-                    const type =
-                        document.getElementById(
-                            "playerClipType"
-                        ).value;
-
-
-                    const category =
-                        document.getElementById(
-                            "playerClipCategory"
-                        ).value.trim();
-
-
-                    const description =
-                        document.getElementById(
-                            "playerClipDescription"
-                        ).value.trim();
-
-
-                    if (!title) {
-
-                        status.textContent =
-                            "Please enter clip title.";
+                        clipMessage(
+                            "Please login first."
+                        );
 
                         return;
 
                     }
 
 
-                    status.textContent =
-                        "Uploading clip...";
+                    uploadCancelled = false;
 
 
-                    let thumbnail = "";
+                    const title =
+                        document
+                            .getElementById(
+                                "playerClipTitle"
+                            )
+                            .value
+                            .trim();
+
+
+                    const type =
+                        document
+                            .getElementById(
+                                "playerClipType"
+                            )
+                            .value;
+
+
+                    const category =
+                        document
+                            .getElementById(
+                                "playerClipCategory"
+                            )
+                            .value
+                            .trim();
+
+
+                    const description =
+                        document
+                            .getElementById(
+                                "playerClipDescription"
+                            )
+                            .value
+                            .trim();
 
 
                     const thumbnailFile =
-                        document.getElementById(
-                            "playerClipThumbnail"
-                        ).files[0];
+                        document
+                            .getElementById(
+                                "playerClipThumbnail"
+                            )
+                            .files[0];
 
 
-                    if (thumbnailFile) {
+                    const videoFile =
+                        document
+                            .getElementById(
+                                "playerClipVideo"
+                            )
+                            .files[0];
 
 
-                        const ref =
-                            firebase.storage()
-                                .ref(
-                                    "playerClips/" +
-                                    currentPlayer.id +
-                                    "/thumbnails/" +
-                                    Date.now() +
-                                    "_" +
-                                    thumbnailFile.name
-                                );
+                    const url =
+                        document
+                            .getElementById(
+                                "playerClipUrl"
+                            )
+                            .value
+                            .trim();
 
 
-                        const snap =
-                            await ref.put(
-                                thumbnailFile
-                            );
+                    /* =====================================
+                       VALIDATION
+                    ===================================== */
 
+                    if (!title) {
 
-                        thumbnail =
-                            await snap.ref
-                                .getDownloadURL();
+                        clipMessage(
+                            "Please enter clip title."
+                        );
+
+                        return;
 
                     }
 
 
-                    let videoUrl = "";
+                    if (!category) {
+
+                        clipMessage(
+                            "Please enter category."
+                        );
+
+                        return;
+
+                    }
 
 
                     if (type === "video") {
 
+                        if (!thumbnailFile) {
 
-                        const videoFile =
-                            document.getElementById(
-                                "playerClipVideo"
-                            ).files[0];
-
-
-                        if (!videoFile) {
-
-                            status.textContent =
-                                "Please select a video.";
+                            clipMessage(
+                                "Please select thumbnail."
+                            );
 
                             return;
 
                         }
 
 
-                        const ref =
-                            firebase.storage()
-                                .ref(
-                                    "playerClips/" +
-                                    currentPlayer.id +
-                                    "/videos/" +
-                                    Date.now() +
-                                    "_" +
-                                    videoFile.name
-                                );
+                        if (!videoFile) {
 
-
-                        const snap =
-                            await ref.put(
-                                videoFile
+                            clipMessage(
+                                "Please select video."
                             );
 
+                            return;
 
-                        videoUrl =
-                            await snap.ref
-                                .getDownloadURL();
-
+                        }
 
                     } else {
 
+                        if (!url) {
 
-                        videoUrl =
-                            document.getElementById(
-                                "playerClipUrl"
-                            ).value.trim();
+                            clipMessage(
+                                "Please enter video URL."
+                            );
+
+                            return;
+
+                        }
 
 
-                        if (!videoUrl) {
+                        if (
+                            type === "youtube" &&
+                            !(
+                                url.includes("youtube.com") ||
+                                url.includes("youtu.be")
+                            )
+                        ) {
 
-                            status.textContent =
-                                "Please enter video URL.";
+                            clipMessage(
+                                "Please enter a valid YouTube URL."
+                            );
+
+                            return;
+
+                        }
+
+
+                        if (
+                            type === "instagram" &&
+                            !url.includes("instagram.com")
+                        ) {
+
+                            clipMessage(
+                                "Please enter a valid Instagram URL."
+                            );
 
                             return;
 
@@ -4462,247 +4836,595 @@
                     }
 
 
-                    await db
-                        .collection("clips")
-                        .add({
+                    /* =====================================
+                       DISABLE BUTTON
+                    ===================================== */
 
-                            title: title,
+                    uploadPlayerClip.disabled = true;
 
-                            playerName:
-                                currentPlayer.name ||
-                                currentPlayer.playerName ||
-                                currentPlayer.ign ||
-                                "Player",
-
-                            playerId:
-                                currentPlayer.id,
-
-                            playerEmail:
-                                currentUser.email,
-
-                            thumbnail:
-                                thumbnail,
-
-                            clipType:
-                                type,
-
-                            videoUrl:
-                                videoUrl,
-
-                            category:
-                                category,
-
-                            description:
-                                description,
-
-                            featured:
-                                false,
-
-                            createdAt:
-                                firebase.firestore
-                                    .FieldValue
-                                    .serverTimestamp()
-
-                        });
+                    uploadPlayerClip.innerHTML =
+                        '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
 
 
-                    status.textContent =
-                        "🔥 Clip uploaded successfully!";
+                    try {
+
+                        let thumbnail = "";
+
+                        let finalVideo = "";
 
 
-                    document.getElementById(
-                        "playerClipTitle"
-                    ).value = "";
+                        /* =================================
+                           UPLOAD THUMBNAIL
+                        ================================= */
 
+                        if (
+                            type === "video" &&
+                            thumbnailFile
+                        ) {
 
-                    document.getElementById(
-                        "playerClipCategory"
-                    ).value = "";
-
-
-                    document.getElementById(
-                        "playerClipDescription"
-                    ).value = "";
-
-
-                    document.getElementById(
-                        "playerClipUrl"
-                    ).value = "";
-
-
-                    document.getElementById(
-                        "playerClipThumbnail"
-                    ).value = "";
-
-
-                    document.getElementById(
-                        "playerClipVideo"
-                    ).value = "";
-
-
-                    loadMyContent(
-                        currentPlayer
-                    );
-
-
-                } catch (error) {
-
-                    console.error(error);
-
-                    status.textContent =
-                        "Upload failed: " +
-                        error.message;
-
-                }
-
-            }
-        );
-
-
-        /* =========================================
-           UPLOAD GALLERY IMAGE
-        ========================================= */
-
-        document.getElementById(
-            "uploadPlayerGallery"
-        ).addEventListener(
-            "click",
-            async () => {
-
-
-                if (!currentPlayer)
-                    return;
-
-
-                const status =
-                    document.getElementById(
-                        "galleryUploadStatus"
-                    );
-
-
-                const imageFile =
-                    document.getElementById(
-                        "playerGalleryImage"
-                    ).files[0];
-
-
-                const title =
-                    document.getElementById(
-                        "playerGalleryTitle"
-                    ).value.trim();
-
-
-                if (!imageFile) {
-
-                    status.textContent =
-                        "Please select an image.";
-
-                    return;
-
-                }
-
-
-                if (!title) {
-
-                    status.textContent =
-                        "Please enter image title.";
-
-                    return;
-
-                }
-
-
-                try {
-
-
-                    status.textContent =
-                        "Uploading image...";
-
-
-                    const ref =
-                        firebase.storage()
-                            .ref(
-                                "playerGallery/" +
-                                currentPlayer.id +
-                                "/" +
-                                Date.now() +
-                                "_" +
-                                imageFile.name
+                            clipMessage(
+                                "Uploading thumbnail... 0%"
                             );
 
 
-                    const snap =
-                        await ref.put(
-                            imageFile
+                            const thumbnailUpload =
+                                await uploadPlayerFileToCloudinary(
+                                    thumbnailFile,
+                                    "image",
+                                    (percent) => {
+
+                                        clipMessage(
+                                            `Uploading thumbnail... ${percent}%`
+                                        );
+
+                                    }
+                                );
+
+
+                            if (uploadCancelled) {
+
+                                return;
+
+                            }
+
+
+                            thumbnail =
+                                thumbnailUpload.secure_url;
+
+
+                            clipMessage(
+                                "✅ Thumbnail uploaded."
+                            );
+
+                        }
+
+
+                        /* =================================
+                           UPLOAD VIDEO
+                        ================================= */
+
+                        if (
+                            type === "video" &&
+                            videoFile
+                        ) {
+
+                            clipMessage(
+                                "Uploading video... 0%"
+                            );
+
+
+                            const videoUpload =
+                                await uploadPlayerFileToCloudinary(
+                                    videoFile,
+                                    "video",
+                                    (percent) => {
+
+                                        clipMessage(
+                                            `Uploading video... ${percent}%`
+                                        );
+
+                                    }
+                                );
+
+
+                            if (uploadCancelled) {
+
+                                return;
+
+                            }
+
+
+                            finalVideo =
+                                videoUpload.secure_url;
+
+
+                            clipMessage(
+                                "✅ Video uploaded."
+                            );
+
+                        }
+
+
+                        /* =================================
+                           URL CLIP
+                        ================================= */
+
+                        if (type !== "video") {
+
+                            finalVideo = url;
+
+                            thumbnail = "";
+
+                        }
+
+
+                        /* =================================
+                           SAVE FIRESTORE
+                        ================================= */
+
+                        clipMessage(
+                            "Saving clip..."
                         );
 
 
-                    const imageUrl =
-                        await snap.ref
-                            .getDownloadURL();
+                        await db
+                            .collection("clips")
+                            .add({
+
+                                title: title,
+
+                                playerName:
+                                    currentPlayer.name ||
+                                    currentPlayer.playerName ||
+                                    currentPlayer.ign ||
+                                    "Player",
+
+                                playerId:
+                                    currentPlayer.id,
+
+                                playerEmail:
+                                    currentUser?.email || "",
+
+                                thumbnail:
+                                    thumbnail,
+
+                                clipType:
+                                    type,
+
+                                videoUrl:
+                                    finalVideo,
+
+                                category:
+                                    category,
+
+                                description:
+                                    description,
+
+                                featured:
+                                    false,
+
+                                createdAt:
+                                    firebase.firestore
+                                        .FieldValue
+                                        .serverTimestamp()
+
+                            });
 
 
-                    await db
-                        .collection("gallery")
-                        .add({
+                        /* =================================
+                           SUCCESS
+                        ================================= */
 
-                            title:
-                                title,
-
-                            image:
-                                imageUrl,
-
-                            playerId:
-                                currentPlayer.id,
-
-                            playerName:
-                                currentPlayer.name ||
-                                currentPlayer.playerName ||
-                                currentPlayer.ign ||
-                                "Player",
-
-                            playerEmail:
-                                currentUser.email,
-
-                            createdAt:
-                                firebase.firestore
-                                    .FieldValue
-                                    .serverTimestamp()
-
-                        });
+                        clipMessage(
+                            "🔥 Clip uploaded successfully!"
+                        );
 
 
-                    status.textContent =
-                        "🔥 Gallery image uploaded successfully!";
+                        /* CLEAR FORM */
+
+                        document.getElementById(
+                            "playerClipTitle"
+                        ).value = "";
 
 
-                    document.getElementById(
-                        "playerGalleryImage"
-                    ).value = "";
+                        document.getElementById(
+                            "playerClipCategory"
+                        ).value = "";
 
 
-                    document.getElementById(
-                        "playerGalleryTitle"
-                    ).value = "";
+                        document.getElementById(
+                            "playerClipDescription"
+                        ).value = "";
 
 
-                    loadMyContent(
-                        currentPlayer
+                        document.getElementById(
+                            "playerClipUrl"
+                        ).value = "";
+
+
+                        document.getElementById(
+                            "playerClipThumbnail"
+                        ).value = "";
+
+
+                        document.getElementById(
+                            "playerClipVideo"
+                        ).value = "";
+
+
+                        /* Reload own content */
+
+                        loadMyContent(
+                            currentPlayer
+                        );
+
+
+                        /* Close upload box */
+
+                        setTimeout(
+                            () => {
+
+                                clipUploadBox.classList.remove(
+                                    "active"
+                                );
+
+                                clipMessage("");
+
+                            },
+                            1200
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Player Clip Upload Error:",
+                            error
+                        );
+
+
+                        if (
+                            error.message ===
+                            "UPLOAD_CANCELLED"
+                        ) {
+
+                            clipMessage(
+                                "❌ Upload cancelled."
+                            );
+
+                        } else {
+
+                            clipMessage(
+                                "❌ Upload failed: " +
+                                error.message
+                            );
+
+                        }
+
+                    } finally {
+
+                        activeUploadXHR = null;
+
+                        uploadPlayerClip.disabled =
+                            false;
+
+                        uploadPlayerClip.innerHTML =
+                            '<i class="fa-solid fa-cloud-arrow-up"></i> Upload Clip';
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =========================================
+           GALLERY STATUS
+        ========================================= */
+
+        const galleryStatus =
+            document.getElementById(
+                "galleryUploadStatus"
+            );
+
+
+        function galleryMessage(text) {
+
+            if (galleryStatus) {
+
+                galleryStatus.textContent =
+                    text;
+
+            }
+
+        }
+
+
+        /* =========================================
+           CANCEL GALLERY UPLOAD
+        ========================================= */
+
+        if (galleryCancelBtn) {
+
+            galleryCancelBtn.addEventListener(
+                "click",
+                () => {
+
+                    uploadCancelled = true;
+
+                    if (activeUploadXHR) {
+
+                        activeUploadXHR.abort();
+
+                    }
+
+                    galleryMessage(
+                        "❌ Upload cancelled."
                     );
 
 
-                } catch (error) {
+                    const button =
+                        document.getElementById(
+                            "uploadPlayerGallery"
+                        );
 
-                    console.error(error);
 
-                    status.textContent =
-                        "Upload failed: " +
-                        error.message;
+                    if (button) {
+
+                        button.disabled = false;
+
+                        button.innerHTML =
+                            '<i class="fa-solid fa-cloud-arrow-up"></i> Upload Gallery Image';
+
+                    }
 
                 }
+            );
 
-            }
-        );
+        }
+
+
+        /* =========================================
+           UPLOAD PLAYER GALLERY IMAGE
+        ========================================= */
+
+        const uploadPlayerGallery =
+            document.getElementById(
+                "uploadPlayerGallery"
+            );
+
+
+        if (uploadPlayerGallery) {
+
+            uploadPlayerGallery.addEventListener(
+                "click",
+                async () => {
+
+                    if (!currentPlayer) {
+
+                        galleryMessage(
+                            "Please login first."
+                        );
+
+                        return;
+
+                    }
+
+
+                    uploadCancelled = false;
+
+
+                    const imageFile =
+                        document
+                            .getElementById(
+                                "playerGalleryImage"
+                            )
+                            .files[0];
+
+
+                    const title =
+                        document
+                            .getElementById(
+                                "playerGalleryTitle"
+                            )
+                            .value
+                            .trim();
+
+
+                    /* =================================
+                       VALIDATION
+                    ================================= */
+
+                    if (!imageFile) {
+
+                        galleryMessage(
+                            "Please select an image."
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (!title) {
+
+                        galleryMessage(
+                            "Please enter image title."
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* =================================
+                       DISABLE BUTTON
+                    ================================= */
+
+                    uploadPlayerGallery.disabled =
+                        true;
+
+
+                    uploadPlayerGallery.innerHTML =
+                        '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+
+
+                    try {
+
+                        galleryMessage(
+                            "Uploading image... 0%"
+                        );
+
+
+                        /* =================================
+                           CLOUDINARY IMAGE UPLOAD
+                        ================================= */
+
+                        const imageUpload =
+                            await uploadPlayerFileToCloudinary(
+                                imageFile,
+                                "image",
+                                (percent) => {
+
+                                    galleryMessage(
+                                        `Uploading image... ${percent}%`
+                                    );
+
+                                }
+                            );
+
+
+                        if (uploadCancelled) {
+
+                            return;
+
+                        }
+
+
+                        const imageUrl =
+                            imageUpload.secure_url;
+
+
+                        /* =================================
+                           SAVE FIRESTORE
+                        ================================= */
+
+                        galleryMessage(
+                            "Saving image..."
+                        );
+
+
+                        await db
+                            .collection("gallery")
+                            .add({
+
+                                title:
+                                    title,
+
+                                image:
+                                    imageUrl,
+
+                                playerId:
+                                    currentPlayer.id,
+
+                                playerName:
+                                    currentPlayer.name ||
+                                    currentPlayer.playerName ||
+                                    currentPlayer.ign ||
+                                    "Player",
+
+                                playerEmail:
+                                    currentUser?.email || "",
+
+                                createdAt:
+                                    firebase.firestore
+                                        .FieldValue
+                                        .serverTimestamp()
+
+                            });
+
+
+                        /* =================================
+                           SUCCESS
+                        ================================= */
+
+                        galleryMessage(
+                            "🔥 Gallery image uploaded successfully!"
+                        );
+
+
+                        document.getElementById(
+                            "playerGalleryImage"
+                        ).value = "";
+
+
+                        document.getElementById(
+                            "playerGalleryTitle"
+                        ).value = "";
+
+
+                        loadMyContent(
+                            currentPlayer
+                        );
+
+
+                        setTimeout(
+                            () => {
+
+                                galleryUploadBox.classList.remove(
+                                    "active"
+                                );
+
+                                galleryMessage("");
+
+                            },
+                            1200
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Player Gallery Upload Error:",
+                            error
+                        );
+
+
+                        if (
+                            error.message ===
+                            "UPLOAD_CANCELLED"
+                        ) {
+
+                            galleryMessage(
+                                "❌ Upload cancelled."
+                            );
+
+                        } else {
+
+                            galleryMessage(
+                                "❌ Upload failed: " +
+                                error.message
+                            );
+
+                        }
+
+                    } finally {
+
+                        activeUploadXHR = null;
+
+                        uploadPlayerGallery.disabled =
+                            false;
+
+                        uploadPlayerGallery.innerHTML =
+                            '<i class="fa-solid fa-cloud-arrow-up"></i> Upload Gallery Image';
+
+                    }
+
+                }
+            );
+
+        }
 
 
         /* =========================================
@@ -5545,70 +6267,70 @@
 
         function renderPlayerNotifications() {
 
-    if (!playerNotificationList) return;
+            if (!playerNotificationList) return;
 
-    playerNotificationList.innerHTML = "";
+            playerNotificationList.innerHTML = "";
 
-    if (playerNotifications.length === 0) {
+            if (playerNotifications.length === 0) {
 
-        playerNotificationList.innerHTML = `
+                playerNotificationList.innerHTML = `
             <p class="player-notification-empty">
                 No notifications
             </p>
         `;
 
-        if (playerNotificationCount) {
-            playerNotificationCount.style.display = "none";
-        }
+                if (playerNotificationCount) {
+                    playerNotificationCount.style.display = "none";
+                }
 
-        return;
-    }
-
-
-    const unread =
-        playerNotifications.filter(
-            n => !n.isRead
-        ).length;
+                return;
+            }
 
 
-    // Unread count
-
-    if (playerNotificationCount) {
-
-        if (unread > 0) {
-
-            playerNotificationCount.style.display =
-                "flex";
-
-            playerNotificationCount.textContent =
-                unread;
-
-        } else {
-
-            playerNotificationCount.style.display =
-                "none";
-
-        }
-
-    }
+            const unread =
+                playerNotifications.filter(
+                    n => !n.isRead
+                ).length;
 
 
-    playerNotifications.forEach(
-        (notification) => {
+            // Unread count
 
-            const item =
-                document.createElement("div");
+            if (playerNotificationCount) {
 
-            item.className =
-                "player-notification-item" +
-                (
-                    notification.isRead
-                        ? ""
-                        : " unread"
-                );
+                if (unread > 0) {
+
+                    playerNotificationCount.style.display =
+                        "flex";
+
+                    playerNotificationCount.textContent =
+                        unread;
+
+                } else {
+
+                    playerNotificationCount.style.display =
+                        "none";
+
+                }
+
+            }
 
 
-            item.innerHTML = `
+            playerNotifications.forEach(
+                (notification) => {
+
+                    const item =
+                        document.createElement("div");
+
+                    item.className =
+                        "player-notification-item" +
+                        (
+                            notification.isRead
+                                ? ""
+                                : " unread"
+                        );
+
+
+                    item.innerHTML = `
 
                 <h4>
                     ${notification.title}
@@ -5621,50 +6343,50 @@
             `;
 
 
-            item.addEventListener(
-                "click",
-                async () => {
+                    item.addEventListener(
+                        "click",
+                        async () => {
 
-                    try {
+                            try {
 
-                        if (!notification.isRead) {
+                                if (!notification.isRead) {
 
-                            await db
-                                .collection(
-                                    "notifications"
-                                )
-                                .doc(
-                                    notification.id
-                                )
-                                .update({
+                                    await db
+                                        .collection(
+                                            "notifications"
+                                        )
+                                        .doc(
+                                            notification.id
+                                        )
+                                        .update({
 
-                                    isRead: true
+                                            isRead: true
 
-                                });
+                                        });
+
+                                }
+
+                            } catch (error) {
+
+                                console.error(
+                                    "Notification error:",
+                                    error
+                                );
+
+                            }
 
                         }
+                    );
 
-                    } catch (error) {
 
-                        console.error(
-                            "Notification error:",
-                            error
-                        );
-
-                    }
+                    playerNotificationList.appendChild(
+                        item
+                    );
 
                 }
             );
 
-
-            playerNotificationList.appendChild(
-                item
-            );
-
         }
-    );
-
-}
 
         // ============================================
         // FIRESTORE LIVE NOTIFICATIONS

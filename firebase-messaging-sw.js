@@ -26,24 +26,31 @@ messaging.onBackgroundMessage((payload) => {
         payload
     );
 
-    const notification =
-        payload.notification || {};
+    // If FCM already contains a notification payload,
+    // Firebase/browser will show it automatically.
+    // Do NOT show it again manually.
+    if (payload.notification) {
+
+        console.log(
+            "FCM notification payload detected - skipping manual notification."
+        );
+
+        return;
+
+    }
 
     const data =
         payload.data || {};
 
     const title =
-        notification.title ||
         data.title ||
         "4 FIRE UNITED";
 
     const body =
-        notification.body ||
         data.body ||
         "You have a new notification.";
 
     const icon =
-        notification.icon ||
         data.icon ||
         "/images/logo/logo.png";
 
@@ -64,6 +71,7 @@ messaging.onBackgroundMessage((payload) => {
             }
         }
     );
+
 });
 
 self.addEventListener(
