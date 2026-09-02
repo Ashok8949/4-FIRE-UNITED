@@ -450,9 +450,10 @@ async function sendFireChatMessage() {
             "../images/logo/logo.png";
 
 
-        await db
-            .collection("chat")
-            .add({
+        const chatMessageRef =
+            await db
+                .collection("chat")
+                .add({
 
                 text:
                     text,
@@ -475,6 +476,50 @@ async function sendFireChatMessage() {
                         .serverTimestamp()
 
             });
+
+
+        // =========================================
+        // FCM CHAT PUSH
+        // =========================================
+        try {
+            fetch(
+                "https://script.google.com/macros/s/AKfycbw3nOBztKlMYFPs-J7vVEZimLNtZdwv6WicbuqG7lxFEzO7T3DXpVJoyGceUkovBGUV/exec",
+                {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        type: "chat",
+                        priority: "normal",
+                        title: "💬 4 FIRE UNITED Live Chat",
+                        body:
+                            playerName +
+                            ": " +
+                            text,
+                        link: "/player-dashboard.html",
+                        messageId:
+                            chatMessageRef.id,
+                        senderPlayerId:
+                            playerDoc.id,
+                        senderEmail:
+                            user.email
+                    })
+                }
+            ).catch((pushError) => {
+                console.warn(
+                    "CHAT FCM PUSH ERROR:",
+                    pushError
+                );
+            });
+        } catch (pushError) {
+            console.warn(
+                "CHAT FCM PUSH ERROR:",
+                pushError
+            );
+        }
 
 
         chatInput.value =

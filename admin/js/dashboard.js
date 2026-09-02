@@ -304,9 +304,8 @@ if (sendNotificationBtn) {
             // ========================================
 
             const response = await fetch(
-                "https://script.google.com/macros/s/AKfycbxUZlmL3-7t3MfrUONl1igu_3G2w8HwI6sUshCy_Smci5CklflchRRTe34SD1IO33o/exec",
+                "https://script.google.com/macros/s/AKfycbw3nOBztKlMYFPs-J7vVEZimLNtZdwv6WicbuqG7lxFEzO7T3DXpVJoyGceUkovBGUV/exec",
                 {
-
                     method: "POST",
 
                     headers: {
@@ -316,6 +315,10 @@ if (sendNotificationBtn) {
 
                     body: JSON.stringify({
 
+                        type: "admin",
+
+                        priority: "high",
+
                         title: title,
 
                         body: message,
@@ -323,7 +326,6 @@ if (sendNotificationBtn) {
                         link: link
 
                     })
-
                 }
             );
 
