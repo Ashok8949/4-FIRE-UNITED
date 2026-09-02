@@ -2308,6 +2308,368 @@
             }
 
         }
+
+/* FIRE UNITED PREMIUM PLAYER CARD — PREMIUM V2 */
+.player-card-section{
+    margin-top:18px;
+}
+.player-card-section-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:18px;
+}
+.player-card-section-head h2{
+    margin:0;
+    font-size:20px;
+}
+.player-card-section-head p{
+    margin:4px 0 0;
+    color:#777;
+    font-size:12px;
+}
+.premium-player-card-wrap{
+    display:flex;
+    justify-content:center;
+    padding:10px 0 4px;
+}
+.premium-player-card{
+    position:relative;
+    width:min(100%,450px);
+    aspect-ratio:3 / 4;
+    overflow:hidden;
+    border-radius:28px;
+    clip-path:inset(0 round 28px);
+    -webkit-clip-path:inset(0 round 28px);
+    padding:20px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 86% 7%,rgba(255,123,0,.24),transparent 23%),
+        radial-gradient(circle at 4% 94%,rgba(255,65,0,.18),transparent 29%),
+        linear-gradient(150deg,#181818 0%,#0b0b0b 42%,#050505 100%);
+    border:1px solid rgba(255,123,0,.55);
+    box-shadow:
+        0 30px 75px rgba(0,0,0,.62),
+        inset 0 0 0 1px rgba(255,255,255,.045);
+    isolation:isolate;
+}
+.premium-player-card:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    border-radius:28px;
+    clip-path:inset(0 round 28px);
+    -webkit-clip-path:inset(0 round 28px);
+    opacity:.35;
+    background:
+        linear-gradient(126deg,transparent 0 43%,rgba(255,123,0,.22) 44%,transparent 45%),
+        linear-gradient(310deg,transparent 0 67%,rgba(255,255,255,.045) 68%,transparent 69%),
+        radial-gradient(circle at 50% 45%,transparent 0 36%,rgba(255,123,0,.035) 37%,transparent 55%);
+    background-size:180px 180px,230px 230px,100% 100%;
+}
+.premium-player-card:after{
+    content:"4FU";
+    position:absolute;
+    border-radius:28px;
+    clip-path:inset(0 round 28px);
+    -webkit-clip-path:inset(0 round 28px);
+    right:-22px;
+    bottom:78px;
+    z-index:-1;
+    font-family:"Bebas Neue",sans-serif;
+    font-size:190px;
+    line-height:.8;
+    color:rgba(255,255,255,.028);
+    letter-spacing:-8px;
+}
+.premium-card-glow{
+    position:absolute;
+    width:230px;
+    height:230px;
+    right:-110px;
+    top:90px;
+    border-radius:50%;
+    background:rgba(255,105,0,.13);
+    filter:blur(35px);
+    pointer-events:none;
+}
+.premium-card-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:15px;
+}
+.premium-card-brand{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:"Bebas Neue",sans-serif;
+    font-size:25px;
+    letter-spacing:2.5px;
+    line-height:1;
+}
+.premium-card-brand-mark{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    height:28px;
+    border:1px solid rgba(255,123,0,.75);
+    border-radius:8px;
+    background:linear-gradient(145deg,#ff8a22,#d94b00);
+    box-shadow:0 0 22px rgba(255,105,0,.28);
+    font-size:20px;
+}
+.premium-card-edition{
+    color:#777;
+    font-size:8px;
+    line-height:1.45;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    text-align:right;
+}
+.premium-card-edition strong{
+    color:#bbb;
+    font-size:9px;
+}
+.premium-card-photo{
+    position:relative;
+    width:100%;
+    height:46%;
+    min-height:230px;
+    margin:16px 0 12px;
+    overflow:hidden;
+    border-radius:20px;
+    border:1px solid rgba(255,123,0,.3);
+    background:
+        radial-gradient(circle at 50% 20%,rgba(255,123,0,.16),transparent 42%),
+        linear-gradient(145deg,#222,#090909);
+    box-shadow:0 16px 35px rgba(0,0,0,.38);
+}
+.premium-card-photo:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:1;
+    border:1px solid rgba(255,255,255,.035);
+    border-radius:20px;
+    pointer-events:none;
+}
+.premium-card-photo:after{
+    content:"";
+    position:absolute;
+    inset:auto 0 0;
+    height:58%;
+    background:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.08) 22%,rgba(0,0,0,.9) 100%);
+    pointer-events:none;
+}
+.premium-card-photo img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center;
+}
+.premium-card-player-info{
+    position:absolute;
+    left:18px;
+    right:18px;
+    bottom:16px;
+    z-index:2;
+}
+.premium-card-kicker{
+    margin-bottom:5px;
+    color:#ff8a26;
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:2.8px;
+    text-transform:uppercase;
+}
+.premium-card-name{
+    font-family:"Bebas Neue",sans-serif;
+    font-size:clamp(34px,8vw,48px);
+    line-height:.9;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    text-shadow:0 5px 22px rgba(0,0,0,.8);
+}
+.premium-card-role{
+    margin-top:7px;
+    color:#f1f1f1;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+}
+.premium-card-divider{
+    height:1px;
+    margin:14px 0 12px;
+    background:linear-gradient(90deg,rgba(255,123,0,.9),rgba(255,123,0,.25),transparent);
+}
+.premium-card-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+}
+.premium-card-stat{
+    position:relative;
+    min-height:48px;
+    padding:8px 5px 7px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,.075);
+    border-radius:11px;
+    background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+.premium-card-stat:before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:-1px;
+    width:20px;
+    height:1px;
+    transform:translateX(-50%);
+    background:#ff7b00;
+    box-shadow:0 0 10px rgba(255,123,0,.5);
+}
+.premium-card-stat strong{
+    display:block;
+    font-size:18px;
+    line-height:1.05;
+    font-weight:800;
+}
+.premium-card-stat span{
+    display:block;
+    margin-top:4px;
+    color:#777;
+    font-size:7px;
+    font-weight:700;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+}
+.premium-card-bottom{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:end;
+    gap:14px;
+    margin-top:14px;
+}
+.premium-card-overall-label{
+    color:#777;
+    font-size:7px;
+    font-weight:700;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+.premium-card-overall{
+    margin-top:2px;
+    font-family:"Bebas Neue",sans-serif;
+    font-size:31px;
+    line-height:1;
+    letter-spacing:1.5px;
+}
+.premium-card-overall span{
+    color:#ff7b00;
+}
+.premium-card-meta-line{
+    max-width:290px;
+    margin-top:6px;
+    color:#6f6f6f;
+    font-size:7px;
+    font-weight:600;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.premium-card-qr-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+}
+.premium-card-qr{
+    width:68px;
+    height:68px;
+    flex:0 0 68px;
+    padding:6px;
+    border-radius:12px;
+    background:#fff;
+    box-shadow:0 10px 28px rgba(0,0,0,.48),0 0 0 1px rgba(255,255,255,.15);
+}
+.premium-card-qr img,
+.premium-card-qr canvas{
+    width:100%!important;
+    height:100%!important;
+    display:block;
+}
+.premium-card-qr-label{
+    color:#777;
+    font-size:6px;
+    font-weight:800;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+}
+.premium-card-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:18px;
+}
+.premium-card-action{
+    min-height:48px;
+    border:1px solid #303030;
+    border-radius:12px;
+    background:#141414;
+    color:#fff;
+    font-family:"Poppins",sans-serif;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s ease;
+}
+.premium-card-action:hover{
+    border-color:#ff7b00;
+    background:#1d1d1d;
+    transform:translateY(-1px);
+}
+.premium-card-action.primary{
+    border-color:#ff7b00;
+    background:linear-gradient(135deg,#ff850f,#f04c00);
+    box-shadow:0 10px 25px rgba(255,95,0,.18);
+}
+.premium-card-action.primary:hover{
+    background:linear-gradient(135deg,#ff982e,#ff5a0a);
+}
+.premium-card-status{
+    min-height:18px;
+    margin-top:8px;
+    text-align:center;
+    color:#777;
+    font-size:11px;
+}
+@media(max-width:600px){
+    .player-card-section-head{align-items:flex-start}
+    .premium-player-card{
+        width:min(100%,410px);
+        border-radius:22px;
+        padding:16px;
+    }
+    .premium-card-photo{
+        min-height:205px;
+        margin-top:13px;
+    }
+    .premium-card-qr{
+        width:60px;
+        height:60px;
+        flex-basis:60px;
+    }
+    .premium-card-stat strong{font-size:16px}
+}
+
     </style>
 
 <body>
@@ -2744,6 +3106,49 @@
 
 
 
+
+
+<!-- FIRE UNITED PREMIUM PLAYER CARD -->
+<div class="player-card-section card">
+<div class="player-card-section-head"><div><h2><i class="fa-solid fa-id-card" style="color:#ff7200;"></i> FIRE UNITED Player Card</h2><p>Your premium shareable player identity card.</p></div></div>
+<div class="premium-player-card-wrap">
+<div class="premium-player-card" id="premiumPlayerCard">
+<div class="premium-card-glow" aria-hidden="true"></div>
+<div class="premium-card-top">
+    <div class="premium-card-brand"><span class="premium-card-brand-mark">4</span> FIRE UNITED</div>
+    <div class="premium-card-edition">OFFICIAL<br><strong>PLAYER CARD</strong></div>
+</div>
+<div class="premium-card-photo">
+    <img id="premiumCardImage" src="../images/logo/logo.png" alt="Player">
+    <div class="premium-card-player-info">
+        <div class="premium-card-kicker">4FU ESPORTS • VERIFIED PLAYER</div>
+        <div class="premium-card-name" id="premiumCardName">PLAYER</div>
+        <div class="premium-card-role" id="premiumCardRole">PLAYER</div>
+    </div>
+</div>
+<div class="premium-card-divider"></div>
+<div class="premium-card-stats">
+    <div class="premium-card-stat"><strong id="premiumCardRank">-</strong><span>Rank</span></div>
+    <div class="premium-card-stat"><strong id="premiumCardLevel">-</strong><span>Level</span></div>
+    <div class="premium-card-stat"><strong id="premiumCardKD">-</strong><span>KD</span></div>
+    <div class="premium-card-stat"><strong id="premiumCardHeadshot">-</strong><span>Headshot</span></div>
+    <div class="premium-card-stat"><strong id="premiumCardMatches">-</strong><span>Matches</span></div>
+    <div class="premium-card-stat"><strong id="premiumCardBooyah">-</strong><span>Booyah</span></div>
+</div>
+<div class="premium-card-bottom">
+    <div class="premium-card-meta">
+        <div class="premium-card-overall-label">4 FIRE UNITED IDENTITY</div>
+        <div class="premium-card-overall"><span>4FU</span> PLAYER</div>
+        <div class="premium-card-meta-line" id="premiumCardMeta">UID • — &nbsp; | &nbsp; GUILD • —</div>
+    </div>
+    <div class="premium-card-qr-wrap">
+        <div class="premium-card-qr" id="premiumCardQR" aria-label="Scan to open FIRE UNITED website"></div>
+        <div class="premium-card-qr-label">SCAN PROFILE</div>
+    </div>
+</div>
+</div>
+</div>
+<div class="premium-card-actions"><button type="button" class="premium-card-action primary" id="sharePremiumPlayerCard"><i class="fa-solid fa-share-nodes"></i> Share Card</button><button type="button" class="premium-card-action" id="downloadPremiumPlayerCard"><i class="fa-solid fa-download"></i> Download Card</button></div><div class="premium-card-status" id="premiumCardStatus"></div></div>
 
         <!-- =========================================
          REAL-TIME PLAYERS ONLINE
@@ -3478,6 +3883,7 @@
 
 
             checkAchievements(player);
+            setPremiumPlayerCard(player);
 
         }
 
@@ -6533,10 +6939,207 @@
 
         }
 
+
+/* PREMIUM PLAYER CARD LOGIC — SHARE THE ACTUAL CARD IMAGE */
+function getPlayerCardWebsiteUrl(){
+    return window.location.origin + "/";
+}
+
+function setPremiumPlayerCard(player){
+    if(!player) return;
+
+    const name = player.name || player.playerName || player.ign || "Player";
+    const role = player.role || "Player";
+    const image = player.image || player.photo || "../images/logo/logo.png";
+
+    const setText = (id,value) => {
+        const el = document.getElementById(id);
+        if(el) el.textContent = value == null || value === "" ? "-" : value;
+    };
+
+    const img = document.getElementById("premiumCardImage");
+    if(img){
+        img.src = image;
+        img.onerror = () => {
+            img.src = "../images/logo/logo.png";
+        };
+    }
+
+    setText("premiumCardName",name);
+    setText("premiumCardRole",role);
+    setText("premiumCardRank",player.rank);
+    setText("premiumCardLevel",player.level);
+    setText("premiumCardKD",player.kd);
+    setText("premiumCardHeadshot",player.headshot);
+    setText("premiumCardMatches",player.matches);
+    setText("premiumCardBooyah",player.booyah);
+    setText("premiumCardMeta","UID • "+(player.uid||"—")+"   |   GUILD • "+(player.guild||"—"));
+
+    const qr = document.getElementById("premiumCardQR");
+    if(qr){
+        qr.innerHTML = "";
+        if(typeof QRCode === "function"){
+            new QRCode(qr,{
+                text:getPlayerCardWebsiteUrl(),
+                width:56,
+                height:56,
+                colorDark:"#111111",
+                colorLight:"#ffffff",
+                correctLevel:QRCode.CorrectLevel.M
+            });
+        }
+    }
+}
+
+async function waitForPremiumCardAssets(card){
+    if(document.fonts && document.fonts.ready){
+        try{ await document.fonts.ready; }catch(e){}
+    }
+
+    const images = card ? Array.from(card.querySelectorAll("img")) : [];
+    await Promise.all(images.map(img => {
+        if(img.complete) return img.decode ? img.decode().catch(()=>{}) : Promise.resolve();
+        return new Promise(resolve => {
+            img.addEventListener("load",resolve,{once:true});
+            img.addEventListener("error",resolve,{once:true});
+        });
+    }));
+
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
+
+async function getPremiumPlayerCardCanvas(){
+    const card = document.getElementById("premiumPlayerCard");
+    if(!card) throw new Error("Player card not found.");
+    if(typeof html2canvas !== "function") throw new Error("Card renderer is not available.");
+
+    await waitForPremiumCardAssets(card);
+
+    /*
+     * Keep the exact rounded outer shape during PNG rendering.
+     * The extra wrapper prevents html2canvas from leaving square/triangular
+     * artifacts around the four corners.
+     */
+    const oldRadius = card.style.borderRadius;
+    const oldClip = card.style.clipPath;
+    const oldWebkitClip = card.style.webkitClipPath;
+
+    card.style.borderRadius = "28px";
+    card.style.clipPath = "inset(0 round 28px)";
+    card.style.webkitClipPath = "inset(0 round 28px)";
+
+    const canvas = await html2canvas(card,{
+        backgroundColor:"#070707",
+        scale:2,
+        useCORS:true,
+        allowTaint:false,
+        logging:false,
+        imageTimeout:15000,
+        removeContainer:true
+    });
+
+    card.style.borderRadius = oldRadius;
+    card.style.clipPath = oldClip;
+    card.style.webkitClipPath = oldWebkitClip;
+
+    return canvas;
+}
+
+function getPremiumCardFileName(){
+    const name = currentPlayer?.name || currentPlayer?.playerName || currentPlayer?.ign || "player";
+    const safeName = String(name)
+        .replace(/[^a-z0-9-_]+/gi,"-")
+        .replace(/^-+|-+$/g,"") || "player";
+    return "4FU-Player-Card-"+safeName+".png";
+}
+
+document.getElementById("downloadPremiumPlayerCard")?.addEventListener("click",async()=>{
+    const status = document.getElementById("premiumCardStatus");
+
+    try{
+        if(status) status.textContent = "Preparing your premium card...";
+        const canvas = await getPremiumPlayerCardCanvas();
+
+        const link = document.createElement("a");
+        link.download = getPremiumCardFileName();
+        link.href = canvas.toDataURL("image/png");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        if(status) status.textContent = "Premium player card downloaded.";
+    }catch(error){
+        console.error("Player card download error:",error);
+        if(status) status.textContent = "Unable to download the card. Please try again.";
+    }
+});
+
+document.getElementById("sharePremiumPlayerCard")?.addEventListener("click",async()=>{
+    const status = document.getElementById("premiumCardStatus");
+
+    try{
+        if(status) status.textContent = "Preparing card for sharing...";
+
+        const canvas = await getPremiumPlayerCardCanvas();
+        const blob = await new Promise(resolve => canvas.toBlob(resolve,"image/png",1));
+
+        if(!blob) throw new Error("Unable to create card image.");
+
+        const playerName = currentPlayer?.name || currentPlayer?.playerName || currentPlayer?.ign || "Player";
+        const file = new File([blob],getPremiumCardFileName(),{type:"image/png"});
+
+        /*
+         * IMPORTANT:
+         * Share the PNG file itself. Do NOT pass a URL here.
+         * This makes supported apps such as WhatsApp receive the
+         * actual premium player-card image instead of only a link.
+         */
+        const shareData = {
+            title:"4 FIRE UNITED • "+playerName,
+            text:"🔥 My 4 FIRE UNITED Player Card"
+        };
+
+        if(navigator.share){
+            if(navigator.canShare && navigator.canShare({files:[file]})){
+                await navigator.share({
+                    ...shareData,
+                    files:[file]
+                });
+                if(status) status.textContent = "Player card shared successfully.";
+            }else{
+                await navigator.share(shareData);
+                if(status) status.textContent = "Share opened. Your device does not support image-file sharing here.";
+            }
+        }else{
+            const link = document.createElement("a");
+            link.download = getPremiumCardFileName();
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(link.href),1000);
+
+            if(status) status.textContent = "Sharing is not supported here, so the card was downloaded.";
+        }
+    }catch(error){
+        if(error && error.name === "AbortError"){
+            if(status) status.textContent = "Share cancelled.";
+            return;
+        }
+
+        console.error("Player card share error:",error);
+        if(status) status.textContent = "Unable to share the card. Please try again.";
+    }
+});
+document.getElementById("sharePremiumPlayerCard")?.addEventListener("click",async()=>{const status=document.getElementById("premiumCardStatus");try{if(status)status.textContent="Preparing your premium card...";const canvas=await getPremiumPlayerCardCanvas();const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));if(!blob)throw new Error("Unable to create card image.");const playerName=currentPlayer?.name||currentPlayer?.ign||"Player";const file=new File([blob],"4FU-Player-Card.png",{type:"image/png"});const shareData={title:"4 FIRE UNITED • "+playerName,text:"Check out my 4 FIRE UNITED Player Card!",url:getPlayerCardWebsiteUrl()};if(navigator.share){if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({...shareData,files:[file]});else await navigator.share(shareData);if(status)status.textContent="Player card shared.";}else{const link=document.createElement("a");link.download="4FU-Player-Card.png";link.href=canvas.toDataURL("image/png");link.click();if(status)status.textContent="Sharing is not supported here, so the card was downloaded instead.";}}catch(error){if(error&&error.name==="AbortError"){if(status)status.textContent="Share cancelled.";return;}console.error("Player card share error:",error);if(status)status.textContent="Unable to share the card. Please try again.";}});
+
     </script>
 
 
 
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 </body>
 
