@@ -633,90 +633,80 @@
             const target = document.getElementById("latestAnnouncementSecret");
             if (!target) return;
 
+            let timer = null;
+            let active = false;
             let startX = 0;
             let startY = 0;
-            let holding = false;
-            let ready = false;
             let unlocked = false;
-            let timer = null;
 
             target.style.userSelect = "none";
             target.style.webkitUserSelect = "none";
             target.style.webkitTouchCallout = "none";
             target.style.touchAction = "none";
+            target.style.cursor = "default";
 
-            function goAdmin() {
+            function unlock() {
                 if (unlocked) return;
                 unlocked = true;
+                active = false;
                 clearTimeout(timer);
-                window.location.assign("admin/dashboard.html");
+                window.location.href = "/admin/dashboard.html";
             }
 
-            function begin(x, y, isTouch) {
+            function start(x, y) {
                 if (unlocked) return;
+                active = true;
                 startX = x;
                 startY = y;
-                holding = true;
-                ready = !isTouch;
-
                 clearTimeout(timer);
-                if (isTouch) {
-                    // Long press first. This is deliberately tolerant for fast/slow phones.
-                    timer = setTimeout(() => {
-                        if (holding) ready = true;
-                    }, 500);
-                }
+
+                // Extra WebView-safe fallback: a continuous long press opens admin.
+                timer = setTimeout(() => {
+                    if (active) unlock();
+                }, 1400);
             }
 
-            function move(x, y, isTouch) {
-                if (!holding || unlocked) return;
+            function move(x, y) {
+                if (!active || unlocked) return;
 
                 const dx = x - startX;
                 const dy = y - startY;
 
-                // Left movement only. Ignore vertical movement.
-                if (Math.abs(dy) > Math.abs(dx) * 1.5) return;
-
-                // Phone: 55px after long press. Mouse: 80px direct drag.
-                const distance = isTouch ? 55 : 80;
-                if (ready && dx <= -distance) goAdmin();
+                // Fast-phone friendly hidden swipe: hold briefly, then move left only 25px.
+                if (dx <= -25 && Math.abs(dx) >= Math.abs(dy)) {
+                    unlock();
+                }
             }
 
-            function end() {
-                holding = false;
-                ready = false;
+            function stop() {
+                active = false;
                 clearTimeout(timer);
             }
 
-            // Android WebView: native touch events are more reliable than pointer events.
+            // Android WebView touch handling.
             target.addEventListener("touchstart", e => {
                 if (e.touches.length !== 1) return;
                 const t = e.touches[0];
-                begin(t.clientX, t.clientY, true);
+                start(t.clientX, t.clientY);
                 e.preventDefault();
             }, { passive: false });
 
             target.addEventListener("touchmove", e => {
-                if (!holding || e.touches.length !== 1) return;
+                if (e.touches.length !== 1) return;
                 const t = e.touches[0];
-                move(t.clientX, t.clientY, true);
+                move(t.clientX, t.clientY);
                 e.preventDefault();
             }, { passive: false });
 
-            target.addEventListener("touchend", end, { passive: true });
-            target.addEventListener("touchcancel", end, { passive: true });
+            target.addEventListener("touchend", stop, { passive: true });
+            target.addEventListener("touchcancel", stop, { passive: true });
 
             // Desktop fallback.
             target.addEventListener("mousedown", e => {
-                if (e.button !== 0) return;
-                begin(e.clientX, e.clientY, false);
+                if (e.button === 0) start(e.clientX, e.clientY);
             });
-
-            window.addEventListener("mousemove", e => {
-                move(e.clientX, e.clientY, false);
-            });
-
-            window.addEventListener("mouseup", end);
+            window.addEventListener("mousemove", e => move(e.clientX, e.clientY));
+            window.addEventListener("mouseup", stop);
             target.addEventListener("dragstart", e => e.preventDefault());
             target.addEventListener("contextmenu", e => e.preventDefault());
         })();
