@@ -633,9 +633,9 @@
             const secretTarget = document.getElementById("latestAnnouncementSecret");
             if (!secretTarget) return;
 
-            let dragging = false;
             let startX = 0;
             let startY = 0;
+            let activePointerId = null;
             let unlocked = false;
             let holdTimer = null;
             let holdReady = false;
@@ -649,58 +649,59 @@
             const unlock = () => {
                 if (unlocked) return;
                 unlocked = true;
-                dragging = false;
                 clearTimeout(holdTimer);
                 window.location.href = "admin/dashboard.html";
             };
 
-            const startDrag = (e) => {
-                if (unlocked) return;
-                dragging = true;
+            const reset = () => {
+                clearTimeout(holdTimer);
+                holdTimer = null;
                 holdReady = false;
-                startX = e.clientX;
-                startY = e.clientY;
-
-                if (e.pointerId !== undefined && secretTarget.setPointerCapture) {
-                    try { secretTarget.setPointerCapture(e.pointerId); } catch (_) {}
-                }
-
-                // Phone: hold first, then swipe left.
-                // Desktop: mouse can drag left immediately.
-                holdTimer = setTimeout(() => {
-                    holdReady = true;
-                }, 700);
+                activePointerId = null;
             };
 
-            const moveDrag = (e) => {
-                if (!dragging || unlocked) return;
+            secretTarget.addEventListener("pointerdown", (e) => {
+                if (unlocked) return;
+
+                activePointerId = e.pointerId;
+                startX = e.clientX;
+                startY = e.clientY;
+                holdReady = false;
+
+                try { secretTarget.setPointerCapture(e.pointerId); } catch (_) {}
+
+                // Touch devices: first hold, then swipe left.
+                if (e.pointerType === "touch" || e.pointerType === "pen") {
+                    holdTimer = setTimeout(() => {
+                        holdReady = true;
+                    }, 700);
+                } else {
+                    // Mouse: drag left directly.
+                    holdReady = true;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            secretTarget.addEventListener("pointermove", (e) => {
+                if (unlocked || e.pointerId !== activePointerId) return;
 
                 const dx = e.clientX - startX;
                 const dy = e.clientY - startY;
 
-                if (e.pointerType === "mouse") {
-                    if (dx < -120 && Math.abs(dx) > Math.abs(dy) * 1.3) unlock();
-                    return;
+                // Ignore accidental vertical movement/scrolling.
+                if (Math.abs(dy) > 35 && Math.abs(dy) > Math.abs(dx)) return;
+
+                if (holdReady && dx < -70 && Math.abs(dx) > Math.abs(dy) * 1.15) {
+                    unlock();
                 }
 
-                if (e.pointerType === "touch" && holdReady) {
-                    if (dx < -80 && Math.abs(dx) > Math.abs(dy) * 1.25) unlock();
-                }
-            };
+                e.preventDefault();
+            }, { passive: false });
 
-            const endDrag = (e) => {
-                dragging = false;
-                holdReady = false;
-                clearTimeout(holdTimer);
-                if (e && e.pointerId !== undefined && secretTarget.releasePointerCapture) {
-                    try { secretTarget.releasePointerCapture(e.pointerId); } catch (_) {}
-                }
-            };
-
-            secretTarget.addEventListener("pointerdown", startDrag);
-            secretTarget.addEventListener("pointermove", moveDrag);
-            secretTarget.addEventListener("pointerup", endDrag);
-            secretTarget.addEventListener("pointercancel", endDrag);
+            secretTarget.addEventListener("pointerup", reset);
+            secretTarget.addEventListener("pointercancel", reset);
+            secretTarget.addEventListener("lostpointercapture", reset);
             secretTarget.addEventListener("dragstart", (e) => e.preventDefault());
             secretTarget.addEventListener("contextmenu", (e) => e.preventDefault());
         })();
