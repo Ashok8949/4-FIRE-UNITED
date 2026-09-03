@@ -311,7 +311,7 @@
 
             <h5>LATEST UPDATE</h5>
 
-            <h2>Latest Announcement</h2>
+            <h2 id="latestAnnouncementSecret">Latest Announcement</h2>
 
         </div>
 
@@ -626,6 +626,56 @@
     <!-- ================= FOOTER ================= -->
 
 
+
+    <!-- Hidden Admin Access -->
+    <script>
+        (() => {
+            const secretTarget = document.getElementById("latestAnnouncementSecret");
+            if (!secretTarget) return;
+
+            let dragging = false;
+            let startX = 0;
+            let startY = 0;
+            let unlocked = false;
+
+            secretTarget.style.userSelect = "none";
+            secretTarget.style.webkitUserSelect = "none";
+            secretTarget.style.cursor = "default";
+
+            const startDrag = (e) => {
+                if (unlocked) return;
+                dragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+            };
+
+            const moveDrag = (e) => {
+                if (!dragging || unlocked) return;
+
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+
+                // Hidden trigger: hold mouse and drag clearly to the left.
+                if (dx < -120 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+                    unlocked = true;
+                    dragging = false;
+                    window.location.href = "admin/dashboard.html";
+                }
+            };
+
+            const endDrag = () => {
+                dragging = false;
+            };
+
+            secretTarget.addEventListener("pointerdown", startDrag);
+            secretTarget.addEventListener("pointermove", moveDrag);
+            secretTarget.addEventListener("pointerup", endDrag);
+            secretTarget.addEventListener("pointercancel", endDrag);
+            secretTarget.addEventListener("pointerleave", endDrag);
+
+            secretTarget.addEventListener("dragstart", (e) => e.preventDefault());
+        })();
+    </script>
 
     <!-- JavaScript -->
 
