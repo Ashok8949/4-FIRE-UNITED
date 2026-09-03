@@ -637,16 +637,36 @@
             let startX = 0;
             let startY = 0;
             let unlocked = false;
+            let holdTimer = null;
+            let holdReady = false;
 
             secretTarget.style.userSelect = "none";
             secretTarget.style.webkitUserSelect = "none";
             secretTarget.style.cursor = "default";
+            secretTarget.style.touchAction = "none";
+            secretTarget.style.webkitTouchCallout = "none";
+
+            const unlock = () => {
+                if (unlocked) return;
+                unlocked = true;
+                dragging = false;
+                clearTimeout(holdTimer);
+                window.location.href = "admin/dashboard.html";
+            };
 
             const startDrag = (e) => {
                 if (unlocked) return;
+
                 dragging = true;
+                holdReady = false;
                 startX = e.clientX;
                 startY = e.clientY;
+
+                // Phone: hold for 700ms first, then swipe left.
+                // Desktop: normal mouse hold + left drag still works.
+                holdTimer = setTimeout(() => {
+                    holdReady = true;
+                }, 700);
             };
 
             const moveDrag = (e) => {
@@ -655,16 +675,26 @@
                 const dx = e.clientX - startX;
                 const dy = e.clientY - startY;
 
-                // Hidden trigger: hold mouse and drag clearly to the left.
-                if (dx < -120 && Math.abs(dx) > Math.abs(dy) * 1.3) {
-                    unlocked = true;
-                    dragging = false;
-                    window.location.href = "admin/dashboard.html";
+                // Desktop mouse: direct left drag.
+                if (e.pointerType === "mouse") {
+                    if (dx < -120 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+                        unlock();
+                    }
+                    return;
+                }
+
+                // Phone/tablet: long-press first, then left swipe.
+                if (e.pointerType === "touch" && holdReady) {
+                    if (dx < -80 && Math.abs(dx) > Math.abs(dy) * 1.25) {
+                        unlock();
+                    }
                 }
             };
 
             const endDrag = () => {
                 dragging = false;
+                holdReady = false;
+                clearTimeout(holdTimer);
             };
 
             secretTarget.addEventListener("pointerdown", startDrag);
@@ -674,6 +704,7 @@
             secretTarget.addEventListener("pointerleave", endDrag);
 
             secretTarget.addEventListener("dragstart", (e) => e.preventDefault());
+            secretTarget.addEventListener("contextmenu", (e) => e.preventDefault());
         })();
     </script>
 
