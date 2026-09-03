@@ -1,7 +1,7 @@
-{
-  "versionCode": 3,
-  "versionName": "1.0.2",
-  "apkUrl": "https://raw.githubusercontent.com/Ashok8949/4-FIRE-UNITED/main/app/4FireUnited.apk",
-  "forceUpdate": false,
-  "message": "A new version of 4 FIRE UNITED is available."
+﻿{
+    "versionCode":  3,
+    "versionName":  "1.0.2",
+    "apkUrl":  "https://raw.githubusercontent.com/Ashok8949/4-FIRE-UNITED/main/app/4FireUnited.apk?v=3",
+    "forceUpdate":  false,
+    "message":  "A new version of 4 FIRE UNITED is available."
 }
