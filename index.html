@@ -630,80 +630,95 @@
     <!-- Hidden Admin Access -->
     <script>
         (() => {
-            const secretTarget = document.getElementById("latestAnnouncementSecret");
-            if (!secretTarget) return;
+            const target = document.getElementById("latestAnnouncementSecret");
+            if (!target) return;
 
             let startX = 0;
             let startY = 0;
-            let activePointerId = null;
+            let holding = false;
+            let ready = false;
             let unlocked = false;
-            let holdTimer = null;
-            let holdReady = false;
+            let timer = null;
 
-            secretTarget.style.userSelect = "none";
-            secretTarget.style.webkitUserSelect = "none";
-            secretTarget.style.webkitTouchCallout = "none";
-            secretTarget.style.cursor = "default";
-            secretTarget.style.touchAction = "none";
+            target.style.userSelect = "none";
+            target.style.webkitUserSelect = "none";
+            target.style.webkitTouchCallout = "none";
+            target.style.touchAction = "none";
 
-            const unlock = () => {
+            function goAdmin() {
                 if (unlocked) return;
                 unlocked = true;
-                clearTimeout(holdTimer);
-                window.location.href = "admin/dashboard.html";
-            };
+                clearTimeout(timer);
+                window.location.assign("admin/dashboard.html");
+            }
 
-            const reset = () => {
-                clearTimeout(holdTimer);
-                holdTimer = null;
-                holdReady = false;
-                activePointerId = null;
-            };
-
-            secretTarget.addEventListener("pointerdown", (e) => {
+            function begin(x, y, isTouch) {
                 if (unlocked) return;
+                startX = x;
+                startY = y;
+                holding = true;
+                ready = !isTouch;
 
-                activePointerId = e.pointerId;
-                startX = e.clientX;
-                startY = e.clientY;
-                holdReady = false;
-
-                try { secretTarget.setPointerCapture(e.pointerId); } catch (_) {}
-
-                // Touch devices: first hold, then swipe left.
-                if (e.pointerType === "touch" || e.pointerType === "pen") {
-                    holdTimer = setTimeout(() => {
-                        holdReady = true;
-                    }, 700);
-                } else {
-                    // Mouse: drag left directly.
-                    holdReady = true;
+                clearTimeout(timer);
+                if (isTouch) {
+                    // Long press first. This is deliberately tolerant for fast/slow phones.
+                    timer = setTimeout(() => {
+                        if (holding) ready = true;
+                    }, 500);
                 }
+            }
 
+            function move(x, y, isTouch) {
+                if (!holding || unlocked) return;
+
+                const dx = x - startX;
+                const dy = y - startY;
+
+                // Left movement only. Ignore vertical movement.
+                if (Math.abs(dy) > Math.abs(dx) * 1.5) return;
+
+                // Phone: 55px after long press. Mouse: 80px direct drag.
+                const distance = isTouch ? 55 : 80;
+                if (ready && dx <= -distance) goAdmin();
+            }
+
+            function end() {
+                holding = false;
+                ready = false;
+                clearTimeout(timer);
+            }
+
+            // Android WebView: native touch events are more reliable than pointer events.
+            target.addEventListener("touchstart", e => {
+                if (e.touches.length !== 1) return;
+                const t = e.touches[0];
+                begin(t.clientX, t.clientY, true);
                 e.preventDefault();
             }, { passive: false });
 
-            secretTarget.addEventListener("pointermove", (e) => {
-                if (unlocked || e.pointerId !== activePointerId) return;
-
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-
-                // Ignore accidental vertical movement/scrolling.
-                if (Math.abs(dy) > 35 && Math.abs(dy) > Math.abs(dx)) return;
-
-                if (holdReady && dx < -70 && Math.abs(dx) > Math.abs(dy) * 1.15) {
-                    unlock();
-                }
-
+            target.addEventListener("touchmove", e => {
+                if (!holding || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                move(t.clientX, t.clientY, true);
                 e.preventDefault();
             }, { passive: false });
 
-            secretTarget.addEventListener("pointerup", reset);
-            secretTarget.addEventListener("pointercancel", reset);
-            secretTarget.addEventListener("lostpointercapture", reset);
-            secretTarget.addEventListener("dragstart", (e) => e.preventDefault());
-            secretTarget.addEventListener("contextmenu", (e) => e.preventDefault());
+            target.addEventListener("touchend", end, { passive: true });
+            target.addEventListener("touchcancel", end, { passive: true });
+
+            // Desktop fallback.
+            target.addEventListener("mousedown", e => {
+                if (e.button !== 0) return;
+                begin(e.clientX, e.clientY, false);
+            });
+
+            window.addEventListener("mousemove", e => {
+                move(e.clientX, e.clientY, false);
+            });
+
+            window.addEventListener("mouseup", end);
+            target.addEventListener("dragstart", e => e.preventDefault());
+            target.addEventListener("contextmenu", e => e.preventDefault());
         })();
     </script>
 
