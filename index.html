@@ -642,9 +642,9 @@
 
             secretTarget.style.userSelect = "none";
             secretTarget.style.webkitUserSelect = "none";
+            secretTarget.style.webkitTouchCallout = "none";
             secretTarget.style.cursor = "default";
             secretTarget.style.touchAction = "none";
-            secretTarget.style.webkitTouchCallout = "none";
 
             const unlock = () => {
                 if (unlocked) return;
@@ -656,14 +656,17 @@
 
             const startDrag = (e) => {
                 if (unlocked) return;
-
                 dragging = true;
                 holdReady = false;
                 startX = e.clientX;
                 startY = e.clientY;
 
-                // Phone: hold for 700ms first, then swipe left.
-                // Desktop: normal mouse hold + left drag still works.
+                if (e.pointerId !== undefined && secretTarget.setPointerCapture) {
+                    try { secretTarget.setPointerCapture(e.pointerId); } catch (_) {}
+                }
+
+                // Phone: hold first, then swipe left.
+                // Desktop: mouse can drag left immediately.
                 holdTimer = setTimeout(() => {
                     holdReady = true;
                 }, 700);
@@ -675,34 +678,29 @@
                 const dx = e.clientX - startX;
                 const dy = e.clientY - startY;
 
-                // Desktop mouse: direct left drag.
                 if (e.pointerType === "mouse") {
-                    if (dx < -120 && Math.abs(dx) > Math.abs(dy) * 1.3) {
-                        unlock();
-                    }
+                    if (dx < -120 && Math.abs(dx) > Math.abs(dy) * 1.3) unlock();
                     return;
                 }
 
-                // Phone/tablet: long-press first, then left swipe.
                 if (e.pointerType === "touch" && holdReady) {
-                    if (dx < -80 && Math.abs(dx) > Math.abs(dy) * 1.25) {
-                        unlock();
-                    }
+                    if (dx < -80 && Math.abs(dx) > Math.abs(dy) * 1.25) unlock();
                 }
             };
 
-            const endDrag = () => {
+            const endDrag = (e) => {
                 dragging = false;
                 holdReady = false;
                 clearTimeout(holdTimer);
+                if (e && e.pointerId !== undefined && secretTarget.releasePointerCapture) {
+                    try { secretTarget.releasePointerCapture(e.pointerId); } catch (_) {}
+                }
             };
 
             secretTarget.addEventListener("pointerdown", startDrag);
             secretTarget.addEventListener("pointermove", moveDrag);
             secretTarget.addEventListener("pointerup", endDrag);
             secretTarget.addEventListener("pointercancel", endDrag);
-            secretTarget.addEventListener("pointerleave", endDrag);
-
             secretTarget.addEventListener("dragstart", (e) => e.preventDefault());
             secretTarget.addEventListener("contextmenu", (e) => e.preventDefault());
         })();
