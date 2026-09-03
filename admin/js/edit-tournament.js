@@ -10,6 +10,72 @@ if (!tournamentId) {
 
 const docRef = db.collection("tournaments").doc(tournamentId);
 
+
+// =========================
+// Android FCM Notification
+// =========================
+
+const FOUR_FU_ANDROID_FCM_URL =
+    "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
+
+function send4FUTournamentUpdateNotification(tournament) {
+
+    try {
+
+        fetch(FOUR_FU_ANDROID_FCM_URL, {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+
+            body: JSON.stringify({
+
+                type: "major",
+
+                updateType: "tournament",
+
+                priority: "normal",
+
+                title: "🏆 Tournament Updated",
+
+                body:
+                    tournament.title +
+                    " tournament details have been updated.",
+
+                link: "/tournaments.html",
+
+                targetPlayerId: "ALL",
+
+                senderEmail:
+                    auth.currentUser?.email || "Admin"
+
+            })
+
+        }).catch((error) => {
+
+            console.warn(
+                "4FU ANDROID FCM TOURNAMENT UPDATE ERROR:",
+                error
+            );
+
+        });
+
+    } catch (error) {
+
+        console.warn(
+            "4FU ANDROID FCM TOURNAMENT UPDATE ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
 // =========================
 // Load Tournament
 // =========================
@@ -37,7 +103,7 @@ docRef.get()
     document.getElementById("status").value = t.status || "";
     document.getElementById("registration").value = t.registration || "";
     document.getElementById("liveLink").value = t.liveLink || "";
-document.getElementById("liveStatus").value = t.liveStatus || "Upcoming";
+    document.getElementById("liveStatus").value = t.liveStatus || "Upcoming";
 
 })
 
@@ -49,27 +115,29 @@ document.getElementById("liveStatus").value = t.liveStatus || "Upcoming";
 
 });
 
+
 // =========================
 // Update Tournament
 // =========================
 
 document.getElementById("updateTournament").addEventListener("click", () => {
 
-   const tournament = {
+    const tournament = {
 
-    title: document.getElementById("title").value.trim(),
-    game: document.getElementById("game").value.trim(),
-    mode: document.getElementById("mode").value.trim(),
-    date: document.getElementById("date").value,
-    time: document.getElementById("time").value,
-    prize: document.getElementById("prize").value.trim(),
-    status: document.getElementById("status").value.trim(),
-    registration: document.getElementById("registration").value.trim(),
+        title: document.getElementById("title").value.trim(),
+        game: document.getElementById("game").value.trim(),
+        mode: document.getElementById("mode").value.trim(),
+        date: document.getElementById("date").value,
+        time: document.getElementById("time").value,
+        prize: document.getElementById("prize").value.trim(),
+        status: document.getElementById("status").value.trim(),
+        registration: document.getElementById("registration").value.trim(),
 
-    liveLink: document.getElementById("liveLink").value.trim(),
-    liveStatus: document.getElementById("liveStatus").value
+        liveLink: document.getElementById("liveLink").value.trim(),
+        liveStatus: document.getElementById("liveStatus").value
 
-};
+    };
+
 
     if (
         !tournament.title ||
@@ -84,6 +152,7 @@ document.getElementById("updateTournament").addEventListener("click", () => {
 
     }
 
+
     const btn = document.getElementById("updateTournament");
 
     btn.disabled = true;
@@ -91,9 +160,17 @@ document.getElementById("updateTournament").addEventListener("click", () => {
     btn.innerHTML =
         '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
 
+
     docRef.update(tournament)
 
     .then(() => {
+
+        // =========================
+        // Send Android Notification
+        // =========================
+
+        send4FUTournamentUpdateNotification(tournament);
+
 
         alert("✅ Tournament Updated Successfully!");
 

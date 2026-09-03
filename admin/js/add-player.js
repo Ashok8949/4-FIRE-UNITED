@@ -56,25 +56,25 @@ function uploadToCloudinary(file){
 
         xhr.upload.onprogress = (e) => {
 
-    if(e.lengthComputable){
+            if(e.lengthComputable){
 
-        const percent = Math.round(
+                const percent = Math.round(
 
-            (e.loaded / e.total) * 100
+                    (e.loaded / e.total) * 100
 
-        );
+                );
 
-        setProgress(
+                setProgress(
 
-            percent,
+                    percent,
 
-            `Uploading Image... ${percent}%`
+                    `Uploading Image... ${percent}%`
 
-        );
+                );
 
-    }
+            }
 
-};
+        };
 
         xhr.onload = () => {
 
@@ -106,103 +106,180 @@ imageInput.addEventListener("change", () => {
         URL.createObjectURL(imageInput.files[0]);
 
 });
+
 document.getElementById("savePlayer").addEventListener("click", async () => {
 
-   
-   showProgress("Uploading Player Image...");
-    if (imageInput.files.length > 0) {
+    try {
 
-    const upload = await uploadToCloudinary(
+        showProgress("Uploading Player Image...");
 
-        imageInput.files[0]
+        if (imageInput.files.length > 0) {
 
-    );
+            const upload = await uploadToCloudinary(
 
-    imageUrl = upload.secure_url;
+                imageInput.files[0]
 
-}
+            );
 
-if (weaponImageInput.files.length > 0) {
-    showProgress("Uploading Weapon Image...");
+            imageUrl = upload.secure_url;
 
-    const upload = await uploadToCloudinary(
-        weaponImageInput.files[0]
-    );
+        }
 
-    weaponImageUrl = upload.secure_url;
+        if (weaponImageInput.files.length > 0) {
 
-}
+            showProgress("Uploading Weapon Image...");
 
-    const player = {
+            const upload = await uploadToCloudinary(
+                weaponImageInput.files[0]
+            );
 
-        name: document.getElementById("name").value.trim(),
-        ign: document.getElementById("ign").value.trim(),
-        loginEmail: document.getElementById("loginEmail").value.trim(),
-        uid: document.getElementById("uid").value.trim(),
-        guild: document.getElementById("guild").value.trim(),
-        role: document.getElementById("role").value.trim(),
-        language: document.getElementById("language").value.trim(),
-        country: document.getElementById("country").value.trim(),
+            weaponImageUrl = upload.secure_url;
 
-since: document.getElementById("since").value.trim(),
+        }
 
-        displayOrder: Number(
-    document.getElementById("displayOrder").value
-) || 9999,
+        const player = {
 
-        level:Number(document.getElementById("level").value),
-        rank:document.getElementById("rank").value.trim(),
-        kd:document.getElementById("kd").value.trim(),
-        headshot:document.getElementById("headshot").value.trim(),
-        matches: Number(document.getElementById("matches").value) || 0,
-        booyah: Number(document.getElementById("booyah").value) || 0,
-        weaponName: document.getElementById("weaponName").value.trim(),
-        weaponType: document.getElementById("weaponType").value.trim(),
+            name: document.getElementById("name").value.trim(),
+            ign: document.getElementById("ign").value.trim(),
+            loginEmail: document.getElementById("loginEmail").value.trim(),
+            uid: document.getElementById("uid").value.trim(),
+            guild: document.getElementById("guild").value.trim(),
+            role: document.getElementById("role").value.trim(),
+            language: document.getElementById("language").value.trim(),
+            country: document.getElementById("country").value.trim(),
 
-weaponQuote: document.getElementById("weaponQuote").value.trim(),
+            since: document.getElementById("since").value.trim(),
 
-weaponImage: weaponImageUrl,
+            displayOrder: Number(
+                document.getElementById("displayOrder").value
+            ) || 9999,
 
-        instagram:document.getElementById("instagram").value.trim(),
-        youtube:document.getElementById("youtube").value.trim(),
-        discord:document.getElementById("discord").value.trim(),
-        facebook:document.getElementById("facebook").value.trim(),
+            level:Number(document.getElementById("level").value),
+            rank:document.getElementById("rank").value.trim(),
+            kd:document.getElementById("kd").value.trim(),
+            headshot:document.getElementById("headshot").value.trim(),
+            matches: Number(document.getElementById("matches").value) || 0,
+            booyah: Number(document.getElementById("booyah").value) || 0,
+            weaponName: document.getElementById("weaponName").value.trim(),
+            weaponType: document.getElementById("weaponType").value.trim(),
 
-       image: imageUrl,
+            weaponQuote: document.getElementById("weaponQuote").value.trim(),
 
-     featured: document.getElementById("featured").checked,
+            weaponImage: weaponImageUrl,
 
-        createdAt:new Date()
+            instagram:document.getElementById("instagram").value.trim(),
+            youtube:document.getElementById("youtube").value.trim(),
+            discord:document.getElementById("discord").value.trim(),
+            facebook:document.getElementById("facebook").value.trim(),
 
-    };
+            image: imageUrl,
 
-    setProgress(100,"Image Uploaded Successfully");
+            featured: document.getElementById("featured").checked,
 
-showProgress("Saving Player...");
+            createdAt:new Date()
 
-    await db.collection("players").add(player);
-    await db.collection("notifications").add({
+        };
 
-    title: "New Player Added",
+        setProgress(100,"Image Uploaded Successfully");
 
-    message: player.name,
+        showProgress("Saving Player...");
 
-    type: "player",
+        await db.collection("players").add(player);
 
-    link: "players.html",
+        await db.collection("notifications").add({
 
-    isRead: false,
+            title: "New Player Added",
 
-    createdAt:
-    firebase.firestore.FieldValue.serverTimestamp()
+            message: player.name,
 
-});
+            type: "player",
 
-setProgress(100,"Player Saved Successfully");
+            link: "players.html",
 
-    alert("Player Added");
-    resetProgress();
+            isRead: false,
 
-    location.href="players.html";
+            createdAt:
+            firebase.firestore.FieldValue.serverTimestamp()
+
+        });
+
+        setProgress(100,"Player Saved Successfully");
+
+
+        // ==========================================
+        // ANDROID APP FCM NOTIFICATION
+        // ==========================================
+
+        try {
+
+            fetch(
+                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
+                {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8"
+                    },
+                    body: JSON.stringify({
+
+                        type: "player_update",
+
+                        priority: "normal",
+
+                        title: "👤 New Player Added",
+
+                        body:
+                            player.name +
+                            " has joined 4 FIRE UNITED.",
+
+                        link: "/players.html",
+
+                        updateType: "player_update",
+
+                        targetPlayerId: "ALL",
+
+                        senderEmail:
+                            firebase.auth().currentUser?.email || "Admin"
+
+                    })
+                }
+            ).catch((error) => {
+
+                console.warn(
+                    "4FU ANDROID FCM PLAYER ERROR:",
+                    error
+                );
+
+            });
+
+        } catch (error) {
+
+            console.warn(
+                "4FU ANDROID FCM PLAYER ERROR:",
+                error
+            );
+
+        }
+
+        // ==========================================
+
+
+        alert("Player Added");
+
+        resetProgress();
+
+        location.href="players.html";
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+        alert(err);
+
+        resetProgress();
+
+    }
 
 });

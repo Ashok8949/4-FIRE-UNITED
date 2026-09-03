@@ -5057,6 +5057,8 @@
         }
 
 
+
+
         /* =========================================
            UPLOAD PLAYER CLIP
         ========================================= */
@@ -5388,6 +5390,15 @@
                                 playerId:
                                     currentPlayer.id,
 
+                                playerUid:
+                                    currentUser?.uid || "",
+
+                                playerDocId:
+                                    currentPlayer.id,
+
+                                uploadedByPlayer:
+                                    true,
+
                                 playerEmail:
                                     currentUser?.email || "",
 
@@ -5417,9 +5428,24 @@
                             });
 
 
+
+
+
                         /* =================================
                            SUCCESS
                         ================================= */
+
+                        send4FUPlayerUpdateNotification({
+                            title: "📹 New Clip Uploaded",
+                            body:
+                                (currentPlayer.name ||
+                                    currentPlayer.playerName ||
+                                    currentPlayer.ign ||
+                                    "A player") +
+                                " uploaded a new gameplay clip: " +
+                                title,
+                            updateType: "clip"
+                        });
 
                         clipMessage(
                             "🔥 Clip uploaded successfully!"
@@ -5734,6 +5760,15 @@
                                 playerId:
                                     currentPlayer.id,
 
+                                playerUid:
+                                    currentUser?.uid || "",
+
+                                playerDocId:
+                                    currentPlayer.id,
+
+                                uploadedByPlayer:
+                                    true,
+
                                 playerName:
                                     currentPlayer.name ||
                                     currentPlayer.playerName ||
@@ -5751,9 +5786,24 @@
                             });
 
 
+
+
+
                         /* =================================
                            SUCCESS
                         ================================= */
+
+                        send4FUPlayerUpdateNotification({
+                            title: "📸 New Photo Uploaded",
+                            body:
+                                (currentPlayer.name ||
+                                    currentPlayer.playerName ||
+                                    currentPlayer.ign ||
+                                    "A player") +
+                                " uploaded a new photo: " +
+                                title,
+                            updateType: "gallery"
+                        });
 
                         galleryMessage(
                             "🔥 Gallery image uploaded successfully!"
@@ -7140,6 +7190,47 @@ document.getElementById("sharePremiumPlayerCard")?.addEventListener("click",asyn
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+<script>
+/* =========================================
+   4FU ANDROID APP FCM - PLAYER UPDATES
+   Android app tokens only. No browser push.
+========================================= */
+const FOUR_FU_ANDROID_FCM_URL = "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
+
+function send4FUPlayerUpdateNotification({ title, body, updateType }) {
+    try {
+        fetch(FOUR_FU_ANDROID_FCM_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                type: updateType || "major",
+                priority: "normal",
+                title: title,
+                body: body,
+                link: "/player-dashboard.html",
+                updateType: updateType || "major",
+                senderPlayerId:
+                    typeof currentPlayer !== "undefined" && currentPlayer
+                        ? currentPlayer.id || ""
+                        : "",
+                senderEmail:
+                    typeof currentUser !== "undefined" && currentUser
+                        ? currentUser.email || ""
+                        : ""
+            })
+        }).catch(error => {
+            console.warn("4FU ANDROID FCM PLAYER UPDATE ERROR:", error);
+        });
+    } catch (error) {
+        console.warn("4FU ANDROID FCM PLAYER UPDATE ERROR:", error);
+    }
+}
+</script>
 
 </body>
 

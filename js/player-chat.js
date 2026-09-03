@@ -342,6 +342,7 @@ function renderChatMessage(
                     ""
                 }
 
+
             </div>
 
 
@@ -480,45 +481,69 @@ async function sendFireChatMessage() {
 
         // =========================================
         // FCM CHAT PUSH
+        // Android App Only
         // =========================================
+
         try {
+
             fetch(
-                "https://script.google.com/macros/s/AKfycbw3nOBztKlMYFPs-J7vVEZimLNtZdwv6WicbuqG7lxFEzO7T3DXpVJoyGceUkovBGUV/exec",
+                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
                 {
                     method: "POST",
+
                     mode: "no-cors",
+
                     headers: {
                         "Content-Type":
                             "text/plain;charset=utf-8"
                     },
+
                     body: JSON.stringify({
+
                         type: "chat",
+
                         priority: "normal",
-                        title: "💬 4 FIRE UNITED Live Chat",
+
+                        title:
+                            "💬 4 FIRE UNITED Live Chat",
+
                         body:
                             playerName +
                             ": " +
                             text,
-                        link: "/player-dashboard.html",
+
+                        link:
+                            "/player-dashboard.html",
+
                         messageId:
                             chatMessageRef.id,
+
                         senderPlayerId:
                             playerDoc.id,
+
                         senderEmail:
                             user.email
+
                     })
+
                 }
+
             ).catch((pushError) => {
+
                 console.warn(
                     "CHAT FCM PUSH ERROR:",
                     pushError
                 );
+
             });
+
         } catch (pushError) {
+
             console.warn(
                 "CHAT FCM PUSH ERROR:",
                 pushError
             );
+
         }
 
 

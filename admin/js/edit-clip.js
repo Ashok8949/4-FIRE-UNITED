@@ -156,7 +156,7 @@ ref.get().then((doc) => {
 
     oldFeatured = clip.featured || false;
 
-document.getElementById("featured").checked = oldFeatured;
+    document.getElementById("featured").checked = oldFeatured;
 
     oldVideo = clip.videoUrl || "";
 
@@ -199,8 +199,9 @@ updateBtn.addEventListener("click", async () => {
         let thumbnail = oldThumbnail;
 
         let finalVideo = oldVideo;
+
         const featured =
-    document.getElementById("featured").checked;
+            document.getElementById("featured").checked;
 
         /* ---------- Thumbnail ---------- */
 
@@ -296,25 +297,25 @@ updateBtn.addEventListener("click", async () => {
 
         if (featured) {
 
-    const oldFeaturedDocs = await db.collection("clips")
-        .where("featured", "==", true)
-        .get();
+            const oldFeaturedDocs = await db.collection("clips")
+                .where("featured", "==", true)
+                .get();
 
-    const batch = db.batch();
+            const batch = db.batch();
 
-    oldFeaturedDocs.forEach(doc => {
+            oldFeaturedDocs.forEach(doc => {
 
-        batch.update(doc.ref, {
+                batch.update(doc.ref, {
 
-            featured: false
+                    featured: false
 
-        });
+                });
 
-    });
+            });
 
-    await batch.commit();
+            await batch.commit();
 
-}
+        }
 
         showProgress("Updating Clip...");
 
@@ -333,11 +334,71 @@ updateBtn.addEventListener("click", async () => {
             category: categoryInput.value.trim(),
 
             description: descriptionInput.value.trim(),
+
             featured: featured
 
         });
 
         setProgress(100,"Clip Updated Successfully");
+
+
+        // ==========================================
+        // ANDROID APP FCM NOTIFICATION
+        // ==========================================
+
+        try {
+
+            fetch(
+                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
+                {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8"
+                    },
+                    body: JSON.stringify({
+
+                        type: "clip",
+
+                        priority: "normal",
+
+                        title: "🎬 Clip Updated",
+
+                        body:
+                            "A gameplay clip was updated: " +
+                            (titleInput.value.trim() || "Untitled Clip"),
+
+                        link: "/clips.html",
+
+                        updateType: "clip",
+
+                        targetPlayerId: "ALL",
+
+                        senderEmail:
+                            firebase.auth().currentUser?.email || "Admin"
+
+                    })
+                }
+            ).catch((error) => {
+
+                console.warn(
+                    "4FU ANDROID FCM CLIP UPDATE ERROR:",
+                    error
+                );
+
+            });
+
+        } catch (error) {
+
+            console.warn(
+                "4FU ANDROID FCM CLIP UPDATE ERROR:",
+                error
+            );
+
+        }
+
+        // ==========================================
+
 
         alert("✅ Clip Updated Successfully!");
 

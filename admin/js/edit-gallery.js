@@ -46,15 +46,85 @@ document.getElementById("image").addEventListener("input",()=>{
 // Update Image
 document.getElementById("updateGallery").addEventListener("click",()=>{
 
+    const updatedTitle =
+        document.getElementById("title").value.trim();
+
+    const updatedImage =
+        document.getElementById("image").value.trim();
+
+    if (!updatedTitle || !updatedImage) {
+
+        alert("Please fill all required fields.");
+        return;
+
+    }
+
     docRef.update({
 
-        title:document.getElementById("title").value.trim(),
+        title: updatedTitle,
 
-        image:document.getElementById("image").value.trim()
+        image: updatedImage
 
     })
 
     .then(()=>{
+
+        // ==========================================
+        // ANDROID APP FCM NOTIFICATION
+        // ==========================================
+
+        try {
+
+            fetch(
+                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
+                {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8"
+                    },
+                    body: JSON.stringify({
+
+                        type: "gallery",
+
+                        priority: "normal",
+
+                        title: "🖼️ Gallery Updated",
+
+                        body:
+                            "Gallery image updated: " +
+                            updatedTitle,
+
+                        link: "/gallery.html",
+
+                        updateType: "gallery",
+
+                        targetPlayerId: "ALL",
+
+                        senderEmail:
+                            firebase.auth().currentUser?.email || "Admin"
+
+                    })
+                }
+            ).catch((error) => {
+
+                console.warn(
+                    "4FU ANDROID FCM GALLERY UPDATE ERROR:",
+                    error
+                );
+
+            });
+
+        } catch (error) {
+
+            console.warn(
+                "4FU ANDROID FCM GALLERY UPDATE ERROR:",
+                error
+            );
+
+        }
+
+        // ==========================================
 
         alert("✅ Gallery Updated Successfully!");
 

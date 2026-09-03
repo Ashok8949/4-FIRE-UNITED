@@ -300,11 +300,11 @@ if (sendNotificationBtn) {
 
 
             // ========================================
-            // 2. SEND PUSH NOTIFICATION
+            // 2. SEND ANDROID APP ADMIN PUSH
             // ========================================
 
             const response = await fetch(
-                "https://script.google.com/macros/s/AKfycbw3nOBztKlMYFPs-J7vVEZimLNtZdwv6WicbuqG7lxFEzO7T3DXpVJoyGceUkovBGUV/exec",
+                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
                 {
                     method: "POST",
 
@@ -323,7 +323,13 @@ if (sendNotificationBtn) {
 
                         body: message,
 
-                        link: link
+                        link: link,
+
+                        targetPlayerId: "ALL",
+
+                        senderEmail:
+                            auth.currentUser?.email ||
+                            "Admin"
 
                     })
                 }
@@ -332,8 +338,6 @@ if (sendNotificationBtn) {
 
             const result =
                 await response.json();
-
-
 
 
             console.log(

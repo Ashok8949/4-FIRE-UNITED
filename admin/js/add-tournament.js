@@ -1,3 +1,72 @@
+// =========================
+// Android FCM Notification
+// =========================
+
+const FOUR_FU_ANDROID_FCM_URL =
+    "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
+
+function send4FUTournamentNotification(tournament) {
+
+    try {
+
+        fetch(FOUR_FU_ANDROID_FCM_URL, {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+
+            body: JSON.stringify({
+
+                type: "major",
+
+                updateType: "tournament",
+
+                priority: "normal",
+
+                title: "🏆 New Tournament Added",
+
+                body:
+                    tournament.title +
+                    " has been added to 4 FIRE UNITED.",
+
+                link: "/tournaments.html",
+
+                targetPlayerId: "ALL",
+
+                senderEmail:
+                    auth.currentUser?.email || "Admin"
+
+            })
+
+        }).catch((error) => {
+
+            console.warn(
+                "4FU ANDROID FCM TOURNAMENT ERROR:",
+                error
+            );
+
+        });
+
+    } catch (error) {
+
+        console.warn(
+            "4FU ANDROID FCM TOURNAMENT ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+// =========================
+// Save Tournament
+// =========================
+
 document.getElementById("saveTournament").addEventListener("click", () => {
 
     const tournament = {
@@ -40,28 +109,36 @@ document.getElementById("saveTournament").addEventListener("click", () => {
 
     .then(async () => {
 
-    await db.collection("notifications").add({
+        await db.collection("notifications").add({
 
-        title: "New Tournament Added",
+            title: "New Tournament Added",
 
-        message: tournament.title,
+            message: tournament.title,
 
-        type: "tournament",
+            type: "tournament",
 
-        link: "tournaments.html",
+            link: "tournaments.html",
 
-        isRead: false,
+            isRead: false,
 
-        createdAt:
-        firebase.firestore.FieldValue.serverTimestamp()
+            createdAt:
+            firebase.firestore.FieldValue.serverTimestamp()
 
-    });
+        });
 
-    alert("✅ Tournament Added Successfully!");
 
-    window.location.href = "tournaments.html";
+        // =========================
+        // Send Android Notification
+        // =========================
 
-})
+        send4FUTournamentNotification(tournament);
+
+
+        alert("✅ Tournament Added Successfully!");
+
+        window.location.href = "tournaments.html";
+
+    })
 
     .catch((error) => {
 

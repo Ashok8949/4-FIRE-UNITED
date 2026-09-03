@@ -713,6 +713,40 @@ document.getElementById("image").addEventListener(
 );
 
 
+
+// ==========================================
+// 4FU ANDROID APP FCM - PROFILE UPDATES
+// Android app tokens only. No browser push.
+// ==========================================
+const FOUR_FU_ANDROID_FCM_URL = "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
+
+function send4FUProfileUpdateNotification({ title, body }) {
+    try {
+        fetch(FOUR_FU_ANDROID_FCM_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                type: "profile",
+                priority: "normal",
+                title: title,
+                body: body,
+                link: "/player-dashboard.html",
+                updateType: "profile",
+                senderPlayerId: playerDocId || "",
+                senderEmail:
+                    auth.currentUser?.email || ""
+            })
+        }).catch(error => {
+            console.warn("4FU ANDROID FCM PROFILE UPDATE ERROR:", error);
+        });
+    } catch (error) {
+        console.warn("4FU ANDROID FCM PROFILE UPDATE ERROR:", error);
+    }
+}
+
 // ==========================================
 // SAVE PLAYER PROFILE
 // ==========================================
@@ -1206,6 +1240,68 @@ document.getElementById("saveBtn").addEventListener(
                         imageUrl
 
                 });
+
+
+            // ==========================================
+            // ANDROID APP PUSH - PROFILE UPDATE
+            // ==========================================
+            const profileChanged =
+                (playerData.name || "") !==
+                    document.getElementById("name").value.trim() ||
+                (playerData.ign || "") !==
+                    document.getElementById("ign").value.trim() ||
+                (playerData.uid || "") !==
+                    document.getElementById("uid").value.trim() ||
+                (playerData.guild || "") !==
+                    document.getElementById("guild").value.trim() ||
+                (playerData.language || "") !==
+                    document.getElementById("language").value.trim() ||
+                (playerData.country || "") !==
+                    document.getElementById("country").value ||
+                String(playerData.level ?? "") !==
+                    String(Number(document.getElementById("level").value) || 0) ||
+                (playerData.rank || "") !==
+                    document.getElementById("rank").value ||
+                (playerData.kd || "") !==
+                    document.getElementById("kd").value.trim() ||
+                (playerData.headshot || "") !==
+                    document.getElementById("headshot").value.trim() ||
+                String(playerData.matches ?? "") !==
+                    String(Number(document.getElementById("matches").value) || 0) ||
+                String(playerData.booyah ?? "") !==
+                    String(Number(document.getElementById("booyah").value) || 0) ||
+                (playerData.weaponName || "") !==
+                    document.getElementById("weaponName").value.trim() ||
+                (playerData.weaponType || "") !==
+                    document.getElementById("weaponType").value.trim() ||
+                (playerData.weaponQuote || "") !==
+                    document.getElementById("weaponQuote").value.trim() ||
+                (playerData.instagram || "") !==
+                    document.getElementById("instagram").value.trim() ||
+                (playerData.youtube || "") !==
+                    document.getElementById("youtube").value.trim() ||
+                (playerData.discord || "") !==
+                    document.getElementById("discord").value.trim() ||
+                (playerData.facebook || "") !==
+                    document.getElementById("facebook").value.trim() ||
+                (playerData.loginEmail || oldEmail) !== newEmail ||
+                (playerData.image || "") !== imageUrl ||
+                (playerData.weaponImage || "") !== weaponImageUrl ||
+                changingPassword;
+
+            if (profileChanged) {
+                const playerName =
+                    document.getElementById("name").value.trim() ||
+                    document.getElementById("ign").value.trim() ||
+                    "A player";
+
+                send4FUProfileUpdateNotification({
+                    title: "📝 Player Profile Updated",
+                    body:
+                        playerName +
+                        " updated their player profile."
+                });
+            }
 
 
             // ==========================================

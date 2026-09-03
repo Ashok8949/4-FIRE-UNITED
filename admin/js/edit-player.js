@@ -18,6 +18,7 @@ const status = document.getElementById("uploadStatus");
 
 let imageUrl = "";
 let weaponImageUrl = "";
+
 function showProgress(text){
 
     progress.style.display = "block";
@@ -65,25 +66,25 @@ function uploadToCloudinary(file){
 
         xhr.upload.onprogress = (e) => {
 
-    if(e.lengthComputable){
+            if(e.lengthComputable){
 
-        const percent = Math.round(
+                const percent = Math.round(
 
-            (e.loaded / e.total) * 100
+                    (e.loaded / e.total) * 100
 
-        );
+                );
 
-        setProgress(
+                setProgress(
 
-            percent,
+                    percent,
 
-            `Uploading Image... ${percent}%`
+                    `Uploading Image... ${percent}%`
 
-        );
+                );
 
-    }
+            }
 
-};
+        };
 
         xhr.onload = () => {
 
@@ -146,21 +147,20 @@ docRef.get().then((doc) => {
     document.getElementById("language").value = p.language || "";
     document.getElementById("country").value = p.country || "";
 
-document.getElementById("since").value = p.since || "";
+    document.getElementById("since").value = p.since || "";
     document.getElementById("weaponName").value = p.weaponName || "";
 
-document.getElementById("weaponType").value = p.weaponType || "";
+    document.getElementById("weaponType").value = p.weaponType || "";
 
-document.getElementById("weaponQuote").value = p.weaponQuote || "";
+    document.getElementById("weaponQuote").value = p.weaponQuote || "";
 
-document.getElementById("displayOrder").value =
-    p.displayOrder || "";
+    document.getElementById("displayOrder").value =
+        p.displayOrder || "";
 
     document.getElementById("featured").checked = p.featured || false;
-    document.getElementById("loginEmail").value =
-    p.loginEmail || "";
 
-    
+    document.getElementById("loginEmail").value =
+        p.loginEmail || "";
 
     // ==========================
     // Social Media
@@ -173,14 +173,14 @@ document.getElementById("displayOrder").value =
 
     // Preview Image
 
-   if (p.image) {
+    if (p.image) {
 
-    imageUrl = p.image;
-    weaponImageUrl = p.weaponImage || "";
+        imageUrl = p.image;
+        weaponImageUrl = p.weaponImage || "";
 
-    previewImage.src = p.image;
+        previewImage.src = p.image;
 
-}
+    }
 
 })
 
@@ -196,89 +196,162 @@ document.getElementById("displayOrder").value =
 
 document.getElementById("saveBtn").addEventListener("click", async () => {
 
-    if (imageInput.files.length > 0) {
+    try {
 
-   showProgress("Uploading Player Image...");
+        if (imageInput.files.length > 0) {
 
-    const upload = await uploadToCloudinary(
-        imageInput.files[0]
-    );
+            showProgress("Uploading Player Image...");
 
-    imageUrl = upload.secure_url;
+            const upload = await uploadToCloudinary(
+                imageInput.files[0]
+            );
 
-} else {
+            imageUrl = upload.secure_url;
 
-    showProgress("Updating Player...");
+        } else {
 
-}
+            showProgress("Updating Player...");
 
-showProgress("Uploading Weapon Image...");
+        }
 
-if (weaponImageInput.files.length > 0) {
+        showProgress("Uploading Weapon Image...");
 
-    const upload = await uploadToCloudinary(
-        weaponImageInput.files[0]
-    );
+        if (weaponImageInput.files.length > 0) {
 
-    weaponImageUrl = upload.secure_url;
+            const upload = await uploadToCloudinary(
+                weaponImageInput.files[0]
+            );
 
-}
+            weaponImageUrl = upload.secure_url;
 
-showProgress("Updating Player...");
+        }
+
+        showProgress("Updating Player...");
+
+        const data = {
+
+            name: document.getElementById("name").value.trim(),
+            ign: document.getElementById("ign").value.trim(),
+            uid: document.getElementById("uid").value.trim(),
+            role: document.getElementById("role").value.trim(),
+            level: Number(document.getElementById("level").value),
+            rank: document.getElementById("rank").value.trim(),
+            kd: document.getElementById("kd").value.trim(),
+            headshot: document.getElementById("headshot").value.trim(),
+            matches: Number(document.getElementById("matches").value) || 0,
+            booyah: Number(document.getElementById("booyah").value) || 0,
+            weaponName: document.getElementById("weaponName").value.trim(),
+
+            weaponType:
+                document.getElementById("weaponType").value.trim(),
+
+            weaponQuote:
+                document.getElementById("weaponQuote").value.trim(),
+
+            weaponImage: weaponImageUrl,
+
+            guild: document.getElementById("guild").value.trim(),
+            language: document.getElementById("language").value.trim(),
+
+            country: document.getElementById("country").value.trim(),
+
+            since: document.getElementById("since").value.trim(),
+
+            displayOrder: Number(
+                document.getElementById("displayOrder").value
+            ) || 9999,
+
+            featured:
+                document.getElementById("featured").checked,
+
+            loginEmail:
+                document.getElementById("loginEmail").value.trim(),
+
+            // Social Media
+
+            instagram:
+                document.getElementById("instagram").value.trim(),
+
+            youtube:
+                document.getElementById("youtube").value.trim(),
+
+            discord:
+                document.getElementById("discord").value.trim(),
+
+            facebook:
+                document.getElementById("facebook").value.trim(),
+
+            image: imageUrl,
+
+            lastEdited: new Date()
+
+        };
+
+        await docRef.update(data);
+
+        setProgress(
+            100,
+            "Player Updated Successfully"
+        );
 
 
-    const data = {
+        // ==========================================
+        // ANDROID APP FCM NOTIFICATION
+        // ==========================================
 
-        name: document.getElementById("name").value.trim(),
-        ign: document.getElementById("ign").value.trim(),
-        uid: document.getElementById("uid").value.trim(),
-        role: document.getElementById("role").value.trim(),
-        level: Number(document.getElementById("level").value),
-        rank: document.getElementById("rank").value.trim(),
-        kd: document.getElementById("kd").value.trim(),
-        headshot: document.getElementById("headshot").value.trim(),
-        matches: Number(document.getElementById("matches").value) || 0,
-        booyah: Number(document.getElementById("booyah").value) || 0,
-        weaponName: document.getElementById("weaponName").value.trim(),
+        try {
 
-weaponType: document.getElementById("weaponType").value.trim(),
+            fetch(
+                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
+                {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8"
+                    },
+                    body: JSON.stringify({
 
-weaponQuote: document.getElementById("weaponQuote").value.trim(),
+                        type: "player_update",
 
-weaponImage: weaponImageUrl,
-        guild: document.getElementById("guild").value.trim(),
-        language: document.getElementById("language").value.trim(),
+                        priority: "normal",
 
-        country: document.getElementById("country").value.trim(),
+                        title: "📝 Player Profile Updated",
 
-since: document.getElementById("since").value.trim(),
-        displayOrder: Number(
-    document.getElementById("displayOrder").value
-) || 9999,
-        featured: document.getElementById("featured").checked,
-        loginEmail:
-    document.getElementById("loginEmail").value.trim(),
+                        body:
+                            data.name +
+                            " updated their player profile.",
 
-        // Social Media
+                        link: "/players.html",
 
-        instagram: document.getElementById("instagram").value.trim(),
-        youtube: document.getElementById("youtube").value.trim(),
-        discord: document.getElementById("discord").value.trim(),
-        facebook: document.getElementById("facebook").value.trim(),
+                        updateType: "player_update",
 
-        image: imageUrl,
+                        targetPlayerId: playerId,
 
-      lastEdited: new Date()
+                        senderEmail:
+                            firebase.auth().currentUser?.email || "Admin"
 
-    };
+                    })
+                }
+            ).catch((error) => {
 
-   
-    
+                console.warn(
+                    "4FU ANDROID FCM PLAYER UPDATE ERROR:",
+                    error
+                );
 
-    docRef.update(data)
+            });
 
-    .then(() => {
-        setProgress(100,"Player Updated Successfully");
+        } catch (error) {
+
+            console.warn(
+                "4FU ANDROID FCM PLAYER UPDATE ERROR:",
+                error
+            );
+
+        }
+
+        // ==========================================
+
 
         alert("✅ Player Updated Successfully!");
 
@@ -286,9 +359,9 @@ since: document.getElementById("since").value.trim(),
 
         window.location = "players.html";
 
-    })
+    }
 
-    .catch((err) => {
+    catch (err) {
 
         console.error(err);
 
@@ -296,8 +369,6 @@ since: document.getElementById("since").value.trim(),
 
         alert("Update Failed!");
 
-    });
+    }
 
 });
-
-
