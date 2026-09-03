@@ -259,32 +259,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 
         <div class="push-notification-form">
-
-
-            <!-- PLAYER -->
-
-            <div>
-
-                <label for="pushPlayer">
-
-                    Select Player
-
-                </label>
-
-                <select id="pushPlayer">
-
-                    <option value="">
-
-                        Loading players...
-
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- TITLE -->
+            <!-- TITLE --><!-- TITLE -->
 
             <div>
 
@@ -393,10 +368,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 ====================================== -->
 
 <script>
-
-const pushPlayer =
-    document.getElementById("pushPlayer");
-
 const pushTitle =
     document.getElementById("pushTitle");
 
@@ -412,134 +383,14 @@ const sendPushBtn =
 const pushStatus =
     document.getElementById("pushStatus");
 
-
-let pushPlayers = [];
-
-
-// ============================================
-// LOAD PLAYERS
-// ============================================
-
-async function loadPushPlayers() {
-
-    try {
-
-        const snapshot =
-            await db
-                .collection("players")
-                .get();
-
-
-        pushPlayers = [];
-
-
-        snapshot.forEach(doc => {
-
-            pushPlayers.push({
-
-                id: doc.id,
-
-                ...doc.data()
-
-            });
-
-        });
-
-
-        pushPlayers.sort((a, b) => {
-
-            const nameA =
-                (
-                    a.name ||
-                    a.ign ||
-                    ""
-                ).toLowerCase();
-
-
-            const nameB =
-                (
-                    b.name ||
-                    b.ign ||
-                    ""
-                ).toLowerCase();
-
-
-            return nameA.localeCompare(nameB);
-
-        });
-
-
-        pushPlayer.innerHTML = "";
-
-
-        const allOption =
-            document.createElement("option");
-
-        allOption.value = "ALL";
-
-        allOption.textContent =
-            "All Players";
-
-        pushPlayer.appendChild(
-            allOption
-        );
-
-
-        pushPlayers.forEach(player => {
-
-            const option =
-                document.createElement("option");
-
-            option.value =
-                player.id;
-
-            option.textContent =
-                player.name ||
-                player.ign ||
-                "Unknown Player";
-
-            pushPlayer.appendChild(
-                option
-            );
-
-        });
-
-
-    } catch (error) {
-
-        console.error(
-            "❌ Failed to load players:",
-            error
-        );
-
-
-        pushPlayer.innerHTML = `
-
-            <option value="">
-
-                Failed to load players
-
-            </option>
-
-        `;
-
-    }
-
-}
-
-
-// ============================================
-// SEND BUTTON
+    // ============================================
+    // SEND BUTTON
 // ============================================
 
 sendPushBtn.addEventListener(
     "click",
     async () => {
-
-        const target =
-            pushPlayer.value;
-
-        const title =
+const title =
             pushTitle.value.trim();
 
         const message =
@@ -548,21 +399,7 @@ sendPushBtn.addEventListener(
         const link =
             pushLink.value.trim() ||
             "/player-dashboard.html";
-
-
-        if (!target) {
-
-            showPushStatus(
-                "Please select a player.",
-                false
-            );
-
-            return;
-
-        }
-
-
-        if (!title) {
+if (!title) {
 
             showPushStatus(
                 "Please enter a notification title.",
@@ -599,21 +436,8 @@ sendPushBtn.addEventListener(
                 Sending...
 
             `;
-
-
-            /*
-             * IMPORTANT
-             *
-             * Ye existing Firestore notification
-             * system me notification record create
-             * karega.
-             *
-             * Actual FCM push sending next step me
-             * secure Firebase backend se connect hoga.
-             */
-
-
-            await db
+            // Save the notification in Firestore.
+await db
                 .collection("notifications")
                 .add({
 
@@ -625,11 +449,8 @@ sendPushBtn.addEventListener(
 
                     link:
                         link,
-
-                    target:
-                        target,
-
-                    isRead:
+                    target: "ALL",
+isRead:
                         false,
 
                     type:
@@ -647,8 +468,59 @@ sendPushBtn.addEventListener(
                 });
 
 
+            // ========================================
+            // SEND ANDROID APP FCM PUSH
+            // ========================================
+
+            const FOUR_FU_ANDROID_FCM_URL =
+                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
+
+            try {
+
+                await fetch(FOUR_FU_ANDROID_FCM_URL, {
+
+                    method: "POST",
+
+                    mode: "no-cors",
+
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8"
+                    },
+
+                    body: JSON.stringify({
+
+                        type: "admin",
+
+                        priority: "high",
+
+                        title: title,
+
+                        body: message,
+
+                        link: link,
+
+                        targetPlayerId: "ALL",
+
+                        senderEmail:
+                            auth.currentUser?.email ||
+                            "Admin"
+
+                    })
+
+                });
+
+            } catch (fcmError) {
+
+                console.warn(
+                    "4FU ANDROID FCM PUSH ERROR:",
+                    fcmError
+                );
+
+            }
+
+
             showPushStatus(
-                "Notification created successfully.",
+                "Notification sent to Android app users.",
                 true
             );
 
@@ -739,11 +611,7 @@ firebase.auth().onAuthStateChanged(
 
         document.body.style.visibility =
             "visible";
-
-
-        await loadPushPlayers();
-
-    }
+}
 );
 
 </script>

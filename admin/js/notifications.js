@@ -4,36 +4,26 @@ const list = document.getElementById("notificationList");
 const count = document.getElementById("notificationCount");
 const clearReadBtn = document.getElementById("clearReadBtn");
 
+
+// =====================================
+// NOTIFICATION SOUND
+// =====================================
+
 const notificationAudio = new Audio("sounds/notification.mp3");
-if ("Notification" in window &&
-    Notification.permission !== "granted") {
 
-    Notification.requestPermission();
-
-}
 notificationAudio.preload = "auto";
 
-function showBrowserNotification(title, message) {
 
-    if (
-        "Notification" in window &&
-        Notification.permission === "granted"
-    ) {
-
-        new Notification(title, {
-
-            body: message,
-
-            icon: "../images/logo/logo.png"
-
-        });
-
-    }
-
-}
+// =====================================
+// NOTIFICATIONS ARRAY
+// =====================================
 
 let notifications = [];
 
+
+// =====================================
+// PLAY NOTIFICATION SOUND
+// =====================================
 
 function playNotificationSound() {
 
@@ -47,6 +37,11 @@ function playNotificationSound() {
 
 }
 
+
+// =====================================
+// NOTIFICATION BELL
+// =====================================
+
 bell.onclick = () => {
 
     dropdown.style.display =
@@ -55,6 +50,11 @@ bell.onclick = () => {
             : "block";
 
 };
+
+
+// =====================================
+// CLOSE DROPDOWN
+// =====================================
 
 window.addEventListener("click", (e) => {
 
@@ -65,6 +65,11 @@ window.addEventListener("click", (e) => {
     }
 
 });
+
+
+// =====================================
+// RENDER NOTIFICATIONS
+// =====================================
 
 function renderNotifications() {
 
@@ -84,12 +89,10 @@ function renderNotifications() {
 
     }
 
+
     const unreadCount =
         notifications.filter(n => !n.isRead).length;
 
-
-
-  
 
     if (unreadCount > 0) {
 
@@ -102,6 +105,7 @@ function renderNotifications() {
         count.style.display = "none";
 
     }
+
 
     notifications.forEach(item => {
 
@@ -122,8 +126,18 @@ function renderNotifications() {
     });
 
 }
+
+
+// =====================================
+// FIRST SNAPSHOT
+// =====================================
+
 let firstSnapshot = true;
 
+
+// =====================================
+// FIRESTORE NOTIFICATIONS
+// =====================================
 
 db.collection("notifications")
 .orderBy("createdAt", "desc")
@@ -132,25 +146,27 @@ db.collection("notifications")
 
     notifications = [];
 
+
     snapshot.docChanges().forEach((change) => {
 
         if (!firstSnapshot && change.type === "added") {
 
             const data = change.doc.data();
 
+
+            // =====================================
+            // PLAY SOUND ONLY
+            // =====================================
+            // Browser push notification removed.
+            // Android app FCM notifications are handled
+            // separately by the Android app.
+
             playNotificationSound();
-
-            showBrowserNotification(
-
-                data.title || "Notification",
-
-                data.message || ""
-
-            );
 
         }
 
     });
+
 
     snapshot.forEach((doc) => {
 
@@ -174,11 +190,17 @@ db.collection("notifications")
 
     });
 
+
     renderNotifications();
 
     firstSnapshot = false;
 
 });
+
+
+// =====================================
+// OPEN NOTIFICATION
+// =====================================
 
 async function openNotification(id, link) {
 
@@ -198,6 +220,7 @@ async function openNotification(id, link) {
 
     }
 
+
     if (link && link !== "#") {
 
         window.location.href = link;
@@ -205,6 +228,11 @@ async function openNotification(id, link) {
     }
 
 }
+
+
+// =====================================
+// CLEAR READ NOTIFICATIONS
+// =====================================
 
 clearReadBtn.addEventListener("click", async () => {
 
@@ -214,6 +242,7 @@ clearReadBtn.addEventListener("click", async () => {
         .where("isRead", "==", true)
         .get();
 
+
         if (snapshot.empty) {
 
             alert("No read notifications found.");
@@ -222,7 +251,9 @@ clearReadBtn.addEventListener("click", async () => {
 
         }
 
+
         const batch = db.batch();
+
 
         snapshot.forEach((doc) => {
 
@@ -230,7 +261,9 @@ clearReadBtn.addEventListener("click", async () => {
 
         });
 
+
         await batch.commit();
+
 
         alert("Read notifications cleared.");
 

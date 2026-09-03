@@ -2955,7 +2955,6 @@
                         <i class="fa-solid fa-ranking-star"></i>
 
                         <h2 id="playerRank">
-                            -
                         </h2>
 
                         <p>Rank</p>
@@ -2968,7 +2967,6 @@
                         <i class="fa-solid fa-fire"></i>
 
                         <h2 id="playerLevel">
-                            -
                         </h2>
 
                         <p>Level</p>
@@ -2981,7 +2979,6 @@
                         <i class="fa-solid fa-crosshairs"></i>
 
                         <h2 id="playerKD">
-                            -
                         </h2>
 
                         <p>KD</p>
@@ -2994,7 +2991,6 @@
                         <i class="fa-solid fa-bullseye"></i>
 
                         <h2 id="playerHeadshot">
-                            -
                         </h2>
 
                         <p>Headshot</p>
@@ -3007,7 +3003,6 @@
                         <i class="fa-solid fa-gamepad"></i>
 
                         <h2 id="playerMatches">
-                            -
                         </h2>
 
                         <p>Matches</p>
@@ -3020,7 +3015,6 @@
                         <i class="fa-solid fa-trophy"></i>
 
                         <h2 id="playerBooyah">
-                            -
                         </h2>
 
                         <p>Booyah</p>
@@ -3041,7 +3035,6 @@
                         </span>
 
                         <strong id="playerUID">
-                            -
                         </strong>
 
                     </div>
@@ -3054,7 +3047,6 @@
                         </span>
 
                         <strong id="playerGuild">
-                            -
                         </strong>
 
                     </div>
@@ -3067,7 +3059,6 @@
                         </span>
 
                         <strong id="playerCountry">
-                            -
                         </strong>
 
                     </div>
@@ -3080,7 +3071,6 @@
                         </span>
 
                         <strong id="playerLanguage">
-                            -
                         </strong>
 
                     </div>
@@ -3093,7 +3083,6 @@
                         </span>
 
                         <strong id="playerSince">
-                            -
                         </strong>
 
                     </div>
@@ -7103,15 +7092,91 @@ function getPremiumCardFileName(){
     return "4FU-Player-Card-"+safeName+".png";
 }
 
+/*
+ * 4 FIRE UNITED — PREMIUM PLAYER CARD
+ * Android WebView uses the native Player Card bridge.
+ * Normal browsers keep the existing Web Share / Download behavior.
+ *
+ * The native MainActivity bridge installer checks this flag, so the
+ * page owns these two button handlers and there is no double trigger.
+ */
+window.__4fuNativePlayerCardBridgeInstalled = true;
+
+function hasNativePlayerCardBridge(){
+    return !!(
+        window.FourFUPlayerCard &&
+        typeof FourFUPlayerCard.beginCardTransfer === "function" &&
+        typeof FourFUPlayerCard.appendCardChunk === "function" &&
+        typeof FourFUPlayerCard.finishCardTransfer === "function"
+    );
+}
+
+async function sendPremiumCardToAndroid(action,dataUrl,fileName){
+    if(!hasNativePlayerCardBridge()){
+        throw new Error("Android card bridge unavailable.");
+    }
+
+    const transferId =
+        "card_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+
+    const base64 = dataUrl.substring(dataUrl.indexOf(",") + 1);
+    const chunkSize = 32768;
+
+    FourFUPlayerCard.beginCardTransfer(
+        transferId,
+        action,
+        fileName
+    );
+
+    try{
+        for(let i = 0; i < base64.length; i += chunkSize){
+            FourFUPlayerCard.appendCardChunk(
+                transferId,
+                base64.substring(i,i + chunkSize)
+            );
+        }
+
+        FourFUPlayerCard.finishCardTransfer(transferId);
+    }catch(error){
+        if(typeof FourFUPlayerCard.cancelCardTransfer === "function"){
+            FourFUPlayerCard.cancelCardTransfer(transferId);
+        }
+        throw error;
+    }
+}
+
 document.getElementById("downloadPremiumPlayerCard")?.addEventListener("click",async()=>{
     const status = document.getElementById("premiumCardStatus");
 
     try{
         if(status) status.textContent = "Preparing your premium card...";
-        const canvas = await getPremiumPlayerCardCanvas();
 
+        const canvas = await getPremiumPlayerCardCanvas();
+        const fileName = getPremiumCardFileName();
+
+        /*
+         * ANDROID APP
+         * Send the PNG to MainActivity in small Base64 chunks.
+         * This avoids the Android WebView JavascriptInterface
+         * size limit that caused phone-only download failures.
+         */
+        if(hasNativePlayerCardBridge()){
+            await sendPremiumCardToAndroid(
+                "download",
+                canvas.toDataURL("image/png"),
+                fileName
+            );
+
+            if(status) status.textContent = "Premium player card downloaded.";
+            return;
+        }
+
+        /*
+         * NORMAL WEB BROWSER
+         * Keep the original browser download behavior.
+         */
         const link = document.createElement("a");
-        link.download = getPremiumCardFileName();
+        link.download = fileName;
         link.href = canvas.toDataURL("image/png");
         document.body.appendChild(link);
         link.click();
@@ -7131,45 +7196,85 @@ document.getElementById("sharePremiumPlayerCard")?.addEventListener("click",asyn
         if(status) status.textContent = "Preparing card for sharing...";
 
         const canvas = await getPremiumPlayerCardCanvas();
-        const blob = await new Promise(resolve => canvas.toBlob(resolve,"image/png",1));
+        const blob = await new Promise(resolve =>
+            canvas.toBlob(resolve,"image/png",1)
+        );
 
         if(!blob) throw new Error("Unable to create card image.");
 
-        const playerName = currentPlayer?.name || currentPlayer?.playerName || currentPlayer?.ign || "Player";
-        const file = new File([blob],getPremiumCardFileName(),{type:"image/png"});
+        const playerName =
+            currentPlayer?.name ||
+            currentPlayer?.playerName ||
+            currentPlayer?.ign ||
+            "Player";
+
+        const fileName = getPremiumCardFileName();
 
         /*
-         * IMPORTANT:
-         * Share the PNG file itself. Do NOT pass a URL here.
-         * This makes supported apps such as WhatsApp receive the
-         * actual premium player-card image instead of only a link.
+         * ANDROID APP
+         * Share the actual PNG file through the native Android
+         * FileProvider instead of navigator.share().
          */
+        if(hasNativePlayerCardBridge()){
+            const dataUrl = canvas.toDataURL("image/png");
+
+            await sendPremiumCardToAndroid(
+                "share",
+                dataUrl,
+                fileName
+            );
+
+            if(status) status.textContent = "Player card shared successfully.";
+            return;
+        }
+
+        /*
+         * NORMAL WEB BROWSER
+         * Keep the existing Web Share behavior.
+         */
+        const file = new File(
+            [blob],
+            fileName,
+            {type:"image/png"}
+        );
+
         const shareData = {
-            title:"4 FIRE UNITED • "+playerName,
+            title:"4 FIRE UNITED • " + playerName,
             text:"🔥 My 4 FIRE UNITED Player Card"
         };
 
         if(navigator.share){
-            if(navigator.canShare && navigator.canShare({files:[file]})){
+            if(
+                navigator.canShare &&
+                navigator.canShare({files:[file]})
+            ){
                 await navigator.share({
                     ...shareData,
                     files:[file]
                 });
-                if(status) status.textContent = "Player card shared successfully.";
+
+                if(status)
+                    status.textContent = "Player card shared successfully.";
             }else{
                 await navigator.share(shareData);
-                if(status) status.textContent = "Share opened. Your device does not support image-file sharing here.";
+
+                if(status)
+                    status.textContent =
+                        "Share opened. Your device does not support image-file sharing here.";
             }
         }else{
             const link = document.createElement("a");
-            link.download = getPremiumCardFileName();
+            link.download = fileName;
             link.href = URL.createObjectURL(blob);
             document.body.appendChild(link);
             link.click();
             link.remove();
+
             setTimeout(() => URL.revokeObjectURL(link.href),1000);
 
-            if(status) status.textContent = "Sharing is not supported here, so the card was downloaded.";
+            if(status)
+                status.textContent =
+                    "Sharing is not supported here, so the card was downloaded.";
         }
     }catch(error){
         if(error && error.name === "AbortError"){
@@ -7178,12 +7283,13 @@ document.getElementById("sharePremiumPlayerCard")?.addEventListener("click",asyn
         }
 
         console.error("Player card share error:",error);
-        if(status) status.textContent = "Unable to share the card. Please try again.";
+        if(status)
+            status.textContent =
+                "Unable to share the card. Please try again.";
     }
 });
-document.getElementById("sharePremiumPlayerCard")?.addEventListener("click",async()=>{const status=document.getElementById("premiumCardStatus");try{if(status)status.textContent="Preparing your premium card...";const canvas=await getPremiumPlayerCardCanvas();const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));if(!blob)throw new Error("Unable to create card image.");const playerName=currentPlayer?.name||currentPlayer?.ign||"Player";const file=new File([blob],"4FU-Player-Card.png",{type:"image/png"});const shareData={title:"4 FIRE UNITED • "+playerName,text:"Check out my 4 FIRE UNITED Player Card!",url:getPlayerCardWebsiteUrl()};if(navigator.share){if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({...shareData,files:[file]});else await navigator.share(shareData);if(status)status.textContent="Player card shared.";}else{const link=document.createElement("a");link.download="4FU-Player-Card.png";link.href=canvas.toDataURL("image/png");link.click();if(status)status.textContent="Sharing is not supported here, so the card was downloaded instead.";}}catch(error){if(error&&error.name==="AbortError"){if(status)status.textContent="Share cancelled.";return;}console.error("Player card share error:",error);if(status)status.textContent="Unable to share the card. Please try again.";}});
 
-    </script>
+</script>
 
 
 

@@ -8,6 +8,8 @@ db.collection("notifications")
 
     container.innerHTML = "";
 
+    notifications = [];
+
     if (snapshot.empty) {
 
         container.innerHTML = `
