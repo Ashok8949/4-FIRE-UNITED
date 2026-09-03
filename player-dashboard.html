@@ -7066,33 +7066,57 @@ async function getPremiumPlayerCardCanvas(){
     await waitForPremiumCardAssets(card);
 
     /*
-     * Keep the exact rounded outer shape during PNG rendering.
-     * The extra wrapper prevents html2canvas from leaving square/triangular
-     * artifacts around the four corners.
+     * IMPORTANT:
+     * The on-screen card intentionally keeps its fixed 3:4 design.
+     * For PNG export, however, the content inside the card can be taller
+     * than that fixed aspect-ratio on small phone screens. Rendering the
+     * live element directly therefore clips the bottom section.
+     *
+     * Create an off-screen export copy with natural height. This changes
+     * ONLY the exported image; the visible website card remains untouched.
      */
-    const oldRadius = card.style.borderRadius;
-    const oldClip = card.style.clipPath;
-    const oldWebkitClip = card.style.webkitClipPath;
+    const exportCard = card.cloneNode(true);
+    exportCard.removeAttribute("id");
 
-    card.style.borderRadius = "28px";
-    card.style.clipPath = "inset(0 round 28px)";
-    card.style.webkitClipPath = "inset(0 round 28px)";
+    const rect = card.getBoundingClientRect();
+    const exportWidth = Math.max(1, Math.round(rect.width));
 
-    const canvas = await html2canvas(card,{
-        backgroundColor:"#070707",
-        scale:2,
-        useCORS:true,
-        allowTaint:false,
-        logging:false,
-        imageTimeout:15000,
-        removeContainer:true
-    });
+    exportCard.style.position = "absolute";
+    exportCard.style.left = "-100000px";
+    exportCard.style.top = "0";
+    exportCard.style.width = exportWidth + "px";
+    exportCard.style.height = "auto";
+    exportCard.style.minHeight = "0";
+    exportCard.style.aspectRatio = "auto";
+    exportCard.style.overflow = "hidden";
+    exportCard.style.borderRadius = "28px";
+    exportCard.style.clipPath = "inset(0 round 28px)";
+    exportCard.style.webkitClipPath = "inset(0 round 28px)";
 
-    card.style.borderRadius = oldRadius;
-    card.style.clipPath = oldClip;
-    card.style.webkitClipPath = oldWebkitClip;
+    document.body.appendChild(exportCard);
 
-    return canvas;
+    try{
+        await waitForPremiumCardAssets(exportCard);
+
+        const exportHeight = Math.ceil(exportCard.scrollHeight);
+        exportCard.style.height = exportHeight + "px";
+
+        return await html2canvas(exportCard,{
+            backgroundColor:"#070707",
+            scale:2,
+            useCORS:true,
+            allowTaint:false,
+            logging:false,
+            imageTimeout:15000,
+            removeContainer:true,
+            width:exportWidth,
+            height:exportHeight,
+            windowWidth:document.documentElement.clientWidth,
+            windowHeight:document.documentElement.clientHeight
+        });
+    }finally{
+        exportCard.remove();
+    }
 }
 
 function getPremiumCardFileName(){
@@ -7103,153 +7127,78 @@ function getPremiumCardFileName(){
     return "4FU-Player-Card-"+safeName+".png";
 }
 
-async function sendPremiumPlayerCardToAndroid(action, canvas){
-    if(!window.FourFUPlayerCard ||
-       typeof FourFUPlayerCard.beginCardTransfer !== "function" ||
-       typeof FourFUPlayerCard.appendCardChunk !== "function" ||
-       typeof FourFUPlayerCard.finishCardTransfer !== "function"){
-        throw new Error("Android player card bridge unavailable.");
-    }
-
-    const dataUrl = canvas.toDataURL("image/png");
-    const comma = dataUrl.indexOf(",");
-    if(comma < 0) throw new Error("Invalid player card image.");
-
-    const base64 = dataUrl.substring(comma + 1);
-    const id = "card_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-    const fileName = getPremiumCardFileName();
-    const chunkSize = 32768;
-
-    FourFUPlayerCard.beginCardTransfer(id, action, fileName);
+document.getElementById("downloadPremiumPlayerCard")?.addEventListener("click",async()=>{
+    const status = document.getElementById("premiumCardStatus");
 
     try{
-        for(let i = 0; i < base64.length; i += chunkSize){
-            FourFUPlayerCard.appendCardChunk(
-                id,
-                base64.substring(i, i + chunkSize)
-            );
-        }
+        if(status) status.textContent = "Preparing your premium card...";
+        const canvas = await getPremiumPlayerCardCanvas();
 
-        FourFUPlayerCard.finishCardTransfer(id);
-        return true;
-    }catch(error){
-        try{
-            if(typeof FourFUPlayerCard.cancelCardTransfer === "function"){
-                FourFUPlayerCard.cancelCardTransfer(id);
-            }
-        }catch(e){}
-        throw error;
-    }
-}
-
-async function sharePremiumPlayerCardWeb(canvas, playerName, status){
-    const blob = await new Promise(resolve =>
-        canvas.toBlob(resolve,"image/png",1)
-    );
-
-    if(!blob) throw new Error("Unable to create card image.");
-
-    const file = new File(
-        [blob],
-        getPremiumCardFileName(),
-        {type:"image/png"}
-    );
-
-    const shareData = {
-        title:"4 FIRE UNITED • "+playerName,
-        text:"🔥 My 4 FIRE UNITED Player Card"
-    };
-
-    if(navigator.share){
-        if(navigator.canShare && navigator.canShare({files:[file]})){
-            await navigator.share({
-                ...shareData,
-                files:[file]
-            });
-            if(status) status.textContent = "Player card shared successfully.";
-        }else{
-            await navigator.share(shareData);
-            if(status) status.textContent = "Share opened. Your device does not support image-file sharing here.";
-        }
-    }else{
         const link = document.createElement("a");
         link.download = getPremiumCardFileName();
-        link.href = URL.createObjectURL(blob);
+        link.href = canvas.toDataURL("image/png");
         document.body.appendChild(link);
         link.click();
         link.remove();
-        setTimeout(() => URL.revokeObjectURL(link.href),1000);
-        if(status) status.textContent = "Sharing is not supported here, so the card was downloaded.";
+
+        if(status) status.textContent = "Premium player card downloaded.";
+    }catch(error){
+        console.error("Player card download error:",error);
+        if(status) status.textContent = "Unable to download the card. Please try again.";
     }
-}
+});
 
-const premiumDownloadButton = document.getElementById("downloadPremiumPlayerCard");
-const premiumShareButton = document.getElementById("sharePremiumPlayerCard");
+document.getElementById("sharePremiumPlayerCard")?.addEventListener("click",async()=>{
+    const status = document.getElementById("premiumCardStatus");
 
-if(premiumDownloadButton){
-    premiumDownloadButton.addEventListener("click",async(event)=>{
-        event.preventDefault();
-        event.stopImmediatePropagation();
+    try{
+        if(status) status.textContent = "Preparing card for sharing...";
 
-        const status = document.getElementById("premiumCardStatus");
+        const canvas = await getPremiumPlayerCardCanvas();
+        const blob = await new Promise(resolve => canvas.toBlob(resolve,"image/png",1));
 
-        try{
-            if(status) status.textContent = "Preparing your premium card...";
+        if(!blob) throw new Error("Unable to create card image.");
 
-            const canvas = await getPremiumPlayerCardCanvas();
+        const playerName = currentPlayer?.name || currentPlayer?.playerName || currentPlayer?.ign || "Player";
+        const file = new File([blob],getPremiumCardFileName(),{type:"image/png"});
+        const shareData = {
+            title:"4 FIRE UNITED • "+playerName,
+            text:"🔥 My 4 FIRE UNITED Player Card"
+        };
 
-            if(window.FourFUPlayerCard){
-                await sendPremiumPlayerCardToAndroid("download",canvas);
-                if(status) status.textContent = "Premium player card downloaded.";
-                return;
+        if(navigator.share){
+            if(navigator.canShare && navigator.canShare({files:[file]})){
+                await navigator.share({
+                    ...shareData,
+                    files:[file]
+                });
+                if(status) status.textContent = "Player card shared successfully.";
+            }else{
+                await navigator.share(shareData);
+                if(status) status.textContent = "Share opened. Your device does not support image-file sharing here.";
             }
-
+        }else{
             const link = document.createElement("a");
             link.download = getPremiumCardFileName();
-            link.href = canvas.toDataURL("image/png");
+            link.href = URL.createObjectURL(blob);
             document.body.appendChild(link);
             link.click();
             link.remove();
+            setTimeout(() => URL.revokeObjectURL(link.href),1000);
 
-            if(status) status.textContent = "Premium player card downloaded.";
-        }catch(error){
-            console.error("Player card download error:",error);
-            if(status) status.textContent = "Unable to download the card. Please try again.";
+            if(status) status.textContent = "Sharing is not supported here, so the card was downloaded.";
         }
-    },true);
-}
-
-if(premiumShareButton){
-    premiumShareButton.addEventListener("click",async(event)=>{
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const status = document.getElementById("premiumCardStatus");
-
-        try{
-            if(status) status.textContent = "Preparing card for sharing...";
-
-            const canvas = await getPremiumPlayerCardCanvas();
-            const playerName = currentPlayer?.name || currentPlayer?.playerName || currentPlayer?.ign || "Player";
-
-            if(window.FourFUPlayerCard){
-                await sendPremiumPlayerCardToAndroid("share",canvas);
-                if(status) status.textContent = "Player card shared successfully.";
-                return;
-            }
-
-            await sharePremiumPlayerCardWeb(canvas,playerName,status);
-        }catch(error){
-            if(error && error.name === "AbortError"){
-                if(status) status.textContent = "Share cancelled.";
-                return;
-            }
-
-            console.error("Player card share error:",error);
-            if(status) status.textContent = "Unable to share the card. Please try again.";
+    }catch(error){
+        if(error && error.name === "AbortError"){
+            if(status) status.textContent = "Share cancelled.";
+            return;
         }
-    },true);
-}
+
+        console.error("Player card share error:",error);
+        if(status) status.textContent = "Unable to share the card. Please try again.";
+    }
+});
+
     </script>
 
 
