@@ -2309,368 +2309,601 @@
 
         }
 
-/* FIRE UNITED PREMIUM PLAYER CARD — PREMIUM V2 */
-.player-card-section{
-    margin-top:18px;
-}
-.player-card-section-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-    margin-bottom:18px;
-}
-.player-card-section-head h2{
-    margin:0;
-    font-size:20px;
-}
-.player-card-section-head p{
-    margin:4px 0 0;
-    color:#777;
-    font-size:12px;
-}
-.premium-player-card-wrap{
-    display:flex;
-    justify-content:center;
-    padding:10px 0 4px;
-}
-.premium-player-card{
-    position:relative;
-    width:min(100%,450px);
-    aspect-ratio:3 / 4;
-    overflow:hidden;
-    border-radius:28px;
-    clip-path:inset(0 round 28px);
-    -webkit-clip-path:inset(0 round 28px);
-    padding:20px;
-    color:#fff;
-    background:
-        radial-gradient(circle at 86% 7%,rgba(255,123,0,.24),transparent 23%),
-        radial-gradient(circle at 4% 94%,rgba(255,65,0,.18),transparent 29%),
-        linear-gradient(150deg,#181818 0%,#0b0b0b 42%,#050505 100%);
-    border:1px solid rgba(255,123,0,.55);
-    box-shadow:
-        0 30px 75px rgba(0,0,0,.62),
-        inset 0 0 0 1px rgba(255,255,255,.045);
-    isolation:isolate;
-}
-.premium-player-card:before{
-    content:"";
-    position:absolute;
-    inset:0;
-    z-index:-1;
-    border-radius:28px;
-    clip-path:inset(0 round 28px);
-    -webkit-clip-path:inset(0 round 28px);
-    opacity:.35;
-    background:
-        linear-gradient(126deg,transparent 0 43%,rgba(255,123,0,.22) 44%,transparent 45%),
-        linear-gradient(310deg,transparent 0 67%,rgba(255,255,255,.045) 68%,transparent 69%),
-        radial-gradient(circle at 50% 45%,transparent 0 36%,rgba(255,123,0,.035) 37%,transparent 55%);
-    background-size:180px 180px,230px 230px,100% 100%;
-}
-.premium-player-card:after{
-    content:"4FU";
-    position:absolute;
-    border-radius:28px;
-    clip-path:inset(0 round 28px);
-    -webkit-clip-path:inset(0 round 28px);
-    right:-22px;
-    bottom:78px;
-    z-index:-1;
-    font-family:"Bebas Neue",sans-serif;
-    font-size:190px;
-    line-height:.8;
-    color:rgba(255,255,255,.028);
-    letter-spacing:-8px;
-}
-.premium-card-glow{
-    position:absolute;
-    width:230px;
-    height:230px;
-    right:-110px;
-    top:90px;
-    border-radius:50%;
-    background:rgba(255,105,0,.13);
-    filter:blur(35px);
-    pointer-events:none;
-}
-.premium-card-top{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:15px;
-}
-.premium-card-brand{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-family:"Bebas Neue",sans-serif;
-    font-size:25px;
-    letter-spacing:2.5px;
-    line-height:1;
-}
-.premium-card-brand-mark{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:28px;
-    height:28px;
-    border:1px solid rgba(255,123,0,.75);
-    border-radius:8px;
-    background:linear-gradient(145deg,#ff8a22,#d94b00);
-    box-shadow:0 0 22px rgba(255,105,0,.28);
-    font-size:20px;
-}
-.premium-card-edition{
-    color:#777;
-    font-size:8px;
-    line-height:1.45;
-    letter-spacing:2.5px;
-    text-transform:uppercase;
-    text-align:right;
-}
-.premium-card-edition strong{
-    color:#bbb;
-    font-size:9px;
-}
-.premium-card-photo{
-    position:relative;
-    width:100%;
-    height:46%;
-    min-height:230px;
-    margin:16px 0 12px;
-    overflow:hidden;
-    border-radius:20px;
-    border:1px solid rgba(255,123,0,.3);
-    background:
-        radial-gradient(circle at 50% 20%,rgba(255,123,0,.16),transparent 42%),
-        linear-gradient(145deg,#222,#090909);
-    box-shadow:0 16px 35px rgba(0,0,0,.38);
-}
-.premium-card-photo:before{
-    content:"";
-    position:absolute;
-    inset:0;
-    z-index:1;
-    border:1px solid rgba(255,255,255,.035);
-    border-radius:20px;
-    pointer-events:none;
-}
-.premium-card-photo:after{
-    content:"";
-    position:absolute;
-    inset:auto 0 0;
-    height:58%;
-    background:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.08) 22%,rgba(0,0,0,.9) 100%);
-    pointer-events:none;
-}
-.premium-card-photo img{
-    width:100%;
-    height:100%;
-    display:block;
-    object-fit:cover;
-    object-position:center;
-}
-.premium-card-player-info{
-    position:absolute;
-    left:18px;
-    right:18px;
-    bottom:16px;
-    z-index:2;
-}
-.premium-card-kicker{
-    margin-bottom:5px;
-    color:#ff8a26;
-    font-size:8px;
-    font-weight:800;
-    letter-spacing:2.8px;
-    text-transform:uppercase;
-}
-.premium-card-name{
-    font-family:"Bebas Neue",sans-serif;
-    font-size:clamp(34px,8vw,48px);
-    line-height:.9;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    text-shadow:0 5px 22px rgba(0,0,0,.8);
-}
-.premium-card-role{
-    margin-top:7px;
-    color:#f1f1f1;
-    font-size:10px;
-    font-weight:700;
-    letter-spacing:2.5px;
-    text-transform:uppercase;
-}
-.premium-card-divider{
-    height:1px;
-    margin:14px 0 12px;
-    background:linear-gradient(90deg,rgba(255,123,0,.9),rgba(255,123,0,.25),transparent);
-}
-.premium-card-stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:8px;
-}
-.premium-card-stat{
-    position:relative;
-    min-height:48px;
-    padding:8px 5px 7px;
-    text-align:center;
-    border:1px solid rgba(255,255,255,.075);
-    border-radius:11px;
-    background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
-}
-.premium-card-stat:before{
-    content:"";
-    position:absolute;
-    left:50%;
-    top:-1px;
-    width:20px;
-    height:1px;
-    transform:translateX(-50%);
-    background:#ff7b00;
-    box-shadow:0 0 10px rgba(255,123,0,.5);
-}
-.premium-card-stat strong{
-    display:block;
-    font-size:18px;
-    line-height:1.05;
-    font-weight:800;
-}
-.premium-card-stat span{
-    display:block;
-    margin-top:4px;
-    color:#777;
-    font-size:7px;
-    font-weight:700;
-    letter-spacing:1.2px;
-    text-transform:uppercase;
-}
-.premium-card-bottom{
-    display:grid;
-    grid-template-columns:1fr auto;
-    align-items:end;
-    gap:14px;
-    margin-top:14px;
-}
-.premium-card-overall-label{
-    color:#777;
-    font-size:7px;
-    font-weight:700;
-    letter-spacing:2px;
-    text-transform:uppercase;
-}
-.premium-card-overall{
-    margin-top:2px;
-    font-family:"Bebas Neue",sans-serif;
-    font-size:31px;
-    line-height:1;
-    letter-spacing:1.5px;
-}
-.premium-card-overall span{
-    color:#ff7b00;
-}
-.premium-card-meta-line{
-    max-width:290px;
-    margin-top:6px;
-    color:#6f6f6f;
-    font-size:7px;
-    font-weight:600;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-.premium-card-qr-wrap{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:4px;
-}
-.premium-card-qr{
-    width:68px;
-    height:68px;
-    flex:0 0 68px;
-    padding:6px;
-    border-radius:12px;
-    background:#fff;
-    box-shadow:0 10px 28px rgba(0,0,0,.48),0 0 0 1px rgba(255,255,255,.15);
-}
-.premium-card-qr img,
-.premium-card-qr canvas{
-    width:100%!important;
-    height:100%!important;
-    display:block;
-}
-.premium-card-qr-label{
-    color:#777;
-    font-size:6px;
-    font-weight:800;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-}
-.premium-card-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:18px;
-}
-.premium-card-action{
-    min-height:48px;
-    border:1px solid #303030;
-    border-radius:12px;
-    background:#141414;
-    color:#fff;
-    font-family:"Poppins",sans-serif;
-    font-size:12px;
-    font-weight:700;
-    cursor:pointer;
-    transition:.2s ease;
-}
-.premium-card-action:hover{
-    border-color:#ff7b00;
-    background:#1d1d1d;
-    transform:translateY(-1px);
-}
-.premium-card-action.primary{
-    border-color:#ff7b00;
-    background:linear-gradient(135deg,#ff850f,#f04c00);
-    box-shadow:0 10px 25px rgba(255,95,0,.18);
-}
-.premium-card-action.primary:hover{
-    background:linear-gradient(135deg,#ff982e,#ff5a0a);
-}
-.premium-card-status{
-    min-height:18px;
-    margin-top:8px;
-    text-align:center;
-    color:#777;
-    font-size:11px;
-}
-@media(max-width:600px){
-    .player-card-section-head{align-items:flex-start}
-    .premium-player-card{
-        width:min(100%,410px);
-        aspect-ratio:3 / 4.45;
-        border-radius:22px;
-        padding:16px;
-    }
-    .premium-card-photo{
-        min-height:205px;
-        margin-top:13px;
-    }
-    .premium-card-qr{
-        width:60px;
-        height:60px;
-        flex-basis:60px;
-    }
-    .premium-card-stat strong{font-size:16px}
-}
+        /* FIRE UNITED PREMIUM PLAYER CARD — PREMIUM V2 */
+        .player-card-section {
+            margin-top: 18px;
+        }
 
+        .player-card-section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .player-card-section-head h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .player-card-section-head p {
+            margin: 4px 0 0;
+            color: #777;
+            font-size: 12px;
+        }
+
+        .premium-player-card-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0 4px;
+        }
+
+        .premium-player-card {
+            position: relative;
+            width: min(100%, 450px);
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            border-radius: 28px;
+            clip-path: inset(0 round 28px);
+            -webkit-clip-path: inset(0 round 28px);
+            padding: 20px;
+            color: #fff;
+            background:
+                radial-gradient(circle at 86% 7%, rgba(255, 123, 0, .24), transparent 23%),
+                radial-gradient(circle at 4% 94%, rgba(255, 65, 0, .18), transparent 29%),
+                linear-gradient(150deg, #181818 0%, #0b0b0b 42%, #050505 100%);
+            border: 1px solid rgba(255, 123, 0, .55);
+            box-shadow:
+                0 30px 75px rgba(0, 0, 0, .62),
+                inset 0 0 0 1px rgba(255, 255, 255, .045);
+            isolation: isolate;
+        }
+
+        .premium-player-card:before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            border-radius: 28px;
+            clip-path: inset(0 round 28px);
+            -webkit-clip-path: inset(0 round 28px);
+            opacity: .35;
+            background:
+                linear-gradient(126deg, transparent 0 43%, rgba(255, 123, 0, .22) 44%, transparent 45%),
+                linear-gradient(310deg, transparent 0 67%, rgba(255, 255, 255, .045) 68%, transparent 69%),
+                radial-gradient(circle at 50% 45%, transparent 0 36%, rgba(255, 123, 0, .035) 37%, transparent 55%);
+            background-size: 180px 180px, 230px 230px, 100% 100%;
+        }
+
+        .premium-player-card:after {
+            content: "4FU";
+            position: absolute;
+            border-radius: 28px;
+            clip-path: inset(0 round 28px);
+            -webkit-clip-path: inset(0 round 28px);
+            right: -22px;
+            bottom: 78px;
+            z-index: -1;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 190px;
+            line-height: .8;
+            color: rgba(255, 255, 255, .028);
+            letter-spacing: -8px;
+        }
+
+        .premium-card-glow {
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            right: -110px;
+            top: 90px;
+            border-radius: 50%;
+            background: rgba(255, 105, 0, .13);
+            filter: blur(35px);
+            pointer-events: none;
+        }
+
+        .premium-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .premium-card-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 25px;
+            letter-spacing: 2.5px;
+            line-height: 1;
+        }
+
+        .premium-card-brand-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(255, 123, 0, .75);
+            border-radius: 8px;
+            background: linear-gradient(145deg, #ff8a22, #d94b00);
+            box-shadow: 0 0 22px rgba(255, 105, 0, .28);
+            font-size: 20px;
+        }
+
+        .premium-card-edition {
+            color: #777;
+            font-size: 8px;
+            line-height: 1.45;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            text-align: right;
+        }
+
+        .premium-card-edition strong {
+            color: #bbb;
+            font-size: 9px;
+        }
+
+        .premium-card-photo {
+            position: relative;
+            width: 100%;
+            height: 46%;
+            min-height: 230px;
+            margin: 16px 0 12px;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 123, 0, .3);
+            background:
+                radial-gradient(circle at 50% 20%, rgba(255, 123, 0, .16), transparent 42%),
+                linear-gradient(145deg, #222, #090909);
+            box-shadow: 0 16px 35px rgba(0, 0, 0, .38);
+        }
+
+        .premium-card-photo:before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, .035);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        .premium-card-photo:after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 58%;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, .08) 22%, rgba(0, 0, 0, .9) 100%);
+            pointer-events: none;
+        }
+
+        .premium-card-photo img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .premium-card-player-info {
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 16px;
+            z-index: 2;
+        }
+
+        .premium-card-kicker {
+            margin-bottom: 5px;
+            color: #ff8a26;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 2.8px;
+            text-transform: uppercase;
+        }
+
+        .premium-card-name {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(34px, 8vw, 48px);
+            line-height: .9;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-shadow: 0 5px 22px rgba(0, 0, 0, .8);
+        }
+
+        .premium-card-role {
+            margin-top: 7px;
+            color: #f1f1f1;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+        }
+
+        .premium-card-divider {
+            height: 1px;
+            margin: 14px 0 12px;
+            background: linear-gradient(90deg, rgba(255, 123, 0, .9), rgba(255, 123, 0, .25), transparent);
+        }
+
+        .premium-card-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .premium-card-stat {
+            position: relative;
+            min-height: 48px;
+            padding: 8px 5px 7px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, .075);
+            border-radius: 11px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .018));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .025);
+        }
+
+        .premium-card-stat:before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: -1px;
+            width: 20px;
+            height: 1px;
+            transform: translateX(-50%);
+            background: #ff7b00;
+            box-shadow: 0 0 10px rgba(255, 123, 0, .5);
+        }
+
+        .premium-card-stat strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1.05;
+            font-weight: 800;
+        }
+
+        .premium-card-stat span {
+            display: block;
+            margin-top: 4px;
+            color: #777;
+            font-size: 7px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .premium-card-bottom {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: end;
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .premium-card-overall-label {
+            color: #777;
+            font-size: 7px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .premium-card-overall {
+            margin-top: 2px;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 31px;
+            line-height: 1;
+            letter-spacing: 1.5px;
+        }
+
+        .premium-card-overall span {
+            color: #ff7b00;
+        }
+
+        .premium-card-meta-line {
+            max-width: 290px;
+            margin-top: 6px;
+            color: #6f6f6f;
+            font-size: 7px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .premium-card-qr-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .premium-card-qr {
+            width: 68px;
+            height: 68px;
+            flex: 0 0 68px;
+            padding: 6px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, .48), 0 0 0 1px rgba(255, 255, 255, .15);
+        }
+
+        .premium-card-qr img,
+        .premium-card-qr canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        .premium-card-qr-label {
+            color: #777;
+            font-size: 6px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .premium-card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .premium-card-action {
+            min-height: 48px;
+            border: 1px solid #303030;
+            border-radius: 12px;
+            background: #141414;
+            color: #fff;
+            font-family: "Poppins", sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .premium-card-action:hover {
+            border-color: #ff7b00;
+            background: #1d1d1d;
+            transform: translateY(-1px);
+        }
+
+        .premium-card-action.primary {
+            border-color: #ff7b00;
+            background: linear-gradient(135deg, #ff850f, #f04c00);
+            box-shadow: 0 10px 25px rgba(255, 95, 0, .18);
+        }
+
+        .premium-card-action.primary:hover {
+            background: linear-gradient(135deg, #ff982e, #ff5a0a);
+        }
+
+        .premium-card-status {
+            min-height: 18px;
+            margin-top: 8px;
+            text-align: center;
+            color: #777;
+            font-size: 11px;
+        }
+
+        @media(max-width:600px) {
+            .player-card-section-head {
+                align-items: flex-start
+            }
+
+            .premium-player-card {
+                width: min(100%, 410px);
+                aspect-ratio: 3 / 4.45;
+                border-radius: 22px;
+                padding: 16px;
+            }
+
+            .premium-card-photo {
+                min-height: 205px;
+                margin-top: 13px;
+            }
+
+            .premium-card-qr {
+                width: 60px;
+                height: 60px;
+                flex-basis: 60px;
+            }
+
+            .premium-card-stat strong {
+                font-size: 16px
+            }
+        }
+
+
+        /* =====================================================
+   4FU PLAYER FRIENDS SYSTEM
+===================================================== */
+
+        .player-friends-card {
+            margin-top: 24px;
+        }
+
+        .friends-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .friends-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .friends-title i {
+            font-size: 22px;
+        }
+
+        .friends-title h2 {
+            margin: 0;
+        }
+
+        .friends-subtitle {
+            margin: 6px 0 0;
+            opacity: 0.7;
+            font-size: 13px;
+        }
+
+        .friends-count {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .friend-search-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .friend-search-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .friend-search-row button {
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .friend-results,
+        .friend-requests,
+        .friend-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .friend-section-label {
+            margin: 22px 0 10px;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            opacity: 0.75;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .friend-avatar {
+            width: 46px;
+            height: 46px;
+            flex: 0 0 46px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .friend-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .friend-name {
+            font-weight: 800;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .friend-meta {
+            margin-top: 3px;
+            font-size: 12px;
+            opacity: 0.65;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .friend-actions {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .friend-action-btn {
+            border: 0;
+            border-radius: 8px;
+            padding: 8px 11px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .friend-empty {
+            padding: 18px;
+            text-align: center;
+            opacity: 0.65;
+            font-size: 13px;
+            border-radius: 10px;
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+        }
+
+        @media (max-width: 600px) {
+            .friends-header {
+                align-items: flex-start;
+            }
+
+            .friend-search-row {
+                flex-direction: column;
+            }
+
+            .friend-search-row button {
+                width: 100%;
+            }
+
+            .friend-item {
+                align-items: flex-start;
+            }
+
+            .friend-actions {
+                width: 100%;
+                margin-top: 8px;
+                justify-content: flex-start;
+            }
+
+            .friend-item {
+                flex-wrap: wrap;
+            }
+        }
     </style>
 
 <body>
@@ -3109,47 +3342,62 @@
 
 
 
-<!-- FIRE UNITED PREMIUM PLAYER CARD -->
-<div class="player-card-section card">
-<div class="player-card-section-head"><div><h2><i class="fa-solid fa-id-card" style="color:#ff7200;"></i> FIRE UNITED Player Card</h2><p>Your premium shareable player identity card.</p></div></div>
-<div class="premium-player-card-wrap">
-<div class="premium-player-card" id="premiumPlayerCard">
-<div class="premium-card-glow" aria-hidden="true"></div>
-<div class="premium-card-top">
-    <div class="premium-card-brand"><span class="premium-card-brand-mark">4</span> FIRE UNITED</div>
-    <div class="premium-card-edition">OFFICIAL<br><strong>PLAYER CARD</strong></div>
-</div>
-<div class="premium-card-photo">
-    <img id="premiumCardImage" src="../images/logo/logo.png" alt="Player">
-    <div class="premium-card-player-info">
-        <div class="premium-card-kicker">4FU ESPORTS • VERIFIED PLAYER</div>
-        <div class="premium-card-name" id="premiumCardName">PLAYER</div>
-        <div class="premium-card-role" id="premiumCardRole">PLAYER</div>
-    </div>
-</div>
-<div class="premium-card-divider"></div>
-<div class="premium-card-stats">
-    <div class="premium-card-stat"><strong id="premiumCardRank">-</strong><span>Rank</span></div>
-    <div class="premium-card-stat"><strong id="premiumCardLevel">-</strong><span>Level</span></div>
-    <div class="premium-card-stat"><strong id="premiumCardKD">-</strong><span>KD</span></div>
-    <div class="premium-card-stat"><strong id="premiumCardHeadshot">-</strong><span>Headshot</span></div>
-    <div class="premium-card-stat"><strong id="premiumCardMatches">-</strong><span>Matches</span></div>
-    <div class="premium-card-stat"><strong id="premiumCardBooyah">-</strong><span>Booyah</span></div>
-</div>
-<div class="premium-card-bottom">
-    <div class="premium-card-meta">
-        <div class="premium-card-overall-label">4 FIRE UNITED IDENTITY</div>
-        <div class="premium-card-overall"><span>4FU</span> PLAYER</div>
-        <div class="premium-card-meta-line" id="premiumCardMeta">UID • — &nbsp; | &nbsp; GUILD • —</div>
-    </div>
-    <div class="premium-card-qr-wrap">
-        <div class="premium-card-qr" id="premiumCardQR" aria-label="Scan to open FIRE UNITED website"></div>
-        <div class="premium-card-qr-label">SCAN PROFILE</div>
-    </div>
-</div>
-</div>
-</div>
-<div class="premium-card-actions"><button type="button" class="premium-card-action primary" id="sharePremiumPlayerCard"><i class="fa-solid fa-share-nodes"></i> Share Card</button><button type="button" class="premium-card-action" id="downloadPremiumPlayerCard"><i class="fa-solid fa-download"></i> Download Card</button></div><div class="premium-card-status" id="premiumCardStatus"></div></div>
+        <!-- FIRE UNITED PREMIUM PLAYER CARD -->
+        <div class="player-card-section card">
+            <div class="player-card-section-head">
+                <div>
+                    <h2><i class="fa-solid fa-id-card" style="color:#ff7200;"></i> FIRE UNITED Player Card</h2>
+                    <p>Your premium shareable player identity card.</p>
+                </div>
+            </div>
+            <div class="premium-player-card-wrap">
+                <div class="premium-player-card" id="premiumPlayerCard">
+                    <div class="premium-card-glow" aria-hidden="true"></div>
+                    <div class="premium-card-top">
+                        <div class="premium-card-brand"><span class="premium-card-brand-mark">4</span> FIRE UNITED</div>
+                        <div class="premium-card-edition">OFFICIAL<br><strong>PLAYER CARD</strong></div>
+                    </div>
+                    <div class="premium-card-photo">
+                        <img id="premiumCardImage" src="../images/logo/logo.png" alt="Player">
+                        <div class="premium-card-player-info">
+                            <div class="premium-card-kicker">4FU ESPORTS • VERIFIED PLAYER</div>
+                            <div class="premium-card-name" id="premiumCardName">PLAYER</div>
+                            <div class="premium-card-role" id="premiumCardRole">PLAYER</div>
+                        </div>
+                    </div>
+                    <div class="premium-card-divider"></div>
+                    <div class="premium-card-stats">
+                        <div class="premium-card-stat"><strong id="premiumCardRank">-</strong><span>Rank</span></div>
+                        <div class="premium-card-stat"><strong id="premiumCardLevel">-</strong><span>Level</span></div>
+                        <div class="premium-card-stat"><strong id="premiumCardKD">-</strong><span>KD</span></div>
+                        <div class="premium-card-stat"><strong id="premiumCardHeadshot">-</strong><span>Headshot</span>
+                        </div>
+                        <div class="premium-card-stat"><strong id="premiumCardMatches">-</strong><span>Matches</span>
+                        </div>
+                        <div class="premium-card-stat"><strong id="premiumCardBooyah">-</strong><span>Booyah</span>
+                        </div>
+                    </div>
+                    <div class="premium-card-bottom">
+                        <div class="premium-card-meta">
+                            <div class="premium-card-overall-label">4 FIRE UNITED IDENTITY</div>
+                            <div class="premium-card-overall"><span>4FU</span> PLAYER</div>
+                            <div class="premium-card-meta-line" id="premiumCardMeta">UID • — &nbsp; | &nbsp; GUILD • —
+                            </div>
+                        </div>
+                        <div class="premium-card-qr-wrap">
+                            <div class="premium-card-qr" id="premiumCardQR"
+                                aria-label="Scan to open FIRE UNITED website"></div>
+                            <div class="premium-card-qr-label">SCAN PROFILE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="premium-card-actions"><button type="button" class="premium-card-action primary"
+                    id="sharePremiumPlayerCard"><i class="fa-solid fa-share-nodes"></i> Share Card</button><button
+                    type="button" class="premium-card-action" id="downloadPremiumPlayerCard"><i
+                        class="fa-solid fa-download"></i> Download Card</button></div>
+            <div class="premium-card-status" id="premiumCardStatus"></div>
+        </div>
 
         <!-- =========================================
          REAL-TIME PLAYERS ONLINE
@@ -6181,6 +6429,66 @@
     <!-- =========================================
      PLAYER DASHBOARD END
 ========================================= -->
+
+    <!-- =====================================================
+     4FU PLAYER FRIENDS
+===================================================== -->
+    <section class="card player-friends-card" id="playerFriendsSection">
+
+        <div class="friends-header">
+            <div>
+                <div class="friends-title">
+                    <i class="fa-solid fa-user-group"></i>
+                    <h2>MY FRIENDS</h2>
+                </div>
+
+                <p class="friends-subtitle">
+                    Find 4FU players, send requests and manage your squad.
+                </p>
+            </div>
+
+            <span class="friends-count" id="friendsCount">0</span>
+        </div>
+
+
+        <div class="friend-search-row">
+
+            <input id="friendSearchInput" type="text" placeholder="Search player by name, IGN or email..."
+                maxlength="80" autocomplete="off">
+
+            <button id="friendSearchBtn" type="button">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Search
+            </button>
+
+        </div>
+
+
+        <div id="friendSearchResults" class="friend-results"></div>
+
+
+        <div class="friend-section-label">
+            Incoming Requests
+        </div>
+
+        <div id="friendRequestsList" class="friend-requests">
+            <div class="friend-empty">
+                No pending friend requests.
+            </div>
+        </div>
+
+
+        <div class="friend-section-label">
+            My Friends
+        </div>
+
+        <div id="friendList" class="friend-list">
+            <div class="friend-empty">
+                Loading friends...
+            </div>
+        </div>
+
+    </section>
     <!-- FIRE CHAT -->
     <section class="fire-chat-section">
 
@@ -6991,247 +7299,1403 @@
         }
 
 
-/* PREMIUM PLAYER CARD LOGIC — SHARE THE ACTUAL CARD IMAGE */
-function getPlayerCardWebsiteUrl(){
-    return window.location.origin + "/";
-}
-
-function setPremiumPlayerCard(player){
-    if(!player) return;
-
-    const name = player.name || player.playerName || player.ign || "Player";
-    const role = player.role || "Player";
-    const image = player.image || player.photo || "../images/logo/logo.png";
-
-    const setText = (id,value) => {
-        const el = document.getElementById(id);
-        if(el) el.textContent = value == null || value === "" ? "-" : value;
-    };
-
-    const img = document.getElementById("premiumCardImage");
-    if(img){
-        img.src = image;
-        img.onerror = () => {
-            img.src = "../images/logo/logo.png";
-        };
-    }
-
-    setText("premiumCardName",name);
-    setText("premiumCardRole",role);
-    setText("premiumCardRank",player.rank);
-    setText("premiumCardLevel",player.level);
-    setText("premiumCardKD",player.kd);
-    setText("premiumCardHeadshot",player.headshot);
-    setText("premiumCardMatches",player.matches);
-    setText("premiumCardBooyah",player.booyah);
-    setText("premiumCardMeta","UID • "+(player.uid||"—")+"   |   GUILD • "+(player.guild||"—"));
-
-    const qr = document.getElementById("premiumCardQR");
-    if(qr){
-        qr.innerHTML = "";
-        if(typeof QRCode === "function"){
-            new QRCode(qr,{
-                text:getPlayerCardWebsiteUrl(),
-                width:56,
-                height:56,
-                colorDark:"#111111",
-                colorLight:"#ffffff",
-                correctLevel:QRCode.CorrectLevel.M
-            });
+        /* PREMIUM PLAYER CARD LOGIC — SHARE THE ACTUAL CARD IMAGE */
+        function getPlayerCardWebsiteUrl() {
+            return window.location.origin + "/";
         }
-    }
-}
 
-async function waitForPremiumCardAssets(card){
-    if(document.fonts && document.fonts.ready){
-        try{ await document.fonts.ready; }catch(e){}
-    }
+        function setPremiumPlayerCard(player) {
+            if (!player) return;
 
-    const images = card ? Array.from(card.querySelectorAll("img")) : [];
-    await Promise.all(images.map(img => {
-        if(img.complete) return img.decode ? img.decode().catch(()=>{}) : Promise.resolve();
-        return new Promise(resolve => {
-            img.addEventListener("load",resolve,{once:true});
-            img.addEventListener("error",resolve,{once:true});
-        });
-    }));
+            const name = player.name || player.playerName || player.ign || "Player";
+            const role = player.role || "Player";
+            const image = player.image || player.photo || "../images/logo/logo.png";
 
-    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-}
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value == null || value === "" ? "-" : value;
+            };
 
-async function getPremiumPlayerCardCanvas(){
-    const card = document.getElementById("premiumPlayerCard");
-    if(!card) throw new Error("Player card not found.");
-    if(typeof html2canvas !== "function") throw new Error("Card renderer is not available.");
-
-    await waitForPremiumCardAssets(card);
-
-    /*
-     * Keep the exact rounded outer shape during PNG rendering.
-     * The extra wrapper prevents html2canvas from leaving square/triangular
-     * artifacts around the four corners.
-     */
-    const oldRadius = card.style.borderRadius;
-    const oldClip = card.style.clipPath;
-    const oldWebkitClip = card.style.webkitClipPath;
-
-    card.style.borderRadius = "28px";
-    card.style.clipPath = "inset(0 round 28px)";
-    card.style.webkitClipPath = "inset(0 round 28px)";
-
-    const canvas = await html2canvas(card,{
-        backgroundColor:"#070707",
-        scale:2,
-        useCORS:true,
-        allowTaint:false,
-        logging:false,
-        imageTimeout:15000,
-        removeContainer:true
-    });
-
-    card.style.borderRadius = oldRadius;
-    card.style.clipPath = oldClip;
-    card.style.webkitClipPath = oldWebkitClip;
-
-    return canvas;
-}
-
-function getPremiumCardFileName(){
-    const name = currentPlayer?.name || currentPlayer?.playerName || currentPlayer?.ign || "player";
-    const safeName = String(name)
-        .replace(/[^a-z0-9-_]+/gi,"-")
-        .replace(/^-+|-+$/g,"") || "player";
-    return "4FU-Player-Card-"+safeName+".png";
-}
-
-document.getElementById("downloadPremiumPlayerCard")?.addEventListener("click",async()=>{
-    const status = document.getElementById("premiumCardStatus");
-
-    try{
-        if(status) status.textContent = "Preparing your premium card...";
-        const canvas = await getPremiumPlayerCardCanvas();
-
-        const link = document.createElement("a");
-        link.download = getPremiumCardFileName();
-        link.href = canvas.toDataURL("image/png");
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        if(status) status.textContent = "Premium player card downloaded.";
-    }catch(error){
-        console.error("Player card download error:",error);
-        if(status) status.textContent = "Unable to download the card. Please try again.";
-    }
-});
-
-document.getElementById("sharePremiumPlayerCard")?.addEventListener("click",async()=>{
-    const status = document.getElementById("premiumCardStatus");
-
-    try{
-        if(status) status.textContent = "Preparing card for sharing...";
-
-        const canvas = await getPremiumPlayerCardCanvas();
-        const blob = await new Promise(resolve => canvas.toBlob(resolve,"image/png",1));
-
-        if(!blob) throw new Error("Unable to create card image.");
-
-        const playerName = currentPlayer?.name || currentPlayer?.playerName || currentPlayer?.ign || "Player";
-        const file = new File([blob],getPremiumCardFileName(),{type:"image/png"});
-
-        /*
-         * IMPORTANT:
-         * Share the PNG file itself. Do NOT pass a URL here.
-         * This makes supported apps such as WhatsApp receive the
-         * actual premium player-card image instead of only a link.
-         */
-        const shareData = {
-            title:"4 FIRE UNITED • "+playerName,
-            text:"🔥 My 4 FIRE UNITED Player Card"
-        };
-
-        if(navigator.share){
-            if(navigator.canShare && navigator.canShare({files:[file]})){
-                await navigator.share({
-                    ...shareData,
-                    files:[file]
-                });
-                if(status) status.textContent = "Player card shared successfully.";
-            }else{
-                await navigator.share(shareData);
-                if(status) status.textContent = "Share opened. Your device does not support image-file sharing here.";
+            const img = document.getElementById("premiumCardImage");
+            if (img) {
+                img.src = image;
+                img.onerror = () => {
+                    img.src = "../images/logo/logo.png";
+                };
             }
-        }else{
-            const link = document.createElement("a");
-            link.download = getPremiumCardFileName();
-            link.href = URL.createObjectURL(blob);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            setTimeout(() => URL.revokeObjectURL(link.href),1000);
 
-            if(status) status.textContent = "Sharing is not supported here, so the card was downloaded.";
-        }
-    }catch(error){
-        if(error && error.name === "AbortError"){
-            if(status) status.textContent = "Share cancelled.";
-            return;
+            setText("premiumCardName", name);
+            setText("premiumCardRole", role);
+            setText("premiumCardRank", player.rank);
+            setText("premiumCardLevel", player.level);
+            setText("premiumCardKD", player.kd);
+            setText("premiumCardHeadshot", player.headshot);
+            setText("premiumCardMatches", player.matches);
+            setText("premiumCardBooyah", player.booyah);
+            setText("premiumCardMeta", "UID • " + (player.uid || "—") + "   |   GUILD • " + (player.guild || "—"));
+
+            const qr = document.getElementById("premiumCardQR");
+            if (qr) {
+                qr.innerHTML = "";
+                if (typeof QRCode === "function") {
+                    new QRCode(qr, {
+                        text: getPlayerCardWebsiteUrl(),
+                        width: 56,
+                        height: 56,
+                        colorDark: "#111111",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                }
+            }
         }
 
-        console.error("Player card share error:",error);
-        if(status) status.textContent = "Unable to share the card. Please try again.";
-    }
-});
-document.getElementById("sharePremiumPlayerCard")?.addEventListener("click",async()=>{const status=document.getElementById("premiumCardStatus");try{if(status)status.textContent="Preparing your premium card...";const canvas=await getPremiumPlayerCardCanvas();const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));if(!blob)throw new Error("Unable to create card image.");const playerName=currentPlayer?.name||currentPlayer?.ign||"Player";const file=new File([blob],"4FU-Player-Card.png",{type:"image/png"});const shareData={title:"4 FIRE UNITED • "+playerName,text:"Check out my 4 FIRE UNITED Player Card!",url:getPlayerCardWebsiteUrl()};if(navigator.share){if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({...shareData,files:[file]});else await navigator.share(shareData);if(status)status.textContent="Player card shared.";}else{const link=document.createElement("a");link.download="4FU-Player-Card.png";link.href=canvas.toDataURL("image/png");link.click();if(status)status.textContent="Sharing is not supported here, so the card was downloaded instead.";}}catch(error){if(error&&error.name==="AbortError"){if(status)status.textContent="Share cancelled.";return;}console.error("Player card share error:",error);if(status)status.textContent="Unable to share the card. Please try again.";}});
+        async function waitForPremiumCardAssets(card) {
+            if (document.fonts && document.fonts.ready) {
+                try { await document.fonts.ready; } catch (e) { }
+            }
+
+            const images = card ? Array.from(card.querySelectorAll("img")) : [];
+            await Promise.all(images.map(img => {
+                if (img.complete) return img.decode ? img.decode().catch(() => { }) : Promise.resolve();
+                return new Promise(resolve => {
+                    img.addEventListener("load", resolve, { once: true });
+                    img.addEventListener("error", resolve, { once: true });
+                });
+            }));
+
+            await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        }
+
+        async function getPremiumPlayerCardCanvas() {
+            const card = document.getElementById("premiumPlayerCard");
+            if (!card) throw new Error("Player card not found.");
+            if (typeof html2canvas !== "function") throw new Error("Card renderer is not available.");
+
+            await waitForPremiumCardAssets(card);
+
+            /*
+             * Keep the exact rounded outer shape during PNG rendering.
+             * The extra wrapper prevents html2canvas from leaving square/triangular
+             * artifacts around the four corners.
+             */
+            const oldRadius = card.style.borderRadius;
+            const oldClip = card.style.clipPath;
+            const oldWebkitClip = card.style.webkitClipPath;
+
+            card.style.borderRadius = "28px";
+            card.style.clipPath = "inset(0 round 28px)";
+            card.style.webkitClipPath = "inset(0 round 28px)";
+
+            const canvas = await html2canvas(card, {
+                backgroundColor: "#070707",
+                scale: 2,
+                useCORS: true,
+                allowTaint: false,
+                logging: false,
+                imageTimeout: 15000,
+                removeContainer: true
+            });
+
+            card.style.borderRadius = oldRadius;
+            card.style.clipPath = oldClip;
+            card.style.webkitClipPath = oldWebkitClip;
+
+            return canvas;
+        }
+
+        function getPremiumCardFileName() {
+            const name = currentPlayer?.name || currentPlayer?.playerName || currentPlayer?.ign || "player";
+            const safeName = String(name)
+                .replace(/[^a-z0-9-_]+/gi, "-")
+                .replace(/^-+|-+$/g, "") || "player";
+            return "4FU-Player-Card-" + safeName + ".png";
+        }
+
+        document.getElementById("downloadPremiumPlayerCard")?.addEventListener("click", async () => {
+            const status = document.getElementById("premiumCardStatus");
+
+            try {
+                if (status) status.textContent = "Preparing your premium card...";
+                const canvas = await getPremiumPlayerCardCanvas();
+
+                const link = document.createElement("a");
+                link.download = getPremiumCardFileName();
+                link.href = canvas.toDataURL("image/png");
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                if (status) status.textContent = "Premium player card downloaded.";
+            } catch (error) {
+                console.error("Player card download error:", error);
+                if (status) status.textContent = "Unable to download the card. Please try again.";
+            }
+        });
+
+        document.getElementById("sharePremiumPlayerCard")?.addEventListener("click", async () => {
+            const status = document.getElementById("premiumCardStatus");
+
+            try {
+                if (status) status.textContent = "Preparing card for sharing...";
+
+                const canvas = await getPremiumPlayerCardCanvas();
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 1));
+
+                if (!blob) throw new Error("Unable to create card image.");
+
+                const playerName = currentPlayer?.name || currentPlayer?.playerName || currentPlayer?.ign || "Player";
+                const file = new File([blob], getPremiumCardFileName(), { type: "image/png" });
+
+                /*
+                 * IMPORTANT:
+                 * Share the PNG file itself. Do NOT pass a URL here.
+                 * This makes supported apps such as WhatsApp receive the
+                 * actual premium player-card image instead of only a link.
+                 */
+                const shareData = {
+                    title: "4 FIRE UNITED • " + playerName,
+                    text: "🔥 My 4 FIRE UNITED Player Card"
+                };
+
+                if (navigator.share) {
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            ...shareData,
+                            files: [file]
+                        });
+                        if (status) status.textContent = "Player card shared successfully.";
+                    } else {
+                        await navigator.share(shareData);
+                        if (status) status.textContent = "Share opened. Your device does not support image-file sharing here.";
+                    }
+                } else {
+                    const link = document.createElement("a");
+                    link.download = getPremiumCardFileName();
+                    link.href = URL.createObjectURL(blob);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+
+                    if (status) status.textContent = "Sharing is not supported here, so the card was downloaded.";
+                }
+            } catch (error) {
+                if (error && error.name === "AbortError") {
+                    if (status) status.textContent = "Share cancelled.";
+                    return;
+                }
+
+                console.error("Player card share error:", error);
+                if (status) status.textContent = "Unable to share the card. Please try again.";
+            }
+        });
+        document.getElementById("sharePremiumPlayerCard")?.addEventListener("click", async () => { const status = document.getElementById("premiumCardStatus"); try { if (status) status.textContent = "Preparing your premium card..."; const canvas = await getPremiumPlayerCardCanvas(); const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png")); if (!blob) throw new Error("Unable to create card image."); const playerName = currentPlayer?.name || currentPlayer?.ign || "Player"; const file = new File([blob], "4FU-Player-Card.png", { type: "image/png" }); const shareData = { title: "4 FIRE UNITED • " + playerName, text: "Check out my 4 FIRE UNITED Player Card!", url: getPlayerCardWebsiteUrl() }; if (navigator.share) { if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ ...shareData, files: [file] }); else await navigator.share(shareData); if (status) status.textContent = "Player card shared."; } else { const link = document.createElement("a"); link.download = "4FU-Player-Card.png"; link.href = canvas.toDataURL("image/png"); link.click(); if (status) status.textContent = "Sharing is not supported here, so the card was downloaded instead."; } } catch (error) { if (error && error.name === "AbortError") { if (status) status.textContent = "Share cancelled."; return; } console.error("Player card share error:", error); if (status) status.textContent = "Unable to share the card. Please try again."; } });
 
     </script>
 
 
 
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 
-<script>
-/* =========================================
-   4FU ANDROID APP FCM - PLAYER UPDATES
-   Android app tokens only. No browser push.
+    <script>
+        /* =========================================
+           4FU ANDROID APP FCM - PLAYER UPDATES
+           Android app tokens only. No browser push.
+        ========================================= */
+        const FOUR_FU_ANDROID_FCM_URL = "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
+
+        function send4FUPlayerUpdateNotification({ title, body, updateType }) {
+            try {
+                fetch(FOUR_FU_ANDROID_FCM_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        type: updateType || "major",
+                        priority: "normal",
+                        title: title,
+                        body: body,
+                        link: "/player-dashboard.html",
+                        updateType: updateType || "major",
+                        senderPlayerId:
+                            typeof currentPlayer !== "undefined" && currentPlayer
+                                ? currentPlayer.id || ""
+                                : "",
+                        senderEmail:
+                            typeof currentUser !== "undefined" && currentUser
+                                ? currentUser.email || ""
+                                : ""
+                    })
+                }).catch(error => {
+                    console.warn("4FU ANDROID FCM PLAYER UPDATE ERROR:", error);
+                });
+            } catch (error) {
+                console.warn("4FU ANDROID FCM PLAYER UPDATE ERROR:", error);
+            }
+        }
+    </script>
+
+    <script>
+        /* =====================================================
+           4FU PLAYER FRIENDS ENGINE
+           Firestore collections:
+             friends/{playerId_friendId}
+             friendRequests/{playerId_friendId}
+        ===================================================== */
+        (function () {
+            const friendSearchInput = document.getElementById("friendSearchInput");
+            const friendSearchBtn = document.getElementById("friendSearchBtn");
+            const friendSearchResults = document.getElementById("friendSearchResults");
+            const friendRequestsList = document.getElementById("friendRequestsList");
+            const friendList = document.getElementById("friendList");
+            const friendsCount = document.getElementById("friendsCount");
+            window.db = db;
+
+            /* =====================================================
+   4FU FRIEND REQUEST PUSH NOTIFICATION
+===================================================== */
+
+            const FOUR_FU_FRIEND_FCM_URL =
+                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
+
+            async function send4FUFriendRequestNotification(
+                receiverPlayer,
+                senderPlayer
+            ) {
+                try {
+
+                    if (!receiverPlayer || !receiverPlayer.id) {
+                        console.warn(
+                            "4FU FRIEND FCM: Receiver player missing."
+                        );
+                        return;
+                    }
+
+                    if (!senderPlayer || !senderPlayer.id) {
+                        console.warn(
+                            "4FU FRIEND FCM: Sender player missing."
+                        );
+                        return;
+                    }
+
+                    const senderName =
+                        friendName(senderPlayer);
+
+                    await fetch(
+                        FOUR_FU_FRIEND_FCM_URL,
+                        {
+                            method: "POST",
+                            mode: "no-cors",
+
+                            headers: {
+                                "Content-Type":
+                                    "text/plain;charset=utf-8"
+                            },
+
+                            body: JSON.stringify({
+
+                                type: "friend_request",
+
+                                priority: "high",
+
+                                title:
+                                    "🔥 4FU — New Friend Request",
+
+                                body:
+                                    senderName +
+                                    " wants to be your friend.",
+
+                                link:
+                                    "/player-dashboard.html",
+
+                                updateType:
+                                    "friend_request",
+
+                                targetPlayerId:
+                                    String(receiverPlayer.id),
+
+                                senderPlayerId:
+                                    String(senderPlayer.id),
+
+                                senderEmail:
+                                    currentUser?.email || ""
+
+                            })
+                        }
+                    );
+
+                    console.log(
+                        "✅ 4FU friend request notification sent."
+                    );
+
+                } catch (error) {
+
+                    console.warn(
+                        "4FU FRIEND FCM ERROR:",
+                        error
+                    );
+
+                }
+            }
+
+            const FRIEND_DEFAULT_IMAGE = "../images/logo/logo.png";
+            let friendPlayersCache = [];
+            let friendInitStarted = false;
+
+            function escapeFriendHtml(value) {
+                return String(value ?? "")
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function friendName(player) {
+                return player.name ||
+                    player.playerName ||
+                    player.ign ||
+                    "Player";
+            }
+
+            function friendImage(player) {
+                return player.image ||
+                    player.photo ||
+                    player.profileImage ||
+                    FRIEND_DEFAULT_IMAGE;
+            }
+
+            function friendKey(a, b) {
+                return [String(a), String(b)].sort().join("_");
+            }
+
+            function getFriendProfileUrl(playerId) {
+                return `../player-profile.html?id=${encodeURIComponent(playerId)}`;
+            }
+
+            function renderFriendItem(player, actionsHtml, metaText) {
+                const name = escapeFriendHtml(friendName(player));
+                const role = escapeFriendHtml(player.role || "Player");
+                const image = escapeFriendHtml(friendImage(player));
+
+                return `
+                <div class="friend-item">
+
+                    <img
+                        class="friend-avatar"
+                        src="${image}"
+                        alt="${name}"
+                        onerror="this.src='${FRIEND_DEFAULT_IMAGE}'"
+                    >
+
+                    <div class="friend-info">
+
+                        <div class="friend-name">
+                            ${name}
+                        </div>
+
+                        <div class="friend-meta">
+                            ${metaText || role}
+                        </div>
+
+                    </div>
+
+                    <div class="friend-actions">
+                        ${actionsHtml || ""}
+                    </div>
+
+                </div>
+            `;
+            }
+
+            async function loadFriendPlayersCache() {
+                if (!window.db) return [];
+
+                const snapshot = await db.collection("players").get();
+
+                friendPlayersCache = snapshot.docs
+                    .map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }))
+                    .filter(player =>
+                        currentPlayer &&
+                        player.id !== currentPlayer.id
+                    );
+
+                return friendPlayersCache;
+            }
+
+            async function getFriendRelationship(playerId) {
+                if (!currentPlayer || !window.db) {
+                    return "none";
+                }
+
+                const key = friendKey(
+                    currentPlayer.id,
+                    playerId
+                );
+
+                const friendDoc = await db
+                    .collection("friends")
+                    .doc(key)
+                    .get();
+
+                if (
+                    friendDoc.exists &&
+                    friendDoc.data().status === "accepted"
+                ) {
+                    return "friends";
+                }
+
+                const requestDoc = await db
+                    .collection("friendRequests")
+                    .doc(key)
+                    .get();
+
+                if (!requestDoc.exists) {
+                    return "none";
+                }
+
+                const request = requestDoc.data();
+
+                if (request.status !== "pending") {
+                    return "none";
+                }
+
+                if (request.fromId === currentPlayer.id) {
+                    return "outgoing";
+                }
+
+                if (request.toId === currentPlayer.id) {
+                    return "incoming";
+                }
+
+                return "none";
+            }
+
+            async function searchFriends() {
+
+                if (!currentPlayer) {
+                    alert("Please login first.");
+                    return;
+                }
+
+                const query = String(friendSearchInput?.value || "")
+                    .trim()
+                    .toLowerCase();
+
+                if (!query) {
+                    friendSearchResults.innerHTML = "";
+                    return;
+                }
+
+                friendSearchResults.innerHTML = `
+        <div class="friend-empty">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Searching...
+        </div>
+    `;
+
+                try {
+
+                    // Always fetch the latest players directly from Firestore
+                    const snapshot = await db.collection("players").get();
+
+                    const results = snapshot.docs
+                        .map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }))
+                        .filter(player => {
+
+                            // Don't show yourself
+                            if (
+                                currentPlayer &&
+                                String(player.id) === String(currentPlayer.id)
+                            ) {
+                                return false;
+                            }
+
+                            const searchableText = [
+                                player.name,
+                                player.playerName,
+                                player.username,
+                                player.ign,
+                                player.email,
+                                player.loginEmail,
+                                player.guild,
+                                player.role
+                            ]
+                                .map(value => String(value || "").toLowerCase())
+                                .join(" ");
+
+                            return searchableText.includes(query);
+                        })
+                        .slice(0, 20);
+
+                    if (!results.length) {
+
+                        friendSearchResults.innerHTML = `
+                <div class="friend-empty">
+                    No player found.
+                </div>
+            `;
+
+                        return;
+                    }
+
+                    const rows = await Promise.all(
+                        results.map(async player => {
+
+                            const relationship =
+                                await getFriendRelationship(player.id);
+
+                            let actions = "";
+
+                            if (relationship === "friends") {
+
+                                actions = `
+                        <a
+                            class="friend-action-btn secondary"
+                            href="${getFriendProfileUrl(player.id)}"
+                        >
+                            Profile
+                        </a>
+
+                        <button
+                            type="button"
+                            class="friend-action-btn danger"
+                            onclick="remove4FUFriend('${player.id}')"
+                        >
+                            Remove
+                        </button>
+                    `;
+
+                            } else if (relationship === "outgoing") {
+
+                                actions = `
+                        <button
+                            type="button"
+                            class="friend-action-btn secondary"
+                            disabled
+                        >
+                            Request Sent
+                        </button>
+                    `;
+
+                            } else if (relationship === "incoming") {
+
+                                actions = `
+                        <button
+                            type="button"
+                            class="friend-action-btn"
+                            onclick="accept4FUFriendRequest('${player.id}')"
+                        >
+                            Accept
+                        </button>
+
+                        <button
+                            type="button"
+                            class="friend-action-btn danger"
+                            onclick="decline4FUFriendRequest('${player.id}')"
+                        >
+                            Decline
+                        </button>
+                    `;
+
+                            } else {
+
+                                actions = `
+                        <button
+                            type="button"
+                            class="friend-action-btn"
+                            onclick="send4FUFriendRequest('${player.id}')"
+                        >
+                            <i class="fa-solid fa-user-plus"></i>
+                            Add Friend
+                        </button>
+                    `;
+                            }
+
+                            const meta =
+                                player.ign
+                                    ? `IGN: ${escapeFriendHtml(player.ign)}`
+                                    : escapeFriendHtml(
+                                        player.role || "4FU Player"
+                                    );
+
+                            return renderFriendItem(
+                                player,
+                                actions,
+                                meta
+                            );
+                        })
+                    );
+
+                    friendSearchResults.innerHTML =
+                        rows.filter(Boolean).join("") ||
+                        `
+                <div class="friend-empty">
+                    No player found.
+                </div>
+            `;
+
+                } catch (error) {
+
+                    console.error(
+                        "4FU friend search error:",
+                        error
+                    );
+
+                    friendSearchResults.innerHTML = `
+            <div class="friend-empty">
+                Search failed. Please try again.
+            </div>
+        `;
+                }
+            }
+
+            async function send4FUFriendRequest(toPlayerId) {
+
+                if (!currentPlayer || !window.db) {
+                    alert("Player session is not ready. Please refresh the page.");
+                    return;
+                }
+
+                if (String(toPlayerId) === String(currentPlayer.id)) {
+                    return;
+                }
+
+                try {
+
+                    const key = friendKey(currentPlayer.id, toPlayerId);
+
+                    const requestRef = db
+                        .collection("friendRequests")
+                        .doc(key);
+
+                    const friendRef = db
+                        .collection("friends")
+                        .doc(key);
+
+                    // Check existing friendship
+                    const friendSnap = await friendRef.get();
+
+                    if (
+                        friendSnap.exists &&
+                        friendSnap.data().status === "accepted"
+                    ) {
+                        alert("You are already friends with this player.");
+                        return;
+                    }
+
+                    // Check existing request
+                    const requestSnap = await requestRef.get();
+
+                    if (
+                        requestSnap.exists &&
+                        requestSnap.data().status === "pending"
+                    ) {
+
+                        if (
+                            String(requestSnap.data().fromId) ===
+                            String(currentPlayer.id)
+                        ) {
+                            alert("Friend request already sent.");
+                        } else {
+                            alert("This player has already sent you a request.");
+                        }
+
+                        return;
+                    }
+
+                    // Create new request
+                    await requestRef.set({
+
+                        fromId: currentPlayer.id,
+
+                        toId: toPlayerId,
+
+                        fromEmail:
+                            currentUser?.email ||
+                            currentPlayer.loginEmail ||
+                            "",
+
+                        fromName:
+                            friendName(currentPlayer),
+
+                        status: "pending",
+
+                        createdAt:
+                            firebase.firestore.FieldValue.serverTimestamp(),
+
+                        updatedAt:
+                            firebase.firestore.FieldValue.serverTimestamp()
+
+                    });
+
+                    /* =========================================
+   SEND ANDROID FRIEND REQUEST NOTIFICATION
 ========================================= */
-const FOUR_FU_ANDROID_FCM_URL = "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
 
-function send4FUPlayerUpdateNotification({ title, body, updateType }) {
-    try {
-        fetch(FOUR_FU_ANDROID_FCM_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify({
-                type: updateType || "major",
-                priority: "normal",
-                title: title,
-                body: body,
-                link: "/player-dashboard.html",
-                updateType: updateType || "major",
-                senderPlayerId:
-                    typeof currentPlayer !== "undefined" && currentPlayer
-                        ? currentPlayer.id || ""
-                        : "",
-                senderEmail:
-                    typeof currentUser !== "undefined" && currentUser
-                        ? currentUser.email || ""
-                        : ""
-            })
-        }).catch(error => {
-            console.warn("4FU ANDROID FCM PLAYER UPDATE ERROR:", error);
-        });
-    } catch (error) {
-        console.warn("4FU ANDROID FCM PLAYER UPDATE ERROR:", error);
-    }
-}
-</script>
+                    try {
+
+                        const receiverPlayer =
+                            friendPlayersCache.find(
+                                player =>
+                                    String(player.id) ===
+                                    String(toPlayerId)
+                            );
+
+                        if (receiverPlayer) {
+
+                            await send4FUFriendRequestNotification(
+                                receiverPlayer,
+                                currentPlayer
+                            );
+
+                        } else {
+
+                            console.warn(
+                                "4FU FRIEND FCM: Receiver player not found."
+                            );
+                        }
+
+                    } catch (notificationError) {
+
+                        console.warn(
+                            "4FU FRIEND FCM notification failed:",
+                            notificationError
+                        );
+
+                    }
+
+                    const target =
+                        friendPlayersCache.find(
+                            player =>
+                                String(player.id) === String(toPlayerId)
+                        );
+
+                    alert(
+                        `Friend request sent to ${target
+                            ? friendName(target)
+                            : "player"
+                        }.`
+                    );
+
+                    // Refresh search result
+                    try {
+                        await searchFriends();
+                    } catch (searchError) {
+                        console.warn(
+                            "Friend search refresh error:",
+                            searchError
+                        );
+                    }
+
+                    // Refresh friend sections
+                    try {
+                        await load4FUFriends();
+                    } catch (friendsError) {
+                        console.warn(
+                            "Friends refresh error:",
+                            friendsError
+                        );
+                    }
+
+                    try {
+                        await load4FUFriendRequests();
+                    } catch (requestError) {
+                        console.warn(
+                            "Requests refresh error:",
+                            requestError
+                        );
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "4FU send friend request error:",
+                        error
+                    );
+
+                    alert(
+                        "Could not send friend request:\n\n" +
+                        error.message
+                    );
+                }
+            }
+
+            async function accept4FUFriendRequest(fromPlayerId) {
+                if (!currentPlayer || !window.db) {
+                    return;
+                }
+
+                try {
+
+                    const key = friendKey(
+                        currentPlayer.id,
+                        fromPlayerId
+                    );
+
+                    const requestRef = db
+                        .collection("friendRequests")
+                        .doc(key);
+
+                    const requestSnap =
+                        await requestRef.get();
+
+                    if (
+                        !requestSnap.exists ||
+                        requestSnap.data().status !== "pending"
+                    ) {
+
+                        alert(
+                            "This request is no longer pending."
+                        );
+
+                        await load4FUFriendRequests();
+
+                        return;
+                    }
+
+                    const request =
+                        requestSnap.data();
+
+                    if (
+                        request.toId !==
+                        currentPlayer.id
+                    ) {
+
+                        alert(
+                            "Invalid friend request."
+                        );
+
+                        return;
+                    }
+
+                    const batch = db.batch();
+
+                    batch.set(
+                        db.collection("friends")
+                            .doc(
+                                `${fromPlayerId}_${currentPlayer.id}`
+                            ),
+                        {
+                            playerId: fromPlayerId,
+
+                            friendId:
+                                currentPlayer.id,
+
+                            status: "accepted",
+
+                            createdAt:
+                                firebase.firestore.FieldValue
+                                    .serverTimestamp(),
+
+                            updatedAt:
+                                firebase.firestore.FieldValue
+                                    .serverTimestamp()
+                        }
+                    );
+
+                    batch.set(
+                        db.collection("friends")
+                            .doc(
+                                `${currentPlayer.id}_${fromPlayerId}`
+                            ),
+                        {
+                            playerId:
+                                currentPlayer.id,
+
+                            friendId:
+                                fromPlayerId,
+
+                            status: "accepted",
+
+                            createdAt:
+                                firebase.firestore.FieldValue
+                                    .serverTimestamp(),
+
+                            updatedAt:
+                                firebase.firestore.FieldValue
+                                    .serverTimestamp()
+                        }
+                    );
+
+                    batch.update(
+                        requestRef,
+                        {
+                            status: "accepted",
+
+                            updatedAt:
+                                firebase.firestore.FieldValue
+                                    .serverTimestamp()
+                        }
+                    );
+
+                    await batch.commit();
+
+                    alert(
+                        "Friend request accepted."
+                    );
+
+                    await load4FUFriends();
+
+                    await load4FUFriendRequests();
+
+                    if (
+                        friendSearchInput?.value.trim()
+                    ) {
+                        await searchFriends();
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "4FU accept friend request error:",
+                        error
+                    );
+
+                    alert(
+                        "Could not accept request: " +
+                        error.message
+                    );
+                }
+            }
+
+            async function decline4FUFriendRequest(fromPlayerId) {
+                if (!currentPlayer || !window.db) {
+                    return;
+                }
+
+                try {
+
+                    const key = friendKey(
+                        currentPlayer.id,
+                        fromPlayerId
+                    );
+
+                    const requestRef = db
+                        .collection("friendRequests")
+                        .doc(key);
+
+                    const requestSnap =
+                        await requestRef.get();
+
+                    if (
+                        requestSnap.exists &&
+                        requestSnap.data().toId ===
+                        currentPlayer.id
+                    ) {
+
+                        await requestRef.update({
+
+                            status: "declined",
+
+                            updatedAt:
+                                firebase.firestore.FieldValue
+                                    .serverTimestamp()
+                        });
+                    }
+
+                    await load4FUFriendRequests();
+
+                    if (
+                        friendSearchInput?.value.trim()
+                    ) {
+                        await searchFriends();
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "4FU decline friend request error:",
+                        error
+                    );
+
+                    alert(
+                        "Could not decline friend request: " +
+                        error.message
+                    );
+                }
+            }
+
+            async function remove4FUFriend(friendPlayerId) {
+                if (!currentPlayer || !window.db) {
+                    return;
+                }
+
+                if (
+                    !confirm(
+                        "Remove this player from your friends?"
+                    )
+                ) {
+                    return;
+                }
+
+                try {
+
+                    const keyA =
+                        `${currentPlayer.id}_${friendPlayerId}`;
+
+                    const keyB =
+                        `${friendPlayerId}_${currentPlayer.id}`;
+
+                    const batch = db.batch();
+
+                    batch.delete(
+                        db.collection("friends")
+                            .doc(keyA)
+                    );
+
+                    batch.delete(
+                        db.collection("friends")
+                            .doc(keyB)
+                    );
+
+                    await batch.commit();
+
+                    await load4FUFriends();
+
+                    if (
+                        friendSearchInput?.value.trim()
+                    ) {
+                        await searchFriends();
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "4FU remove friend error:",
+                        error
+                    );
+
+                    alert(
+                        "Could not remove friend: " +
+                        error.message
+                    );
+                }
+            }
+
+            async function load4FUFriendRequests() {
+                if (!currentPlayer || !window.db) {
+                    return;
+                }
+
+                try {
+
+                    const snapshot =
+                        await db.collection("friendRequests")
+                            .where(
+                                "toId",
+                                "==",
+                                currentPlayer.id
+                            )
+                            .get();
+
+                    const requests =
+                        snapshot.docs
+                            .map(doc => ({
+                                id: doc.id,
+                                ...doc.data()
+                            }))
+                            .filter(
+                                request =>
+                                    request.status ===
+                                    "pending"
+                            );
+
+                    if (!requests.length) {
+
+                        friendRequestsList.innerHTML = `
+                        <div class="friend-empty">
+                            No pending friend requests.
+                        </div>
+                    `;
+
+                        return;
+                    }
+
+                    const rows = await Promise.all(
+                        requests.map(async request => {
+
+                            let player =
+                                friendPlayersCache.find(
+                                    p =>
+                                        p.id ===
+                                        request.fromId
+                                );
+
+                            if (!player) {
+
+                                const playerSnap =
+                                    await db.collection("players")
+                                        .doc(request.fromId)
+                                        .get();
+
+                                player =
+                                    playerSnap.exists
+                                        ? {
+                                            id: playerSnap.id,
+                                            ...playerSnap.data()
+                                        }
+                                        : {
+                                            id: request.fromId,
+                                            name:
+                                                request.fromName ||
+                                                "Player"
+                                        };
+                            }
+
+                            const actions = `
+                            <a
+                                class="friend-action-btn secondary"
+                                href="${getFriendProfileUrl(player.id)}"
+                            >
+                                Profile
+                            </a>
+
+                            <button
+                                type="button"
+                                class="friend-action-btn"
+                                onclick="accept4FUFriendRequest('${player.id}')"
+                            >
+                                Accept
+                            </button>
+
+                            <button
+                                type="button"
+                                class="friend-action-btn danger"
+                                onclick="decline4FUFriendRequest('${player.id}')"
+                            >
+                                Decline
+                            </button>
+                        `;
+
+                            return renderFriendItem(
+                                player,
+                                actions,
+                                "Wants to be your friend"
+                            );
+                        })
+                    );
+
+                    friendRequestsList.innerHTML =
+                        rows.join("");
+
+                } catch (error) {
+
+                    console.error(
+                        "4FU friend requests error:",
+                        error
+                    );
+
+                    friendRequestsList.innerHTML = `
+                    <div class="friend-empty">
+                        Failed to load requests.
+                    </div>
+                `;
+                }
+            }
+
+            async function load4FUFriends() {
+                if (!currentPlayer || !window.db) {
+                    return;
+                }
+
+                try {
+
+                    const snapshot =
+                        await db.collection("friends")
+                            .where(
+                                "playerId",
+                                "==",
+                                currentPlayer.id
+                            )
+                            .get();
+
+                    const friendRows =
+                        snapshot.docs
+                            .map(doc => doc.data())
+                            .filter(
+                                friend =>
+                                    friend.status ===
+                                    "accepted"
+                            );
+
+                    friendsCount.textContent =
+                        String(friendRows.length);
+
+                    if (!friendRows.length) {
+
+                        friendList.innerHTML = `
+                        <div class="friend-empty">
+                            No friends yet.
+                            Search a 4FU player above
+                            and send a request.
+                        </div>
+                    `;
+
+                        return;
+                    }
+
+                    const rows = await Promise.all(
+                        friendRows.map(async friend => {
+
+                            const playerSnap =
+                                await db.collection("players")
+                                    .doc(friend.friendId)
+                                    .get();
+
+                            if (!playerSnap.exists) {
+                                return "";
+                            }
+
+                            const player = {
+                                id: playerSnap.id,
+                                ...playerSnap.data()
+                            };
+
+                            const actions = `
+                            <a
+                                class="friend-action-btn secondary"
+                                href="${getFriendProfileUrl(player.id)}"
+                            >
+                                Profile
+                            </a>
+
+                            <button
+                                type="button"
+                                class="friend-action-btn danger"
+                                onclick="remove4FUFriend('${player.id}')"
+                            >
+                                Remove
+                            </button>
+                        `;
+
+                            return renderFriendItem(
+                                player,
+                                actions,
+                                escapeFriendHtml(
+                                    player.role ||
+                                    "4FU Player"
+                                )
+                            );
+                        })
+                    );
+
+                    friendList.innerHTML =
+                        rows.filter(Boolean).join("") ||
+                        `
+                        <div class="friend-empty">
+                            No friends found.
+                        </div>
+                    `;
+
+                } catch (error) {
+
+                    console.error(
+                        "4FU friends load error:",
+                        error
+                    );
+
+                    friendList.innerHTML = `
+                    <div class="friend-empty">
+                        Failed to load friends.
+                    </div>
+                `;
+                }
+            }
+
+            async function init4FUFriends() {
+                if (
+                    friendInitStarted ||
+                    !currentPlayer ||
+                    !window.db
+                ) {
+                    return;
+                }
+
+                friendInitStarted = true;
+
+                try {
+
+                    await loadFriendPlayersCache();
+
+                    await Promise.all([
+                        load4FUFriends(),
+                        load4FUFriendRequests()
+                    ]);
+
+                } catch (error) {
+
+                    console.error(
+                        "4FU friend system init error:",
+                        error
+                    );
+                }
+            }
+
+            if (friendSearchBtn) {
+                friendSearchBtn.addEventListener(
+                    "click",
+                    searchFriends
+                );
+            }
+
+            if (friendSearchInput) {
+
+                friendSearchInput.addEventListener(
+                    "keydown",
+                    event => {
+
+                        if (event.key === "Enter") {
+                            searchFriends();
+                        }
+
+                    }
+                );
+            }
+
+            window.send4FUFriendRequest =
+                send4FUFriendRequest;
+
+            window.accept4FUFriendRequest =
+                accept4FUFriendRequest;
+
+            window.decline4FUFriendRequest =
+                decline4FUFriendRequest;
+
+            window.remove4FUFriend =
+                remove4FUFriend;
+
+            const friendWait =
+                setInterval(() => {
+
+                    if (
+                        currentPlayer &&
+                        window.db
+                    ) {
+
+                        clearInterval(
+                            friendWait
+                        );
+
+                        init4FUFriends();
+                    }
+
+                }, 500);
+
+        })();
+    </script>
 
 </body>
 
