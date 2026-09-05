@@ -113,6 +113,19 @@
             gap: 15px;
         }
 
+        .birthday-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .birthday-field label {
+            color: #ff7200;
+            font-size: 13px;
+            font-weight: 600;
+            padding-left: 2px;
+        }
+
         .form-grid input,
         .form-grid select {
             width: 100%;
@@ -266,7 +279,10 @@
 
             <input type="text" id="ign" placeholder="IGN">
 
-            
+            <div class="birthday-field">
+                <label for="birthday">Date of Birth</label>
+                <input type="date" id="birthday" title="Date of Birth">
+            </div>
 
             <input type="text" id="uid" placeholder="Free Fire UID">
 

@@ -29,11 +29,13 @@ auth.onAuthStateChanged(async (user) => {
             .get();
 
         if (snapshot.empty) {
+
             snapshot = await db
                 .collection("players")
                 .where("loginEmail", "==", user.email)
                 .limit(1)
                 .get();
+
         }
 
 
@@ -65,6 +67,22 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById("ign").value =
             playerData.ign || "";
 
+
+        // ==========================================
+        // LOAD BIRTHDAY
+        // ==========================================
+
+        const birthdayField =
+            document.getElementById("birthday");
+
+        if (birthdayField) {
+
+            birthdayField.value =
+                playerData.birthday || "";
+
+        }
+
+
         document.getElementById("uid").value =
             playerData.uid || "";
 
@@ -74,15 +92,26 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById("role").value =
             playerData.role || "";
 
-        // 🔒 ROLE LOCK - PLAYER CANNOT CHANGE ROLE
-        const roleField = document.getElementById("role");
+
+        // ==========================================
+        // ROLE LOCK
+        // ==========================================
+
+        const roleField =
+            document.getElementById("role");
 
         if (roleField) {
+
             roleField.disabled = true;
+
             roleField.readOnly = true;
+
             roleField.style.pointerEvents = "none";
+
             roleField.style.cursor = "not-allowed";
+
         }
+
 
         document.getElementById("language").value =
             playerData.language || "";
@@ -91,7 +120,9 @@ auth.onAuthStateChanged(async (user) => {
             playerData.country || "";
 
         document.getElementById("currentEmail").value =
-            user.email || playerData.loginEmail || "";
+            user.email ||
+            playerData.loginEmail ||
+            "";
 
         document.getElementById("level").value =
             playerData.level ?? "";
@@ -148,7 +179,8 @@ auth.onAuthStateChanged(async (user) => {
         // ==========================================
 
         document.getElementById("previewImage").src =
-            playerData.image || "../images/logo/logo.png";
+            playerData.image ||
+            "../images/logo/logo.png";
 
 
         // ==========================================
@@ -173,14 +205,17 @@ auth.onAuthStateChanged(async (user) => {
         }
 
 
-        document.body.style.visibility = "visible";
+        document.body.style.visibility =
+            "visible";
 
 
     } catch (error) {
 
         console.error(error);
 
-        alert("Unable to load player profile.");
+        alert(
+            "Unable to load player profile."
+        );
 
     }
 
@@ -198,17 +233,25 @@ document.getElementById("image").addEventListener(
         const file = this.files[0];
 
         if (!file) {
+
             return;
+
         }
 
-        const reader = new FileReader();
+
+        const reader =
+            new FileReader();
+
 
         reader.onload = function (event) {
 
-            document.getElementById("previewImage").src =
+            document.getElementById(
+                "previewImage"
+            ).src =
                 event.target.result;
 
         };
+
 
         reader.readAsDataURL(file);
 
@@ -226,7 +269,9 @@ document.getElementById("saveBtn").addEventListener(
 
         if (!playerDocId) {
 
-            alert("Player profile not loaded.");
+            alert(
+                "Player profile not loaded."
+            );
 
             return;
 
@@ -237,10 +282,14 @@ document.getElementById("saveBtn").addEventListener(
             document.getElementById("saveBtn");
 
         const uploadStatus =
-            document.getElementById("uploadStatus");
+            document.getElementById(
+                "uploadStatus"
+            );
 
         const uploadProgress =
-            document.getElementById("uploadProgress");
+            document.getElementById(
+                "uploadProgress"
+            );
 
 
         try {
@@ -258,15 +307,20 @@ document.getElementById("saveBtn").addEventListener(
             let imageUrl =
                 playerData.image || "";
 
+
             const imageFile =
-                document.getElementById("image").files[0];
+                document.getElementById(
+                    "image"
+                ).files[0];
 
 
             if (imageFile) {
 
-                uploadProgress.style.display = "block";
+                uploadProgress.style.display =
+                    "block";
 
-                uploadStatus.style.display = "block";
+                uploadStatus.style.display =
+                    "block";
 
                 uploadStatus.textContent =
                     "Uploading player image...";
@@ -287,45 +341,51 @@ document.getElementById("saveBtn").addEventListener(
                     storageRef.put(imageFile);
 
 
-                await new Promise((resolve, reject) => {
+                await new Promise(
+                    (resolve, reject) => {
 
-                    uploadTask.on(
+                        uploadTask.on(
 
-                        "state_changed",
+                            "state_changed",
 
-                        (snapshot) => {
+                            (snapshot) => {
 
-                            const progress =
-                                (
-                                    snapshot.bytesTransferred /
-                                    snapshot.totalBytes
-                                ) * 100;
+                                const progress =
+                                    (
+                                        snapshot.bytesTransferred /
+                                        snapshot.totalBytes
+                                    ) * 100;
 
-                            uploadProgress.value =
-                                progress;
 
-                        },
+                                uploadProgress.value =
+                                    progress;
 
-                        (error) => {
+                            },
 
-                            reject(error);
 
-                        },
+                            (error) => {
 
-                        async () => {
+                                reject(error);
 
-                            imageUrl =
-                                await uploadTask.snapshot
-                                    .ref
-                                    .getDownloadURL();
+                            },
 
-                            resolve();
 
-                        }
+                            async () => {
 
-                    );
+                                imageUrl =
+                                    await uploadTask
+                                        .snapshot
+                                        .ref
+                                        .getDownloadURL();
 
-                });
+                                resolve();
+
+                            }
+
+                        );
+
+                    }
+                );
 
             }
 
@@ -337,13 +397,17 @@ document.getElementById("saveBtn").addEventListener(
             let weaponImageUrl =
                 playerData.weaponImage || "";
 
+
             const weaponFile =
-                document.getElementById("weaponImage").files[0];
+                document.getElementById(
+                    "weaponImage"
+                ).files[0];
 
 
             if (weaponFile) {
 
-                uploadStatus.style.display = "block";
+                uploadStatus.style.display =
+                    "block";
 
                 uploadStatus.textContent =
                     "Uploading weapon image...";
@@ -361,48 +425,56 @@ document.getElementById("saveBtn").addEventListener(
 
 
                 const weaponUploadTask =
-                    weaponStorageRef.put(weaponFile);
-
-
-                await new Promise((resolve, reject) => {
-
-                    weaponUploadTask.on(
-
-                        "state_changed",
-
-                        (snapshot) => {
-
-                            const progress =
-                                (
-                                    snapshot.bytesTransferred /
-                                    snapshot.totalBytes
-                                ) * 100;
-
-                            uploadProgress.value =
-                                progress;
-
-                        },
-
-                        (error) => {
-
-                            reject(error);
-
-                        },
-
-                        async () => {
-
-                            weaponImageUrl =
-                                await weaponUploadTask.snapshot
-                                    .ref
-                                    .getDownloadURL();
-
-                            resolve();
-
-                        }
-
+                    weaponStorageRef.put(
+                        weaponFile
                     );
 
-                });
+
+                await new Promise(
+                    (resolve, reject) => {
+
+                        weaponUploadTask.on(
+
+                            "state_changed",
+
+                            (snapshot) => {
+
+                                const progress =
+                                    (
+                                        snapshot.bytesTransferred /
+                                        snapshot.totalBytes
+                                    ) * 100;
+
+
+                                uploadProgress.value =
+                                    progress;
+
+                            },
+
+
+                            (error) => {
+
+                                reject(error);
+
+                            },
+
+
+                            async () => {
+
+                                weaponImageUrl =
+                                    await weaponUploadTask
+                                        .snapshot
+                                        .ref
+                                        .getDownloadURL();
+
+                                resolve();
+
+                            }
+
+                        );
+
+                    }
+                );
 
             }
 
@@ -411,7 +483,9 @@ document.getElementById("saveBtn").addEventListener(
             // FIREBASE AUTH
             // ==========================================
 
-            const currentUser = auth.currentUser;
+            const currentUser =
+                auth.currentUser;
+
 
             if (!currentUser) {
 
@@ -429,26 +503,52 @@ document.getElementById("saveBtn").addEventListener(
 
 
             const newEmail =
-                document.getElementById("loginEmail")
+                document
+                    .getElementById("loginEmail")
                     .value
                     .trim()
                     .toLowerCase();
 
 
+            // ==========================================
+            // GET BIRTHDAY
+            // ==========================================
+
+            const birthdayField =
+                document.getElementById(
+                    "birthday"
+                );
+
+
+            const birthday =
+                birthdayField
+                    ? birthdayField.value
+                    : "";
+
+
             const currentPassword =
-                document.getElementById("currentPassword")
+                document
+                    .getElementById(
+                        "currentPassword"
+                    )
                     .value
                     .trim();
 
 
             const newPassword =
-                document.getElementById("newPassword")
+                document
+                    .getElementById(
+                        "newPassword"
+                    )
                     .value
                     .trim();
 
 
             const confirmPassword =
-                document.getElementById("confirmPassword")
+                document
+                    .getElementById(
+                        "confirmPassword"
+                    )
                     .value
                     .trim();
 
@@ -532,18 +632,12 @@ document.getElementById("saveBtn").addEventListener(
 
 
                 await currentUser
-                    .updatePassword(newPassword);
+                    .updatePassword(
+                        newPassword
+                    );
 
             }
 
-
-
-
-
-
-            // ==========================================
-            // EMAIL CHANGE
-            // ==========================================
 
             // ==========================================
             // EMAIL CHANGE
@@ -551,7 +645,10 @@ document.getElementById("saveBtn").addEventListener(
 
             if (changingEmail) {
 
-                await currentUser.updateEmail(newEmail);
+                await currentUser.updateEmail(
+                    newEmail
+                );
+
 
                 alert(
                     "Email changed successfully to " +
@@ -559,6 +656,7 @@ document.getElementById("saveBtn").addEventListener(
                 );
 
             }
+
 
             // ==========================================
             // UPDATE FIRESTORE
@@ -575,11 +673,18 @@ document.getElementById("saveBtn").addEventListener(
                             .value
                             .trim(),
 
+
                     ign:
                         document
                             .getElementById("ign")
                             .value
                             .trim(),
+
+
+                    // 🎂 BIRTHDAY
+                    birthday:
+                        birthday || "",
+
 
                     uid:
                         document
@@ -587,16 +692,18 @@ document.getElementById("saveBtn").addEventListener(
                             .value
                             .trim(),
 
+
                     guild:
                         document
                             .getElementById("guild")
                             .value
                             .trim(),
 
+
                     // 🔒 ROLE LOCK
-                    // Always keep the role assigned by admin
                     role:
                         playerData.role || "",
+
 
                     language:
                         document
@@ -604,13 +711,19 @@ document.getElementById("saveBtn").addEventListener(
                             .value
                             .trim(),
 
+
                     country:
                         document
                             .getElementById("country")
                             .value,
 
-                    loginEmail: newEmail,
-                    authUid: currentUser.uid,
+
+                    loginEmail:
+                        newEmail,
+
+
+                    authUid:
+                        currentUser.uid,
 
 
                     level:
@@ -659,21 +772,27 @@ document.getElementById("saveBtn").addEventListener(
 
                     weaponName:
                         document
-                            .getElementById("weaponName")
+                            .getElementById(
+                                "weaponName"
+                            )
                             .value
                             .trim(),
 
 
                     weaponType:
                         document
-                            .getElementById("weaponType")
+                            .getElementById(
+                                "weaponType"
+                            )
                             .value
                             .trim(),
 
 
                     weaponQuote:
                         document
-                            .getElementById("weaponQuote")
+                            .getElementById(
+                                "weaponQuote"
+                            )
                             .value
                             .trim(),
 
@@ -684,28 +803,36 @@ document.getElementById("saveBtn").addEventListener(
 
                     instagram:
                         document
-                            .getElementById("instagram")
+                            .getElementById(
+                                "instagram"
+                            )
                             .value
                             .trim(),
 
 
                     youtube:
                         document
-                            .getElementById("youtube")
+                            .getElementById(
+                                "youtube"
+                            )
                             .value
                             .trim(),
 
 
                     discord:
                         document
-                            .getElementById("discord")
+                            .getElementById(
+                                "discord"
+                            )
                             .value
                             .trim(),
 
 
                     facebook:
                         document
-                            .getElementById("facebook")
+                            .getElementById(
+                                "facebook"
+                            )
                             .value
                             .trim(),
 
@@ -717,14 +844,63 @@ document.getElementById("saveBtn").addEventListener(
 
 
             // ==========================================
+            // SYNC BIRTHDAY WITH ANDROID APP
+            // ==========================================
+
+            // Android WebView only.
+            // Normal browser mein ye unavailable rahega.
+
+            if (window.FourFUBirthday) {
+
+                try {
+
+                    if (birthday) {
+
+                        window.FourFUBirthday.setBirthday(
+                            birthday,
+                            document
+                                .getElementById(
+                                    "name"
+                                )
+                                .value
+                                .trim()
+                        );
+
+                    } else if (
+                        window.FourFUBirthday
+                            .clearBirthday
+                    ) {
+
+                        window.FourFUBirthday
+                            .clearBirthday();
+
+                    }
+
+                } catch (
+                    birthdayError
+                ) {
+
+                    console.warn(
+                        "4FU birthday Android sync failed:",
+                        birthdayError
+                    );
+
+                }
+
+            }
+
+
+            // ==========================================
             // SUCCESS
             // ==========================================
 
             uploadProgress.style.display =
                 "none";
 
+
             uploadStatus.style.display =
                 "block";
+
 
             uploadStatus.textContent =
                 "Profile updated successfully!";
@@ -749,10 +925,19 @@ document.getElementById("saveBtn").addEventListener(
                 error
             );
 
+
             alert(
                 "Firebase Error:\n\n" +
-                "CODE: " + (error.code || "NO CODE") +
-                "\n\nMESSAGE: " + (error.message || "NO MESSAGE")
+                "CODE: " +
+                (
+                    error.code ||
+                    "NO CODE"
+                ) +
+                "\n\nMESSAGE: " +
+                (
+                    error.message ||
+                    "NO MESSAGE"
+                )
             );
 
 
