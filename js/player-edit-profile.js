@@ -1,5 +1,6 @@
 // ==========================================
 // 4 FIRE UNITED - PLAYER EDIT PROFILE
+// COMPLETE UPDATED VERSION
 // ==========================================
 
 let playerDocId = null;
@@ -28,6 +29,7 @@ auth.onAuthStateChanged(async (user) => {
             .limit(1)
             .get();
 
+
         if (snapshot.empty) {
 
             snapshot = await db
@@ -43,7 +45,8 @@ auth.onAuthStateChanged(async (user) => {
 
             await auth.signOut();
 
-            window.location.href = "player-login.html";
+            window.location.href =
+                "player-login.html";
 
             return;
 
@@ -64,6 +67,7 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById("name").value =
             playerData.name || "";
 
+
         document.getElementById("ign").value =
             playerData.ign || "";
 
@@ -74,6 +78,7 @@ auth.onAuthStateChanged(async (user) => {
 
         const birthdayField =
             document.getElementById("birthday");
+
 
         if (birthdayField) {
 
@@ -86,8 +91,10 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById("uid").value =
             playerData.uid || "";
 
+
         document.getElementById("guild").value =
             playerData.guild || "";
+
 
         document.getElementById("role").value =
             playerData.role || "";
@@ -100,15 +107,18 @@ auth.onAuthStateChanged(async (user) => {
         const roleField =
             document.getElementById("role");
 
+
         if (roleField) {
 
             roleField.disabled = true;
 
             roleField.readOnly = true;
 
-            roleField.style.pointerEvents = "none";
+            roleField.style.pointerEvents =
+                "none";
 
-            roleField.style.cursor = "not-allowed";
+            roleField.style.cursor =
+                "not-allowed";
 
         }
 
@@ -116,28 +126,36 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById("language").value =
             playerData.language || "";
 
+
         document.getElementById("country").value =
             playerData.country || "";
+
 
         document.getElementById("currentEmail").value =
             user.email ||
             playerData.loginEmail ||
             "";
 
+
         document.getElementById("level").value =
             playerData.level ?? "";
+
 
         document.getElementById("rank").value =
             playerData.rank || "";
 
+
         document.getElementById("kd").value =
             playerData.kd || "";
+
 
         document.getElementById("headshot").value =
             playerData.headshot || "";
 
+
         document.getElementById("matches").value =
             playerData.matches ?? "";
+
 
         document.getElementById("booyah").value =
             playerData.booyah ?? "";
@@ -150,8 +168,10 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById("weaponName").value =
             playerData.weaponName || "";
 
+
         document.getElementById("weaponType").value =
             playerData.weaponType || "";
+
 
         document.getElementById("weaponQuote").value =
             playerData.weaponQuote || "";
@@ -164,11 +184,14 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById("instagram").value =
             playerData.instagram || "";
 
+
         document.getElementById("youtube").value =
             playerData.youtube || "";
 
+
         document.getElementById("discord").value =
             playerData.discord || "";
+
 
         document.getElementById("facebook").value =
             playerData.facebook || "";
@@ -190,12 +213,16 @@ auth.onAuthStateChanged(async (user) => {
         if (playerData.weaponImage) {
 
             const weaponPreview =
-                document.getElementById("weaponPreview");
+                document.getElementById(
+                    "weaponPreview"
+                );
+
 
             if (weaponPreview) {
 
                 weaponPreview.src =
                     playerData.weaponImage;
+
 
                 weaponPreview.style.display =
                     "block";
@@ -232,6 +259,7 @@ document.getElementById("image").addEventListener(
 
         const file = this.files[0];
 
+
         if (!file) {
 
             return;
@@ -243,20 +271,101 @@ document.getElementById("image").addEventListener(
             new FileReader();
 
 
-        reader.onload = function (event) {
+        reader.onload =
+            function (event) {
 
-            document.getElementById(
-                "previewImage"
-            ).src =
-                event.target.result;
+                document.getElementById(
+                    "previewImage"
+                ).src =
+                    event.target.result;
 
-        };
+            };
 
 
         reader.readAsDataURL(file);
 
     }
 );
+
+
+// ==========================================
+// 4FU ANDROID APP FCM
+// PROFILE UPDATES
+// Android app tokens only
+// No browser push
+// ==========================================
+
+const FOUR_FU_ANDROID_FCM_URL =
+    "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
+
+
+function send4FUProfileUpdateNotification({
+    title,
+    body
+}) {
+
+    try {
+
+        fetch(
+            FOUR_FU_ANDROID_FCM_URL,
+            {
+
+                method: "POST",
+
+                mode: "no-cors",
+
+                headers: {
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+
+                body: JSON.stringify({
+
+                    type: "profile",
+
+                    priority: "normal",
+
+                    title: title,
+
+                    body: body,
+
+                    link:
+                        "/player-dashboard.html",
+
+                    updateType:
+                        "profile",
+
+                    senderPlayerId:
+                        playerDocId || "",
+
+                    senderEmail:
+                        auth.currentUser?.email ||
+                        ""
+
+                })
+
+            }
+        )
+        .catch(error => {
+
+            console.warn(
+                "4FU ANDROID FCM PROFILE UPDATE ERROR:",
+                error
+            );
+
+        });
+
+
+    } catch (error) {
+
+        console.warn(
+            "4FU ANDROID FCM PROFILE UPDATE ERROR:",
+            error
+        );
+
+    }
+
+}
 
 
 // ==========================================
@@ -279,12 +388,16 @@ document.getElementById("saveBtn").addEventListener(
 
 
         const saveBtn =
-            document.getElementById("saveBtn");
+            document.getElementById(
+                "saveBtn"
+            );
+
 
         const uploadStatus =
             document.getElementById(
                 "uploadStatus"
             );
+
 
         const uploadProgress =
             document.getElementById(
@@ -296,12 +409,13 @@ document.getElementById("saveBtn").addEventListener(
 
             saveBtn.disabled = true;
 
+
             saveBtn.innerHTML =
                 '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
 
             // ==========================================
-            // IMAGE UPLOAD
+            // PLAYER IMAGE UPLOAD
             // ==========================================
 
             let imageUrl =
@@ -319,8 +433,10 @@ document.getElementById("saveBtn").addEventListener(
                 uploadProgress.style.display =
                     "block";
 
+
                 uploadStatus.style.display =
                     "block";
+
 
                 uploadStatus.textContent =
                     "Uploading player image...";
@@ -338,7 +454,9 @@ document.getElementById("saveBtn").addEventListener(
 
 
                 const uploadTask =
-                    storageRef.put(imageFile);
+                    storageRef.put(
+                        imageFile
+                    );
 
 
                 await new Promise(
@@ -362,13 +480,11 @@ document.getElementById("saveBtn").addEventListener(
 
                             },
 
-
                             (error) => {
 
                                 reject(error);
 
                             },
-
 
                             async () => {
 
@@ -377,6 +493,7 @@ document.getElementById("saveBtn").addEventListener(
                                         .snapshot
                                         .ref
                                         .getDownloadURL();
+
 
                                 resolve();
 
@@ -408,6 +525,7 @@ document.getElementById("saveBtn").addEventListener(
 
                 uploadStatus.style.display =
                     "block";
+
 
                 uploadStatus.textContent =
                     "Uploading weapon image...";
@@ -451,13 +569,11 @@ document.getElementById("saveBtn").addEventListener(
 
                             },
 
-
                             (error) => {
 
                                 reject(error);
 
                             },
-
 
                             async () => {
 
@@ -466,6 +582,7 @@ document.getElementById("saveBtn").addEventListener(
                                         .snapshot
                                         .ref
                                         .getDownloadURL();
+
 
                                 resolve();
 
@@ -497,17 +614,27 @@ document.getElementById("saveBtn").addEventListener(
 
 
             const oldEmail =
-                (currentUser.email || "")
+                (
+                    currentUser.email || ""
+                )
                     .trim()
                     .toLowerCase();
 
 
-            const newEmail =
+            const enteredEmail =
                 document
-                    .getElementById("loginEmail")
+                    .getElementById(
+                        "loginEmail"
+                    )
                     .value
                     .trim()
                     .toLowerCase();
+
+
+            // Blank = keep old email
+            const newEmail =
+                enteredEmail ||
+                oldEmail;
 
 
             // ==========================================
@@ -525,6 +652,10 @@ document.getElementById("saveBtn").addEventListener(
                     ? birthdayField.value
                     : "";
 
+
+            // ==========================================
+            // PASSWORD FIELDS
+            // ==========================================
 
             const currentPassword =
                 document
@@ -551,15 +682,6 @@ document.getElementById("saveBtn").addEventListener(
                     )
                     .value
                     .trim();
-
-
-            if (!newEmail) {
-
-                throw new Error(
-                    "Login email cannot be empty."
-                );
-
-            }
 
 
             const changingEmail =
@@ -610,7 +732,9 @@ document.getElementById("saveBtn").addEventListener(
 
             if (changingPassword) {
 
-                if (newPassword.length < 6) {
+                if (
+                    newPassword.length < 6
+                ) {
 
                     throw new Error(
                         "New password must be at least 6 characters."
@@ -707,14 +831,18 @@ document.getElementById("saveBtn").addEventListener(
 
                     language:
                         document
-                            .getElementById("language")
+                            .getElementById(
+                                "language"
+                            )
                             .value
                             .trim(),
 
 
                     country:
                         document
-                            .getElementById("country")
+                            .getElementById(
+                                "country"
+                            )
                             .value,
 
 
@@ -729,27 +857,35 @@ document.getElementById("saveBtn").addEventListener(
                     level:
                         Number(
                             document
-                                .getElementById("level")
+                                .getElementById(
+                                    "level"
+                                )
                                 .value
                         ) || 0,
 
 
                     rank:
                         document
-                            .getElementById("rank")
+                            .getElementById(
+                                "rank"
+                            )
                             .value,
 
 
                     kd:
                         document
-                            .getElementById("kd")
+                            .getElementById(
+                                "kd"
+                            )
                             .value
                             .trim(),
 
 
                     headshot:
                         document
-                            .getElementById("headshot")
+                            .getElementById(
+                                "headshot"
+                            )
                             .value
                             .trim(),
 
@@ -757,7 +893,9 @@ document.getElementById("saveBtn").addEventListener(
                     matches:
                         Number(
                             document
-                                .getElementById("matches")
+                                .getElementById(
+                                    "matches"
+                                )
                                 .value
                         ) || 0,
 
@@ -765,7 +903,9 @@ document.getElementById("saveBtn").addEventListener(
                     booyah:
                         Number(
                             document
-                                .getElementById("booyah")
+                                .getElementById(
+                                    "booyah"
+                                )
                                 .value
                         ) || 0,
 
@@ -848,7 +988,7 @@ document.getElementById("saveBtn").addEventListener(
             // ==========================================
 
             // Android WebView only.
-            // Normal browser mein ye unavailable rahega.
+            // Normal browser mein unavailable rahega.
 
             if (window.FourFUBirthday) {
 
@@ -857,14 +997,18 @@ document.getElementById("saveBtn").addEventListener(
                     if (birthday) {
 
                         window.FourFUBirthday.setBirthday(
+
                             birthday,
+
                             document
                                 .getElementById(
                                     "name"
                                 )
                                 .value
                                 .trim()
+
                         );
+
 
                     } else if (
                         window.FourFUBirthday
@@ -876,6 +1020,7 @@ document.getElementById("saveBtn").addEventListener(
 
                     }
 
+
                 } catch (
                     birthdayError
                 ) {
@@ -886,6 +1031,41 @@ document.getElementById("saveBtn").addEventListener(
                     );
 
                 }
+
+            }
+
+
+            // ==========================================
+            // PROFILE UPDATE NOTIFICATION
+            // ==========================================
+
+            try {
+
+                send4FUProfileUpdateNotification({
+
+                    title:
+                        "🔥 4FU Profile Updated",
+
+                    body:
+                        (
+                            document
+                                .getElementById(
+                                    "name"
+                                )
+                                .value
+                                .trim() ||
+                            "A player"
+                        ) +
+                        " updated their 4FU profile."
+
+                });
+
+            } catch (notificationError) {
+
+                console.warn(
+                    "4FU profile notification failed:",
+                    notificationError
+                );
 
             }
 
