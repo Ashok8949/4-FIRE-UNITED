@@ -3978,14 +3978,76 @@
                 const doc =
                     snapshot.docs[0];
 
-
                 currentPlayer = {
-
                     id: doc.id,
-
                     ...doc.data()
-
                 };
+
+
+                /* =========================================
+                   4FU ANDROID APP - PLAYER IDENTITY SYNC
+                ========================================= */
+
+                if (
+                    window.FourFUIdentity &&
+                    typeof window.FourFUIdentity.setPlayerIdentity === "function"
+                ) {
+
+                    const playerId =
+                        String(
+                            currentPlayer.id || ""
+                        ).trim();
+
+                    const playerEmail =
+                        String(
+                            currentUser?.email ||
+                            currentPlayer.loginEmail ||
+                            ""
+                        ).trim();
+
+                    if (playerId) {
+
+                        console.log(
+                            "🔥 4FU Android Identity Sync:",
+                            playerId,
+                            playerEmail
+                        );
+
+                        try {
+
+                            window.FourFUIdentity.setPlayerIdentity(
+                                playerId,
+                                playerEmail
+                            );
+
+                            console.log(
+                                "✅ 4FU Android identity synced."
+                            );
+
+                        } catch (error) {
+
+                            console.error(
+                                "❌ 4FU Android identity sync failed:",
+                                error
+                            );
+
+                        }
+
+                    } else {
+
+                        console.warn(
+                            "⚠️ 4FU Android identity sync skipped: playerId missing."
+                        );
+
+                    }
+
+                } else {
+
+                    console.log(
+                        "ℹ️ Android identity bridge not available. Web browser detected."
+                    );
+
+                }
 
 
                 loadPlayerDashboard(
