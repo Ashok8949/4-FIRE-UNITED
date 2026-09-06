@@ -11,7 +11,25 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-    <script src="js/firebase.js"></script>
+    <script>
+        // 4FU Firebase initialization — standalone player profile page
+        const firebaseConfig = {
+            apiKey: "AIzaSyBS7S43uJdMtXCL1j4CKanXK6W_Fpq9MQg",
+            authDomain: "fire-united.firebaseapp.com",
+            projectId: "fire-united",
+            storageBucket: "fire-united.firebasestorage.app",
+            messagingSenderId: "643603449722",
+            appId: "1:643603449722:web:8a8952c317a3cecffe78c3",
+            measurementId: "G-JC6K4S3R9C",
+            databaseURL: "https://fire-united-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+    </script>
     <style>
         * { box-sizing: border-box; }
         html, body { margin: 0; min-height: 100%; }
@@ -205,9 +223,14 @@
         return;
     }
 
-    db = window.db || firebase.firestore();
+    function loadPlayerProfile() {
+        return db.collection("players").doc(playerId).get();
+    }
 
-    db.collection("players").doc(playerId).get().then(function (snap) {
+    // Wait for Firebase Auth to restore the existing session before reading the profile.
+    // This works with Firestore rules that require a signed-in player.
+    auth.onAuthStateChanged(function () {
+        loadPlayerProfile().then(function (snap) {
         if (!snap.exists) throw new Error("Player profile not found.");
 
         const p = snap.data() || {};
@@ -245,11 +268,12 @@
 
         loading.style.display = "none";
         profile.style.display = "block";
-    }).catch(function (err) {
-        console.error("4FU PLAYER PROFILE ERROR:", err);
-        loading.style.display = "none";
-        errorBox.style.display = "block";
-        errorBox.textContent = err.message || "Unable to load player profile.";
+        }).catch(function (err) {
+            console.error("4FU PLAYER PROFILE ERROR:", err);
+            loading.style.display = "none";
+            errorBox.style.display = "block";
+            errorBox.textContent = err.message || "Unable to load player profile.";
+        });
     });
 })();
 </script>
