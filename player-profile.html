@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 FIRE UNITED — Player Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; min-height: 100%; }
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: #070707;
+            color: #f5f5f5;
+            padding: 24px 16px 50px;
+        }
+        .page { width: min(980px, 100%); margin: 0 auto; }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+        .brand { font-weight: 900; letter-spacing: 2px; }
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            text-decoration: none;
+            background: #171717;
+            border: 1px solid #303030;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-weight: 700;
+        }
+        .back:hover { border-color: #777; }
+        .hero {
+            background: linear-gradient(145deg, #151515, #0c0c0c);
+            border: 1px solid #2b2b2b;
+            border-radius: 20px;
+            padding: 28px;
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            box-shadow: 0 18px 50px rgba(0,0,0,.35);
+        }
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f5f5f5;
+            background: #111;
+            flex: 0 0 auto;
+        }
+        .eyebrow { margin: 0 0 8px; color: #aaa; font-size: 12px; font-weight: 800; letter-spacing: 2px; }
+        h1 { margin: 0 0 8px; font-size: clamp(30px, 6vw, 52px); line-height: 1; }
+        .role { color: #cfcfcf; font-weight: 700; }
+        .guild { margin-top: 8px; color: #999; }
+        .status { margin-top: 14px; display: inline-flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 800; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; background: #38d16f; display: inline-block; }
+        .grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; margin-top: 16px; }
+        .card { background: #111; border: 1px solid #292929; border-radius: 16px; padding: 20px; }
+        .card h2 { margin: 0 0 16px; font-size: 17px; }
+        .stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+        .stat { background: #171717; border: 1px solid #262626; border-radius: 12px; padding: 13px 10px; text-align: center; }
+        .stat strong { display: block; font-size: 22px; }
+        .stat span { color: #999; font-size: 11px; font-weight: 700; }
+        .rows { display: grid; gap: 10px; }
+        .row { display: flex; justify-content: space-between; gap: 20px; border-bottom: 1px solid #222; padding-bottom: 9px; }
+        .row:last-child { border-bottom: 0; padding-bottom: 0; }
+        .label { color: #888; }
+        .value { text-align: right; font-weight: 700; overflow-wrap: anywhere; }
+        .socials { display: flex; flex-wrap: wrap; gap: 9px; }
+        .socials a { color: #fff; text-decoration: none; background: #181818; border: 1px solid #2b2b2b; padding: 9px 12px; border-radius: 9px; }
+        .bio { color: #c7c7c7; line-height: 1.65; white-space: pre-wrap; }
+        .loading, .error { text-align: center; padding: 70px 20px; background: #111; border: 1px solid #292929; border-radius: 18px; }
+        .error { color: #ff8a8a; }
+        @media (max-width: 700px) {
+            .hero { flex-direction: column; text-align: center; }
+            .grid { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+            .row { flex-direction: column; gap: 3px; }
+            .value { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="topbar">
+        <div class="brand">4 FIRE UNITED</div>
+        <a class="back" href="/player-dashboard.html"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div id="loading" class="loading">Loading player profile...</div>
+    <div id="error" class="error" style="display:none;"></div>
+
+    <main id="profile" style="display:none;">
+        <section class="hero">
+            <img id="avatar" class="avatar" src="images/logo/logo.png" alt="Player">
+            <div>
+                <p class="eyebrow">4FU PLAYER PROFILE</p>
+                <h1 id="name">Player</h1>
+                <div id="role" class="role">Player</div>
+                <div id="guild" class="guild"></div>
+                <div class="status"><span class="dot"></span> 4FU PLAYER</div>
+            </div>
+        </section>
+
+        <div class="grid">
+            <section class="card">
+                <h2>PLAYER STATS</h2>
+                <div class="stats">
+                    <div class="stat"><strong id="rank">-</strong><span>RANK</span></div>
+                    <div class="stat"><strong id="level">-</strong><span>LEVEL</span></div>
+                    <div class="stat"><strong id="kd">-</strong><span>KD</span></div>
+                    <div class="stat"><strong id="headshot">-</strong><span>HEADSHOT</span></div>
+                    <div class="stat"><strong id="matches">-</strong><span>MATCHES</span></div>
+                    <div class="stat"><strong id="booyah">-</strong><span>BOOYAH</span></div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>PLAYER INFO</h2>
+                <div class="rows">
+                    <div class="row"><span class="label">Language</span><span id="language" class="value">-</span></div>
+                    <div class="row"><span class="label">Joined</span><span id="joined" class="value">-</span></div>
+                    <div class="row"><span class="label">Email</span><span id="email" class="value">-</span></div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>ABOUT PLAYER</h2>
+                <div id="bio" class="bio">No bio available.</div>
+            </section>
+
+            <section class="card">
+                <h2>SOCIALS</h2>
+                <div id="socials" class="socials"></div>
+            </section>
+        </div>
+    </main>
+</div>
+
+<script>
+(function () {
+    const loading = document.getElementById("loading");
+    const errorBox = document.getElementById("error");
+    const profile = document.getElementById("profile");
+    const params = new URLSearchParams(window.location.search);
+    const playerId = String(params.get("id") || params.get("playerId") || "").trim();
+
+    const fallbackImage = "images/logo/logo.png";
+
+    function value(...values) {
+        for (const item of values) {
+            if (item !== undefined && item !== null && String(item).trim() !== "") return item;
+        }
+        return "-";
+    }
+
+    function set(id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value(text);
+    }
+
+    function safeUrl(raw) {
+        const text = String(raw || "").trim();
+        if (!text) return "";
+        if (/^https?:\/\//i.test(text)) return text;
+        return "https://" + text.replace(/^\/+/, "");
+    }
+
+    function addSocial(container, icon, label, rawUrl) {
+        const url = safeUrl(rawUrl);
+        if (!url) return;
+        const a = document.createElement("a");
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.innerHTML = `<i class="${icon}"></i> ${label}`;
+        container.appendChild(a);
+    }
+
+    if (!playerId) {
+        loading.style.display = "none";
+        errorBox.style.display = "block";
+        errorBox.textContent = "Player profile ID is missing.";
+        return;
+    }
+
+    if (!window.firebase || !firebase.firestore) {
+        loading.style.display = "none";
+        errorBox.style.display = "block";
+        errorBox.textContent = "Firebase could not be loaded.";
+        return;
+    }
+
+    db = window.db || firebase.firestore();
+
+    db.collection("players").doc(playerId).get().then(function (snap) {
+        if (!snap.exists) throw new Error("Player profile not found.");
+
+        const p = snap.data() || {};
+        const playerName = value(p.name, p.playerName, p.ign, "Player");
+        const image = value(p.image, p.photo, p.profileImage, fallbackImage);
+
+        document.getElementById("name").textContent = playerName;
+        document.getElementById("avatar").src = image;
+        document.getElementById("avatar").onerror = function () { this.src = fallbackImage; };
+        set("role", value(p.role, "Player"));
+        set("guild", p.guild);
+        set("rank", p.rank);
+        set("level", p.level);
+        set("kd", p.kd ?? p.KD);
+        set("headshot", p.headshot ?? p.headshotRate);
+        set("matches", p.matches);
+        set("booyah", p.booyah ?? p.booyahs);
+        set("language", p.language);
+        set("email", p.loginEmail || p.email);
+
+        let joined = p.joined || p.joinedAt || p.createdAt;
+        if (joined && typeof joined.toDate === "function") joined = joined.toDate().toLocaleDateString();
+        else if (joined instanceof Date) joined = joined.toLocaleDateString();
+        set("joined", joined);
+
+        const bio = value(p.bio, p.about, p.description, "No bio available.");
+        document.getElementById("bio").textContent = bio;
+
+        const socials = document.getElementById("socials");
+        addSocial(socials, "fa-brands fa-instagram", "Instagram", p.instagram);
+        addSocial(socials, "fa-brands fa-youtube", "YouTube", p.youtube);
+        addSocial(socials, "fa-brands fa-discord", "Discord", p.discord);
+        addSocial(socials, "fa-brands fa-facebook", "Facebook", p.facebook);
+        if (!socials.children.length) socials.textContent = "No social links available.";
+
+        loading.style.display = "none";
+        profile.style.display = "block";
+    }).catch(function (err) {
+        console.error("4FU PLAYER PROFILE ERROR:", err);
+        loading.style.display = "none";
+        errorBox.style.display = "block";
+        errorBox.textContent = err.message || "Unable to load player profile.";
+    });
+})();
+</script>
+</body>
+</html>
