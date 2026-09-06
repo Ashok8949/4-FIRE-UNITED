@@ -8079,11 +8079,32 @@
                     }
 
                     // Create new request
+                    // ============================================
+                    // RE-SEND FRIEND REQUEST
+                    // If an old request was declined, delete it
+                    // first so the new request can be created.
+                    // ============================================
+
+                    if (
+                        requestSnap.exists &&
+                        requestSnap.data().status !== "pending"
+                    ) {
+
+                        await requestRef.delete();
+                    }
+
+
+                    // ============================================
+                    // CREATE NEW FRIEND REQUEST
+                    // ============================================
+
                     await requestRef.set({
 
-                        fromId: currentPlayer.id,
+                        fromId:
+                            currentPlayer.id,
 
-                        toId: toPlayerId,
+                        toId:
+                            toPlayerId,
 
                         fromEmail:
                             currentUser?.email ||
@@ -8093,14 +8114,16 @@
                         fromName:
                             friendName(currentPlayer),
 
-                        status: "pending",
+                        status:
+                            "pending",
 
                         createdAt:
-                            firebase.firestore.FieldValue.serverTimestamp(),
+                            firebase.firestore.FieldValue
+                                .serverTimestamp(),
 
                         updatedAt:
-                            firebase.firestore.FieldValue.serverTimestamp()
-
+                            firebase.firestore.FieldValue
+                                .serverTimestamp()
                     });
 
                     /* =========================================
