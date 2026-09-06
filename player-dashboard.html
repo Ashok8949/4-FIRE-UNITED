@@ -4554,6 +4554,22 @@
                     };
 
 
+                    /* =================================
+                       4FU ANDROID FCM - PROFILE UPDATE
+                       Uses the funny PROFILE notification pool.
+                    ================================= */
+                    send4FUPlayerUpdateNotification({
+                        title: "👤 Profile Update",
+                        body:
+                            (currentPlayer.name ||
+                                currentPlayer.playerName ||
+                                currentPlayer.ign ||
+                                "A player") +
+                            " updated their 4FU profile 👀🔥",
+                        updateType: "profile"
+                    });
+
+
                     loadPlayerDashboard(
                         currentPlayer
                     );
@@ -6727,7 +6743,7 @@
         let fireUnitedMessaging = null;
 
 
-        async function setupFireUnitedPushNotifications() {
+        async function setupFireUnitedPushNotifications() { return; // 4FU WEB PUSH DISABLED - Android app only
 
             if (!currentPlayer) {
                 console.warn("No player logged in.");
