@@ -34,7 +34,21 @@
     <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="css/area-map.css">
+    <link rel="stylesheet" href="./css/area-map.css?v=20260908-1">
+
+
+    <!-- 4FU DEPLOYMENT CHECK
+         Keep css/area-map.css and js/area-map.js in the same deployment.
+         The visible page must never fall back to browser-default styling. -->
+    <style id="areaMapBootGuard">
+        html, body {
+            background:#02070d;
+            color:#f4f7fb;
+            margin:0;
+            width:100%;
+            min-height:100%;
+        }
+    </style>
 
 </head>
 
@@ -999,8 +1013,18 @@
 </div>
 
 
+
+<script>
+window.addEventListener("error", function (event) {
+    if (event && event.target && event.target.tagName === "LINK" &&
+        event.target.href && event.target.href.indexOf("/css/area-map.css") !== -1) {
+        console.warn("4FU World Explorer: area-map.css did not load. Make sure css/area-map.css is deployed.");
+    }
+}, true);
+</script>
+
 <!-- JS -->
-<script src="js/area-map.js?v=20260907-5"></script>
+<script src="./js/area-map.js?v=20260908-1"></script>
 
 </body>
 </html>
