@@ -19,15 +19,40 @@ const year = document.getElementById("year");
             PAGE LOADED
 =========================================*/
 
-
+window.addEventListener("load", () => {
 
     // Hide Loader
+    if (loader) {
 
-   
+        requestAnimationFrame(() => {
+
+            loader.classList.add("hide");
+
+            setTimeout(() => {
+
+                loader.remove();
+
+            }, 300);
+
+        });
+
+    }
 
     // Current Year
+    if (year) {
 
-    
+        year.textContent = new Date().getFullYear();
+
+    }
+
+    // Lazy Loading
+    document.querySelectorAll("img").forEach((img) => {
+
+        img.loading = "lazy";
+
+    });
+
+});
 
 /*=========================================
             MOBILE MENU
@@ -61,25 +86,17 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 
     anchor.addEventListener("click", (e) => {
 
-        const href = anchor.getAttribute("href");
-
-        // Ignore empty or placeholder links
-        if (!href || href === "#") return;
-
-        // Only handle in-page anchors
-        if (!href.startsWith("#")) return;
-
-        const target = document.querySelector(href);
+        const target = document.querySelector(
+            anchor.getAttribute("href")
+        );
 
         if (!target) return;
 
         e.preventDefault();
 
         target.scrollIntoView({
-
             behavior: "smooth",
             block: "start"
-
         });
 
     });
@@ -90,7 +107,9 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
             ACTIVE NAV LINK
 =========================================*/
 
-const currentPage = location.pathname.split("/").pop();
+const currentPage = location.pathname
+    .split("/")
+    .pop();
 
 document.querySelectorAll(".nav-links a").forEach((link) => {
 
@@ -109,70 +128,179 @@ document.querySelectorAll(".nav-links a").forEach((link) => {
 
 /*=========================================
             NAVBAR EFFECT
+        4FU FINAL SCROLL SYSTEM
+
+        DOWN  = HIDE
+        UP    = SHOW
+        TOP   = SHOW
 =========================================*/
 
-if (navbar) {
+const navbarHeader = document.querySelector("header");
 
-    let lastScroll = 0;
+if (navbarHeader) {
 
-    window.addEventListener("scroll", () => {
+    let lastScrollY = Math.max(
+        0,
+        window.scrollY ||
+        window.pageYOffset ||
+        0
+    );
 
-        const current = window.pageYOffset;
+    let ticking = false;
 
-        // Background
+    function updateNavbar() {
 
-        if (current > 40) {
+        const currentScrollY = Math.max(
+            0,
+            window.scrollY ||
+            window.pageYOffset ||
+            0
+        );
 
-            navbar.style.background = "rgba(0,0,0,.92)";
-            navbar.style.boxShadow = "0 10px 30px rgba(0,0,0,.35)";
+        const delta =
+            currentScrollY - lastScrollY;
 
-        } else {
+        /*-------------------------------------
+            ALWAYS SHOW AT TOP
+        -------------------------------------*/
 
-            navbar.style.background = "rgba(0,0,0,.35)";
-            navbar.style.boxShadow = "none";
+        if (currentScrollY <= 20) {
+
+            navbarHeader.classList.remove(
+                "nav-hidden"
+            );
 
         }
 
-        // Hide / Show
+        /*-------------------------------------
+            KEEP NAVBAR VISIBLE
+            WHEN MOBILE MENU IS OPEN
+        -------------------------------------*/
 
-        if (current > lastScroll && current > 120) {
+        else if (
+            navLinks &&
+            navLinks.classList.contains("active")
+        ) {
 
-            navbar.style.transform = "translateY(-100%)";
-
-        } else {
-
-            navbar.style.transform = "translateY(0)";
+            navbarHeader.classList.remove(
+                "nav-hidden"
+            );
 
         }
 
-        lastScroll = current;
+        /*-------------------------------------
+            SCROLL DOWN
+            HIDE NAVBAR
+        -------------------------------------*/
 
-    }, { passive: true });
+        else if (
+            delta > 6 &&
+            currentScrollY > 90
+        ) {
+
+            navbarHeader.classList.add(
+                "nav-hidden"
+            );
+
+        }
+
+        /*-------------------------------------
+            SCROLL UP
+            SHOW NAVBAR
+        -------------------------------------*/
+
+        else if (delta < -6) {
+
+            navbarHeader.classList.remove(
+                "nav-hidden"
+            );
+
+        }
+
+        lastScrollY = currentScrollY;
+
+        ticking = false;
+
+    }
+
+    /*-----------------------------------------
+        SCROLL LISTENER
+    -----------------------------------------*/
+
+    window.addEventListener(
+        "scroll",
+        () => {
+
+            if (ticking) return;
+
+            ticking = true;
+
+            window.requestAnimationFrame(
+                updateNavbar
+            );
+
+        },
+        {
+            passive: true
+        }
+    );
+
+    /*-----------------------------------------
+        BROWSER BACK/FORWARD
+    -----------------------------------------*/
+
+    window.addEventListener(
+        "pageshow",
+        () => {
+
+            navbarHeader.classList.remove(
+                "nav-hidden"
+            );
+
+            lastScrollY = Math.max(
+                0,
+                window.scrollY ||
+                window.pageYOffset ||
+                0
+            );
+
+        }
+    );
 
 }
+
 /*=========================================
             SCROLL TO TOP
 =========================================*/
 
 if (scrollBtn) {
 
-    window.addEventListener("scroll", () => {
+    window.addEventListener(
+        "scroll",
+        () => {
 
-        scrollBtn.style.display =
-            window.scrollY > 300 ? "flex" : "none";
+            scrollBtn.style.display =
+                window.scrollY > 300
+                    ? "flex"
+                    : "none";
 
-    }, { passive: true });
+        },
+        {
+            passive: true
+        }
+    );
 
-    scrollBtn.addEventListener("click", () => {
+    scrollBtn.addEventListener(
+        "click",
+        () => {
 
-        window.scrollTo({
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
 
-            top: 0,
-            behavior: "smooth"
-
-        });
-
-    });
+        }
+    );
 
 }
 
@@ -180,30 +308,46 @@ if (scrollBtn) {
             BUTTON ANIMATION
 =========================================*/
 
-document.querySelectorAll(".btn1,.btn2,.join-btn").forEach((btn) => {
+document
+    .querySelectorAll(
+        ".btn1,.btn2,.join-btn"
+    )
+    .forEach((btn) => {
 
-    btn.addEventListener("click", () => {
+        btn.addEventListener(
+            "click",
+            () => {
 
-        btn.style.transform = "scale(.96)";
+                btn.style.transform =
+                    "scale(.96)";
 
-        setTimeout(() => {
+                setTimeout(() => {
 
-            btn.style.transform = "";
+                    btn.style.transform = "";
 
-        }, 120);
+                }, 120);
+
+            }
+        );
 
     });
-
-});
 
 /*=========================================
             SCROLL REVEAL
 =========================================*/
 
 const revealItems = document.querySelectorAll(
-
-".about,.players,.hall,.gallery-preview,.stats-section,.join-team,.team-card,.player-profile,.player-banner,.tournament-card,.gallery-box"
-
+    ".about," +
+    ".players," +
+    ".hall," +
+    ".gallery-preview," +
+    ".stats-section," +
+    ".join-team," +
+    ".team-card," +
+    ".player-profile," +
+    ".player-banner," +
+    ".tournament-card," +
+    ".gallery-box"
 );
 
 function revealOnScroll() {
@@ -211,10 +355,8 @@ function revealOnScroll() {
     revealItems.forEach((item) => {
 
         if (
-
             item.getBoundingClientRect().top <
             window.innerHeight - 80
-
         ) {
 
             item.classList.add("show");
@@ -226,13 +368,11 @@ function revealOnScroll() {
 }
 
 window.addEventListener(
-
     "scroll",
-
     revealOnScroll,
-
-    { passive: true }
-
+    {
+        passive: true
+    }
 );
 
 revealOnScroll();
@@ -241,39 +381,51 @@ revealOnScroll();
             COUNTER
 =========================================*/
 
-const counters = document.querySelectorAll(".stats-card h1");
+const counters =
+    document.querySelectorAll(
+        ".stats-card h1"
+    );
 
 let counterStarted = false;
 
-function animateCounter(counter, endValue, suffix) {
+function animateCounter(
+    counter,
+    endValue,
+    suffix
+) {
 
     let start = 0;
 
     const duration = 1200;
 
-    const startTime = performance.now();
+    const startTime =
+        performance.now();
 
     function update(now) {
 
         const progress = Math.min(
-
-            (now - startTime) / duration,
-
+            (now - startTime) /
+                duration,
             1
-
         );
 
-        start = Math.floor(progress * endValue);
+        start = Math.floor(
+            progress * endValue
+        );
 
-        counter.textContent = start + suffix;
+        counter.textContent =
+            start + suffix;
 
         if (progress < 1) {
 
-            requestAnimationFrame(update);
+            requestAnimationFrame(
+                update
+            );
 
         } else {
 
-            counter.textContent = endValue + suffix;
+            counter.textContent =
+                endValue + suffix;
 
         }
 
@@ -287,41 +439,45 @@ function startCounter() {
 
     if (counterStarted) return;
 
-    const section = document.querySelector(".stats-section");
+    const section =
+        document.querySelector(
+            ".stats-section"
+        );
 
     if (!section) return;
 
     if (
-
         section.getBoundingClientRect().top <
         window.innerHeight - 100
-
     ) {
 
         counterStarted = true;
 
         counters.forEach((counter) => {
 
-            const text = counter.textContent;
+            const text =
+                counter.textContent;
 
-            const number = parseInt(
+            const number =
+                parseInt(
+                    text.replace(
+                        /\D/g,
+                        ""
+                    )
+                );
 
-                text.replace(/\D/g, "")
-
-            );
-
-            const suffix = text.replace(/[0-9]/g, "");
+            const suffix =
+                text.replace(
+                    /[0-9]/g,
+                    ""
+                );
 
             if (!isNaN(number)) {
 
                 animateCounter(
-
                     counter,
-
                     number,
-
                     suffix
-
                 );
 
             }
@@ -333,13 +489,11 @@ function startCounter() {
 }
 
 window.addEventListener(
-
     "scroll",
-
     startCounter,
-
-    { passive: true }
-
+    {
+        passive: true
+    }
 );
 
 startCounter();
@@ -348,204 +502,256 @@ startCounter();
         PAGE VISIBILITY OPTIMIZATION
 =========================================*/
 
-document.addEventListener("visibilitychange", () => {
+document.addEventListener(
+    "visibilitychange",
+    () => {
 
-    if (document.hidden) {
+        if (document.hidden) {
 
-        console.log("Page Hidden");
+            console.log(
+                "Page Hidden"
+            );
 
-    } else {
+        } else {
 
-        revealOnScroll();
-        startCounter();
+            revealOnScroll();
+            startCounter();
+
+        }
 
     }
-
-});
+);
 
 /*=========================================
         VISITOR COUNTER
 =========================================*/
 
-window.addEventListener("load", () => {
+(function () {
 
-    setTimeout(() => {
+    const KEY =
+        "4fu-last-visit";
 
-        const KEY = "4fu-last-visit";
+    const now =
+        Date.now();
 
-        const now = Date.now();
+    const lastVisit =
+        Number(
+            localStorage.getItem(KEY)
+        ) || 0;
 
-        const lastVisit =
-            Number(localStorage.getItem(KEY)) || 0;
+    /*-------------------------------------
+        COUNT ONLY ONCE EVERY 30 MINUTES
+    -------------------------------------*/
 
-        if (now - lastVisit < 30 * 60 * 1000) {
+    if (
+        now - lastVisit <
+        30 * 60 * 1000
+    ) {
 
-            return;
+        return;
 
-        }
+    }
 
-        localStorage.setItem(KEY, now);
+    localStorage.setItem(
+        KEY,
+        now
+    );
 
-        if (typeof db === "undefined") return;
+    if (
+        typeof db === "undefined"
+    ) {
 
-        db.collection("stats")
+        return;
+
+    }
+
+    db.collection("stats")
         .doc("visitors")
-        .set({
+        .set(
+            {
 
-            total: firebase.firestore.FieldValue.increment(1),
+                total:
+                    firebase.firestore
+                        .FieldValue
+                        .increment(1),
 
-            lastVisit:
-            firebase.firestore.FieldValue.serverTimestamp()
+                lastVisit:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
 
-        }, {
+            },
+            {
+                merge: true
+            }
+        )
+        .catch((err) => {
 
-            merge: true
+            console.error(
+                "Visitor Error:",
+                err
+            );
 
-        })
+        });
 
-        .catch(console.error);
-
-    },5000);
-
-});
+})();
 
 /*=========================================
         DISABLE RIGHT CLICK
 =========================================*/
 
-document.addEventListener("contextmenu", (e) => {
+document.addEventListener(
+    "contextmenu",
+    (e) => {
 
-    // Uncomment if required
+        // Uncomment if required
+        // e.preventDefault();
 
-    // e.preventDefault();
-
-});
+    }
+);
 
 /*=========================================
         IMAGE OPTIMIZATION
 =========================================*/
 
-document.querySelectorAll("img").forEach((img) => {
+document
+    .querySelectorAll("img")
+    .forEach((img) => {
 
-    img.decoding = "async";
+        img.decoding = "async";
 
-    img.loading = "lazy";
+        img.loading = "lazy";
 
-});
+    });
 
 /*=========================================
         MOBILE TOUCH OPTIMIZATION
 =========================================*/
 
-document.body.style.webkitTapHighlightColor = "transparent";
+document.body.style.webkitTapHighlightColor =
+    "transparent";
 
 /*=========================================
         PERFORMANCE LOG
 =========================================*/
 
-window.addEventListener("load", () => {
+window.addEventListener(
+    "load",
+    () => {
 
-    console.log(
+        console.log(
+            "%c4 FIRE UNITED Loaded Successfully",
+            "color:#ff6a00;" +
+            "font-size:14px;" +
+            "font-weight:bold;"
+        );
 
-        "%c4 FIRE UNITED Loaded Successfully",
-
-        "color:#ff6a00;font-size:14px;font-weight:bold;"
-
-    );
-
-});
+    }
+);
 
 /*=========================================
         MOBILE PERFORMANCE
 =========================================*/
 
-window.addEventListener("pageshow", () => {
+window.addEventListener(
+    "pageshow",
+    () => {
 
-    revealOnScroll();
-    startCounter();
+        revealOnScroll();
+        startCounter();
 
-});
+    }
+);
 
 /*=========================================
         SAFE LINKS
 =========================================*/
 
-document.querySelectorAll("a[target='_blank']").forEach((link) => {
+document
+    .querySelectorAll(
+        "a[target='_blank']"
+    )
+    .forEach((link) => {
 
-    link.setAttribute(
+        link.setAttribute(
+            "rel",
+            "noopener noreferrer"
+        );
 
-        "rel",
-
-        "noopener noreferrer"
-
-    );
-
-});
+    });
 
 /*=========================================
         ESC KEY CLOSE MENU
 =========================================*/
 
-document.addEventListener("keydown", (e) => {
+document.addEventListener(
+    "keydown",
+    (e) => {
 
-    if (
+        if (
+            e.key === "Escape" &&
+            navLinks &&
+            navLinks.classList.contains(
+                "active"
+            )
+        ) {
 
-        e.key === "Escape" &&
-        navLinks &&
-        navLinks.classList.contains("active")
+            navLinks.classList.remove(
+                "active"
+            );
 
-    ) {
-
-        navLinks.classList.remove("active");
+        }
 
     }
-
-});
+);
 
 /*=========================================
         AUTO CLOSE MENU
 =========================================*/
 
-document.addEventListener("click", (e) => {
+document.addEventListener(
+    "click",
+    (e) => {
 
-    if (!menuBtn || !navLinks) return;
+        if (
+            !menuBtn ||
+            !navLinks
+        ) {
 
-    if (
+            return;
 
-        !menuBtn.contains(e.target) &&
-        !navLinks.contains(e.target)
+        }
 
-    ) {
+        if (
+            !menuBtn.contains(e.target) &&
+            !navLinks.contains(e.target)
+        ) {
 
-        navLinks.classList.remove("active");
+            navLinks.classList.remove(
+                "active"
+            );
+
+        }
 
     }
-
-});
+);
 
 /*=========================================
         IMAGE FALLBACK
 =========================================*/
 
-document.querySelectorAll("img").forEach((img) => {
+document
+    .querySelectorAll("img")
+    .forEach((img) => {
 
-    img.onerror = function () {
+        img.onerror = function () {
 
-        this.onerror = null;
+            this.src =
+                "images/logo/logo.png";
 
-if (location.pathname.includes("/players/")) {
+        };
 
-    this.src = "../images/logo/logo.png";
-
-} else {
-
-    this.src = "images/logo/logo.png";
-
-}
-
-    };
-
-});
+    });
 
 /*=========================================
         CONSOLE BRANDING

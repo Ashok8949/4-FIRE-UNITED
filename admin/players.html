@@ -11,89 +11,800 @@
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap"
+rel="stylesheet">
 
-<link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
+<link rel="stylesheet"
+href="CSS/dashboard.css?v=1783829699314">
 
 <style>
+
 body{
     visibility:hidden;
 }
+
+/* =========================================
+   PLAYER MANAGER
+========================================= */
+
+.player-manager{
+    padding:0 5px 60px;
+}
+
+/* Heading */
+
+.manager-heading{
+    margin-bottom:24px;
+}
+
+.manager-heading h2{
+    margin:0;
+    font-family:'Bebas Neue',sans-serif;
+    font-size:32px;
+    letter-spacing:1px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.manager-heading h2 i{
+    font-size:28px;
+}
+
+.manager-heading p{
+    margin:5px 0 0;
+    font-size:13px;
+    opacity:.55;
+}
+
+/* =========================================
+   TOOLBAR
+========================================= */
+
+.player-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
+    padding:16px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    background:rgba(255,255,255,.025);
+}
+
+.search-box{
+    width:min(440px,100%);
+    height:45px;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:0 15px;
+
+    border-radius:10px;
+
+    background:#0d0d0d;
+    border:1px solid rgba(255,255,255,.1);
+
+    transition:.25s;
+}
+
+.search-box:focus-within{
+    border-color:rgba(255,115,0,.55);
+    box-shadow:0 0 0 3px rgba(255,115,0,.06);
+}
+
+.search-box i{
+    opacity:.5;
+    font-size:13px;
+}
+
+.search-box input{
+    width:100%;
+    height:100%;
+
+    border:0;
+    outline:0;
+
+    background:transparent;
+    color:#fff;
+
+    font-family:Poppins,sans-serif;
+    font-size:13px;
+}
+
+.search-box input::placeholder{
+    color:#777;
+}
+
+.player-count{
+    font-size:13px;
+    opacity:.6;
+    white-space:nowrap;
+}
+
+/* =========================================
+   PLAYER GRID
+========================================= */
+
+.player-list{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fill,minmax(310px,1fr));
+
+    gap:18px;
+}
+
+/* =========================================
+   PLAYER CARD
+========================================= */
+
+.player-card{
+    position:relative;
+
+    overflow:hidden;
+
+    padding:18px;
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.player-card:hover{
+    transform:translateY(-4px);
+
+    border-color:rgba(255,115,0,.35);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.25);
+}
+
+.player-card::after{
+    content:"";
+
+    position:absolute;
+
+    width:140px;
+    height:140px;
+
+    top:-75px;
+    right:-75px;
+
+    border-radius:50%;
+
+    background:rgba(255,115,0,.08);
+
+    filter:blur(12px);
+
+    pointer-events:none;
+}
+
+/* =========================================
+   PLAYER TOP
+========================================= */
+
+.player-top{
+    position:relative;
+
+    display:flex;
+    align-items:center;
+
+    gap:14px;
+
+    margin-bottom:18px;
+}
+
+.player-image{
+    width:68px;
+    height:68px;
+
+    flex-shrink:0;
+
+    object-fit:cover;
+
+    border-radius:14px;
+
+    background:#111;
+
+    border:1px solid rgba(255,255,255,.12);
+}
+
+.player-info{
+    min-width:0;
+}
+
+.player-name{
+    font-size:17px;
+    font-weight:700;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.player-ign{
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:#aaa;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.player-ign i{
+    margin-right:4px;
+}
+
+/* =========================================
+   PLAYER DETAILS
+========================================= */
+
+.player-details{
+    position:relative;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:9px;
+
+    margin-bottom:17px;
+}
+
+.player-detail{
+    min-width:0;
+
+    padding:11px 7px;
+
+    text-align:center;
+
+    border-radius:10px;
+
+    background:#0d0d0d;
+
+    border:1px solid rgba(255,255,255,.055);
+}
+
+.player-detail > span:first-child{
+    display:block;
+
+    margin-bottom:5px;
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.7px;
+
+    color:#777;
+}
+
+.player-detail strong{
+    display:block;
+
+    font-size:12px;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+}
+
+/* Role badge */
+
+.role-badge{
+    display:inline-flex !important;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:5px;
+
+    max-width:100%;
+
+    padding:4px 7px;
+
+    border-radius:6px;
+
+    background:rgba(255,255,255,.07);
+
+    font-size:10px !important;
+
+    color:#ddd;
+}
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.player-actions{
+    position:relative;
+
+    display:flex;
+
+    gap:9px;
+
+    padding-top:14px;
+
+    border-top:1px solid rgba(255,255,255,.07);
+}
+
+.edit-btn,
+.delete-btn{
+
+    flex:1;
+
+    min-height:39px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:7px;
+
+    border-radius:9px;
+
+    font-family:Poppins,sans-serif;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    text-decoration:none;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.edit-btn{
+
+    color:#fff;
+
+    background:rgba(255,255,255,.06);
+
+    border:1px solid rgba(255,255,255,.09);
+}
+
+.edit-btn:hover{
+
+    background:rgba(255,255,255,.11);
+
+    transform:translateY(-2px);
+}
+
+.delete-btn{
+
+    color:#fff;
+
+    background:rgba(255,59,48,.1);
+
+    border:1px solid rgba(255,59,48,.22);
+}
+
+.delete-btn:hover{
+
+    background:#e53935;
+
+    border-color:#e53935;
+
+    transform:translateY(-2px);
+}
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-state{
+
+    grid-column:1/-1;
+
+    text-align:center;
+
+    padding:70px 20px;
+
+    border-radius:16px;
+
+    border:1px dashed rgba(255,255,255,.1);
+
+    background:rgba(255,255,255,.02);
+}
+
+.empty-state i{
+
+    display:block;
+
+    margin-bottom:14px;
+
+    font-size:38px;
+
+    opacity:.3;
+}
+
+.empty-state h3{
+
+    margin:0 0 6px;
+
+    font-size:18px;
+}
+
+.empty-state p{
+
+    margin:0;
+
+    font-size:12px;
+
+    opacity:.5;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:700px){
+
+    .player-manager{
+        padding:0 0 40px;
+    }
+
+    .manager-heading h2{
+        font-size:28px;
+    }
+
+    .player-toolbar{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+    .player-count{
+        text-align:right;
+    }
+
+    .player-list{
+        grid-template-columns:1fr;
+    }
+
+}
+
 </style>
 
 </head>
 
+
 <body>
 
-<div class="main">
+<!-- =========================================
+     SIDEBAR
+========================================= -->
 
-<div class="topbar">
+<div class="sidebar">
 
-    <h1>PLAYER MANAGER</h1>
+    <div class="logo">
 
-    <div class="top-actions">
+        <img src="../images/logo/logo.png">
 
-    <a href="dashboard.html" class="back-btn">
-        <i class="fa-solid fa-arrow-left"></i>
-        Back Dashboard
-    </a>
-
-    <div class="search-box">
-
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-            type="text"
-            id="searchPlayer"
-            placeholder="Search Player">
+        <h2>4 FIRE UNITED</h2>
 
     </div>
 
-    <a href="add-player.html" class="add-btn">
-        <i class="fa-solid fa-plus"></i>
-        Add Player
-    </a>
+
+    <ul>
+
+        <li>
+
+            <a href="dashboard.html">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <li class="active">
+
+            <a href="players.html">
+
+                <i class="fa-solid fa-users"></i>
+
+                Players
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="tournaments.html">
+
+                <i class="fa-solid fa-trophy"></i>
+
+                Tournaments
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="gallery.html">
+
+                <i class="fa-solid fa-image"></i>
+
+                Gallery
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="clips.html">
+
+                <i class="fa-solid fa-film"></i>
+
+                Clips
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="announcements.html">
+
+                <i class="fa-solid fa-bullhorn"></i>
+
+                Announcements
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="messages.html">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                Messages
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="applications.html">
+
+                <i class="fa-solid fa-file-circle-check"></i>
+
+                Applications
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="challenge-registrations.html">
+
+                <i class="fa-solid fa-fire"></i>
+
+                Challenges
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="settings.html">
+
+                <i class="fa-solid fa-gear"></i>
+
+                Settings
+
+            </a>
+
+        </li>
+
+    </ul>
 
 </div>
 
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
+<div class="main">
+
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <h1>PLAYER MANAGER</h1>
+
+
+        <div class="admin">
+
+            <img src="../images/logo/logo.png">
+
+            <span>Administrator</span>
+
+            <button id="logoutBtn" class="join-btn">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- CONTENT -->
+
+    <div class="dashboard-section player-manager">
+
+
+        <div class="manager-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-users"></i>
+
+                Players
+
+            </h2>
+
+            <p>
+                Manage all registered 4 FIRE UNITED players
+            </p>
+
+        </div>
+
+
+        <!-- TOOLBAR -->
+
+        <div class="player-toolbar">
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    id="searchPlayer"
+                    placeholder="Search player, IGN, role or rank...">
+
+            </div>
+
+
+            <div class="player-count" id="playerCount">
+
+                0 Players
+
+            </div>
+
+        </div>
+
+
+        <!-- ADD PLAYER -->
+
+        <div style="margin-bottom:20px;">
+
+            <a
+                href="add-player.html"
+                class="add-btn">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Player
+
+            </a>
+
+        </div>
+
+
+        <!-- PLAYERS -->
+
+        <div
+            class="player-list"
+            id="playerTable">
+
+        </div>
+
+
+    </div>
+
 </div>
 
-<div class="table-box">
 
-<table>
-
-<thead>
-
-<tr>
-
-<th>Image</th>
-<th>Name</th>
-<th>IGN</th>
-<th>Role</th>
-<th>Level</th>
-<th>Rank</th>
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-<tbody id="playerTable">
-
-</tbody>
-
-</table>
-
-</div>
+<!-- =========================================
+     FIREBASE
+========================================= -->
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
 
+
 <script src="js/firebase.js?v=1783829699314"></script>
+
 <script src="js/auth-guard.js?v=1783829699314"></script>
-<script src="js/player-manager.js?v=1783829699314"></script>
+
+<script src="js/player-manager.js?v=20260907-2"></script>
+
+
+<!-- LOGOUT -->
+
+<script>
+
+document
+    .getElementById("logoutBtn")
+    ?.addEventListener("click", function(){
+
+        auth.signOut()
+            .then(() => {
+
+                window.location.href =
+                    "login.html";
+
+            })
+            .catch(error => {
+
+                console.error(error);
+
+                alert(error.message);
+
+            });
+
+    });
+
+</script>
+
 
 </body>
 

@@ -5,26 +5,20 @@
 const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
-
     logoutBtn.addEventListener("click", () => {
 
         auth.signOut()
             .then(() => {
-
                 window.location.href = "login.html";
-
             })
             .catch((err) => {
-
                 console.error(err);
-
                 alert(err.message);
-
             });
 
     });
-
 }
+
 
 // =====================================
 // COUNT FUNCTION
@@ -39,15 +33,13 @@ function loadCount(collection, elementId) {
             const el = document.getElementById(elementId);
 
             if (el) {
-
                 el.textContent = snapshot.size;
-
             }
 
         })
         .catch(console.error);
-
 }
+
 
 // =====================================
 // LIVE COUNTS
@@ -58,13 +50,16 @@ loadCount("tournaments", "totalTournaments");
 loadCount("gallery", "totalGallery");
 loadCount("contactMessages", "totalMessages");
 loadCount("joinApplications", "totalApplications");
+loadCount("challengeRegistrations", "totalChallenges");
 
-// Visitors
+
+// =====================================
+// VISITORS
+// =====================================
 
 db.collection("stats")
     .doc("visitors")
     .get()
-
     .then((doc) => {
 
         const el = document.getElementById("totalVisitors");
@@ -72,16 +67,14 @@ db.collection("stats")
         if (!el) return;
 
         if (doc.exists) {
-
             el.textContent = doc.data().total || 0;
-
         } else {
-
             el.textContent = 0;
-
         }
 
-    });
+    })
+    .catch(console.error);
+
 
 // =====================================
 // QUICK ACTIONS
@@ -96,12 +89,11 @@ function quickAction(id, page) {
     btn.style.cursor = "pointer";
 
     btn.onclick = () => {
-
         window.location.href = page;
-
     };
 
 }
+
 
 quickAction("managePlayers", "players.html");
 quickAction("manageTournament", "tournaments.html");
@@ -110,7 +102,9 @@ quickAction("manageClips", "clips.html");
 quickAction("manageNews", "announcements.html");
 quickAction("manageMessages", "messages.html");
 quickAction("manageApplications", "applications.html");
+quickAction("manageChallenges", "challenge-registrations.html");
 quickAction("manageSettings", "settings.html");
+
 
 // =====================================
 // RECENT PLAYER
@@ -119,7 +113,6 @@ quickAction("manageSettings", "settings.html");
 db.collection("players")
     .limit(1)
     .get()
-
     .then((snapshot) => {
 
         snapshot.forEach((doc) => {
@@ -129,14 +122,15 @@ db.collection("players")
             const el = document.getElementById("latestPlayer");
 
             if (el) {
-
-                el.textContent = p.name + " (" + p.role + ")";
-
+                el.textContent =
+                    p.name + " (" + p.role + ")";
             }
 
         });
 
-    });
+    })
+    .catch(console.error);
+
 
 // =====================================
 // RECENT TOURNAMENT
@@ -145,24 +139,24 @@ db.collection("players")
 db.collection("tournaments")
     .limit(1)
     .get()
-
     .then((snapshot) => {
 
         snapshot.forEach((doc) => {
 
             const t = doc.data();
 
-            const el = document.getElementById("latestTournament");
+            const el =
+                document.getElementById("latestTournament");
 
             if (el) {
-
                 el.textContent = t.title;
-
             }
 
         });
 
-    });
+    })
+    .catch(console.error);
+
 
 // =====================================
 // RECENT MESSAGE
@@ -171,24 +165,25 @@ db.collection("tournaments")
 db.collection("contactMessages")
     .limit(1)
     .get()
-
     .then((snapshot) => {
 
         snapshot.forEach((doc) => {
 
             const m = doc.data();
 
-            const el = document.getElementById("latestMessage");
+            const el =
+                document.getElementById("latestMessage");
 
             if (el) {
-
-                el.textContent = m.name + " • " + m.subject;
-
+                el.textContent =
+                    m.name + " • " + m.subject;
             }
 
         });
 
-    });
+    })
+    .catch(console.error);
+
 
 // =====================================
 // RECENT APPLICATION
@@ -197,24 +192,29 @@ db.collection("contactMessages")
 db.collection("joinApplications")
     .limit(1)
     .get()
-
     .then((snapshot) => {
 
         snapshot.forEach((doc) => {
 
             const a = doc.data();
 
-            const el = document.getElementById("latestApplication");
+            const el =
+                document.getElementById("latestApplication");
 
             if (el) {
-
-                el.textContent = a.name + " • " + a.rank;
-
+                el.textContent =
+                    a.name + " • " + a.rank;
             }
 
         });
 
-    });
+    })
+    .catch(console.error);
+
+
+// =====================================
+// NOTIFICATIONS PAGE
+// =====================================
 
 document
     .getElementById("sendNotification")
@@ -225,6 +225,7 @@ document
 
     });
 
+
 // ============================================
 // SEND PUSH NOTIFICATION
 // ============================================
@@ -232,204 +233,224 @@ document
 const sendNotificationBtn =
     document.getElementById("sendNotificationBtn");
 
+
 if (sendNotificationBtn) {
 
-    sendNotificationBtn.addEventListener("click", async () => {
+    sendNotificationBtn.addEventListener(
+        "click",
+        async () => {
 
-        const title =
-            document.getElementById("notificationTitle")
-                .value
-                .trim();
+            const title =
+                document
+                    .getElementById("notificationTitle")
+                    .value
+                    .trim();
 
-        const message =
-            document.getElementById("notificationMessage")
-                .value
-                .trim();
+            const message =
+                document
+                    .getElementById("notificationMessage")
+                    .value
+                    .trim();
 
-        const target =
-            document.getElementById("notificationTarget")
-                .value;
+            const target =
+                document
+                    .getElementById("notificationTarget")
+                    .value;
 
-        const link =
-            document.getElementById("notificationLink")
-                .value
-                .trim() ||
-            "/player-dashboard.html";
-
-
-        if (!title || !message) {
-
-            alert(
-                "Please enter notification title and message."
-            );
-
-            return;
-        }
-
-
-        try {
-
-            sendNotificationBtn.disabled = true;
-
-            sendNotificationBtn.innerHTML =
-                '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
-
-
-            // ========================================
-            // 1. SAVE NOTIFICATION IN FIRESTORE
-            // ========================================
-
-            await db.collection("notifications").add({
-
-                title: title,
-
-                message: message,
-
-                target: target,
-
-                link: link,
-
-                type: "push",
-
-                isRead: false,
-
-                createdAt:
-                    firebase.firestore.FieldValue.serverTimestamp()
-
-            });
-
-
-            // ========================================
-            // 2. SEND ANDROID APP ADMIN PUSH
-            // ========================================
-
-            const response = await fetch(
-                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "text/plain;charset=utf-8"
-                    },
-
-                    body: JSON.stringify({
-
-                        type: "admin",
-
-                        priority: "high",
-
-                        title: title,
-
-                        body: message,
-
-                        link: link,
-
-                        targetPlayerId: "ALL",
-
-                        senderEmail:
-                            auth.currentUser?.email ||
-                            "Admin"
-
-                    })
-                }
-            );
-
-
-            const result =
-                await response.json();
-
-
-            console.log(
-                "FCM Response:",
-                result
-            );
-
-
-            if (!result.success) {
-
-                throw new Error(
-                    result.error ||
-                    "Notification sending failed."
-                );
-
-            }
-
-            // ========================================
-            // SAVE NOTIFICATION FOR PLAYER DASHBOARD
-            // ========================================
-
-            await db.collection("notifications").add({
-
-                title: title,
-
-                message: message,
-
-                target: "ALL",
-
-                link: link,
-
-                type: "push",
-
-                isRead: false,
-
-                createdAt:
-                    firebase.firestore.FieldValue.serverTimestamp()
-
-            });
-
-
-            // ========================================
-            // SUCCESS
-            // ========================================
-
-            alert(
-                "✅ Notification sent successfully!\n\n" +
-                "Sent: " +
-                result.sent +
-                "\nFailed: " +
-                result.failed
-            );
-
-
-            // Clear form
-
-            document.getElementById(
-                "notificationTitle"
-            ).value = "";
-
-            document.getElementById(
-                "notificationMessage"
-            ).value = "";
-
-            document.getElementById(
-                "notificationLink"
-            ).value =
+            const link =
+                document
+                    .getElementById("notificationLink")
+                    .value
+                    .trim() ||
                 "/player-dashboard.html";
 
 
-        } catch (error) {
+            if (!title || !message) {
 
-            console.error(
-                "❌ Notification Error:",
-                error
-            );
+                alert(
+                    "Please enter notification title and message."
+                );
 
-            alert(
-                "❌ Failed to send notification.\n\n" +
-                error.message
-            );
+                return;
+            }
 
-        } finally {
 
-            sendNotificationBtn.disabled =
-                false;
+            try {
 
-            sendNotificationBtn.innerHTML =
-                '<i class="fa-solid fa-paper-plane"></i> Send Notification';
+                sendNotificationBtn.disabled = true;
+
+                sendNotificationBtn.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+
+                // ========================================
+                // SAVE NOTIFICATION
+                // ========================================
+
+                await db
+                    .collection("notifications")
+                    .add({
+
+                        title: title,
+
+                        message: message,
+
+                        target: target,
+
+                        link: link,
+
+                        type: "push",
+
+                        isRead: false,
+
+                        createdAt:
+                            firebase.firestore
+                                .FieldValue
+                                .serverTimestamp()
+
+                    });
+
+
+                // ========================================
+                // SEND ANDROID APP ADMIN PUSH
+                // ========================================
+
+                const response =
+                    await fetch(
+                        "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "text/plain;charset=utf-8"
+                            },
+
+                            body: JSON.stringify({
+
+                                type: "admin",
+
+                                priority: "high",
+
+                                title: title,
+
+                                body: message,
+
+                                link: link,
+
+                                targetPlayerId: "ALL",
+
+                                senderEmail:
+                                    auth.currentUser?.email ||
+                                    "Admin"
+
+                            })
+
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                console.log(
+                    "FCM Response:",
+                    result
+                );
+
+
+                if (!result.success) {
+
+                    throw new Error(
+                        result.error ||
+                        "Notification sending failed."
+                    );
+
+                }
+
+
+                // ========================================
+                // SAVE PLAYER DASHBOARD NOTIFICATION
+                // ========================================
+
+                await db
+                    .collection("notifications")
+                    .add({
+
+                        title: title,
+
+                        message: message,
+
+                        target: "ALL",
+
+                        link: link,
+
+                        type: "push",
+
+                        isRead: false,
+
+                        createdAt:
+                            firebase.firestore
+                                .FieldValue
+                                .serverTimestamp()
+
+                    });
+
+
+                // ========================================
+                // SUCCESS
+                // ========================================
+
+                alert(
+                    "✅ Notification sent successfully!\n\n" +
+                    "Sent: " +
+                    result.sent +
+                    "\nFailed: " +
+                    result.failed
+                );
+
+
+                // Clear form
+
+                document
+                    .getElementById("notificationTitle")
+                    .value = "";
+
+                document
+                    .getElementById("notificationMessage")
+                    .value = "";
+
+                document
+                    .getElementById("notificationLink")
+                    .value =
+                    "/player-dashboard.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Notification Error:",
+                    error
+                );
+
+                alert(
+                    "❌ Failed to send notification.\n\n" +
+                    error.message
+                );
+
+            } finally {
+
+                sendNotificationBtn.disabled =
+                    false;
+
+                sendNotificationBtn.innerHTML =
+                    '<i class="fa-solid fa-paper-plane"></i> Send Notification';
+
+            }
 
         }
-
-    });
+    );
 
 }

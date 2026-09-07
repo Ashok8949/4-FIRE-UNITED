@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 FIRE UNITED | Challenge Registrations</title>
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link rel="stylesheet" href="CSS/dashboard.css">
+
+    <style>
+        body { visibility: hidden; }
+
+        .challenge-toolbar {
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+            margin-bottom:20px;
+        }
+
+        .challenge-toolbar select,
+        .challenge-toolbar input {
+            padding:12px 14px;
+            border-radius:10px;
+            border:1px solid rgba(255,255,255,.12);
+            background:#111;
+            color:#fff;
+            outline:none;
+        }
+
+        .challenge-list {
+            display:grid;
+            gap:18px;
+        }
+
+        .challenge-item {
+            background:rgba(255,255,255,.035);
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:16px;
+            padding:20px;
+        }
+
+        .challenge-top {
+            display:flex;
+            justify-content:space-between;
+            gap:15px;
+            align-items:center;
+            flex-wrap:wrap;
+            margin-bottom:15px;
+        }
+
+        .challenge-type {
+            font-family:"Bebas Neue",sans-serif;
+            font-size:26px;
+            letter-spacing:1px;
+        }
+
+        .challenge-id {
+            color:#aaa;
+            font-size:12px;
+            word-break:break-all;
+        }
+
+        .challenge-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:12px;
+        }
+
+        .detail {
+            background:rgba(0,0,0,.22);
+            border-radius:10px;
+            padding:12px;
+        }
+
+        .detail small {
+            display:block;
+            color:#999;
+            margin-bottom:4px;
+        }
+
+        .detail strong {
+            display:block;
+            word-break:break-word;
+        }
+
+        .challenge-actions {
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-top:16px;
+        }
+
+        .challenge-actions button,
+        .challenge-actions a {
+            border:0;
+            border-radius:9px;
+            padding:10px 14px;
+            cursor:pointer;
+            text-decoration:none;
+            font-weight:600;
+        }
+
+        .btn-confirm { background:#16a34a; color:#fff; }
+        .btn-reject { background:#dc2626; color:#fff; }
+        .btn-delete { background:#333; color:#fff; }
+        .btn-contact { background:#ff7b00; color:#fff; }
+
+        .status {
+            padding:6px 11px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:700;
+            text-transform:uppercase;
+        }
+
+        .status-new { background:rgba(255,123,0,.16); color:#ff9a3d; }
+        .status-confirmed { background:rgba(22,163,74,.16); color:#4ade80; }
+        .status-rejected { background:rgba(220,38,38,.16); color:#f87171; }
+
+        .empty {
+            text-align:center;
+            padding:40px 20px;
+            color:#999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../images/logo/logo.png">
+            <h2>4 FIRE UNITED</h2>
+        </div>
+
+        <ul>
+            <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="players.html"><i class="fa-solid fa-users"></i> Players</a></li>
+            <li><a href="tournaments.html"><i class="fa-solid fa-trophy"></i> Tournaments</a></li>
+            <li><a href="gallery.html"><i class="fa-solid fa-image"></i> Gallery</a></li>
+            <li><a href="clips.html"><i class="fa-solid fa-film"></i> Clips</a></li>
+            <li><a href="announcements.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+            <li><a href="messages.html"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+            <li><a href="applications.html"><i class="fa-solid fa-file-circle-check"></i> Applications</a></li>
+            <li class="active"><a href="challenge-registrations.html"><i class="fa-solid fa-fire"></i> Challenges</a></li>
+            <li><a href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <h1>CHALLENGE REGISTRATIONS</h1>
+            <div class="admin">
+                <img src="../images/logo/logo.png">
+                <span>Administrator</span>
+                <button id="logoutBtn" class="join-btn">Logout</button>
+            </div>
+        </div>
+
+        <div class="dashboard-section">
+            <h2><i class="fa-solid fa-fire"></i> Challenge Requests</h2>
+
+            <div class="challenge-toolbar">
+                <select id="challengeFilter">
+                    <option value="ALL">All Challenges</option>
+                    <option value="1V1">1V1</option>
+                    <option value="2V2">2V2</option>
+                    <option value="4V4">4V4</option>
+                </select>
+
+                <select id="statusFilter">
+                    <option value="ALL">All Status</option>
+                    <option value="New">New</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+
+                <input id="searchInput" type="search"
+                       placeholder="Search leader, UID, team or registration ID">
+            </div>
+
+            <div id="challengeList" class="challenge-list">
+                <div class="empty">Loading registrations...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/auth-guard.js"></script>
+    <script src="js/challenge-registrations.js"></script>
+</body>
+</html>

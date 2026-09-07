@@ -8,98 +8,847 @@
 
 <title>Tournament Manager | 4 FIRE UNITED</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap"
+rel="stylesheet">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
 
-<link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
+<link rel="stylesheet"
+href="CSS/dashboard.css?v=1783829699314">
 
 <style>
+
 body{
     visibility:hidden;
 }
+
+/* =========================================
+   TOURNAMENT MANAGER
+========================================= */
+
+.tournament-manager{
+    padding:0 5px 60px;
+}
+
+.manager-heading{
+    margin-bottom:24px;
+}
+
+.manager-heading h2{
+    margin:0;
+
+    font-family:'Bebas Neue',sans-serif;
+
+    font-size:32px;
+
+    letter-spacing:1px;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.manager-heading h2 i{
+    font-size:28px;
+}
+
+.manager-heading p{
+    margin:5px 0 0;
+
+    font-size:13px;
+
+    opacity:.55;
+}
+
+/* =========================================
+   TOOLBAR
+========================================= */
+
+.tournament-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:15px;
+
+    margin-bottom:20px;
+
+    padding:16px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.025);
+}
+
+.search-box{
+    width:min(440px,100%);
+
+    height:45px;
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:0 15px;
+
+    border-radius:10px;
+
+    background:#0d0d0d;
+
+    border:1px solid rgba(255,255,255,.1);
+
+    transition:.25s;
+}
+
+.search-box:focus-within{
+    border-color:rgba(255,115,0,.55);
+
+    box-shadow:
+        0 0 0 3px rgba(255,115,0,.06);
+}
+
+.search-box i{
+    opacity:.5;
+
+    font-size:13px;
+}
+
+.search-box input{
+    width:100%;
+
+    height:100%;
+
+    border:0;
+
+    outline:0;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-family:Poppins,sans-serif;
+
+    font-size:13px;
+}
+
+.search-box input::placeholder{
+    color:#777;
+}
+
+.tournament-count{
+    font-size:13px;
+
+    opacity:.6;
+
+    white-space:nowrap;
+}
+
+/* =========================================
+   TOURNAMENT GRID
+========================================= */
+
+.tournament-list{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(320px,1fr));
+
+    gap:18px;
+}
+
+/* =========================================
+   TOURNAMENT CARD
+========================================= */
+
+.tournament-card{
+    position:relative;
+
+    overflow:hidden;
+
+    padding:20px;
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.tournament-card:hover{
+    transform:translateY(-4px);
+
+    border-color:rgba(255,115,0,.35);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.25);
+}
+
+.tournament-card::after{
+    content:"";
+
+    position:absolute;
+
+    width:150px;
+    height:150px;
+
+    top:-80px;
+    right:-80px;
+
+    border-radius:50%;
+
+    background:rgba(255,115,0,.08);
+
+    filter:blur(12px);
+
+    pointer-events:none;
+}
+
+/* =========================================
+   CARD HEADER
+========================================= */
+
+.tournament-top{
+    position:relative;
+
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    margin-bottom:18px;
+}
+
+.tournament-title-wrap{
+    min-width:0;
+}
+
+.tournament-title{
+    font-size:18px;
+
+    font-weight:700;
+
+    line-height:1.3;
+
+    word-break:break-word;
+}
+
+.tournament-game{
+    margin-top:5px;
+
+    font-size:11px;
+
+    color:#999;
+}
+
+.tournament-game i{
+    margin-right:5px;
+}
+
+/* =========================================
+   STATUS
+========================================= */
+
+.status-badge{
+    flex-shrink:0;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 10px;
+
+    border-radius:20px;
+
+    font-size:10px;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.3px;
+
+    background:rgba(255,255,255,.08);
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.status-badge.active{
+    color:#20d878;
+
+    background:rgba(32,216,120,.1);
+
+    border-color:rgba(32,216,120,.18);
+}
+
+.status-badge.upcoming{
+    color:#ff9d00;
+
+    background:rgba(255,157,0,.1);
+
+    border-color:rgba(255,157,0,.18);
+}
+
+.status-badge.completed{
+    color:#aaa;
+
+    background:rgba(255,255,255,.06);
+}
+
+.status-badge.cancelled{
+    color:#ff5555;
+
+    background:rgba(255,59,48,.1);
+
+    border-color:rgba(255,59,48,.18);
+}
+
+/* =========================================
+   DETAILS
+========================================= */
+
+.tournament-details{
+    position:relative;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:10px;
+
+    margin-bottom:18px;
+}
+
+.tournament-detail{
+    padding:12px;
+
+    border-radius:10px;
+
+    background:#0d0d0d;
+
+    border:1px solid rgba(255,255,255,.055);
+}
+
+.tournament-detail span{
+    display:block;
+
+    margin-bottom:5px;
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.7px;
+
+    color:#777;
+}
+
+.tournament-detail strong{
+    display:block;
+
+    font-size:13px;
+
+    color:#eee;
+
+    word-break:break-word;
+}
+
+.tournament-detail.prize strong{
+    color:#ff9d00;
+}
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.tournament-actions{
+    position:relative;
+
+    display:flex;
+
+    gap:9px;
+
+    padding-top:14px;
+
+    border-top:1px solid rgba(255,255,255,.07);
+}
+
+.edit-btn,
+.delete-btn{
+
+    flex:1;
+
+    min-height:39px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:7px;
+
+    border-radius:9px;
+
+    font-family:Poppins,sans-serif;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    text-decoration:none;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.edit-btn{
+    color:#fff;
+
+    background:rgba(255,255,255,.06);
+
+    border:1px solid rgba(255,255,255,.09);
+}
+
+.edit-btn:hover{
+    background:rgba(255,255,255,.11);
+
+    transform:translateY(-2px);
+}
+
+.delete-btn{
+    color:#fff;
+
+    background:rgba(255,59,48,.1);
+
+    border:1px solid rgba(255,59,48,.22);
+}
+
+.delete-btn:hover{
+    background:#e53935;
+
+    border-color:#e53935;
+
+    transform:translateY(-2px);
+}
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-state{
+    grid-column:1/-1;
+
+    text-align:center;
+
+    padding:70px 20px;
+
+    border-radius:16px;
+
+    border:1px dashed rgba(255,255,255,.1);
+
+    background:rgba(255,255,255,.02);
+}
+
+.empty-state i{
+    display:block;
+
+    margin-bottom:14px;
+
+    font-size:38px;
+
+    opacity:.3;
+}
+
+.empty-state h3{
+    margin:0 0 6px;
+
+    font-size:18px;
+}
+
+.empty-state p{
+    margin:0;
+
+    font-size:12px;
+
+    opacity:.5;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:700px){
+
+    .tournament-manager{
+        padding:0 0 40px;
+    }
+
+    .manager-heading h2{
+        font-size:28px;
+    }
+
+    .tournament-toolbar{
+        align-items:stretch;
+
+        flex-direction:column;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+    .tournament-count{
+        text-align:right;
+    }
+
+    .tournament-list{
+        grid-template-columns:1fr;
+    }
+
+    .tournament-top{
+        flex-direction:column;
+    }
+
+    .status-badge{
+        align-self:flex-start;
+    }
+
+}
+
 </style>
 
 </head>
 
+
 <body>
+
+
+<!-- =========================================
+     SIDEBAR
+========================================= -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <img src="../images/logo/logo.png">
+
+        <h2>4 FIRE UNITED</h2>
+
+    </div>
+
+
+    <ul>
+
+        <li>
+
+            <a href="dashboard.html">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="players.html">
+
+                <i class="fa-solid fa-users"></i>
+
+                Players
+
+            </a>
+
+        </li>
+
+
+        <li class="active">
+
+            <a href="tournaments.html">
+
+                <i class="fa-solid fa-trophy"></i>
+
+                Tournaments
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="gallery.html">
+
+                <i class="fa-solid fa-image"></i>
+
+                Gallery
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="clips.html">
+
+                <i class="fa-solid fa-film"></i>
+
+                Clips
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="announcements.html">
+
+                <i class="fa-solid fa-bullhorn"></i>
+
+                Announcements
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="messages.html">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                Messages
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="applications.html">
+
+                <i class="fa-solid fa-file-circle-check"></i>
+
+                Applications
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="challenge-registrations.html">
+
+                <i class="fa-solid fa-fire"></i>
+
+                Challenges
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="settings.html">
+
+                <i class="fa-solid fa-gear"></i>
+
+                Settings
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</div>
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
 
 <div class="main">
 
-<div class="topbar">
 
-    <h1>TOURNAMENT MANAGER</h1>
+    <!-- TOPBAR -->
 
-    <div class="top-actions">
+    <div class="topbar">
 
-        <a href="dashboard.html" class="back-btn">
+        <h1>TOURNAMENT MANAGER</h1>
 
-            <i class="fa-solid fa-arrow-left"></i>
 
-            Back Dashboard
+        <div class="admin">
 
-        </a>
+            <img src="../images/logo/logo.png">
 
-        <div class="search-box">
+            <span>Administrator</span>
 
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <button id="logoutBtn" class="join-btn">
 
-            <input
-                type="text"
-                id="searchTournament"
-                placeholder="Search Tournament">
+                Logout
+
+            </button>
 
         </div>
 
-        <a href="add-tournament.html" class="add-btn">
+    </div>
 
-            <i class="fa-solid fa-plus"></i>
 
-            Add Tournament
+    <!-- CONTENT -->
 
-        </a>
+    <div class="dashboard-section tournament-manager">
+
+
+        <div class="manager-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-trophy"></i>
+
+                Tournaments
+
+            </h2>
+
+            <p>
+                Manage all 4 FIRE UNITED tournaments
+            </p>
+
+        </div>
+
+
+        <!-- TOOLBAR -->
+
+        <div class="tournament-toolbar">
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    id="searchTournament"
+                    placeholder="Search tournament, game or status...">
+
+            </div>
+
+
+            <div class="tournament-count" id="tournamentCount">
+
+                0 Tournaments
+
+            </div>
+
+        </div>
+
+
+        <!-- ADD -->
+
+        <div style="margin-bottom:20px;">
+
+            <a
+                href="add-tournament.html"
+                class="add-btn">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Tournament
+
+            </a>
+
+        </div>
+
+
+        <!-- TOURNAMENTS -->
+
+        <div
+            class="tournament-list"
+            id="tournamentTable">
+
+        </div>
+
 
     </div>
 
 </div>
 
-<div class="table-box">
 
-<table>
-
-<thead>
-
-<tr>
-
-<th>Title</th>
-<th>Game</th>
-<th>Date</th>
-<th>Prize</th>
-<th>Status</th>
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-<tbody id="tournamentTable">
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
+<!-- =========================================
+     FIREBASE
+========================================= -->
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
 
+
 <script src="js/firebase.js?v=1783829699314"></script>
+
 <script src="js/auth-guard.js?v=1783829699314"></script>
-<script src="js/tournament-manager.js?v=1783829699314"></script>
+
+<script src="js/tournament-manager.js?v=20260907-2"></script>
+
+
+<!-- LOGOUT -->
+
+<script>
+
+document
+    .getElementById("logoutBtn")
+    ?.addEventListener("click", function(){
+
+        auth.signOut()
+            .then(() => {
+
+                window.location.href =
+                    "login.html";
+
+            })
+            .catch(error => {
+
+                console.error(error);
+
+                alert(error.message);
+
+            });
+
+    });
+
+</script>
+
 
 </body>
+
 </html>

@@ -1,63 +1,196 @@
 let allAnnouncements = [];
 
+
+// ==========================================
+// LOAD ANNOUNCEMENTS
+// ==========================================
+
 db.collection("announcements")
-.get()
-.then((snapshot) => {
+    .get()
+    .then((snapshot) => {
 
-    allAnnouncements = [];
+        allAnnouncements = [];
 
-    snapshot.forEach((doc) => {
+        snapshot.forEach((doc) => {
 
-        allAnnouncements.push({
-            id: doc.id,
-            ...doc.data()
+            allAnnouncements.push({
+                id: doc.id,
+                ...doc.data()
+            });
+
         });
+
+        renderAnnouncements(allAnnouncements);
+
+    })
+    .catch((error) => {
+
+        console.error("Error loading announcements:", error);
+
+        const grid = document.getElementById("announcementGrid");
+
+        if (grid) {
+
+            grid.innerHTML = `
+                <div class="empty-state">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <h3>Unable to Load Announcements</h3>
+
+                    <p>
+                        Please check your Firebase connection.
+                    </p>
+
+                </div>
+            `;
+
+        }
 
     });
 
-    renderAnnouncements(allAnnouncements);
 
-})
-.catch((error) => {
-
-    console.error(error);
-
-});
+// ==========================================
+// RENDER ANNOUNCEMENTS
+// ==========================================
 
 function renderAnnouncements(list) {
 
-    const table = document.getElementById("announcementTable");
+    const grid = document.getElementById("announcementGrid");
 
-    table.innerHTML = "";
+    const count = document.getElementById("announcementCount");
+
+    if (!grid) return;
+
+
+    grid.innerHTML = "";
+
+
+    if (count) {
+
+        count.textContent =
+            `${list.length} ${list.length === 1 ? "Announcement" : "Announcements"}`;
+
+    }
+
+
+    if (list.length === 0) {
+
+        grid.innerHTML = `
+
+            <div class="empty-state">
+
+                <i class="fa-solid fa-bullhorn"></i>
+
+                <h3>No Announcements Found</h3>
+
+                <p>
+                    Add an announcement or try another search.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
 
     list.forEach((a) => {
 
-        table.innerHTML += `
+        const title =
+            escapeHtml(a.title || "Untitled Announcement");
 
-        <tr>
+        const category =
+            escapeHtml(a.category || "General");
 
-            <td>${a.title || "-"}</td>
+        const date =
+            escapeHtml(a.date || "No Date");
 
-            <td>${a.category || "-"}</td>
+        const status =
+            escapeHtml(a.status || "Active");
 
-            <td>${a.date || "-"}</td>
 
-            <td>${a.status || "-"}</td>
+        grid.innerHTML += `
 
-            <td>
+            <div class="announcement-card">
 
-                <a href="edit-announcement.html?id=${a.id}" class="edit-btn">
-                    <i class="fa-solid fa-pen"></i> Edit
-                </a>
+                <div class="announcement-top">
 
-                <button class="delete-btn"
-                        onclick="deleteAnnouncement('${a.id}')">
-                    <i class="fa-solid fa-trash"></i> Delete
-                </button>
+                    <div class="announcement-icon">
 
-            </td>
+                        <i class="fa-solid fa-bullhorn"></i>
 
-        </tr>
+                    </div>
+
+
+                    <span class="announcement-status">
+
+                        ${status}
+
+                    </span>
+
+                </div>
+
+
+                <h3 title="${escapeAttribute(a.title || "")}">
+
+                    ${title}
+
+                </h3>
+
+
+                <div class="announcement-meta">
+
+                    <span>
+
+                        <i class="fa-solid fa-tag"></i>
+
+                        ${category}
+
+                    </span>
+
+
+                    <span>
+
+                        <i class="fa-regular fa-calendar"></i>
+
+                        ${date}
+
+                    </span>
+
+                </div>
+
+
+                <div class="announcement-buttons">
+
+                    <a
+                        href="edit-announcement.html?id=${encodeURIComponent(a.id)}"
+                        class="edit-btn"
+                    >
+
+                        <i class="fa-solid fa-pen"></i>
+
+                        Edit
+
+                    </a>
+
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteAnnouncement('${escapeAttribute(a.id)}')"
+                    >
+
+                        <i class="fa-solid fa-trash"></i>
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
 
         `;
 
@@ -65,54 +198,130 @@ function renderAnnouncements(list) {
 
 }
 
-function deleteAnnouncement(id) {
 
-    if (!confirm("Delete this announcement?")) return;
+// ==========================================
+// SEARCH
+// ==========================================
 
-    db.collection("announcements")
-    .doc(id)
-    .delete()
+const searchBox =
+    document.getElementById("searchAnnouncement");
 
-    .then(() => {
 
-        alert("✅ Announcement Deleted Successfully!");
+if (searchBox) {
 
-        location.reload();
+    searchBox.addEventListener("input", () => {
 
-    })
+        const value =
+            searchBox.value.trim().toLowerCase();
 
-    .catch((err) => {
 
-        console.error(err);
+        if (!value) {
 
-        alert("❌ Delete Failed!");
+            renderAnnouncements(allAnnouncements);
+
+            return;
+
+        }
+
+
+        const filtered =
+            allAnnouncements.filter((a) => {
+
+                return (
+
+                    (a.title || "")
+                        .toLowerCase()
+                        .includes(value)
+
+                    ||
+
+                    (a.category || "")
+                        .toLowerCase()
+                        .includes(value)
+
+                    ||
+
+                    (a.status || "")
+                        .toLowerCase()
+                        .includes(value)
+
+                );
+
+            });
+
+
+        renderAnnouncements(filtered);
 
     });
 
 }
 
-const searchBox = document.getElementById("searchAnnouncement");
 
-if (searchBox) {
+// ==========================================
+// DELETE ANNOUNCEMENT
+// ==========================================
 
-    searchBox.addEventListener("keyup", () => {
+function deleteAnnouncement(id) {
 
-        const value = searchBox.value.toLowerCase();
+    if (!confirm("Delete this announcement?")) {
+        return;
+    }
 
-        const filtered = allAnnouncements.filter((a) => {
 
-            return (
+    db.collection("announcements")
+        .doc(id)
+        .delete()
+        .then(() => {
 
-                (a.title || "").toLowerCase().includes(value) ||
-                (a.category || "").toLowerCase().includes(value) ||
-                (a.status || "").toLowerCase().includes(value)
+            allAnnouncements =
+                allAnnouncements.filter(
+                    announcement => announcement.id !== id
+                );
 
+
+            renderAnnouncements(allAnnouncements);
+
+        })
+        .catch((error) => {
+
+            console.error(
+                "Delete announcement error:",
+                error
+            );
+
+            alert(
+                "❌ Delete Failed!\n\n" +
+                error.message
             );
 
         });
 
-        renderAnnouncements(filtered);
+}
 
-    });
+
+// ==========================================
+// SECURITY / HTML ESCAPE
+// ==========================================
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHtml(value);
 
 }

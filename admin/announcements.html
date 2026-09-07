@@ -3,102 +3,419 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Announcements | 4 FIRE UNITED</title>
+    <title>Announcements Manager | 4 FIRE UNITED</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-<link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
+    <link rel="stylesheet" href="CSS/dashboard.css">
 
-<style>
-body{
-    visibility:hidden;
-}
-</style>
+    <style>
+
+        body {
+            visibility: hidden;
+        }
+
+        .announcement-content {
+            padding: 30px;
+        }
+
+        .announcement-toolbar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .announcement-heading h2 {
+            margin: 0;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+
+        .announcement-heading p {
+            margin: 5px 0 0;
+            opacity: .6;
+            font-size: 13px;
+        }
+
+        .announcement-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            background: rgba(255, 102, 0, .1);
+            border: 1px solid rgba(255, 102, 0, .2);
+            color: #ff7200;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .announcement-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .search-box i {
+            opacity: .55;
+        }
+
+        .search-box input {
+            width: 210px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: inherit;
+            font-family: Poppins, sans-serif;
+        }
+
+        .search-box input::placeholder {
+            opacity: .5;
+        }
+
+        .announcement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .announcement-card {
+            position: relative;
+            padding: 22px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .035);
+            border: 1px solid rgba(255, 255, 255, .08);
+            transition: .25s ease;
+        }
+
+        .announcement-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 102, 0, .45);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .25);
+        }
+
+        .announcement-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .announcement-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255, 102, 0, .12);
+            color: #ff7200;
+            font-size: 18px;
+        }
+
+        .announcement-status {
+            padding: 6px 10px;
+            border-radius: 7px;
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .08);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .announcement-card h3 {
+            margin: 0 0 9px;
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .announcement-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+            font-size: 11px;
+            opacity: .6;
+        }
+
+        .announcement-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .announcement-meta i {
+            color: #ff7200;
+        }
+
+        .announcement-buttons {
+            display: flex;
+            gap: 9px;
+        }
+
+        .announcement-buttons .edit-btn,
+        .announcement-buttons .delete-btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .empty-state {
+            padding: 70px 20px;
+            text-align: center;
+            opacity: .55;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 5px;
+        }
+
+        .empty-state p {
+            margin: 0;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+
+            .announcement-content {
+                padding: 20px;
+            }
+
+            .announcement-actions {
+                width: 100%;
+            }
+
+            .search-box {
+                flex: 1;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-<div class="main">
+<div class="admin-layout">
 
-<div class="topbar">
+    <!-- SIDEBAR -->
 
-    <h1>ANNOUNCEMENTS</h1>
+    <aside class="sidebar">
 
-    <div class="top-actions">
+        <div class="sidebar-logo">
+            <img src="../images/logo/logo.png" alt="4 Fire United">
+        </div>
 
-        <a href="dashboard.html" class="back-btn">
+        <nav class="sidebar-nav">
 
-            <i class="fa-solid fa-arrow-left"></i>
+            <a href="dashboard.html">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
 
-            Back Dashboard
+            <a href="players.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Players</span>
+            </a>
 
-        </a>
+            <a href="tournaments.html">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Tournaments</span>
+            </a>
 
-        <div class="search-box">
+            <a href="gallery.html">
+                <i class="fa-solid fa-images"></i>
+                <span>Gallery</span>
+            </a>
 
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <a href="clips.html">
+                <i class="fa-solid fa-video"></i>
+                <span>Clips</span>
+            </a>
 
-            <input
-                type="text"
-                id="searchAnnouncement"
-                placeholder="Search Announcement">
+            <a href="announcements.html" class="active">
+                <i class="fa-solid fa-bullhorn"></i>
+                <span>Announcements</span>
+            </a>
+
+            <a href="messages.html">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Messages</span>
+            </a>
+
+            <a href="applications.html">
+                <i class="fa-solid fa-file-signature"></i>
+                <span>Applications</span>
+            </a>
+
+            <a href="challenge-registrations.html">
+                <i class="fa-solid fa-gamepad"></i>
+                <span>Challenges</span>
+            </a>
+
+            <a href="settings.html">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>ANNOUNCEMENTS</h1>
+
+                <span>4 FIRE UNITED • ADMIN PANEL</span>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <div class="admin-info">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                    <span>Administrator</span>
+
+                </div>
+
+                <button class="logout-btn" onclick="logout()">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    Logout
+
+                </button>
+
+            </div>
 
         </div>
 
-        <a href="add-announcement.html" class="add-btn">
 
-            <i class="fa-solid fa-plus"></i>
+        <!-- CONTENT -->
 
-            Add Announcement
+        <div class="announcement-content">
 
-        </a>
+            <div class="announcement-toolbar">
 
-    </div>
+                <div class="announcement-heading">
+
+                    <h2>ANNOUNCEMENT CENTER</h2>
+
+                    <p>
+                        Manage news, updates and important community announcements.
+                    </p>
+
+                    <div class="announcement-count">
+
+                        <i class="fa-solid fa-bullhorn"></i>
+
+                        <span id="announcementCount">
+                            0 Announcements
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="announcement-actions">
+
+                    <div class="search-box">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="text"
+                            id="searchAnnouncement"
+                            placeholder="Search announcements..."
+                        >
+
+                    </div>
+
+
+                    <a href="add-announcement.html" class="add-btn">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Announcement
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="announcementGrid"
+                class="announcement-grid">
+            </div>
+
+        </div>
+
+    </main>
 
 </div>
 
-<div class="table-box">
 
-<table>
+<!-- FIREBASE -->
 
-<thead>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 
-<tr>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 
-<th>Title</th>
-<th>Category</th>
-<th>Date</th>
-<th>Status</th>
-<th>Action</th>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 
-</tr>
 
-</thead>
+<script src="js/firebase.js"></script>
 
-<tbody id="announcementTable">
+<script src="js/auth-guard.js"></script>
 
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
-
-<script src="js/firebase.js?v=1783829699314"></script>
-<script src="js/auth-guard.js?v=1783829699314"></script>
-<script src="js/announcement-manager.js?v=1783829699314"></script>
+<script src="js/announcement-manager.js?v=20260907-2"></script>
 
 </body>
 

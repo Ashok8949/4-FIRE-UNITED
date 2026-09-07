@@ -1,119 +1,301 @@
 let allApplications = [];
+
 let selectedApplications = [];
+
 let allSelected = false;
 
-// ===============================
-// Load Applications
-// ===============================
+
+// ==========================================
+// LOAD APPLICATIONS
+// ==========================================
 
 db.collection("joinApplications")
-.get()
-.then((snapshot) => {
+    .get()
+    .then((snapshot) => {
 
-    allApplications = [];
+        allApplications = [];
 
-    snapshot.forEach((doc) => {
+        snapshot.forEach((doc) => {
 
-        allApplications.push({
-            id: doc.id,
-            ...doc.data()
+            allApplications.push({
+                id: doc.id,
+                ...doc.data()
+            });
+
         });
+
+        renderApplications(allApplications);
+
+    })
+    .catch((error) => {
+
+        console.error(
+            "Error loading applications:",
+            error
+        );
+
+        const table =
+            document.getElementById("applicationTable");
+
+        if (table) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td colspan="8">
+
+                        <div class="empty-application">
+
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+
+                            <h3>Unable to Load Applications</h3>
+
+                            <p>
+                                Please check your Firebase connection.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
 
     });
 
-    renderApplications(allApplications);
 
-})
-.catch((err) => {
-
-    console.error(err);
-
-});
-
-// ===============================
-// Render Table
-// ===============================
+// ==========================================
+// RENDER APPLICATIONS
+// ==========================================
 
 function renderApplications(list) {
 
     allSelected = false;
-selectedApplications = [];
 
-const btn = document.getElementById("selectAllBtn");
+    selectedApplications = [];
 
-if(btn){
 
-    btn.innerHTML =
-    `<i class="fa-solid fa-check-double"></i> Select All`;
+    const selectAllBtn =
+        document.getElementById("selectAllBtn");
 
-}
 
-    const table = document.getElementById("applicationTable");
+    if (selectAllBtn) {
+
+        selectAllBtn.innerHTML = `
+            <i class="fa-solid fa-check-double"></i>
+            Select All
+        `;
+
+    }
+
+
+    const masterCheck =
+        document.getElementById("masterCheck");
+
+
+    if (masterCheck) {
+
+        masterCheck.checked = false;
+
+    }
+
+
+    const table =
+        document.getElementById("applicationTable");
+
+
+    const count =
+        document.getElementById("applicationCount");
+
+
+    if (!table) return;
+
 
     table.innerHTML = "";
 
+
+    if (count) {
+
+        count.textContent =
+            `${list.length} ${list.length === 1 ? "Application" : "Applications"}`;
+
+    }
+
+
+    if (list.length === 0) {
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="8">
+
+                    <div class="empty-application">
+
+                        <i class="fa-solid fa-file-circle-xmark"></i>
+
+                        <h3>No Applications Found</h3>
+
+                        <p>
+                            No player applications match your search.
+                        </p>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
     list.forEach((a) => {
+
+        const name =
+            escapeHtml(a.name || "-");
+
+        const ign =
+            escapeHtml(a.ign || "-");
+
+        const uid =
+            escapeHtml(a.uid || "-");
+
+        const email =
+            escapeHtml(a.email || "-");
+
+        const rank =
+            escapeHtml(a.rank || "-");
+
+        const status =
+            escapeHtml(a.status || "Pending");
+
 
         table.innerHTML += `
 
-        <tr>
+            <tr>
 
-    <td>
+                <td>
 
-        <input
-            type="checkbox"
-            class="application-check"
-            value="${a.id}"
-            onchange="toggleApplication('${a.id}',this.checked)">
+                    <input
+                        type="checkbox"
+                        class="application-check"
+                        value="${escapeAttribute(a.id)}"
+                        onchange="toggleApplication('${escapeAttribute(a.id)}', this.checked)"
+                    >
 
-    </td>
+                </td>
 
-    <td>${a.name || "-"}</td>
 
-            <td>${a.ign || "-"}</td>
+                <td>
 
-            <td>${a.uid || "-"}</td>
+                    <span class="application-name">
+                        ${name}
+                    </span>
 
-            <td>${a.email || "-"}</td>
+                </td>
 
-            <td>${a.rank || "-"}</td>
 
-            <td>${a.status || "Pending"}</td>
+                <td>
 
-            <td>
+                    <span class="application-ign">
+                        ${ign}
+                    </span>
 
-                <a href="view-application.html?id=${a.id}" class="edit-btn">
+                </td>
 
-                    <i class="fa-solid fa-eye"></i>
 
-                    View
+                <td>
+                    ${uid}
+                </td>
 
-                </a>
 
-                <button class="edit-btn"
-                        onclick="updateStatus('${a.id}','Accepted')">
+                <td>
 
-                    Accept
+                    <span class="application-email">
+                        ${email}
+                    </span>
 
-                </button>
+                </td>
 
-                <button class="edit-btn"
-                        onclick="updateStatus('${a.id}','Rejected')">
 
-                    Reject
+                <td>
+                    ${rank}
+                </td>
 
-                </button>
 
-                <button class="delete-btn"
-                        onclick="deleteApplication('${a.id}')">
+                <td>
 
-                    Delete
+                    <span class="application-status">
+                        ${status}
+                    </span>
 
-                </button>
+                </td>
 
-            </td>
 
-        </tr>
+                <td>
+
+                    <div class="application-actions">
+
+                        <a
+                            href="view-application.html?id=${encodeURIComponent(a.id)}"
+                            class="edit-btn"
+                        >
+
+                            <i class="fa-solid fa-eye"></i>
+
+                            View
+
+                        </a>
+
+
+                        <button
+                            class="edit-btn accept-btn"
+                            onclick="updateStatus('${escapeAttribute(a.id)}', 'Accepted')"
+                        >
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Accept
+
+                        </button>
+
+
+                        <button
+                            class="edit-btn reject-btn"
+                            onclick="updateStatus('${escapeAttribute(a.id)}', 'Rejected')"
+                        >
+
+                            <i class="fa-solid fa-xmark"></i>
+
+                            Reject
+
+                        </button>
+
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteApplication('${escapeAttribute(a.id)}')"
+                        >
+
+                            <i class="fa-solid fa-trash"></i>
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </td>
+
+            </tr>
 
         `;
 
@@ -121,164 +303,551 @@ if(btn){
 
 }
 
-// ===============================
-// Update Status
-// ===============================
+
+// ==========================================
+// UPDATE STATUS
+// ==========================================
 
 function updateStatus(id, status) {
 
     db.collection("joinApplications")
-    .doc(id)
-    .update({
+        .doc(id)
+        .update({
+            status: status
+        })
+        .then(() => {
 
-        status: status
+            const application =
+                allApplications.find(
+                    app => app.id === id
+                );
 
-    })
 
-    .then(() => {
+            if (application) {
 
-        alert("✅ Status Updated!");
+                application.status = status;
 
-        location.reload();
+            }
 
-    })
 
-    .catch((err) => {
+            const search =
+                document.getElementById("searchApplication");
 
-        console.error(err);
 
-        alert("❌ Failed!");
+            if (search && search.value.trim()) {
 
-    });
+                performApplicationSearch();
+
+            } else {
+
+                renderApplications(allApplications);
+
+            }
+
+        })
+        .catch((error) => {
+
+            console.error(
+                "Status update error:",
+                error
+            );
+
+            alert(
+                "❌ Failed to update status!\n\n" +
+                error.message
+            );
+
+        });
 
 }
 
-// ===============================
-// Delete Application
-// ===============================
+
+// ==========================================
+// DELETE APPLICATION
+// ==========================================
 
 function deleteApplication(id) {
 
-    if (!confirm("Are you sure you want to delete this application?")) {
+    if (
+        !confirm(
+            "Are you sure you want to delete this application?"
+        )
+    ) {
+
         return;
+
     }
 
+
     db.collection("joinApplications")
-    .doc(id)
-    .delete()
+        .doc(id)
+        .delete()
+        .then(() => {
 
-    .then(() => {
+            allApplications =
+                allApplications.filter(
+                    application =>
+                        application.id !== id
+                );
 
-        alert("🗑️ Application Deleted Successfully!");
 
-        location.reload();
+            selectedApplications =
+                selectedApplications.filter(
+                    applicationId =>
+                        applicationId !== id
+                );
 
-    })
 
-    .catch((err) => {
+            renderApplications(allApplications);
 
-        console.error(err);
+        })
+        .catch((error) => {
 
-        alert("❌ Failed to delete application!");
+            console.error(
+                "Delete application error:",
+                error
+            );
+
+            alert(
+                "❌ Failed to delete application!\n\n" +
+                error.message
+            );
+
+        });
+
+}
+
+
+// ==========================================
+// SEARCH
+// ==========================================
+
+const search =
+    document.getElementById("searchApplication");
+
+
+if (search) {
+
+    search.addEventListener("input", () => {
+
+        performApplicationSearch();
 
     });
 
 }
 
-// ===============================
-// Search
-// ===============================
 
-const search = document.getElementById("searchApplication");
+function performApplicationSearch() {
 
-if (search) {
+    const searchBox =
+        document.getElementById("searchApplication");
 
-    search.addEventListener("keyup", () => {
 
-        const value = search.value.toLowerCase();
+    if (!searchBox) return;
 
-        const filtered = allApplications.filter((a) => {
+
+    const value =
+        searchBox.value
+            .trim()
+            .toLowerCase();
+
+
+    if (!value) {
+
+        renderApplications(allApplications);
+
+        return;
+
+    }
+
+
+    const filtered =
+        allApplications.filter((a) => {
 
             return (
 
-                (a.name || "").toLowerCase().includes(value) ||
-                (a.ign || "").toLowerCase().includes(value) ||
-                (a.uid || "").toLowerCase().includes(value) ||
-                (a.email || "").toLowerCase().includes(value) ||
-                (a.rank || "").toLowerCase().includes(value)
+                (a.name || "")
+                    .toLowerCase()
+                    .includes(value)
+
+                ||
+
+                (a.ign || "")
+                    .toLowerCase()
+                    .includes(value)
+
+                ||
+
+                (a.uid || "")
+                    .toLowerCase()
+                    .includes(value)
+
+                ||
+
+                (a.email || "")
+                    .toLowerCase()
+                    .includes(value)
+
+                ||
+
+                (a.rank || "")
+                    .toLowerCase()
+                    .includes(value)
+
+                ||
+
+                (a.status || "")
+                    .toLowerCase()
+                    .includes(value)
 
             );
 
         });
 
-        renderApplications(filtered);
 
-    });
+    renderApplications(filtered);
 
 }
 
-function toggleApplication(id, checked){
 
-    if(checked){
+// ==========================================
+// TOGGLE SINGLE APPLICATION
+// ==========================================
 
-        if(!selectedApplications.includes(id)){
+function toggleApplication(id, checked) {
+
+    if (checked) {
+
+        if (
+            !selectedApplications.includes(id)
+        ) {
 
             selectedApplications.push(id);
 
         }
 
-    }else{
+    } else {
 
         selectedApplications =
-        selectedApplications.filter(x=>x!==id);
+            selectedApplications.filter(
+                x => x !== id
+            );
 
     }
+
+
+    updateApplicationSelectionState();
 
 }
 
-document.getElementById("deleteSelectedBtn").onclick = async()=>{
 
-    if(selectedApplications.length===0){
+// ==========================================
+// SELECT ALL BUTTON
+// ==========================================
 
-        alert("Select applications first.");
+const selectAllBtn =
+    document.getElementById("selectAllBtn");
 
-        return;
 
-    }
+if (selectAllBtn) {
 
-    if(!confirm(`Delete ${selectedApplications.length} selected application(s)?`)){
+    selectAllBtn.onclick = () => {
 
-        return;
+        const checks =
+            document.querySelectorAll(
+                ".application-check"
+            );
 
-    }
 
-    const batch = db.batch();
+        selectedApplications = [];
 
-    selectedApplications.forEach(id=>{
+        allSelected = !allSelected;
 
-        batch.delete(
 
-            db.collection("joinApplications").doc(id)
+        checks.forEach((checkbox) => {
 
+            checkbox.checked =
+                allSelected;
+
+
+            if (allSelected) {
+
+                selectedApplications.push(
+                    checkbox.value
+                );
+
+            }
+
+        });
+
+
+        updateApplicationSelectionButton();
+
+        updateApplicationMasterCheckbox();
+
+    };
+
+}
+
+
+// ==========================================
+// MASTER CHECKBOX
+// ==========================================
+
+const masterCheck =
+    document.getElementById("masterCheck");
+
+
+if (masterCheck) {
+
+    masterCheck.addEventListener(
+        "change",
+        () => {
+
+            const checks =
+                document.querySelectorAll(
+                    ".application-check"
+                );
+
+
+            selectedApplications = [];
+
+            allSelected =
+                masterCheck.checked;
+
+
+            checks.forEach((checkbox) => {
+
+                checkbox.checked =
+                    allSelected;
+
+
+                if (allSelected) {
+
+                    selectedApplications.push(
+                        checkbox.value
+                    );
+
+                }
+
+            });
+
+
+            updateApplicationSelectionButton();
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// UPDATE SELECTION STATE
+// ==========================================
+
+function updateApplicationSelectionState() {
+
+    const checks =
+        document.querySelectorAll(
+            ".application-check"
         );
 
-    });
 
-    try{
+    allSelected =
+        checks.length > 0 &&
+        selectedApplications.length ===
+        checks.length;
 
-        await batch.commit();
 
-        alert("✅ Selected applications deleted.");
+    updateApplicationSelectionButton();
 
-        location.reload();
+    updateApplicationMasterCheckbox();
 
-    }
-    catch(err){
+}
 
-        console.error(err);
 
-        alert("❌ Failed to delete applications.");
+// ==========================================
+// UPDATE SELECT BUTTON
+// ==========================================
 
-    }
+function updateApplicationSelectionButton() {
 
-};
+    const btn =
+        document.getElementById("selectAllBtn");
+
+
+    if (!btn) return;
+
+
+    btn.innerHTML = allSelected
+
+        ? `
+            <i class="fa-solid fa-square-minus"></i>
+            Unselect All
+          `
+
+        : `
+            <i class="fa-solid fa-check-double"></i>
+            Select All
+          `;
+
+}
+
+
+// ==========================================
+// UPDATE MASTER CHECKBOX
+// ==========================================
+
+function updateApplicationMasterCheckbox() {
+
+    const master =
+        document.getElementById("masterCheck");
+
+
+    const checks =
+        document.querySelectorAll(
+            ".application-check"
+        );
+
+
+    if (!master) return;
+
+
+    master.checked =
+        checks.length > 0 &&
+        selectedApplications.length ===
+        checks.length;
+
+}
+
+
+// ==========================================
+// DELETE SELECTED
+// ==========================================
+
+const deleteSelectedBtn =
+    document.getElementById(
+        "deleteSelectedBtn"
+    );
+
+
+if (deleteSelectedBtn) {
+
+    deleteSelectedBtn.onclick =
+        async () => {
+
+            if (
+                selectedApplications.length === 0
+            ) {
+
+                alert(
+                    "Select applications first."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                !confirm(
+                    `Delete ${selectedApplications.length} selected application(s)?`
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            const batch = db.batch();
+
+
+            selectedApplications.forEach(
+                (id) => {
+
+                    batch.delete(
+                        db.collection(
+                            "joinApplications"
+                        ).doc(id)
+                    );
+
+                }
+            );
+
+
+            try {
+
+                await batch.commit();
+
+
+                const deletedIds =
+                    new Set(
+                        selectedApplications
+                    );
+
+
+                allApplications =
+                    allApplications.filter(
+                        application =>
+                            !deletedIds.has(
+                                application.id
+                            )
+                    );
+
+
+                selectedApplications = [];
+
+                allSelected = false;
+
+
+                renderApplications(
+                    allApplications
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Bulk delete error:",
+                    error
+                );
+
+                alert(
+                    "❌ Failed to delete applications.\n\n" +
+                    error.message
+                );
+
+            }
+
+        };
+
+}
+
+
+// ==========================================
+// HTML ESCAPE
+// ==========================================
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHtml(value);
+
+}

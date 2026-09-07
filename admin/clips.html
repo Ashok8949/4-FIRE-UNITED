@@ -2,70 +2,384 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clips Manager | 4 FIRE UNITED</title>
 
-<title>Manage Clips | 4 FIRE UNITED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-<link rel="stylesheet" href="CSS/dashboard.css">
+    <link rel="stylesheet" href="CSS/dashboard.css">
 
+    <style>
+        body {
+            visibility: hidden;
+        }
+
+        .clips-content {
+            padding: 30px;
+        }
+
+        .clips-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .clips-heading h2 {
+            margin: 0;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+
+        .clips-heading p {
+            margin: 5px 0 0;
+            opacity: .6;
+            font-size: 13px;
+        }
+
+        .clips-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            background: rgba(255, 102, 0, .1);
+            border: 1px solid rgba(255, 102, 0, .2);
+            color: #ff7200;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .clips-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 15px;
+            border-radius: 10px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .search-box i {
+            opacity: .55;
+        }
+
+        .search-box input {
+            width: 210px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: inherit;
+            font-family: Poppins, sans-serif;
+        }
+
+        .search-box input::placeholder {
+            opacity: .5;
+        }
+
+        .add-btn {
+            text-decoration: none;
+        }
+
+        .clips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .clip-card {
+            overflow: hidden;
+            border-radius: 16px;
+            background: rgba(255,255,255,.035);
+            border: 1px solid rgba(255,255,255,.08);
+            transition: .25s ease;
+        }
+
+        .clip-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,102,0,.45);
+            box-shadow: 0 15px 35px rgba(0,0,0,.25);
+        }
+
+        .clip-thumbnail {
+            position: relative;
+            height: 175px;
+            overflow: hidden;
+            background: #111;
+        }
+
+        .clip-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .clip-category {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 10px;
+            border-radius: 7px;
+            background: rgba(0,0,0,.75);
+            backdrop-filter: blur(5px);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .clip-info {
+            padding: 18px;
+        }
+
+        .clip-info h3 {
+            margin: 0 0 8px;
+            font-size: 17px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .clip-player {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            opacity: .65;
+        }
+
+        .clip-player i {
+            color: #ff7200;
+        }
+
+        .clip-buttons {
+            display: flex;
+            gap: 9px;
+        }
+
+        .clip-buttons .edit-btn,
+        .clip-buttons .delete-btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .empty-state {
+            padding: 70px 20px;
+            text-align: center;
+            opacity: .55;
+        }
+
+        .empty-state i {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 5px;
+        }
+
+        .empty-state p {
+            margin: 0;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+            .clips-content {
+                padding: 20px;
+            }
+
+            .clips-toolbar {
+                align-items: flex-start;
+            }
+
+            .clips-actions {
+                width: 100%;
+            }
+
+            .search-box {
+                flex: 1;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="main">
+<div class="admin-layout">
 
-    <div class="topbar">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-        <h1>GAMEPLAY CLIPS</h1>
+        <div class="sidebar-logo">
+            <img src="../images/logo/logo.png" alt="4 Fire United">
+        </div>
 
-        <a href="add-clip.html" class="add-btn">
+        <nav class="sidebar-nav">
 
-            + Add Clip
+            <a href="dashboard.html">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
 
-        </a>
+            <a href="players.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Players</span>
+            </a>
 
-    </div>
+            <a href="tournaments.html">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Tournaments</span>
+            </a>
 
-    <table class="table">
+            <a href="gallery.html">
+                <i class="fa-solid fa-images"></i>
+                <span>Gallery</span>
+            </a>
 
-        <thead>
+            <a href="clips.html" class="active">
+                <i class="fa-solid fa-video"></i>
+                <span>Clips</span>
+            </a>
 
-            <tr>
+            <a href="announcements.html">
+                <i class="fa-solid fa-bullhorn"></i>
+                <span>Announcements</span>
+            </a>
 
-                <th>Thumbnail</th>
+            <a href="messages.html">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Messages</span>
+            </a>
 
-                <th>Title</th>
+            <a href="applications.html">
+                <i class="fa-solid fa-file-signature"></i>
+                <span>Applications</span>
+            </a>
 
-                <th>Player</th>
+            <a href="challenge-registrations.html">
+                <i class="fa-solid fa-gamepad"></i>
+                <span>Challenges</span>
+            </a>
 
-                <th>Category</th>
+            <a href="settings.html">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
 
-                <th>Action</th>
+        </nav>
 
-            </tr>
+    </aside>
 
-        </thead>
 
-        <tbody id="clipsTable">
+    <!-- MAIN -->
+    <main class="main">
 
-        </tbody>
+        <!-- TOPBAR -->
+        <div class="topbar">
 
-    </table>
+            <div>
+                <h1>GAMEPLAY CLIPS</h1>
+                <span>4 FIRE UNITED • ADMIN PANEL</span>
+            </div>
+
+            <div class="top-actions">
+
+                <div class="admin-info">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>Administrator</span>
+                </div>
+
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTENT -->
+        <div class="clips-content">
+
+            <div class="clips-toolbar">
+
+                <div class="clips-heading">
+
+                    <h2>CLIP LIBRARY</h2>
+
+                    <p>
+                        Manage gameplay highlights, player clips and featured moments.
+                    </p>
+
+                    <div class="clips-count">
+                        <i class="fa-solid fa-video"></i>
+                        <span id="clipsCount">0 Clips</span>
+                    </div>
+
+                </div>
+
+
+                <div class="clips-actions">
+
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="text"
+                            id="searchClip"
+                            placeholder="Search clips..."
+                        >
+                    </div>
+
+                    <a href="add-clip.html" class="add-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Clip
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div id="clipsGrid" class="clips-grid"></div>
+
+        </div>
+
+    </main>
 
 </div>
 
+
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 
 <script src="js/firebase.js"></script>
 <script src="js/auth-guard.js"></script>
-<script src="js/clips.js"></script>
+<script src="js/clips.js?v=20260907-2"></script>
 
 </body>
-
 </html>

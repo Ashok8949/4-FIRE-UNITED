@@ -379,6 +379,51 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     font-size: 42px;
     margin: 0;
 }
+.form-mode-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,60,0,.22);
+    border-radius: 999px;
+    background: rgba(255,60,0,.07);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+}
+
+.form-mode-badge i {
+    font-size: 9px;
+}
+
+.form-section-label {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 0 -2px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    opacity: .55;
+}
+
+.form-section-label span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    background: rgba(255,60,0,.12);
+    border: 1px solid rgba(255,60,0,.2);
+    color: #ff7a00;
+    font-size: 9px;
+}
+
 
 .form-title p {
     font-size: 12px;
@@ -407,9 +452,25 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 ========================================= */
 
 .challenge-form {
-    display: grid;
+    display: none;
     grid-template-columns: repeat(2, 1fr);
     gap: 17px;
+}
+
+.challenge-form.active {
+    display: grid;
+    animation: formFieldsReveal .55s ease both;
+}
+
+@keyframes formFieldsReveal {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .form-group {
@@ -671,7 +732,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
     .form-group.full,
     .rules-check,
-    .challenge-submit {
+    .challenge-submit,
+    .form-section-label {
         grid-column: auto;
     }
 
@@ -701,58 +763,61 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <header>
 
-<nav class="navbar">
+        <nav class="navbar">
 
-<div class="logo">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo/logo.png" alt="4 Fire United Logo">
+                </a>
+            </div>
 
-<a href="index.html">
-<img src="images/logo/logo.png" alt="Logo">
-</a>
+            <ul class="nav-links">
 
-</div>
+                <li><a href="index.html" class="active">Home</a></li>
 
+                <li><a href="team.html">Team</a></li>
 
-<ul class="nav-links">
+                <li><a href="tournaments.html">Tournaments</a></li>
 
-<li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
 
-<li><a href="team.html">Team</a></li>
+                <li>
+                    <a href="area-map.html">
+                        World Explorer
+                    </a>
+                </li>
 
-<li><a href="tournaments.html">Tournaments</a></li>
+                <li><a href="clips.html">Clips</a></li>
 
-<li><a href="challenges.html" class="active">Challenges</a></li>
+                <li><a href="challenges.html">Challenges</a></li>
 
-<li><a href="gallery.html">Gallery</a></li>
+                <li><a href="join.html">Join Us</a></li>
 
-<li><a href="clips.html">Clips</a></li>
+                <li><a href="check-status.html">Check Status</a></li>
 
-<li><a href="join.html">Join Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
 
-<li><a href="check-status.html">Check Status</a></li>
+            </ul>
 
-<li><a href="contact.html">Contact</a></li>
+            <div class="nav-buttons">
+                <a href="player-login.html" class="join-btn">
+                    Player Login
+                </a>
 
-</ul>
+                <a href="join.html" class="join-btn">
+                    Join Team
+                </a>
+            </div>
 
+            <div class="menu-btn">
 
-<div class="nav-buttons">
+                <i class="fa-solid fa-bars"></i>
 
-<a href="join.html" class="join-btn">
-Join Team
-</a>
+            </div>
 
-</div>
+        </nav>
 
-
-<div class="menu-btn">
-
-<i class="fa-solid fa-bars"></i>
-
-</div>
-
-</nav>
-
-</header>
+    </header>
 
 
 <!-- =========================================
@@ -979,168 +1044,224 @@ Own the lobby.
 
 
 <!-- =========================================
-     FORM
+     FORMS
 ========================================= -->
 
 <section class="challenge-form-wrapper" id="challengeFormWrapper">
 
-<div class="challenge-form-box">
+    <div class="challenge-form-box">
 
+        <div class="form-top">
 
-<div class="form-top">
+            <div class="form-title">
 
-<div class="form-title">
+                <div class="form-mode-badge" id="formModeBadge">
+                    <i class="fa-solid fa-fire"></i>
+                    <span>CHALLENGE REGISTRATION</span>
+                </div>
 
-<h3 id="formTitle">
-CHALLENGE REGISTRATION
-</h3>
+                <h3 id="formTitle">CHALLENGE REGISTRATION</h3>
 
-<p>
-Leader details are enough. We'll take it from here.
-</p>
+                <p>
+                    Only the leader's details are required. We'll take it from here.
+                </p>
 
-</div>
+            </div>
 
+            <button
+                type="button"
+                class="change-challenge"
+                id="changeChallenge">
+                ← Change Mode
+            </button>
 
-<button
-type="button"
-class="change-challenge"
-id="changeChallenge">
+        </div>
 
-← Change Mode
 
-</button>
+        <!-- =========================
+             1V1 FORM
+        ========================== -->
 
-</div>
+        <form class="challenge-form mode-form" id="form1V1" data-mode="1V1">
 
+            <div class="form-section-label">
+                <span>01</span>
+                LEADER DETAILS
+            </div>
 
-<form class="challenge-form" id="challengeForm">
+            <div class="form-group">
+                <label>LEADER NAME *</label>
+                <input type="text" name="leaderName" placeholder="Enter leader name" required>
+            </div>
 
+            <div class="form-group">
+                <label>FREE FIRE UID *</label>
+                <input type="text" name="leaderUID" placeholder="Enter Free Fire UID" required>
+            </div>
 
-<div class="form-group">
+            <div class="form-group">
+                <label>WHATSAPP NUMBER *</label>
+                <input type="tel" name="whatsapp" placeholder="Enter WhatsApp number" required>
+            </div>
 
-<label>LEADER NAME *</label>
+            <div class="form-group">
+                <label>EMAIL ADDRESS *</label>
+                <input type="email" name="email" placeholder="Enter email address" required>
+            </div>
 
-<input
-type="text"
-id="leaderName"
-placeholder="Enter leader name"
-required>
+            <div class="form-group">
+                <label>PREFERRED DATE</label>
+                <input type="date" name="preferredDate">
+            </div>
 
-</div>
+            <div class="form-group">
+                <label>PREFERRED TIME</label>
+                <input type="time" name="preferredTime">
+            </div>
 
+            <div class="form-group full">
+                <label>MESSAGE</label>
+                <textarea name="message" placeholder="Anything you want to tell 4FU? (Optional)"></textarea>
+            </div>
 
-<div class="form-group">
+            <label class="rules-check">
+                <input type="checkbox" name="rules" required>
+                <span>I have read and agree to the 4FU Challenge Rules.</span>
+            </label>
 
-<label>FREE FIRE UID *</label>
+            <button type="submit" class="challenge-submit">
+                🔥 REGISTER 1V1 CHALLENGE
+            </button>
 
-<input
-type="text"
-id="leaderUID"
-placeholder="Enter Free Fire UID"
-required>
+        </form>
+
 
-</div>
+        <!-- =========================
+             2V2 FORM
+        ========================== -->
+
+        <form class="challenge-form mode-form" id="form2V2" data-mode="2V2">
 
-
-<div class="form-group">
-
-<label>WHATSAPP NUMBER *</label>
-
-<input
-type="tel"
-id="whatsapp"
-placeholder="Enter WhatsApp number"
-required>
-
-</div>
-
-
-<div class="form-group">
-
-<label>EMAIL ADDRESS *</label>
-
-<input
-type="email"
-id="email"
-placeholder="Enter email address"
-required>
-
-</div>
-
-
-<div class="form-group full">
-
-<label>TEAM NAME</label>
-
-<input
-type="text"
-id="teamName"
-placeholder="Enter team name (optional)">
-
-</div>
-
-
-<div class="form-group">
-
-<label>PREFERRED DATE</label>
-
-<input
-type="date"
-id="preferredDate">
-
-</div>
-
-
-<div class="form-group">
-
-<label>PREFERRED TIME</label>
-
-<input
-type="time"
-id="preferredTime">
-
-</div>
-
-
-<div class="form-group full">
-
-<label>MESSAGE</label>
-
-<textarea
-id="message"
-placeholder="Anything you want to tell 4FU? (Optional)"></textarea>
-
-</div>
-
-
-<label class="rules-check">
-
-<input
-type="checkbox"
-id="rules"
-required>
-
-<span>
-I have read and agree to the 4FU Challenge Rules.
-</span>
-
-</label>
-
-
-<button
-type="submit"
-id="challengeSubmit"
-class="challenge-submit">
-
-🔥 REGISTER CHALLENGE
-
-</button>
-
-
-</form>
-
-</div>
+            <div class="form-section-label">
+                <span>02</span>
+                TEAM LEADER DETAILS
+            </div>
+
+            <div class="form-group full">
+                <label>TEAM NAME *</label>
+                <input type="text" name="teamName" placeholder="Enter your team name" required>
+            </div>
+
+            <div class="form-group">
+                <label>LEADER NAME *</label>
+                <input type="text" name="leaderName" placeholder="Enter leader name" required>
+            </div>
+
+            <div class="form-group">
+                <label>FREE FIRE UID *</label>
+                <input type="text" name="leaderUID" placeholder="Enter leader Free Fire UID" required>
+            </div>
+
+            <div class="form-group">
+                <label>WHATSAPP NUMBER *</label>
+                <input type="tel" name="whatsapp" placeholder="Enter WhatsApp number" required>
+            </div>
+
+            <div class="form-group">
+                <label>EMAIL ADDRESS *</label>
+                <input type="email" name="email" placeholder="Enter leader email" required>
+            </div>
+
+            <div class="form-group">
+                <label>PREFERRED DATE</label>
+                <input type="date" name="preferredDate">
+            </div>
+
+            <div class="form-group">
+                <label>PREFERRED TIME</label>
+                <input type="time" name="preferredTime">
+            </div>
+
+            <div class="form-group full">
+                <label>MESSAGE</label>
+                <textarea name="message" placeholder="Anything you want to tell 4FU? (Optional)"></textarea>
+            </div>
+
+            <label class="rules-check">
+                <input type="checkbox" name="rules" required>
+                <span>I have read and agree to the 4FU Challenge Rules.</span>
+            </label>
+
+            <button type="submit" class="challenge-submit">
+                🔥 REGISTER 2V2 CHALLENGE
+            </button>
+
+        </form>
+
+
+        <!-- =========================
+             4V4 FORM
+        ========================== -->
+
+        <form class="challenge-form mode-form" id="form4V4" data-mode="4V4">
+
+            <div class="form-section-label">
+                <span>03</span>
+                TEAM LEADER DETAILS
+            </div>
+
+            <div class="form-group full">
+                <label>TEAM NAME *</label>
+                <input type="text" name="teamName" placeholder="Enter your team name" required>
+            </div>
+
+            <div class="form-group">
+                <label>LEADER NAME *</label>
+                <input type="text" name="leaderName" placeholder="Enter leader name" required>
+            </div>
+
+            <div class="form-group">
+                <label>FREE FIRE UID *</label>
+                <input type="text" name="leaderUID" placeholder="Enter leader Free Fire UID" required>
+            </div>
+
+            <div class="form-group">
+                <label>WHATSAPP NUMBER *</label>
+                <input type="tel" name="whatsapp" placeholder="Enter WhatsApp number" required>
+            </div>
+
+            <div class="form-group">
+                <label>EMAIL ADDRESS *</label>
+                <input type="email" name="email" placeholder="Enter leader email" required>
+            </div>
+
+            <div class="form-group">
+                <label>PREFERRED DATE</label>
+                <input type="date" name="preferredDate">
+            </div>
+
+            <div class="form-group">
+                <label>PREFERRED TIME</label>
+                <input type="time" name="preferredTime">
+            </div>
+
+            <div class="form-group full">
+                <label>MESSAGE</label>
+                <textarea name="message" placeholder="Anything you want to tell 4FU? (Optional)"></textarea>
+            </div>
+
+            <label class="rules-check">
+                <input type="checkbox" name="rules" required>
+                <span>I have read and agree to the 4FU Challenge Rules.</span>
+            </label>
+
+            <button type="submit" class="challenge-submit">
+                🔥 REGISTER 4V4 CHALLENGE
+            </button>
+
+        </form>
+
+    </div>
 
 </section>
 
@@ -1223,6 +1344,12 @@ Your challenge is confirmed only after you contact 4FU.
 </p>
 
 </section>
+
+
+
+
+
+</main>
 
 
 <!-- =========================================
@@ -1322,7 +1449,7 @@ target="_blank">
 
 <script src="js/settings-loader.js?v=1783829699314"></script>
 
-<script src="js/challenges.js?v=1783829699314"></script>
+<script src="js/challenges.js?v=20260907-2"></script>
 
 
 </body>

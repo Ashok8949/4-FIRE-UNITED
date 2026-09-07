@@ -1,73 +1,256 @@
+let allClips = [];
+
+
+// ===============================
+// LOAD CLIPS
+// ===============================
+
 db.collection("clips")
-.orderBy("createdAt", "desc")
-.get()
-.then((snapshot) => {
+    .orderBy("createdAt", "desc")
+    .get()
+    .then((snapshot) => {
 
-    const table = document.getElementById("clipsTable");
+        allClips = [];
 
-    table.innerHTML = "";
+        snapshot.forEach((doc) => {
 
-    snapshot.forEach((doc) => {
+            allClips.push({
+                id: doc.id,
+                ...doc.data()
+            });
 
-        const clip = doc.data();
+        });
 
-        table.innerHTML += `
+        renderClips(allClips);
 
-        <tr>
+    })
+    .catch((error) => {
 
-            <td>
+        console.error("Error loading clips:", error);
 
-                <img src="${clip.thumbnail}"
-                     width="100"
-                     style="border-radius:8px;">
+        const grid = document.getElementById("clipsGrid");
 
-            </td>
+        if (grid) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <h3>Unable to Load Clips</h3>
+                    <p>Please check your Firebase connection.</p>
+                </div>
+            `;
+        }
 
-            <td>${clip.title}</td>
+    });
 
-            <td>${clip.playerName}</td>
 
-            <td>${clip.category}</td>
+// ===============================
+// RENDER CLIPS
+// ===============================
 
-            <td class="action-buttons">
+function renderClips(list) {
 
-               <a href="edit-clip.html?id=${doc.id}" class="edit-btn">
-                  <i class="fa-solid fa-pen"></i> Edit
-               </a>
+    const grid = document.getElementById("clipsGrid");
+    const count = document.getElementById("clipsCount");
 
-               <button onclick="deleteClip('${doc.id}')" class="delete-btn">
-                 <i class="fa-solid fa-trash"></i> Delete
-               </button>
- 
-            </td>
+    if (!grid) return;
 
-        </tr>
+    grid.innerHTML = "";
+
+    if (count) {
+        count.textContent = `${list.length} ${list.length === 1 ? "Clip" : "Clips"}`;
+    }
+
+
+    if (list.length === 0) {
+
+        grid.innerHTML = `
+            <div class="empty-state">
+
+                <i class="fa-solid fa-video-slash"></i>
+
+                <h3>No Clips Found</h3>
+
+                <p>
+                    Add a gameplay clip or try another search.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.forEach((clip) => {
+
+        const title = escapeHtml(clip.title || "Untitled Clip");
+        const player = escapeHtml(clip.playerName || "Unknown Player");
+        const category = escapeHtml(clip.category || "Gameplay");
+
+        const thumbnail = clip.thumbnail || "";
+
+
+        grid.innerHTML += `
+
+            <div class="clip-card">
+
+                <div class="clip-thumbnail">
+
+                    <img
+                        src="${escapeAttribute(thumbnail)}"
+                        alt="${escapeAttribute(clip.title || "Gameplay Clip")}"
+                        onerror="this.src='../images/logo/logo.png';"
+                    >
+
+                    <span class="clip-category">
+                        ${category}
+                    </span>
+
+                </div>
+
+
+                <div class="clip-info">
+
+                    <h3 title="${escapeAttribute(clip.title || "Untitled Clip")}">
+                        ${title}
+                    </h3>
+
+
+                    <div class="clip-player">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        <span>${player}</span>
+
+                    </div>
+
+
+                    <div class="clip-buttons">
+
+                        <a
+                            href="edit-clip.html?id=${encodeURIComponent(clip.id)}"
+                            class="edit-btn"
+                        >
+                            <i class="fa-solid fa-pen"></i>
+                            Edit
+                        </a>
+
+
+                        <button
+                            onclick="deleteClip('${escapeAttribute(clip.id)}')"
+                            class="delete-btn"
+                        >
+                            <i class="fa-solid fa-trash"></i>
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         `;
 
     });
 
-})
-.catch(console.error);
+}
+
+
+// ===============================
+// SEARCH
+// ===============================
+
+const searchBox = document.getElementById("searchClip");
+
+if (searchBox) {
+
+    searchBox.addEventListener("input", () => {
+
+        const value = searchBox.value
+            .trim()
+            .toLowerCase();
+
+
+        if (!value) {
+
+            renderClips(allClips);
+
+            return;
+
+        }
+
+
+        const filtered = allClips.filter((clip) => {
+
+            return (
+                (clip.title || "").toLowerCase().includes(value) ||
+                (clip.playerName || "").toLowerCase().includes(value) ||
+                (clip.category || "").toLowerCase().includes(value)
+            );
+
+        });
+
+
+        renderClips(filtered);
+
+    });
+
+}
+
+
+// ===============================
+// DELETE CLIP
+// ===============================
 
 function deleteClip(id) {
 
-    if (!confirm("Delete this clip?")) return;
+    if (!confirm("Delete this clip?")) {
+        return;
+    }
+
 
     db.collection("clips")
-    .doc(id)
-    .delete()
-    .then(() => {
+        .doc(id)
+        .delete()
+        .then(() => {
 
-        alert("Clip Deleted");
+            allClips = allClips.filter(
+                clip => clip.id !== id
+            );
 
-        location.reload();
+            renderClips(allClips);
 
-    })
-    .catch((err) => {
+        })
+        .catch((error) => {
 
-        alert(err.message);
+            console.error("Delete error:", error);
 
-    });
+            alert("❌ Failed to delete clip.\n\n" + error.message);
+
+        });
+
+}
+
+
+// ===============================
+// HTML ESCAPE
+// ===============================
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHtml(value);
 
 }

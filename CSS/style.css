@@ -2113,10 +2113,13 @@ pointer-events:none;
       PAGE TRANSITION
 ==========================*/
 
+/* PAGE FADE DISABLED
+   IMPORTANT: do not transform/animate <body>.
+   A transformed body creates a containing block for position:fixed
+   elements and can make the navbar move with the page. */
 body{
-
-animation:pageFade .8s ease;
-
+animation:none !important;
+transform:none !important;
 }
 
 @keyframes pageFade{
@@ -4930,4 +4933,655 @@ overflow: hidden;
 .status.offline .status-dot{
     background:#777;
     box-shadow:none;
+}
+
+/* =========================================================
+   🔥 4FU NAVBAR — FINAL WIDTH / LOGO FIX
+   ========================================================= */
+
+header {
+    width: 100%;
+    position: relative;
+    z-index: 9999;
+}
+
+.navbar {
+    width: 100%;
+    min-height: 98px;
+    padding: 0 34px 0 52px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 24px;
+
+    box-sizing: border-box;
+}
+
+/* ================= LOGO ================= */
+
+.navbar .logo {
+    flex: 0 0 auto;
+
+    width: 180px;
+    min-width: 180px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.navbar .logo a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    width: 100%;
+}
+
+.navbar .logo img {
+    display: block;
+
+    width: 125px;
+    height: auto;
+
+    max-width: 125px;
+    max-height: 82px;
+
+    object-fit: contain;
+}
+
+
+/* ================= NAV LINKS ================= */
+
+.navbar .nav-links {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: clamp(16px, 1.25vw, 27px);
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+
+    white-space: nowrap;
+}
+
+.navbar .nav-links li {
+    flex: 0 0 auto;
+}
+
+.navbar .nav-links a {
+    display: inline-flex;
+    align-items: center;
+
+    color: #ffffff;
+
+    font-family: 'Poppins', sans-serif;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    padding: 36px 0 34px;
+
+    transition:
+        color .25s ease,
+        transform .25s ease;
+}
+
+.navbar .nav-links a:hover {
+    color: #ff6500;
+    transform: translateY(-1px);
+}
+
+.navbar .nav-links a.active {
+    color: #ff6500;
+}
+
+
+/* ================= RIGHT BUTTONS ================= */
+
+.navbar .nav-buttons {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-left: auto;
+}
+
+.navbar .join-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 145px;
+    height: 54px;
+
+    padding: 0 22px;
+
+    border: 0;
+    border-radius: 30px;
+
+    background: linear-gradient(
+        135deg,
+        #ff7a00,
+        #ff4d00
+    );
+
+    color: #fff;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 24px rgba(255, 85, 0, .20);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.navbar .join-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 30px rgba(255, 85, 0, .35);
+}
+
+
+/* ================= MENU BUTTON ================= */
+
+.navbar .menu-btn {
+    display: none;
+}
+
+
+/* =========================================================
+   🔥 LARGE DESKTOP
+   ========================================================= */
+
+@media (max-width: 1500px) {
+
+    .navbar {
+        padding-left: 34px;
+        padding-right: 24px;
+        gap: 18px;
+    }
+
+    .navbar .logo {
+        width: 145px;
+        min-width: 145px;
+    }
+
+    .navbar .logo img {
+        width: 110px;
+        max-width: 110px;
+    }
+
+    .navbar .nav-links {
+        gap: 14px;
+    }
+
+    .navbar .nav-links a {
+        font-size: 13px;
+    }
+
+    .navbar .join-btn {
+        min-width: 125px;
+        height: 50px;
+        padding: 0 17px;
+        font-size: 13px;
+    }
+}
+
+
+/* =========================================================
+   🔥 1200–1350
+   ========================================================= */
+
+@media (max-width: 1350px) {
+
+    .navbar {
+        padding: 0 22px;
+        gap: 14px;
+    }
+
+    .navbar .logo {
+        width: 125px;
+        min-width: 125px;
+    }
+
+    .navbar .logo img {
+        width: 100px;
+        max-width: 100px;
+    }
+
+    .navbar .nav-links {
+        gap: 11px;
+    }
+
+    .navbar .nav-links a {
+        font-size: 12px;
+    }
+
+    .navbar .nav-buttons {
+        gap: 6px;
+    }
+
+    .navbar .join-btn {
+        min-width: 108px;
+        height: 46px;
+
+        padding: 0 12px;
+
+        font-size: 12px;
+    }
+}
+
+
+/* =========================================================
+   🔥 TABLET / MOBILE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .navbar {
+        min-height: 82px;
+
+        padding:
+            0 22px;
+    }
+
+    .navbar .logo {
+        width: auto;
+        min-width: auto;
+    }
+
+    .navbar .logo img {
+        width: 92px;
+        max-width: 92px;
+        max-height: 70px;
+    }
+
+    .navbar .nav-links,
+    .navbar .nav-buttons {
+        display: none;
+    }
+
+    .navbar .menu-btn {
+        display: flex;
+
+        margin-left: auto;
+
+        width: 46px;
+        height: 46px;
+
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid rgba(255, 105, 0, .35);
+
+        background: rgba(12, 12, 12, .9);
+
+        color: #ff6500;
+
+        font-size: 20px;
+
+        cursor: pointer;
+    }
+}
+
+
+/* =========================================================
+   🔥 SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .navbar {
+        min-height: 72px;
+        padding: 0 16px;
+    }
+
+    .navbar .logo img {
+        width: 82px;
+        max-width: 82px;
+    }
+
+    .navbar .menu-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+    }
+}
+
+/* =========================================================
+   🔥 4FU NAV ACTIVE LINE — FIXED
+   ========================================================= */
+
+.navbar .nav-links a {
+    position: relative;
+
+    padding: 0 !important;
+
+    height: 98px;
+
+    display: inline-flex;
+    align-items: center;
+
+    box-sizing: border-box;
+}
+
+/* Active orange line */
+.navbar .nav-links a.active::after,
+.navbar .nav-links a:hover::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    bottom: 25px;
+
+    height: 3px;
+
+    background: #ff6500;
+
+    border-radius: 3px;
+
+    transform: scaleX(1);
+
+    transform-origin: center;
+
+    transition: transform .25s ease;
+}
+
+/* Normal links me line hidden */
+.navbar .nav-links a:not(.active)::after {
+    transform: scaleX(0);
+}
+
+/* Hover line */
+.navbar .nav-links a:not(.active):hover::after {
+    transform: scaleX(1);
+}
+
+
+/* =========================================================
+   🔥 TABLET
+   ========================================================= */
+
+@media (max-width: 1500px) {
+
+    .navbar .nav-links a {
+        height: 98px;
+    }
+
+    .navbar .nav-links a.active::after,
+    .navbar .nav-links a:hover::after {
+        bottom: 24px;
+    }
+}
+
+
+/* =========================================================
+   🔥 MOBILE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .navbar .nav-links a {
+        height: auto;
+    }
+
+    .navbar .nav-links a::after {
+        display: none;
+    }
+}
+
+/* =========================================================
+   🔥 4FU NAVBAR — FINAL FIX
+   FIXED TOP
+   DOWN SCROLL = HIDE
+   UP SCROLL = SHOW
+   ========================================================= */
+
+header {
+    position: fixed !important;
+
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+
+    width: 100% !important;
+    height: 98px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    z-index: 999999 !important;
+
+    background: #050505 !important;
+    background-image: none !important;
+
+    border-bottom: 1px solid rgba(255, 106, 0, 0.18);
+
+    /* ONLY HEADER MOVES */
+    transform: translate3d(0, 0, 0) !important;
+
+    transition:
+        transform .32s cubic-bezier(.4, 0, .2, 1) !important;
+
+    will-change: transform;
+
+    opacity: 1 !important;
+    visibility: visible !important;
+
+    isolation: isolate;
+}
+
+
+/* =========================================================
+   🔥 HIDE NAVBAR ON DOWN SCROLL
+   ========================================================= */
+
+header.nav-hidden {
+    transform: translate3d(0, -105%, 0) !important;
+}
+
+
+/* =========================================================
+   🔥 NAVBAR ITSELF NEVER MOVES
+   ========================================================= */
+
+header .navbar {
+    position: relative !important;
+
+    top: auto !important;
+    left: auto !important;
+
+    width: 100% !important;
+    height: 98px !important;
+
+    margin: 0 !important;
+
+    transform: none !important;
+
+    background: transparent !important;
+    background-image: none !important;
+
+    z-index: 1000000 !important;
+
+    animation: none !important;
+}
+
+
+/* =========================================================
+   🔥 4FU LOGO
+   ========================================================= */
+
+header .navbar .logo {
+    position: relative !important;
+
+    height: 98px !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    overflow: visible !important;
+
+    z-index: 10 !important;
+}
+
+
+header .navbar .logo a {
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: flex-start !important;
+
+    height: 100% !important;
+
+    overflow: visible !important;
+}
+
+
+header .navbar .logo img {
+    display: block !important;
+
+    width: 125px !important;
+    height: auto !important;
+
+    max-width: 125px !important;
+    max-height: 82px !important;
+
+    object-fit: contain !important;
+
+    margin: 0 !important;
+}
+
+
+/* =========================================================
+   🔥 PAGE CONTENT
+   NAVBAR KE NICHE SE START HOGA
+   ========================================================= */
+
+body {
+    padding-top: 98px !important;
+
+    /* Navbar safety: body must never be transformed or animated. */
+    animation: none !important;
+    transform: none !important;
+    position: static !important;
+}
+
+
+/* =========================================================
+   🔥 HERO / BANNER
+   NAVBAR KE UPAR KABHI NAHI AAYEGA
+   ========================================================= */
+
+.hero,
+.team-header,
+.page-hero,
+.tournament-header,
+.gallery-header,
+.clips-header,
+.challenge-header {
+    position: relative !important;
+
+    z-index: 1 !important;
+}
+
+
+/* =========================================================
+   🔥 ALL MAIN CONTENT BELOW NAV
+   ========================================================= */
+
+main,
+section,
+footer {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* =========================================================
+   🔥 MOBILE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    header {
+        height: 82px !important;
+    }
+
+    header .navbar {
+        height: 82px !important;
+    }
+
+    header .navbar .logo {
+        height: 82px !important;
+    }
+
+    header .navbar .logo img {
+        width: 92px !important;
+        max-width: 92px !important;
+        max-height: 70px !important;
+    }
+
+    body {
+        padding-top: 82px !important;
+    }
+}
+
+
+/* =========================================================
+   🔥 SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    header {
+        height: 72px !important;
+    }
+
+    header .navbar {
+        height: 72px !important;
+    }
+
+    header .navbar .logo {
+        height: 72px !important;
+    }
+
+    header .navbar .logo img {
+        width: 82px !important;
+        max-width: 82px !important;
+        max-height: 64px !important;
+    }
+
+    body {
+        padding-top: 72px !important;
+    }
 }

@@ -8,117 +8,611 @@
 
 <title>Settings | 4 FIRE UNITED</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-<link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
+<link rel="stylesheet" href="CSS/dashboard.css">
 
 <style>
+
 body{
     visibility:hidden;
+    margin:0;
 }
+
+/* ================================
+   SETTINGS PAGE
+================================ */
+
+.settings-page{
+    padding:30px;
+}
+
+/* HEADER */
+
+.settings-heading{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:25px;
+}
+
+.settings-heading i{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,102,0,.12);
+    border:1px solid rgba(255,102,0,.25);
+    border-radius:12px;
+    color:#ff6b00;
+    font-size:20px;
+}
+
+.settings-heading h2{
+    margin:0;
+    font-family:"Bebas Neue",sans-serif;
+    font-size:30px;
+    letter-spacing:1px;
+}
+
+.settings-heading p{
+    margin:3px 0 0;
+    color:#888;
+    font-size:13px;
+}
+
+/* GRID */
+
+.settings-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:22px;
+}
+
+/* CARD */
+
+.settings-card{
+    background:rgba(20,20,20,.92);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:16px;
+    padding:24px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.settings-card.full{
+    grid-column:1 / -1;
+}
+
+.card-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+    padding-bottom:15px;
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.card-title i{
+    color:#ff6b00;
+}
+
+.card-title h3{
+    margin:0;
+    font-size:16px;
+    font-weight:600;
+}
+
+/* INPUTS */
+
+.input-group{
+    margin-bottom:16px;
+}
+
+.input-group:last-child{
+    margin-bottom:0;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:7px;
+    color:#aaa;
+    font-size:12px;
+    font-weight:500;
+}
+
+.input-group label i{
+    margin-right:6px;
+    color:#ff6b00;
+}
+
+.input-group input{
+    width:100%;
+    box-sizing:border-box;
+    padding:13px 14px;
+    border-radius:9px;
+    border:1px solid rgba(255,255,255,.08);
+    background:#111;
+    color:#fff;
+    outline:none;
+    font-family:Poppins,sans-serif;
+    font-size:13px;
+    transition:.2s;
+}
+
+.input-group input:focus{
+    border-color:#ff6b00;
+    box-shadow:0 0 0 3px rgba(255,107,0,.08);
+}
+
+.input-group input::placeholder{
+    color:#666;
+}
+
+/* HERO TEXT */
+
+.hero-input{
+    margin-bottom:16px;
+}
+
+.hero-input:last-child{
+    margin-bottom:0;
+}
+
+/* SAVE AREA */
+
+.save-area{
+    margin-top:24px;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.save-btn{
+    border:none;
+    border-radius:10px;
+    padding:13px 25px;
+    background:linear-gradient(135deg,#ff7a00,#ff4500);
+    color:#fff;
+    font-family:Poppins,sans-serif;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+    box-shadow:0 8px 20px rgba(255,80,0,.18);
+}
+
+.save-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 25px rgba(255,80,0,.28);
+}
+
+.save-btn:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+    transform:none;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .settings-grid{
+        grid-template-columns:1fr;
+    }
+
+    .settings-card.full{
+        grid-column:auto;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .settings-page{
+        padding:18px;
+    }
+
+    .settings-heading h2{
+        font-size:25px;
+    }
+
+}
+
 </style>
 
 </head>
 
 <body>
 
+<!-- =========================================
+     SIDEBAR
+========================================= -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <img src="../images/logo/logo.png" alt="4 FIRE UNITED">
+
+        <span>4 FIRE UNITED</span>
+
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html">
+            <i class="fa-solid fa-gauge-high"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="players.html">
+            <i class="fa-solid fa-users"></i>
+            <span>Players</span>
+        </a>
+
+        <a href="tournaments.html">
+            <i class="fa-solid fa-trophy"></i>
+            <span>Tournaments</span>
+        </a>
+
+        <a href="gallery.html">
+            <i class="fa-solid fa-images"></i>
+            <span>Gallery</span>
+        </a>
+
+        <a href="clips.html">
+            <i class="fa-solid fa-video"></i>
+            <span>Clips</span>
+        </a>
+
+        <a href="announcements.html">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>Announcements</span>
+        </a>
+
+        <a href="messages.html">
+            <i class="fa-solid fa-envelope"></i>
+            <span>Messages</span>
+        </a>
+
+        <a href="applications.html">
+            <i class="fa-solid fa-file-signature"></i>
+            <span>Applications</span>
+        </a>
+
+        <a href="challenge-registrations.html">
+            <i class="fa-solid fa-fire"></i>
+            <span>Challenges</span>
+        </a>
+
+        <a href="settings.html" class="active">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
 <div class="main">
+
+    <!-- TOPBAR -->
 
     <div class="topbar">
 
         <h1>WEBSITE SETTINGS</h1>
 
-        <a href="dashboard.html" class="back-btn">
+        <div class="topbar-right">
 
-            <i class="fa-solid fa-arrow-left"></i>
+            <div class="admin-user">
 
-            Back Dashboard
+                <i class="fa-solid fa-user-shield"></i>
 
-        </a>
+                <span>Administrator</span>
+
+            </div>
+
+            <button class="logout-btn" onclick="logout()">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                Logout
+
+            </button>
+
+        </div>
 
     </div>
 
-    <div class="edit-box">
 
-        <input
-        type="text"
-        id="teamName"
-        placeholder="Team Name">
+    <!-- SETTINGS -->
 
-        <input
-        type="email"
-        id="email"
-        placeholder="Contact Email">
+    <div class="settings-page">
 
-        <input
-        type="text"
-        id="phone"
-        placeholder="Phone Number">
+        <div class="settings-heading">
 
-        <input
-        type="text"
-        id="address"
-        placeholder="Address">
+            <i class="fa-solid fa-sliders"></i>
 
-        <input
-        type="text"
-        id="logo"
-        placeholder="Logo Image Path">
+            <div>
 
-        <input
-        type="text"
-        id="heroTitle"
-        placeholder="Hero Title">
+                <h2>Website Configuration</h2>
 
-        <input
-        type="text"
-        id="heroSubtitle"
-        placeholder="Hero Subtitle">
+                <p>Manage your website information and social links.</p>
 
-        <input
-        type="text"
-        id="instagram"
-        placeholder="Instagram Link">
+            </div>
 
-        <input
-        type="text"
-        id="youtube"
-        placeholder="YouTube Link">
+        </div>
 
-        <input
-        type="text"
-        id="discord"
-        placeholder="Discord Link">
 
-        <input
-        type="text"
-        id="facebook"
-        placeholder="Facebook Link">
+        <div class="settings-grid">
 
-        <button
-        id="saveSettings"
-        class="save-btn">
 
-            <i class="fa-solid fa-floppy-disk"></i>
+            <!-- =========================
+                 GENERAL INFORMATION
+            ========================== -->
 
-            Save Settings
+            <div class="settings-card">
 
-        </button>
+                <div class="card-title">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    <h3>General Information</h3>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        <i class="fa-solid fa-users"></i>
+                        Team Name
+                    </label>
+
+                    <input
+                    type="text"
+                    id="teamName"
+                    placeholder="Enter team name">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        <i class="fa-solid fa-envelope"></i>
+                        Contact Email
+                    </label>
+
+                    <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter contact email">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        <i class="fa-solid fa-phone"></i>
+                        Phone Number
+                    </label>
+
+                    <input
+                    type="text"
+                    id="phone"
+                    placeholder="Enter phone number">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        <i class="fa-solid fa-location-dot"></i>
+                        Address
+                    </label>
+
+                    <input
+                    type="text"
+                    id="address"
+                    placeholder="Enter address">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        <i class="fa-solid fa-image"></i>
+                        Logo Image Path
+                    </label>
+
+                    <input
+                    type="text"
+                    id="logo"
+                    placeholder="Example: images/logo/logo.png">
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 HERO SETTINGS
+            ========================== -->
+
+            <div class="settings-card">
+
+                <div class="card-title">
+
+                    <i class="fa-solid fa-house"></i>
+
+                    <h3>Hero Section</h3>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        <i class="fa-solid fa-heading"></i>
+                        Hero Title
+                    </label>
+
+                    <input
+                    type="text"
+                    id="heroTitle"
+                    placeholder="Enter hero title">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        <i class="fa-solid fa-align-left"></i>
+                        Hero Subtitle
+                    </label>
+
+                    <input
+                    type="text"
+                    id="heroSubtitle"
+                    placeholder="Enter hero subtitle">
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 SOCIAL LINKS
+            ========================== -->
+
+            <div class="settings-card full">
+
+                <div class="card-title">
+
+                    <i class="fa-solid fa-share-nodes"></i>
+
+                    <h3>Social Media Links</h3>
+
+                </div>
+
+
+                <div class="settings-grid">
+
+                    <div class="input-group">
+
+                        <label>
+                            <i class="fa-brands fa-instagram"></i>
+                            Instagram
+                        </label>
+
+                        <input
+                        type="text"
+                        id="instagram"
+                        placeholder="Instagram profile link">
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            <i class="fa-brands fa-youtube"></i>
+                            YouTube
+                        </label>
+
+                        <input
+                        type="text"
+                        id="youtube"
+                        placeholder="YouTube channel link">
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            <i class="fa-brands fa-discord"></i>
+                            Discord
+                        </label>
+
+                        <input
+                        type="text"
+                        id="discord"
+                        placeholder="Discord invite link">
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            <i class="fa-brands fa-facebook"></i>
+                            Facebook
+                        </label>
+
+                        <input
+                        type="text"
+                        id="facebook"
+                        placeholder="Facebook page link">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <div class="save-area">
+
+            <button
+            id="saveSettings"
+            class="save-btn">
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                Save Settings
+
+            </button>
+
+        </div>
 
     </div>
 
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
 
-<script src="js/firebase.js?v=1783829699314"></script>
-<script src="js/auth-guard.js?v=1783829699314"></script>
-<script src="js/settings.js?v=1783829699314"></script>
+<!-- =========================================
+     FIREBASE
+========================================= -->
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+
+<script src="js/auth-guard.js"></script>
+
+<script src="js/settings.js?v=20260907-2"></script>
 
 </body>
 

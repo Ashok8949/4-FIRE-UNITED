@@ -28,9 +28,10 @@ settingsRef.get()
 
 .catch((err) => {
 
-    console.error(err);
+    console.error("Failed to load settings:", err);
 
 });
+
 
 // =====================================
 // SAVE SETTINGS
@@ -43,45 +44,69 @@ document.getElementById("saveSettings").addEventListener("click", () => {
     btn.disabled = true;
 
     btn.innerHTML =
-    '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+        '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
-    settingsRef.set({
 
-        teamName: document.getElementById("teamName").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        phone: document.getElementById("phone").value.trim(),
-        address: document.getElementById("address").value.trim(),
-        logo: document.getElementById("logo").value.trim(),
-        heroTitle: document.getElementById("heroTitle").value.trim(),
-        heroSubtitle: document.getElementById("heroSubtitle").value.trim(),
-        instagram: document.getElementById("instagram").value.trim(),
-        youtube: document.getElementById("youtube").value.trim(),
-        discord: document.getElementById("discord").value.trim(),
-        facebook: document.getElementById("facebook").value.trim()
+    const settingsData = {
 
-    })
+        teamName:
+            document.getElementById("teamName").value.trim(),
+
+        email:
+            document.getElementById("email").value.trim(),
+
+        phone:
+            document.getElementById("phone").value.trim(),
+
+        address:
+            document.getElementById("address").value.trim(),
+
+        logo:
+            document.getElementById("logo").value.trim(),
+
+        heroTitle:
+            document.getElementById("heroTitle").value.trim(),
+
+        heroSubtitle:
+            document.getElementById("heroSubtitle").value.trim(),
+
+        instagram:
+            document.getElementById("instagram").value.trim(),
+
+        youtube:
+            document.getElementById("youtube").value.trim(),
+
+        discord:
+            document.getElementById("discord").value.trim(),
+
+        facebook:
+            document.getElementById("facebook").value.trim()
+
+    };
+
+
+    settingsRef.set(settingsData)
 
     .then(() => {
 
         alert("✅ Settings Saved Successfully!");
 
-        btn.disabled = false;
-
-        btn.innerHTML =
-        '<i class="fa-solid fa-floppy-disk"></i> Save Settings';
-
     })
 
     .catch((err) => {
 
-        console.error(err);
+        console.error("Failed to save settings:", err);
 
         alert("❌ Failed to Save Settings!");
+
+    })
+
+    .finally(() => {
 
         btn.disabled = false;
 
         btn.innerHTML =
-        '<i class="fa-solid fa-floppy-disk"></i> Save Settings';
+            '<i class="fa-solid fa-floppy-disk"></i> Save Settings';
 
     });
 

@@ -3,123 +3,473 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Applications | 4 FIRE UNITED</title>
+    <title>Applications Manager | 4 FIRE UNITED</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-<link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
+    <link rel="stylesheet" href="CSS/dashboard.css">
 
-<style>
-body{
-    visibility:hidden;
-}
-</style>
+    <style>
+
+        body {
+            visibility: hidden;
+        }
+
+        .applications-content {
+            padding: 30px;
+        }
+
+        .applications-toolbar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .applications-heading h2 {
+            margin: 0;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+
+        .applications-heading p {
+            margin: 5px 0 0;
+            opacity: .6;
+            font-size: 13px;
+        }
+
+        .applications-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            background: rgba(255, 102, 0, .1);
+            border: 1px solid rgba(255, 102, 0, .2);
+            color: #ff7200;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .applications-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .search-box i {
+            opacity: .55;
+        }
+
+        .search-box input {
+            width: 200px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: inherit;
+            font-family: Poppins, sans-serif;
+        }
+
+        .search-box input::placeholder {
+            opacity: .5;
+        }
+
+        .application-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            font-family: Poppins, sans-serif;
+        }
+
+        .delete-selected {
+            color: #ff5a5a;
+        }
+
+        .applications-table-box {
+            overflow-x: auto;
+        }
+
+        .applications-table-box table {
+            min-width: 1050px;
+        }
+
+        .applications-table-box th:first-child,
+        .applications-table-box td:first-child {
+            width: 45px;
+            text-align: center;
+        }
+
+        .applications-table-box input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #ff7200;
+            cursor: pointer;
+        }
+
+        .application-name {
+            font-weight: 600;
+        }
+
+        .application-ign {
+            color: #ff7200;
+            font-weight: 500;
+        }
+
+        .application-email {
+            opacity: .7;
+            font-size: 12px;
+        }
+
+        .application-status {
+            display: inline-flex;
+            padding: 6px 10px;
+            border-radius: 7px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.08);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .application-actions {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .application-actions button,
+        .application-actions a {
+            white-space: nowrap;
+        }
+
+        .accept-btn {
+            color: #65e58a;
+            border-color: rgba(101,229,138,.2);
+        }
+
+        .reject-btn {
+            color: #ff7777;
+            border-color: rgba(255,119,119,.2);
+        }
+
+        .empty-application {
+            padding: 70px 20px;
+            text-align: center;
+            opacity: .55;
+        }
+
+        .empty-application i {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .empty-application h3 {
+            margin: 0 0 5px;
+        }
+
+        .empty-application p {
+            margin: 0;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+
+            .applications-content {
+                padding: 20px;
+            }
+
+            .applications-actions {
+                width: 100%;
+            }
+
+            .search-box {
+                flex: 1;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-<div class="main">
+<div class="admin-layout">
 
-<div class="topbar">
 
-<h1>JOIN APPLICATIONS</h1>
+    <!-- SIDEBAR -->
 
-<div class="top-actions">
+    <aside class="sidebar">
 
-<a href="dashboard.html" class="back-btn">
+        <div class="sidebar-logo">
+            <img src="../images/logo/logo.png" alt="4 Fire United">
+        </div>
 
-<i class="fa-solid fa-arrow-left"></i>
+        <nav class="sidebar-nav">
 
-Back Dashboard
+            <a href="dashboard.html">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
 
-</a>
+            <a href="players.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Players</span>
+            </a>
 
-<div class="search-box">
+            <a href="tournaments.html">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Tournaments</span>
+            </a>
 
-    <button id="selectAllBtn" class="back-btn">
+            <a href="gallery.html">
+                <i class="fa-solid fa-images"></i>
+                <span>Gallery</span>
+            </a>
 
-    <i class="fa-solid fa-check-double"></i>
+            <a href="clips.html">
+                <i class="fa-solid fa-video"></i>
+                <span>Clips</span>
+            </a>
 
-    Select All
+            <a href="announcements.html">
+                <i class="fa-solid fa-bullhorn"></i>
+                <span>Announcements</span>
+            </a>
 
-</button>
+            <a href="messages.html">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Messages</span>
+            </a>
 
-<button id="deleteSelectedBtn" class="back-btn">
+            <a href="applications.html" class="active">
+                <i class="fa-solid fa-file-signature"></i>
+                <span>Applications</span>
+            </a>
 
-    <i class="fa-solid fa-trash"></i>
+            <a href="challenge-registrations.html">
+                <i class="fa-solid fa-gamepad"></i>
+                <span>Challenges</span>
+            </a>
 
-    Delete Selected
+            <a href="settings.html">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
 
-</button>
+        </nav>
 
-<i class="fa-solid fa-magnifying-glass"></i>
+    </aside>
 
-<input
-type="text"
-id="searchApplication"
-placeholder="Search Application">
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>JOIN APPLICATIONS</h1>
+
+                <span>4 FIRE UNITED • ADMIN PANEL</span>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <div class="admin-info">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                    <span>Administrator</span>
+
+                </div>
+
+
+                <button class="logout-btn" onclick="logout()">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    Logout
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTENT -->
+
+        <div class="applications-content">
+
+
+            <div class="applications-toolbar">
+
+
+                <div class="applications-heading">
+
+                    <h2>PLAYER APPLICATIONS</h2>
+
+                    <p>
+                        Review and manage players who want to join 4 FIRE UNITED.
+                    </p>
+
+
+                    <div class="applications-count">
+
+                        <i class="fa-solid fa-file-signature"></i>
+
+                        <span id="applicationCount">
+                            0 Applications
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="applications-actions">
+
+
+                    <div class="search-box">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="text"
+                            id="searchApplication"
+                            placeholder="Search applications..."
+                        >
+
+                    </div>
+
+
+                    <button
+                        id="selectAllBtn"
+                        class="back-btn application-action-btn">
+
+                        <i class="fa-solid fa-check-double"></i>
+
+                        Select All
+
+                    </button>
+
+
+                    <button
+                        id="deleteSelectedBtn"
+                        class="back-btn application-action-btn delete-selected">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                        Delete Selected
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-box applications-table-box">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+
+                                <input
+                                    type="checkbox"
+                                    id="masterCheck"
+                                    title="Select all visible applications"
+                                >
+
+                            </th>
+
+                            <th>Name</th>
+
+                            <th>IGN</th>
+
+                            <th>UID</th>
+
+                            <th>Email</th>
+
+                            <th>Rank</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="applicationTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
 
 </div>
 
-</div>
 
-</div>
+<!-- FIREBASE -->
 
-<div class="table-box">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 
-<table>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 
-<thead>
-
-<tr>
-
-<th>
-
-    <input
-        type="checkbox"
-        id="masterCheck">
-
-</th>
-
-<th>Name</th>
-<th>IGN</th>
-<th>UID</th>
-<th>Email</th>
-<th>Rank</th>
-<th>Status</th>
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-<tbody id="applicationTable">
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
-
-<script src="js/firebase.js?v=1783829699314"></script>
-<script src="js/auth-guard.js?v=1783829699314"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 
 
+<script src="js/firebase.js"></script>
 
-<script src="js/application-manager.js?v=1783829699314"></script>
+<script src="js/auth-guard.js"></script>
+
+<script src="js/application-manager.js?v=20260907-2"></script>
 
 </body>
 

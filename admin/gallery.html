@@ -8,65 +8,654 @@
 
 <title>Gallery Manager | 4 FIRE UNITED</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap"
+rel="stylesheet">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
 
-<link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
+<link rel="stylesheet"
+href="CSS/dashboard.css?v=1783829699314">
 
 <style>
+
 body{
     visibility:hidden;
 }
+
+/* =========================================
+   GALLERY MANAGER
+========================================= */
+
+.gallery-manager{
+    padding:0 5px 60px;
+}
+
+.manager-heading{
+    margin-bottom:24px;
+}
+
+.manager-heading h2{
+    margin:0;
+
+    font-family:'Bebas Neue',sans-serif;
+
+    font-size:32px;
+
+    letter-spacing:1px;
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+}
+
+.manager-heading h2 i{
+    font-size:28px;
+}
+
+.manager-heading p{
+    margin:5px 0 0;
+
+    font-size:13px;
+
+    opacity:.55;
+}
+
+/* =========================================
+   TOOLBAR
+========================================= */
+
+.gallery-toolbar{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    margin-bottom:20px;
+
+    padding:16px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.025);
+}
+
+.gallery-count{
+    font-size:13px;
+
+    opacity:.6;
+
+    white-space:nowrap;
+}
+
+/* =========================================
+   GALLERY GRID
+========================================= */
+
+.gallery-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(270px,1fr));
+
+    gap:18px;
+}
+
+/* =========================================
+   GALLERY CARD
+========================================= */
+
+.gallery-card{
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.gallery-card:hover{
+    transform:translateY(-4px);
+
+    border-color:rgba(255,115,0,.35);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.3);
+}
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.gallery-image-wrap{
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:16/10;
+
+    overflow:hidden;
+
+    background:#0b0b0b;
+}
+
+.gallery-image-wrap::after{
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0,0,0,.3),
+            transparent 45%
+        );
+
+    pointer-events:none;
+}
+
+.gallery-image{
+    width:100%;
+
+    height:100%;
+
+    display:block;
+
+    object-fit:cover;
+
+    transition:
+        transform .45s ease;
+}
+
+.gallery-card:hover .gallery-image{
+    transform:scale(1.05);
+}
+
+/* =========================================
+   GALLERY INFO
+========================================= */
+
+.gallery-info{
+    padding:15px;
+}
+
+.gallery-info h3{
+    margin:0 0 13px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    line-height:1.4;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.gallery-buttons{
+    display:flex;
+
+    gap:9px;
+
+    padding-top:13px;
+
+    border-top:1px solid rgba(255,255,255,.07);
+}
+
+.edit-btn,
+.delete-btn{
+
+    flex:1;
+
+    min-height:38px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    border-radius:9px;
+
+    font-family:Poppins,sans-serif;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    text-decoration:none;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.edit-btn{
+    color:#fff;
+
+    background:rgba(255,255,255,.06);
+
+    border:1px solid rgba(255,255,255,.09);
+}
+
+.edit-btn:hover{
+    background:rgba(255,255,255,.11);
+
+    transform:translateY(-2px);
+}
+
+.delete-btn{
+    color:#fff;
+
+    background:rgba(255,59,48,.1);
+
+    border:1px solid rgba(255,59,48,.22);
+}
+
+.delete-btn:hover{
+    background:#e53935;
+
+    border-color:#e53935;
+
+    transform:translateY(-2px);
+}
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.empty-state{
+    grid-column:1/-1;
+
+    text-align:center;
+
+    padding:70px 20px;
+
+    border-radius:16px;
+
+    border:1px dashed rgba(255,255,255,.1);
+
+    background:rgba(255,255,255,.02);
+}
+
+.empty-state i{
+    display:block;
+
+    margin-bottom:14px;
+
+    font-size:38px;
+
+    opacity:.3;
+}
+
+.empty-state h3{
+    margin:0 0 6px;
+
+    font-size:18px;
+}
+
+.empty-state p{
+    margin:0;
+
+    font-size:12px;
+
+    opacity:.5;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:700px){
+
+    .gallery-manager{
+        padding:0 0 40px;
+    }
+
+    .manager-heading h2{
+        font-size:28px;
+    }
+
+    .gallery-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
 </style>
 
 </head>
 
+
 <body>
+
+
+<!-- =========================================
+     SIDEBAR
+========================================= -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <img src="../images/logo/logo.png">
+
+        <h2>4 FIRE UNITED</h2>
+
+    </div>
+
+
+    <ul>
+
+        <li>
+
+            <a href="dashboard.html">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="players.html">
+
+                <i class="fa-solid fa-users"></i>
+
+                Players
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="tournaments.html">
+
+                <i class="fa-solid fa-trophy"></i>
+
+                Tournaments
+
+            </a>
+
+        </li>
+
+
+        <li class="active">
+
+            <a href="gallery.html">
+
+                <i class="fa-solid fa-image"></i>
+
+                Gallery
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="clips.html">
+
+                <i class="fa-solid fa-film"></i>
+
+                Clips
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="announcements.html">
+
+                <i class="fa-solid fa-bullhorn"></i>
+
+                Announcements
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="messages.html">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                Messages
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="applications.html">
+
+                <i class="fa-solid fa-file-circle-check"></i>
+
+                Applications
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="challenge-registrations.html">
+
+                <i class="fa-solid fa-fire"></i>
+
+                Challenges
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="settings.html">
+
+                <i class="fa-solid fa-gear"></i>
+
+                Settings
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</div>
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
 
 <div class="main">
 
-<div class="topbar">
 
-<h1>GALLERY MANAGER</h1>
+    <!-- TOPBAR -->
 
-<a href="dashboard.html" class="back-btn">
+    <div class="topbar">
 
-<i class="fa-solid fa-arrow-left"></i>
+        <h1>GALLERY MANAGER</h1>
 
-Back Dashboard
 
-</a>
+        <div class="admin">
+
+            <img src="../images/logo/logo.png">
+
+            <span>Administrator</span>
+
+            <button
+                id="logoutBtn"
+                class="join-btn">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- CONTENT -->
+
+    <div class="dashboard-section gallery-manager">
+
+
+        <div class="manager-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-images"></i>
+
+                Gallery
+
+            </h2>
+
+
+            <p>
+                Manage all 4 FIRE UNITED gallery images
+            </p>
+
+        </div>
+
+
+        <!-- TOOLBAR -->
+
+        <div class="gallery-toolbar">
+
+            <div class="gallery-count"
+                 id="galleryCount">
+
+                0 Images
+
+            </div>
+
+
+            <a
+                href="add-gallery.html"
+                class="add-btn">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Image
+
+            </a>
+
+        </div>
+
+
+        <!-- GALLERY -->
+
+        <div
+            id="galleryGrid"
+            class="gallery-grid">
+
+        </div>
+
+
+    </div>
 
 </div>
 
-<div style="margin-bottom:20px;">
 
-<a href="add-gallery.html" class="edit-btn">
-
-<i class="fa-solid fa-plus"></i>
-
-Add Image
-
-</a>
-
-</div>
-
-<div id="galleryGrid" class="gallery-grid">
-
-</div>
-
-</div>
+<!-- =========================================
+     FIREBASE
+========================================= -->
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
 
+
 <script src="js/firebase.js?v=1783829699314"></script>
+
 <script src="js/auth-guard.js?v=1783829699314"></script>
-<script src="js/gallery-manager.js?v=1783829699314"></script>
+
+<script src="js/gallery-manager.js?v=20260907-2"></script>
+
+
+<!-- LOGOUT -->
+
+<script>
+
+document
+    .getElementById("logoutBtn")
+    ?.addEventListener("click", function(){
+
+        auth.signOut()
+
+            .then(() => {
+
+                window.location.href =
+                    "login.html";
+
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+                alert(error.message);
+
+            });
+
+    });
+
+</script>
+
 
 </body>
+
 </html>
