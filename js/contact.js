@@ -2,32 +2,42 @@
 // CONTACT FORM
 // ===============================
 
-document.getElementById("contactForm").addEventListener("submit", (e) => {
+document.getElementById("contactForm").addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    const message = {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const subject = document.getElementById("subject").value.trim();
+    const messageText = document.getElementById("message").value.trim();
 
-        name: document.getElementById("name").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        subject: document.getElementById("subject").value.trim(),
-        message: document.getElementById("message").value.trim(),
-        date: new Date().toLocaleDateString(),
-        status: "New"
+    // ===============================
+    // VALIDATION
+    // ===============================
 
-    };
-
-    if (
-        !message.name ||
-        !message.email ||
-        !message.subject ||
-        !message.message
-    ) {
+    if (!name || !email || !subject || !messageText) {
 
         alert("Please fill all fields.");
         return;
 
     }
+
+    // ===============================
+    // EMAIL VALIDATION
+    // ===============================
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+
+        alert("Please enter a valid email address.");
+        return;
+
+    }
+
+    // ===============================
+    // BUTTON
+    // ===============================
 
     const btn = document.getElementById("sendMessage");
 
@@ -36,47 +46,85 @@ document.getElementById("contactForm").addEventListener("submit", (e) => {
     btn.innerHTML =
         '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
 
-    db.collection("contactMessages")
-    .add(message)
 
-    .then(() => {
+    // ===============================
+    // CONTACT MESSAGE
+    // ===============================
 
-        db.collection("notifications").add({
+    const contactMessage = {
 
-    title: "New Contact Message",
+        name: name,
 
-    message: `${message.name} sent a message`,
+        email: email,
 
-    type: "contact",
+        subject: subject,
 
-    link: "messages.html",
+        message: messageText,
 
-    isRead: false,
+        status: "New",
 
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 
-});
+        date: new Date().toLocaleString()
+
+    };
+
+
+    try {
+
+        // ===============================
+        // SAVE MESSAGE
+        // ===============================
+
+        await db.collection("contactMessages")
+            .add(contactMessage);
+
+
+        // ===============================
+        // CREATE NOTIFICATION
+        // ===============================
+
+        await db.collection("notifications").add({
+
+            title: "New Contact Message",
+
+            message: `${name} sent a new contact message`,
+
+            type: "contact",
+
+            link: "messages.html",
+
+            isRead: false,
+
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+        });
+
+
+        // ===============================
+        // SUCCESS
+        // ===============================
 
         alert("✅ Message Sent Successfully!");
 
         document.getElementById("contactForm").reset();
 
-        btn.disabled = false;
 
-        btn.innerHTML = "Send Message";
+    } catch (err) {
 
-    })
+        console.error("Contact Form Error:", err);
 
-    .catch((err) => {
+        alert("❌ Failed to send message. Please try again.");
 
-        console.error(err);
+    }
 
-        alert("❌ Failed to send message.");
 
-        btn.disabled = false;
+    // ===============================
+    // RESET BUTTON
+    // ===============================
 
-        btn.innerHTML = "Send Message";
+    btn.disabled = false;
 
-    });
+    btn.innerHTML = "Send Message";
 
 });

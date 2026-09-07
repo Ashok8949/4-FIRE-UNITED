@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Challenges | 4 FIRE UNITED</title>
+
+<link rel="stylesheet" href="CSS/style.css?v=1783829699314">
+<link rel="stylesheet" href="CSS/responsive.css?v=1783829699314">
+<link rel="stylesheet" href="CSS/animations.css?v=1783829699314">
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link rel="icon" href="images/logo/logo.png">
+
+
+<style>
+
+/* =========================================
+   4FU CHALLENGES PAGE
+========================================= */
+
+:root {
+    --challenge-accent: #ff3c00;
+    --challenge-accent-2: #ff7a00;
+    --challenge-bg: #070707;
+    --challenge-card: rgba(255,255,255,0.045);
+    --challenge-border: rgba(255,255,255,0.11);
+}
+
+
+/* =========================================
+   MAIN SECTION
+========================================= */
+
+.challenges-page {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 15% 15%, rgba(255,60,0,0.10), transparent 30%),
+        radial-gradient(circle at 85% 35%, rgba(255,100,0,0.07), transparent 28%);
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.challenge-intro {
+    text-align: center;
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 75px 20px 45px;
+}
+
+.challenge-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid rgba(255,60,0,0.35);
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.challenge-intro h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 82px);
+    line-height: .95;
+    margin: 0 0 18px;
+    letter-spacing: 2px;
+}
+
+.challenge-intro h2 span {
+    background: linear-gradient(90deg, #ff3c00, #ff9a00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.challenge-intro p {
+    max-width: 650px;
+    margin: auto;
+    opacity: .72;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+
+/* =========================================
+   RULES
+========================================= */
+
+.challenge-rules {
+    width: min(1100px, 90%);
+    margin: 0 auto 70px;
+    padding: 30px;
+    border: 1px solid var(--challenge-border);
+    border-radius: 20px;
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,.055),
+        rgba(255,255,255,.018)
+    );
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+}
+
+.challenge-rules::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(#ff3c00,#ff8a00);
+}
+
+.rules-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.rules-heading i {
+    font-size: 25px;
+}
+
+.rules-heading h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px 35px;
+}
+
+.rule {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+    opacity: .78;
+    line-height: 1.6;
+}
+
+.rule i {
+    margin-top: 4px;
+    font-size: 11px;
+}
+
+
+/* =========================================
+   SECTION TITLE
+========================================= */
+
+.choose-title {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.choose-title h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    margin: 0 0 5px;
+    letter-spacing: 1px;
+}
+
+.choose-title p {
+    font-size: 13px;
+    opacity: .6;
+}
+
+
+/* =========================================
+   CHALLENGE CARDS
+========================================= */
+
+.challenge-modes {
+    width: min(1100px, 90%);
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding-bottom: 75px;
+}
+
+.challenge-card {
+    position: relative;
+    min-height: 350px;
+    padding: 35px 28px;
+    border: 1px solid var(--challenge-border);
+    border-radius: 24px;
+    overflow: hidden;
+    cursor: pointer;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.018)
+        );
+    transition:
+        transform .45s cubic-bezier(.2,.8,.2,1),
+        border-color .35s ease,
+        box-shadow .35s ease;
+}
+
+.challenge-card::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: rgba(255,60,0,.12);
+    filter: blur(45px);
+    top: -70px;
+    right: -60px;
+    transition: .45s;
+}
+
+.challenge-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg,#ff3c00,#ff8b00);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: .4s;
+}
+
+.challenge-card:hover {
+    transform: translateY(-12px);
+    border-color: rgba(255,60,0,.55);
+    box-shadow: 0 25px 60px rgba(0,0,0,.35);
+}
+
+.challenge-card:hover::before {
+    transform: scale(1.5);
+}
+
+.challenge-card:hover::after {
+    transform: scaleX(1);
+}
+
+.challenge-number {
+    font-size: 12px;
+    opacity: .4;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.challenge-icon {
+    width: 75px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    margin: 35px 0 25px;
+    background: rgba(255,60,0,.10);
+    border: 1px solid rgba(255,60,0,.22);
+    font-size: 30px;
+    transition: .4s;
+}
+
+.challenge-card:hover .challenge-icon {
+    transform: rotate(-5deg) scale(1.08);
+}
+
+.challenge-card h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 1px;
+    margin: 0 0 5px;
+}
+
+.challenge-card p {
+    font-size: 13px;
+    line-height: 1.7;
+    opacity: .62;
+    max-width: 230px;
+}
+
+.challenge-select {
+    position: absolute;
+    bottom: 27px;
+    right: 27px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,.14);
+    transition: .35s;
+}
+
+.challenge-card:hover .challenge-select {
+    background: #ff3c00;
+    border-color: #ff3c00;
+    transform: translateX(4px);
+}
+
+
+/* =========================================
+   FORM AREA
+========================================= */
+
+.challenge-form-wrapper {
+    width: min(850px, 90%);
+    margin: 0 auto 80px;
+    display: none;
+    opacity: 0;
+    transform: translateY(45px) scale(.97);
+}
+
+.challenge-form-wrapper.show {
+    display: block;
+    animation: formReveal .65s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+@keyframes formReveal {
+
+    0% {
+        opacity: 0;
+        transform: translateY(45px) scale(.97);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+.challenge-form-box {
+    padding: 40px;
+    border-radius: 25px;
+    border: 1px solid rgba(255,60,0,.22);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.018)
+        );
+    box-shadow: 0 25px 70px rgba(0,0,0,.3);
+    backdrop-filter: blur(15px);
+}
+
+.form-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.form-title h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    margin: 0;
+}
+
+.form-title p {
+    font-size: 12px;
+    opacity: .6;
+    margin-top: 5px;
+}
+
+.change-challenge {
+    border: 1px solid rgba(255,255,255,.14);
+    background: transparent;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: inherit;
+    font-family: inherit;
+    font-size: 11px;
+}
+
+.change-challenge:hover {
+    border-color: #ff3c00;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.challenge-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 17px;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0 0 7px 3px;
+    opacity: .65;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.22);
+    color: inherit;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    transition: .25s;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: rgba(255,60,0,.65);
+    box-shadow: 0 0 0 3px rgba(255,60,0,.07);
+}
+
+
+/* =========================================
+   RULE CHECK
+========================================= */
+
+.rules-check {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 11px;
+    opacity: .7;
+    line-height: 1.6;
+    cursor: pointer;
+}
+
+.rules-check input {
+    margin-top: 3px;
+    accent-color: #ff3c00;
+}
+
+
+/* =========================================
+   SUBMIT
+========================================= */
+
+.challenge-submit {
+    grid-column: 1 / -1;
+    border: none;
+    padding: 17px;
+    border-radius: 10px;
+    background: linear-gradient(90deg,#ff3c00,#ff7600);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    letter-spacing: .5px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.challenge-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(255,60,0,.22);
+}
+
+.challenge-submit:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   SUCCESS
+========================================= */
+
+.confirmation-box {
+    display: none;
+    width: min(750px, 90%);
+    margin: 0 auto 80px;
+    text-align: center;
+    padding: 55px 30px;
+    border: 1px solid rgba(255,60,0,.25);
+    border-radius: 25px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.018)
+        );
+    animation: formReveal .65s ease forwards;
+}
+
+.confirmation-box.show {
+    display: block;
+}
+
+.success-icon {
+    width: 75px;
+    height: 75px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,60,0,.12);
+    border: 1px solid rgba(255,60,0,.3);
+    font-size: 30px;
+}
+
+.confirmation-box h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    margin: 0;
+}
+
+.confirmation-box p {
+    font-size: 13px;
+    opacity: .68;
+}
+
+.registration-id {
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 18px 0;
+    border-radius: 8px;
+    border: 1px dashed rgba(255,60,0,.4);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.dm-message {
+    max-width: 580px;
+    margin: 15px auto 25px;
+}
+
+.success-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.success-buttons button {
+    padding: 13px 20px;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+}
+
+.instagram-btn {
+    background: linear-gradient(90deg,#ff3c00,#ff7600);
+    color: white;
+}
+
+.copy-btn {
+    background: rgba(255,255,255,.07);
+    color: inherit;
+    border: 1px solid rgba(255,255,255,.12) !important;
+}
+
+
+/* =========================================
+   SOCIAL
+========================================= */
+
+.challenge-social {
+    text-align: center;
+    padding: 20px 20px 80px;
+}
+
+.challenge-social h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    margin-bottom: 5px;
+}
+
+.challenge-social p {
+    opacity: .6;
+    font-size: 13px;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 13px;
+    margin-top: 22px;
+}
+
+.social-icons a {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.12);
+    text-decoration: none;
+    color: inherit;
+    transition: .3s;
+}
+
+.social-icons a:hover {
+    transform: translateY(-5px);
+    border-color: #ff3c00;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 800px) {
+
+    .rules-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .challenge-modes {
+        grid-template-columns: 1fr;
+    }
+
+    .challenge-card {
+        min-height: 300px;
+    }
+
+    .challenge-form-box {
+        padding: 25px 18px;
+    }
+
+    .challenge-form {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full,
+    .rules-check,
+    .challenge-submit {
+        grid-column: auto;
+    }
+
+    .form-top {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="loader">
+<h1></h1>
+</div>
+
+
+<!-- =========================================
+     NAVBAR
+========================================= -->
+
+<header>
+
+<nav class="navbar">
+
+<div class="logo">
+
+<a href="index.html">
+<img src="images/logo/logo.png" alt="Logo">
+</a>
+
+</div>
+
+
+<ul class="nav-links">
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="team.html">Team</a></li>
+
+<li><a href="tournaments.html">Tournaments</a></li>
+
+<li><a href="challenges.html" class="active">Challenges</a></li>
+
+<li><a href="gallery.html">Gallery</a></li>
+
+<li><a href="clips.html">Clips</a></li>
+
+<li><a href="join.html">Join Us</a></li>
+
+<li><a href="check-status.html">Check Status</a></li>
+
+<li><a href="contact.html">Contact</a></li>
+
+</ul>
+
+
+<div class="nav-buttons">
+
+<a href="join.html" class="join-btn">
+Join Team
+</a>
+
+</div>
+
+
+<div class="menu-btn">
+
+<i class="fa-solid fa-bars"></i>
+
+</div>
+
+</nav>
+
+</header>
+
+
+<!-- =========================================
+     PAGE HEADER
+========================================= -->
+
+<header class="team-header">
+
+<h1>CHALLENGES</h1>
+
+<p>
+Think You're The Best? Prove It.
+</p>
+
+</header>
+
+
+<main class="challenges-page">
+
+
+<!-- =========================================
+     INTRO
+========================================= -->
+
+<section class="challenge-intro">
+
+<div class="challenge-badge">
+
+<i class="fa-solid fa-fire"></i>
+
+4FU BATTLE ARENA
+
+</div>
+
+
+<h2>
+CHOOSE YOUR <span>BATTLE</span>
+</h2>
+
+
+<p>
+
+Step into the arena, choose your challenge and prove
+what you're capable of. Register your challenge and
+connect with 4 FIRE UNITED to take it forward.
+
+</p>
+
+</section>
+
+
+<!-- =========================================
+     RULES
+========================================= -->
+
+<section class="challenge-rules">
+
+<div class="rules-heading">
+
+<i class="fa-solid fa-shield-halved"></i>
+
+<h3>CHALLENGE RULES</h3>
+
+</div>
+
+
+<div class="rules-grid">
+
+<div class="rule">
+<i class="fa-solid fa-circle-check"></i>
+<span>No hacks, cheats or unfair gameplay.</span>
+</div>
+
+<div class="rule">
+<i class="fa-solid fa-circle-check"></i>
+<span>Respect every player and team.</span>
+</div>
+
+<div class="rule">
+<i class="fa-solid fa-circle-check"></i>
+<span>Use correct player information.</span>
+</div>
+
+<div class="rule">
+<i class="fa-solid fa-circle-check"></i>
+<span>Follow the confirmed match timing.</span>
+</div>
+
+<div class="rule">
+<i class="fa-solid fa-circle-check"></i>
+<span>Toxic or abusive behavior is not allowed.</span>
+</div>
+
+<div class="rule">
+<i class="fa-solid fa-circle-check"></i>
+<span>4FU can reject invalid challenge requests.</span>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================
+     CHOOSE
+========================================= -->
+
+<section id="challengeSelection">
+
+<div class="choose-title">
+
+<h3>SELECT YOUR MODE</h3>
+
+<p>Choose a battle mode to continue</p>
+
+</div>
+
+
+<div class="challenge-modes">
+
+
+<!-- 1V1 -->
+
+<div class="challenge-card" data-mode="1V1">
+
+<div class="challenge-number">
+01 / SOLO
+</div>
+
+
+<div class="challenge-icon">
+
+<i class="fa-solid fa-user"></i>
+
+</div>
+
+
+<h4>1V1</h4>
+
+<p>
+One player. One opponent.
+No excuses. Just skill.
+</p>
+
+
+<div class="challenge-select">
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</div>
+
+</div>
+
+
+<!-- 2V2 -->
+
+<div class="challenge-card" data-mode="2V2">
+
+<div class="challenge-number">
+02 / DUO
+</div>
+
+
+<div class="challenge-icon">
+
+<i class="fa-solid fa-user-group"></i>
+
+</div>
+
+
+<h4>2V2</h4>
+
+<p>
+Find your duo.
+Coordinate and take the fight.
+</p>
+
+
+<div class="challenge-select">
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</div>
+
+</div>
+
+
+<!-- 4V4 -->
+
+<div class="challenge-card" data-mode="4V4">
+
+<div class="challenge-number">
+03 / SQUAD
+</div>
+
+
+<div class="challenge-icon">
+
+<i class="fa-solid fa-people-group"></i>
+
+</div>
+
+
+<h4>4V4</h4>
+
+<p>
+Build your squad.
+Own the lobby.
+</p>
+
+
+<div class="challenge-select">
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================================
+     FORM
+========================================= -->
+
+<section class="challenge-form-wrapper" id="challengeFormWrapper">
+
+<div class="challenge-form-box">
+
+
+<div class="form-top">
+
+<div class="form-title">
+
+<h3 id="formTitle">
+CHALLENGE REGISTRATION
+</h3>
+
+<p>
+Leader details are enough. We'll take it from here.
+</p>
+
+</div>
+
+
+<button
+type="button"
+class="change-challenge"
+id="changeChallenge">
+
+← Change Mode
+
+</button>
+
+</div>
+
+
+<form class="challenge-form" id="challengeForm">
+
+
+<div class="form-group">
+
+<label>LEADER NAME *</label>
+
+<input
+type="text"
+id="leaderName"
+placeholder="Enter leader name"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>FREE FIRE UID *</label>
+
+<input
+type="text"
+id="leaderUID"
+placeholder="Enter Free Fire UID"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>WHATSAPP NUMBER *</label>
+
+<input
+type="tel"
+id="whatsapp"
+placeholder="Enter WhatsApp number"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>EMAIL ADDRESS *</label>
+
+<input
+type="email"
+id="email"
+placeholder="Enter email address"
+required>
+
+</div>
+
+
+<div class="form-group full">
+
+<label>TEAM NAME</label>
+
+<input
+type="text"
+id="teamName"
+placeholder="Enter team name (optional)">
+
+</div>
+
+
+<div class="form-group">
+
+<label>PREFERRED DATE</label>
+
+<input
+type="date"
+id="preferredDate">
+
+</div>
+
+
+<div class="form-group">
+
+<label>PREFERRED TIME</label>
+
+<input
+type="time"
+id="preferredTime">
+
+</div>
+
+
+<div class="form-group full">
+
+<label>MESSAGE</label>
+
+<textarea
+id="message"
+placeholder="Anything you want to tell 4FU? (Optional)"></textarea>
+
+</div>
+
+
+<label class="rules-check">
+
+<input
+type="checkbox"
+id="rules"
+required>
+
+<span>
+I have read and agree to the 4FU Challenge Rules.
+</span>
+
+</label>
+
+
+<button
+type="submit"
+id="challengeSubmit"
+class="challenge-submit">
+
+🔥 REGISTER CHALLENGE
+
+</button>
+
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- =========================================
+     SUCCESS
+========================================= -->
+
+<section
+class="confirmation-box"
+id="confirmationBox">
+
+
+<div class="success-icon">
+
+<i class="fa-solid fa-check"></i>
+
+</div>
+
+
+<h2>YOU'RE IN!</h2>
+
+
+<p>
+Your challenge registration has been received.
+</p>
+
+
+<div
+class="registration-id"
+id="registrationId">
+
+#4FU-000000
+
+</div>
+
+
+<p>
+Now send us a DM on Instagram to confirm your challenge.
+</p>
+
+
+<p
+class="dm-message"
+id="dmMessage">
+
+</p>
+
+
+<div class="success-buttons">
+
+<button
+class="instagram-btn"
+id="instagramDM">
+
+<i class="fa-brands fa-instagram"></i>
+&nbsp;
+DM 4FU ON INSTAGRAM
+
+</button>
+
+
+<button
+class="copy-btn"
+id="copyMessage">
+
+<i class="fa-solid fa-copy"></i>
+&nbsp;
+COPY MESSAGE
+
+</button>
+
+</div>
+
+
+<p style="margin-top:25px;font-size:11px;opacity:.5;">
+
+Your challenge is confirmed only after you contact 4FU.
+
+</p>
+
+</section>
+
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+
+<footer>
+
+<h2>4 FIRE UNITED</h2>
+
+<p>
+Forged In Fire. United In Victory.
+</p>
+
+
+<div class="footer-social">
+
+<a
+href="https://www.instagram.com/4fireunited/"
+target="_blank">
+
+<i class="fa-brands fa-instagram"></i>
+
+</a>
+
+
+<a
+href="https://www.youtube.com/@4fireunited"
+target="_blank">
+
+<i class="fa-brands fa-youtube"></i>
+
+</a>
+
+
+<a href="#">
+
+<i class="fa-brands fa-discord"></i>
+
+</a>
+
+</div>
+
+
+<div class="footer-links">
+
+<a href="index.html">Home</a>
+
+<a href="team.html">Team</a>
+
+<a href="tournaments.html">Tournament</a>
+
+<a href="challenges.html">Challenges</a>
+
+<a href="gallery.html">Gallery</a>
+
+<a href="clips.html">Clips</a>
+
+<a href="join.html">Join</a>
+
+<a href="contact.html">Contact</a>
+
+</div>
+
+
+<p class="copyright">
+
+© <span id="year"></span>
+4 FIRE UNITED. All Rights Reserved.
+
+</p>
+
+</footer>
+
+
+<!-- =========================================
+     SCRIPTS
+========================================= -->
+
+<script src="js/main.js?v=1783829699314"></script>
+
+<script src="js/animation.js?v=1783829699314"></script>
+
+<script src="js/particles.js?v=1783829699314"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
+
+
+<script src="js/firebase.js?v=1783829699314"></script>
+
+<script src="js/settings-loader.js?v=1783829699314"></script>
+
+<script src="js/challenges.js?v=1783829699314"></script>
+
+
+</body>
+
+</html>
