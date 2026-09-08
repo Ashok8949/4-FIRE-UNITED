@@ -5551,3 +5551,61 @@ footer {
         font-size:20px !important;
     }
 }
+
+/* =========================================================
+   4FU APP HOME — MOBILE MENU FINAL FIX
+   Mobile menu starts directly below the navbar.
+   All non-menu styles remain unchanged.
+   ========================================================= */
+@media (max-width:1050px){
+    .navbar .nav-links{
+        position:fixed !important;
+        top:82px !important;
+        left:-100% !important;
+        right:0 !important;
+        width:100% !important;
+        height:calc(100vh - 82px) !important;
+        margin:0 !important;
+        padding:25px 20px 30px !important;
+        box-sizing:border-box !important;
+        display:flex !important;
+        flex-direction:column !important;
+        justify-content:flex-start !important;
+        align-items:center !important;
+        align-content:flex-start !important;
+        gap:16px !important;
+        overflow-y:auto !important;
+        background:#050505 !important;
+        z-index:99999 !important;
+        list-style:none !important;
+    }
+
+    .navbar .nav-links.active{
+        left:0 !important;
+    }
+
+    .navbar .nav-links li{
+        flex:0 0 auto !important;
+        margin:0 !important;
+        padding:0 !important;
+    }
+
+    .navbar .nav-links a{
+        height:auto !important;
+        min-height:0 !important;
+        padding:0 !important;
+        margin:0 !important;
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+    }
+}
+
+@media (max-width:600px){
+    .navbar .nav-links{
+        top:72px !important;
+        height:calc(100vh - 72px) !important;
+        padding:20px 16px 25px !important;
+        gap:14px !important;
+    }
+}

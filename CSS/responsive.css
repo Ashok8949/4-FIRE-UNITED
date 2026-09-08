@@ -4,63 +4,61 @@
 
 @media (max-width:992px){
 
-.navbar{
-    padding:12px 5%;
-}
+    .navbar{
+        padding:12px 5%;
+    }
 
-.nav-links{
-    gap:18px;
-}
+    .nav-links{
+        gap:18px;
+    }
 
-.hero-container,
-.about-container,
-.player-container,
-.player-wrapper,
-.join-section,
-.contact-section{
-    flex-direction:column;
-    grid-template-columns:1fr;
-    text-align:center;
-}
+    .hero-container,
+    .about-container,
+    .player-container,
+    .player-wrapper,
+    .join-section,
+    .contact-section{
+        flex-direction:column;
+        grid-template-columns:1fr;
+        text-align:center;
+    }
 
-.hero h1{
-    font-size:70px;
-}
+    .hero h1{
+        font-size:70px;
+    }
 
-.hero h3{
-    font-size:26px;
-}
+    .hero h3{
+        font-size:26px;
+    }
 
-.hero-buttons{
-    justify-content:center;
-}
+    .hero-buttons{
+        justify-content:center;
+    }
 
-.hero-stats{
-    justify-content:center;
-    flex-wrap:wrap;
-}
+    .hero-stats{
+        justify-content:center;
+        flex-wrap:wrap;
+    }
 
-.players-container,
-.team-grid,
-.gallery-grid,
-.gallery-page,
-.stats-container,
-.hall-container,
-.tournament-grid{
+    .players-container,
+    .team-grid,
+    .gallery-grid,
+    .gallery-page,
+    .stats-container,
+    .hall-container,
+    .tournament-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
 
-    grid-template-columns:repeat(2,1fr);
+    .player-left,
+    .player-photo{
+        justify-content:center;
+    }
 
-}
-
-.player-left,
-.player-photo{
-    justify-content:center;
-}
-
-.player-right,
-.player-details{
-    text-align:center;
-}
+    .player-right,
+    .player-details{
+        text-align:center;
+    }
 
 }
 
@@ -72,149 +70,84 @@
 @media (max-width:768px){
 
     .player-right h1{
+        font-size:46px;
+        line-height:1.15;
+        white-space:nowrap;
+        text-align:center;
+    }
 
-    font-size:46px;
+    .hero{
+        padding:120px 6% 70px;
+    }
 
-    line-height:1.15;
+    .hero h1{
+        font-size:55px;
+    }
 
-    white-space:nowrap;
+    .hero h3{
+        font-size:22px;
+    }
 
-    text-align:center;
+    .subtitle{
+        font-size:14px;
+    }
 
-}
+    .hero p{
+        font-size:16px;
+    }
 
-.menu-btn{
-    display:block;
-}
+    .hero-buttons{
+        flex-direction:column;
+    }
 
-.nav-buttons{
-    display:none;
-}
+    .btn1,
+    .btn2{
+        width:100%;
+        text-align:center;
+    }
 
-.nav-links{
+    .players-container,
+    .team-grid,
+    .gallery-grid,
+    .gallery-page,
+    .stats-container,
+    .hall-container,
+    .tournament-grid{
+        grid-template-columns:1fr;
+    }
 
-position:fixed;
+    .section-title h2,
+    .about-left h2,
+    .join-left h2,
+    .contact-info h2{
+        font-size:42px;
+    }
 
-top:90px;
+    .team-header h1{
+        font-size:60px;
+    }
 
-left:-100%;
+    .player-right h1,
+    .player-details h1{
+        font-size:46px;
+        line-height:1.15;
+        white-space:nowrap;
+        text-align:center;
+    }
 
-width:100%;
+    .player-left img,
+    .player-photo img{
+        max-width:320px;
+    }
 
-height:calc(100vh - 90px);
+    footer{
+        padding:40px 20px;
+    }
 
-background:#050505;
-
-display:flex;
-
-flex-direction:column;
-
-align-items:center;
-
-justify-content:flex-start;
-
-padding-top:40px;
-
-gap:30px;
-
-transition:.4s;
-
-z-index:999;
-
-}
-
-.nav-links.active{
-
-left:0;
-
-}
-
-.hero{
-    padding:120px 6% 70px;
-}
-
-.hero h1{
-    font-size:55px;
-}
-
-.hero h3{
-    font-size:22px;
-}
-
-.subtitle{
-    font-size:14px;
-}
-
-.hero p{
-    font-size:16px;
-}
-
-.hero-buttons{
-    flex-direction:column;
-}
-
-.btn1,
-.btn2{
-    width:100%;
-    text-align:center;
-}
-
-.players-container,
-.team-grid,
-.gallery-grid,
-.gallery-page,
-.stats-container,
-.hall-container,
-.tournament-grid{
-
-    grid-template-columns:1fr;
-
-}
-
-.section-title h2,
-.about-left h2,
-.join-left h2,
-.contact-info h2{
-
-    font-size:42px;
-
-}
-
-.team-header h1{
-
-    font-size:60px;
-
-}
-
-.player-right h1,
-.player-details h1{
-
-    font-size:46px;
-    line-height:1.15;
-    white-space:nowrap;
-    text-align:center;
-
-}
-
-.player-left img,
-.player-photo img{
-
-    max-width:320px;
-
-}
-
-footer{
-
-    padding:40px 20px;
-
-}
-
-.footer-links{
-
-    flex-direction:column;
-    gap:15px;
-
-}
+    .footer-links{
+        flex-direction:column;
+        gap:15px;
+    }
 
 }
 
@@ -225,50 +158,38 @@ footer{
 
 @media (max-width:480px){
 
-.hero h1{
+    .hero h1{
+        font-size:42px;
+    }
 
-    font-size:42px;
+    .hero h3{
+        font-size:18px;
+    }
 
-}
+    .hero p{
+        font-size:15px;
+    }
 
-.hero h3{
+    .hero-stats{
+        flex-direction:column;
+        align-items:center;
+    }
 
-    font-size:18px;
+    .stat-box{
+        width:100%;
+    }
 
-}
+    .logo img{
+        width:120px;
+        height:auto;
+    }
 
-.hero p{
-
-    font-size:15px;
-
-}
-
-.hero-stats{
-
-    flex-direction:column;
-
-    align-items:center;
-
-}
-
-.stat-box{
-
-    width:100%;
-
-}
-
-.logo img{
-    width:120px;
-    height:auto;
-}
-
-.team-header{
-
-    padding:120px 20px 60px;
+    .team-header{
+        padding:120px 20px 60px;
+    }
 
 }
 
-}
 
 /*=========================================
         CHECK STATUS MOBILE
@@ -276,278 +197,294 @@ footer{
 
 @media (max-width:768px){
 
-.status-box{
+    .status-box{
+        width:90%;
+        padding:30px 20px;
+    }
 
-    width:90%;
-    padding:30px 20px;
+    .status-box h2{
+        font-size:2rem;
+        line-height:1.3;
+    }
+
+    .status-box p{
+        font-size:16px;
+    }
+
+    .status-box input{
+        width:100%;
+        height:55px;
+        padding:0 18px;
+        font-size:17px;
+        border-radius:10px;
+        box-sizing:border-box;
+    }
+
+    .status-box button{
+        width:100%;
+        margin-top:20px;
+    }
+
+    #statusResult{
+        width:100%;
+        box-sizing:border-box;
+    }
 
 }
 
-.status-box h2{
 
-    font-size:2rem;
-    line-height:1.3;
+/* =========================================================
+   NAVBAR — CLEAN BASE
+   ========================================================= */
 
-}
-
-.status-box p{
-
-    font-size:16px;
-
-}
-
-.status-box input{
-
+.navbar{
     width:100%;
-    height:55px;
-    padding:0 18px;
-    font-size:17px;
-    border-radius:10px;
-    box-sizing:border-box;
-
+    display:flex;
+    align-items:center;
+    gap:25px;
 }
 
-.status-box button{
-
-    width:100%;
-    margin-top:20px;
-
+.navbar .logo{
+    flex-shrink:0;
 }
 
-#statusResult{
-
-    width:100%;
-    box-sizing:border-box;
-
+.navbar .logo img{
+    display:block;
+    max-width:150px;
+    height:auto;
 }
 
+.nav-links{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:30px;
+    margin:0;
+    padding:0;
 }
 
-/* =========================================================
-   NAVBAR FIX - DESKTOP + MOBILE
-   ========================================================= */
-
-.navbar {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 25px;
+.nav-links li{
+    list-style:none;
+    flex-shrink:0;
 }
 
-.navbar .logo {
-    flex-shrink: 0;
+.nav-links a{
+    white-space:nowrap;
 }
 
-.navbar .logo img {
-    display: block;
-    max-width: 150px;
-    height: auto;
+.nav-buttons{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
-.nav-links {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    margin: 0;
-    padding: 0;
+.nav-buttons a{
+    white-space:nowrap;
 }
 
-.nav-links li {
-    list-style: none;
-    flex-shrink: 0;
-}
-
-.nav-links a {
-    white-space: nowrap;
-}
-
-.nav-buttons {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.nav-buttons a {
-    white-space: nowrap;
-}
-
-.menu-btn {
-    display: none;
+.menu-btn{
+    display:none;
 }
 
 
 /* =========================================================
-   TABLET
+   NAVBAR — TABLET
    ========================================================= */
 
-@media (max-width: 1200px) {
+@media (max-width:1200px){
 
-    .navbar {
-        gap: 15px;
+    .navbar{
+        gap:15px;
     }
 
-    .navbar .logo img {
-        max-width: 125px;
+    .navbar .logo img{
+        max-width:125px;
     }
 
-    .nav-links {
-        gap: 18px;
+    .nav-links{
+        gap:18px;
     }
 
-    .nav-links a {
-        font-size: 15px;
+    .nav-links a{
+        font-size:15px;
     }
 
-    .nav-buttons {
-        gap: 6px;
+    .nav-buttons{
+        gap:6px;
     }
 
 }
 
 
 /* =========================================================
-   MOBILE
+   NAVBAR — MOBILE
    ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width:900px){
 
-    header {
-        width: 100%;
+    header{
+        width:100%;
     }
 
-    .navbar {
-        position: relative;
-        width: 100%;
-        min-height: 80px;
-        padding: 8px 18px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0;
+    .navbar{
+        position:relative;
+        width:100%;
+        min-height:80px;
+        padding:8px 18px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:0;
+        box-sizing:border-box;
     }
 
-    .navbar .logo {
-        display: flex;
-        align-items: center;
-        z-index: 1001;
+    .navbar .logo{
+        display:flex;
+        align-items:center;
+        z-index:1001;
     }
 
-    .navbar .logo img {
-        width: 115px;
-        max-width: 115px;
-        height: auto;
+    .navbar .logo img{
+        width:115px;
+        max-width:115px;
+        height:auto;
     }
 
-    /* Hide desktop navigation */
-    .nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 100%;
-        height: 100vh;
+    /* =========================================
+       MOBILE MENU
+       ========================================= */
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    .nav-links{
+        position:fixed;
 
-        gap: 25px;
+        top:80px;
+        left:-100%;
+        right:auto;
 
-        margin: 0;
-        padding: 100px 20px 40px;
+        width:100%;
+        height:calc(100vh - 80px);
 
-        background: #080808;
+        display:flex !important;
+        flex-direction:column;
 
-        transition: right 0.35s ease;
+        justify-content:flex-start;
+        align-items:center;
 
-        z-index: 1000;
-        overflow-y: auto;
+        gap:16px;
+
+        margin:0;
+        padding:25px 20px 40px;
+
+        box-sizing:border-box;
+
+        background:#080808;
+
+        transition:left .35s ease;
+
+        z-index:1000;
+        overflow-y:auto;
     }
 
-    /* JS usually adds this class when menu opens */
-    .nav-links.active {
-        right: 0;
+    .nav-links.active{
+        left:0;
+        right:auto;
     }
 
-    .nav-links li {
-        width: 100%;
-        text-align: center;
+    .nav-links li{
+        width:100%;
+        text-align:center;
+        flex-shrink:0;
     }
 
-    .nav-links a {
-        display: inline-block;
-        font-size: 25px;
-        padding: 8px 10px;
-        white-space: normal;
+    .nav-links a{
+        display:inline-block;
+        font-size:16px;
+        line-height:1.2;
+        padding:6px 10px;
+        white-space:nowrap;
     }
 
-    /* Hide desktop buttons on mobile */
-    .nav-buttons {
-        display: none;
+    /* Hide desktop buttons */
+    .nav-buttons{
+        display:none;
     }
 
-    /* Hamburger */
-    .menu-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    /* =========================================
+       HAMBURGER
+       ========================================= */
 
-        width: 48px;
-        height: 48px;
+    .menu-btn{
+        display:flex;
 
-        cursor: pointer;
-        z-index: 1002;
+        align-items:center;
+        justify-content:center;
 
-        flex-shrink: 0;
+        width:48px;
+        height:48px;
+
+        cursor:pointer;
+
+        z-index:1002;
+        flex-shrink:0;
     }
 
-    .menu-btn i {
-        font-size: 32px;
+    .menu-btn i{
+        font-size:32px;
     }
 
-    /* Prevent page horizontal scrolling */
-    body {
-        overflow-x: hidden;
+    body{
+        overflow-x:hidden;
     }
 
 }
 
 
 /* =========================================================
-   SMALL PHONES
+   NAVBAR — SMALL PHONES
    ========================================================= */
 
-@media (max-width: 500px) {
+@media (max-width:500px){
 
-    .navbar {
-        min-height: 72px;
-        padding: 6px 14px;
+    .navbar{
+        min-height:72px;
+        padding:6px 14px;
     }
 
-    .navbar .logo img {
-        width: 100px;
-        max-width: 100px;
+    .navbar .logo img{
+        width:100px;
+        max-width:100px;
     }
 
-    .menu-btn {
-        width: 44px;
-        height: 44px;
+    .menu-btn{
+        width:44px;
+        height:44px;
     }
 
-    .menu-btn i {
-        font-size: 29px;
+    .menu-btn i{
+        font-size:29px;
     }
 
-    .nav-links {
-        gap: 19px;
-        padding-top: 85px;
+    .nav-links{
+        top:72px;
+        left:-100%;
+
+        width:100%;
+        height:calc(100vh - 72px);
+
+        gap:14px;
+
+        padding:20px 16px 30px;
     }
 
-    .nav-links a {
-        font-size: 22px;
+    .nav-links.active{
+        left:0;
+    }
+
+    .nav-links a{
+        font-size:15px;
+        padding:5px 10px;
     }
 
 }
