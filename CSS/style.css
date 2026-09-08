@@ -243,7 +243,7 @@ isolation: isolate;
 
 .menu-btn{
     display:none;
-    font-size:30px;
+    font-size:24px;
     color:#fff;
     cursor:pointer;
 }
@@ -684,7 +684,7 @@ isolation: isolate;
 
     color:#ff7a00;
 
-    font-size:22px;
+    font-size:16px;
 
     margin-bottom:25px;
 
@@ -1028,7 +1028,7 @@ isolation: isolate;
 
 .player-right p{
 
-    font-size:22px;
+    font-size:16px;
     color:#e6e6e6;
     margin-bottom:18px;
     font-weight:500;
@@ -1783,7 +1783,7 @@ cursor:pointer;
     display:none;
     justify-content:center;
     align-items:center;
-    font-size:22px;
+    font-size:16px;
     z-index:9999;
     box-shadow:0 0 20px rgba(255,106,0,.45);
     transition:.3s;
@@ -2610,71 +2610,6 @@ max-width:500px;
     MOBILE MENU
 ==========================*/
 
-@media (max-width:768px){
-
-.nav-links{
-
-position:fixed;
-
-top:90px;
-
-left:-100%;
-
-width:100%;
-
-height:calc(100vh - 90px);
-
-background:#050505;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:flex-start;
-
-align-items:center;
-
-padding-top:40px;
-
-gap:30px;
-
-transition:.4s;
-
-z-index:999;
-
-}
-
-.nav-links.active{
-
-left:0;
-
-}
-
-.nav-links li{
-
-list-style:none;
-
-}
-
-.nav-links a{
-
-font-size:22px;
-
-}
-
-.menu-btn{
-
-display:block;
-
-font-size:30px;
-
-cursor:pointer;
-
-z-index:1001;
-
-}
-
-}
 
 @media (max-width:768px){
 
@@ -2689,17 +2624,17 @@ z-index:1001;
 
 .nav-links{
     position:fixed !important;
-    top:82px;
+    top:72px;
     left:-100%;
     width:100%;
-    height:calc(100vh - 82px);
+    height:calc(100vh - 72px);
     background:#050505;
     display:flex !important;
     flex-direction:column;
     justify-content:flex-start;
     align-items:center;
-    gap:30px;
-    padding-top:40px;
+    gap:16px;
+    padding-top:25px;
     transition:.4s;
     z-index:999;
 }
@@ -2712,6 +2647,14 @@ z-index:1001;
     display:none;
 }
 
+
+ .nav-links a{
+     font-size:16px !important;
+ }
+
+ .menu-btn{
+     font-size:24px !important;
+ }
 }
 
 /*==============================
@@ -2755,7 +2698,7 @@ z-index:1001;
 
 .announcement-card h3{
 
-    font-size:30px;
+    font-size:24px;
     margin-bottom:18px;
     color:#ff6a00;
     font-family:'Bebas Neue',sans-serif;
@@ -3349,7 +3292,7 @@ font-size:18px;
 
 .home-clips .clip-info h3{
 
-    font-size:22px;
+    font-size:16px;
 
     margin-bottom:10px;
 
@@ -5113,6 +5056,7 @@ header {
 
 .navbar .menu-btn {
     display: none;
+    
 }
 
 
@@ -5583,5 +5527,27 @@ footer {
 
     body {
         padding-top: 72px !important;
+    }
+}
+
+/* =========================================================
+   🔥 SMALL MOBILE MENU
+   ========================================================= */
+
+@media (max-width:600px){
+
+    .nav-links{
+        top:72px !important;
+        height:calc(100vh - 72px) !important;
+        padding-top:20px !important;
+        gap:14px !important;
+    }
+
+    .nav-links a{
+        font-size:15px !important;
+    }
+
+    .menu-btn{
+        font-size:20px !important;
     }
 }

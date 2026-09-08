@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>4 FIRE UNITED | Official Esports Team</title>
+    <title>4 FIRE UNITED | Official Esports Team</title>\n    <meta name="navbar-fix" content="20260908-1">
 
     <!-- CSS -->
 
@@ -43,6 +43,121 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
 
     <link rel="stylesheet" href="CSS/fire-border.css">
+
+    <!-- MOBILE NAVBAR FIX -->
+    <style id="mobile-navbar-fix">
+        .mobile-player-login {
+            display: none;
+        }
+
+        @media (max-width: 1050px) {
+            header {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                z-index: 999999 !important;
+            }
+
+            .navbar {
+                min-height: 72px !important;
+                height: 72px !important;
+                padding: 0 18px !important;
+            }
+
+            .navbar .logo {
+                width: 105px !important;
+                min-width: 105px !important;
+            }
+
+            .navbar .logo img {
+                width: 88px !important;
+                max-width: 88px !important;
+                max-height: 62px !important;
+            }
+
+            .menu-btn {
+                width: 46px !important;
+                height: 46px !important;
+                min-width: 46px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .menu-btn i {
+                font-size: 22px !important;
+            }
+
+            .nav-links {
+                gap: 0 !important;
+                padding: 92px 0 24px !important;
+            }
+
+            .nav-links li {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .nav-links li a {
+                font-size: 14px !important;
+                line-height: 1.2 !important;
+                padding: 9px 20px !important;
+                margin: 0 !important;
+            }
+
+            .mobile-player-login {
+                display: block !important;
+                margin-top: 3px !important;
+            }
+
+            .mobile-player-login a {
+                font-size: 14px !important;
+                font-weight: 600 !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                min-height: 68px !important;
+                height: 68px !important;
+                padding: 0 14px !important;
+            }
+
+            .navbar .logo {
+                width: 92px !important;
+                min-width: 92px !important;
+            }
+
+            .navbar .logo img {
+                width: 78px !important;
+                max-width: 78px !important;
+                max-height: 56px !important;
+            }
+
+            .menu-btn {
+                width: 42px !important;
+                height: 42px !important;
+                min-width: 42px !important;
+            }
+
+            .menu-btn i {
+                font-size: 20px !important;
+            }
+
+            .nav-links {
+                padding-top: 82px !important;
+                padding-bottom: 18px !important;
+            }
+
+            .nav-links li a,
+            .mobile-player-login a {
+                font-size: 13px !important;
+                padding: 7px 18px !important;
+            }
+        }
+    </style>
+
 
 
 
@@ -136,6 +251,10 @@
                 <li><a href="check-status.html">Check Status</a></li>
 
                 <li><a href="contact.html">Contact</a></li>
+
+                <li class="mobile-player-login">
+                    <a href="player-login.html">Player Login</a>
+                </li>
 
             </ul>
 

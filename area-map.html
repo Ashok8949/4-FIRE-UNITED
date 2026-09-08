@@ -3179,6 +3179,126 @@ button {
 }
     </style>
 
+
+<style id="area-map-mobile-menu-fix">
+.site-menu-toggle,
+.site-mobile-menu { display:none; }
+
+@media (max-width: 768px) {
+    .world-header {
+        height: 68px !important;
+        padding: 0 14px !important;
+    }
+
+    .brand { gap: 8px !important; min-width: 0 !important; }
+    .brand-logo, .brand-logo img { width: 42px !important; height: 42px !important; }
+    .brand-text strong { font-size: 12px !important; }
+    .brand-text span { font-size: 6px !important; letter-spacing: 2.5px !important; }
+
+    .home-btn {
+        display:none !important;
+    }
+
+    .site-menu-toggle {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        width: 46px;
+        height: 46px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:5px;
+        background: rgba(8,12,18,.96);
+        border:1px solid rgba(255,114,0,.38);
+        cursor:pointer;
+        z-index: 1003;
+    }
+
+    .site-menu-toggle span {
+        width: 28px;
+        height: 4px;
+        border-radius: 4px;
+        background: #ff7200;
+        box-shadow: 0 0 8px rgba(255,114,0,.3);
+        transition: .2s ease;
+    }
+
+    .site-menu-toggle.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+    .site-menu-toggle.active span:nth-child(2) { opacity:0; }
+    .site-menu-toggle.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+    .site-mobile-menu {
+        position: fixed;
+        top: 68px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display:block;
+        visibility:hidden;
+        opacity:0;
+        pointer-events:none;
+        background: rgba(3,5,8,.985);
+        border-top:1px solid rgba(255,114,0,.18);
+        z-index:1002;
+        transform: translateY(-8px);
+        transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+        overflow-y:auto;
+        padding: 34px 20px 45px;
+    }
+
+    .site-mobile-menu.open {
+        visibility:visible;
+        opacity:1;
+        pointer-events:auto;
+        transform:translateY(0);
+    }
+
+    .site-mobile-menu nav {
+        width:min(330px, 88vw);
+        margin:0 auto;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:0;
+    }
+
+    .site-mobile-menu nav a {
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        width:100%;
+        min-height:44px;
+        padding:7px 10px;
+        color:#f4f7fb;
+        text-decoration:none;
+        font-family:"Poppins",sans-serif;
+        font-size:14px;
+        line-height:1.15;
+        font-weight:700;
+        letter-spacing:.1px;
+        transition:color .18s ease, transform .18s ease;
+    }
+
+    .site-mobile-menu nav a:hover,
+    .site-mobile-menu nav a.active {
+        color:#ff7200;
+    }
+
+    .site-mobile-menu nav a:active {
+        transform:scale(.97);
+    }
+}
+
+@media (max-width: 390px) {
+    .site-mobile-menu { padding-top:25px; }
+    .site-mobile-menu nav a { min-height:41px; font-size:13px; padding:6px 8px; }
+    .site-menu-toggle { width:43px; height:43px; top:11px; right:11px; }
+    .site-menu-toggle span { width:26px; height:3px; }
+}
+</style>
+
 </head>
 
 
@@ -3275,6 +3395,27 @@ button {
             HOME
 
         </button>
+
+        <!-- MOBILE SITE MENU -->
+        <button class="site-menu-toggle" id="siteMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+
+        <div class="site-mobile-menu" id="siteMobileMenu" aria-hidden="true">
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="team.html">Team</a>
+                <a href="tournaments.html">Tournaments</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="area-map.html" class="active">World Explorer</a>
+                <a href="clips.html">Clips</a>
+                <a href="challenges.html">Challenges</a>
+                <a href="join-us.html">Join Us</a>
+                <a href="check-status.html">Check Status</a>
+                <a href="contact.html">Contact</a>
+                <a href="player-login.html">Player Login</a>
+            </nav>
+        </div>
 
     </header>
 
@@ -7238,6 +7379,38 @@ function escapeHtml(
         );
 
 }
+</script>
+
+
+<script>
+(function(){
+    const toggle = document.getElementById("siteMenuToggle");
+    const menu = document.getElementById("siteMobileMenu");
+    if (!toggle || !menu) return;
+
+    function closeMenu(){
+        toggle.classList.remove("active");
+        toggle.setAttribute("aria-expanded","false");
+        menu.classList.remove("open");
+        menu.setAttribute("aria-hidden","true");
+    }
+
+    toggle.addEventListener("click", function(){
+        const open = !menu.classList.contains("open");
+        toggle.classList.toggle("active", open);
+        toggle.setAttribute("aria-expanded", String(open));
+        menu.classList.toggle("open", open);
+        menu.setAttribute("aria-hidden", String(!open));
+    });
+
+    menu.querySelectorAll("a").forEach(function(link){
+        link.addEventListener("click", closeMenu);
+    });
+
+    window.addEventListener("resize", function(){
+        if (window.innerWidth > 768) closeMenu();
+    });
+})();
 </script>
 
 </body>
