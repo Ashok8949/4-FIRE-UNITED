@@ -1,90 +1,1110 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Add Gallery Image | 4 FIRE UNITED</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
 
-<link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
+<link rel="stylesheet"
+      href="CSS/dashboard.css?v=1783829699314">
 
 <style>
+
 body{
     visibility:hidden;
 }
-</style>
 
+.gallery-upload-box{
+    margin-top:22px;
+    padding:22px;
+    border:1px solid rgba(255,114,0,.16);
+    border-radius:18px;
+    background:rgba(255,255,255,.018);
+}
+
+.gallery-file-label{
+    min-height:190px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:25px;
+    border:1.5px dashed rgba(255,114,0,.42);
+    border-radius:16px;
+    background:rgba(0,0,0,.22);
+    color:#fff;
+    text-align:center;
+    cursor:pointer;
+    transition:.3s ease;
+}
+
+.gallery-file-label:hover{
+    border-color:#ff7200;
+    background:rgba(255,114,0,.045);
+    transform:translateY(-2px);
+}
+
+.gallery-file-label i{
+    color:#ff7200;
+    font-size:42px;
+}
+
+.gallery-file-label strong{
+    font-size:15px;
+}
+
+.gallery-file-label span{
+    color:#888;
+    font-size:11px;
+}
+
+#image{
+    display:none;
+}
+
+.gallery-preview{
+    display:none;
+    margin-top:18px;
+    position:relative;
+    width:100%;
+    max-height:330px;
+    overflow:hidden;
+    border-radius:14px;
+    border:1px solid rgba(255,114,0,.22);
+    background:#050505;
+}
+
+.gallery-preview img{
+    display:block;
+    width:100%;
+    max-height:330px;
+    object-fit:contain;
+}
+
+.gallery-file-name{
+    margin-top:10px;
+    color:#aaa;
+    font-size:11px;
+    word-break:break-all;
+}
+
+.gallery-status{
+    min-height:22px;
+    margin-top:14px;
+    color:#ff8a2a;
+    font-size:12px;
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.gallery-actions{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:15px;
+}
+
+
+/* =====================================================
+   CANCEL BUTTON
+===================================================== */
+
+.cancel-gallery-btn{
+    width:100%;
+    min-height:50px;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:10px;
+
+    background:rgba(255,255,255,.045);
+    color:#aaa;
+
+    font-family:Poppins,sans-serif;
+    font-size:14px;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:.3s ease;
+}
+
+.cancel-gallery-btn:hover{
+    color:#fff;
+    border-color:rgba(255,114,0,.45);
+    background:rgba(255,114,0,.08);
+    transform:translateY(-1px);
+}
+
+.cancel-gallery-btn:active{
+    transform:scale(.98);
+}
+
+.cancel-gallery-btn i{
+    font-size:14px;
+}
+
+.cancel-gallery-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    transform:none;
+}
+
+</style>
 </head>
+
 
 <body>
 
 <div class="main">
+
+    <!-- =================================================
+         TOPBAR
+    ================================================== -->
 
     <div class="topbar">
 
         <h1>ADD GALLERY IMAGE</h1>
 
         <a href="gallery.html" class="back-btn">
-
             <i class="fa-solid fa-arrow-left"></i>
-
             Back
-
         </a>
 
     </div>
 
+
+    <!-- =================================================
+         MAIN CARD
+    ================================================== -->
+
     <div class="edit-card">
 
         <h2 class="section-title">
-
             GALLERY INFORMATION
-
         </h2>
+
+
+        <!-- =================================================
+             TITLE
+        ================================================== -->
 
         <div class="form-grid">
 
             <input
                 type="text"
                 id="title"
-                placeholder="Image Title">
-
-            <input
-                type="text"
-                id="image"
-                placeholder="Image Path (Example: images/gallery/img1.jpg)">
+                placeholder="Image Title"
+            >
 
         </div>
 
-        <button
-            id="saveGallery"
-            class="save-btn">
 
-            <i class="fa-solid fa-floppy-disk"></i>
+        <!-- =================================================
+             IMAGE UPLOAD
+        ================================================== -->
 
-            Save Image
+        <div class="gallery-upload-box">
 
-        </button>
+            <label
+                for="image"
+                class="gallery-file-label"
+            >
+
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                <strong>
+                    Select Gallery Image
+                </strong>
+
+                <span>
+                    Click here to choose an image from your device
+                </span>
+
+                <span>
+                    JPG, JPEG, PNG, WEBP
+                </span>
+
+            </label>
+
+
+            <input
+                type="file"
+                id="image"
+                accept="image/jpeg,image/png,image/webp"
+            >
+
+
+            <!-- =================================================
+                 PREVIEW
+            ================================================== -->
+
+            <div
+                id="galleryPreview"
+                class="gallery-preview"
+            >
+
+                <img
+                    id="galleryPreviewImage"
+                    src=""
+                    alt="Selected image preview"
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 FILE NAME
+            ================================================== -->
+
+            <div
+                id="galleryFileName"
+                class="gallery-file-name"
+            ></div>
+
+
+            <!-- =================================================
+                 STATUS
+            ================================================== -->
+
+            <div
+                id="galleryStatus"
+                class="gallery-status"
+            ></div>
+
+        </div>
+
+
+        <!-- =================================================
+             ACTION BUTTONS
+        ================================================== -->
+
+        <div class="gallery-actions">
+
+            <!-- SAVE -->
+
+            <button
+                id="saveGallery"
+                class="save-btn"
+                type="button"
+            >
+
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                Upload &amp; Save Image
+
+            </button>
+
+
+            <!-- CANCEL -->
+
+            <button
+                id="cancelGallery"
+                class="cancel-gallery-btn"
+                type="button"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+                Cancel
+
+            </button>
+
+        </div>
 
     </div>
 
 </div>
 
+
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
 
+
 <script src="js/firebase.js?v=1783829699314"></script>
+
 <script src="js/auth-guard.js?v=1783829699314"></script>
-<script src="js/add-gallery.js?v=1783829699314"></script>
+
+
+<script>
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const imageInput =
+    document.getElementById("image");
+
+const titleInput =
+    document.getElementById("title");
+
+const saveButton =
+    document.getElementById("saveGallery");
+
+const cancelButton =
+    document.getElementById("cancelGallery");
+
+const previewBox =
+    document.getElementById("galleryPreview");
+
+const previewImage =
+    document.getElementById("galleryPreviewImage");
+
+const fileNameBox =
+    document.getElementById("galleryFileName");
+
+const statusBox =
+    document.getElementById("galleryStatus");
+
+
+let selectedImageFile = null;
+
+
+/* =====================================================
+   CLOUDINARY CONFIG
+===================================================== */
+
+const CLOUDINARY_CLOUD_NAME =
+    "vuto9fey";
+
+const CLOUDINARY_UPLOAD_PRESET =
+    "4fu_clips";
+
+
+/* =====================================================
+   SHOW / HIDE CANCEL
+===================================================== */
+
+function showCancelButton(){
+
+    cancelButton.style.display =
+        "flex";
+
+}
+
+
+function hideCancelButton(){
+
+    cancelButton.style.display =
+        "none";
+
+}
+
+
+/* =====================================================
+   IMAGE SELECT
+===================================================== */
+
+imageInput.addEventListener(
+    "change",
+    function(){
+
+        const file =
+            this.files && this.files[0];
+
+
+        selectedImageFile =
+            file || null;
+
+
+        if(!file){
+
+            previewBox.style.display =
+                "none";
+
+            previewImage.src =
+                "";
+
+            fileNameBox.textContent =
+                "";
+
+            statusBox.textContent =
+                "";
+
+            hideCancelButton();
+
+            return;
+
+        }
+
+
+        /* =============================================
+           IMAGE TYPE CHECK
+        ============================================= */
+
+        if(
+            !file.type.startsWith("image/")
+        ){
+
+            this.value =
+                "";
+
+            selectedImageFile =
+                null;
+
+            previewBox.style.display =
+                "none";
+
+            previewImage.src =
+                "";
+
+            fileNameBox.textContent =
+                "";
+
+            statusBox.textContent =
+                "❌ Please select a valid image.";
+
+            hideCancelButton();
+
+            return;
+
+        }
+
+
+        /* =============================================
+           FILE SIZE
+        ============================================= */
+
+        const size =
+            (
+                file.size /
+                1024 /
+                1024
+            ).toFixed(2);
+
+
+        fileNameBox.textContent =
+            "Selected: " +
+            file.name +
+            " (" +
+            size +
+            " MB)";
+
+
+        statusBox.textContent =
+            "";
+
+
+        /* =============================================
+           SHOW CANCEL
+        ============================================= */
+
+        showCancelButton();
+
+
+        /* =============================================
+           PREVIEW
+        ============================================= */
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function(event){
+
+                previewImage.src =
+                    event.target.result;
+
+                previewBox.style.display =
+                    "block";
+
+            };
+
+
+        reader.onerror =
+            function(){
+
+                previewBox.style.display =
+                    "none";
+
+                statusBox.textContent =
+                    "❌ Unable to preview image.";
+
+            };
+
+
+        reader.readAsDataURL(file);
+
+    }
+);
+
+
+/* =====================================================
+   CLOUDINARY IMAGE UPLOAD
+===================================================== */
+
+function uploadImageToCloudinary(file){
+
+    return new Promise(
+        (resolve, reject) => {
+
+            if(!file){
+
+                reject(
+                    "No image selected."
+                );
+
+                return;
+
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "file",
+                file
+            );
+
+
+            formData.append(
+                "upload_preset",
+                CLOUDINARY_UPLOAD_PRESET
+            );
+
+
+            const xhr =
+                new XMLHttpRequest();
+
+
+            const uploadUrl =
+                "https://api.cloudinary.com/v1_1/" +
+                CLOUDINARY_CLOUD_NAME +
+                "/image/upload";
+
+
+            xhr.open(
+                "POST",
+                uploadUrl,
+                true
+            );
+
+
+            /* =========================================
+               TIMEOUT
+            ========================================= */
+
+            xhr.timeout =
+                180000;
+
+
+            /* =========================================
+               UPLOAD PROGRESS
+            ========================================= */
+
+            xhr.upload.onprogress =
+                function(event){
+
+                    if(
+                        event.lengthComputable
+                    ){
+
+                        const percent =
+                            Math.round(
+                                (
+                                    event.loaded /
+                                    event.total
+                                ) * 100
+                            );
+
+
+                        statusBox.textContent =
+                            "Uploading image... " +
+                            percent +
+                            "%";
+
+                    }
+
+                };
+
+
+            /* =========================================
+               SUCCESS
+            ========================================= */
+
+            xhr.onload =
+                function(){
+
+                    console.log(
+                        "Cloudinary Status:",
+                        xhr.status
+                    );
+
+
+                    console.log(
+                        "Cloudinary Response:",
+                        xhr.responseText
+                    );
+
+
+                    if(
+                        xhr.status >= 200 &&
+                        xhr.status < 300
+                    ){
+
+                        try{
+
+                            const result =
+                                JSON.parse(
+                                    xhr.responseText
+                                );
+
+
+                            if(
+                                result.secure_url
+                            ){
+
+                                resolve(
+                                    result
+                                );
+
+                            }
+                            else{
+
+                                reject(
+                                    "Cloudinary did not return an image URL."
+                                );
+
+                            }
+
+                        }
+                        catch(error){
+
+                            reject(
+                                "Invalid Cloudinary response."
+                            );
+
+                        }
+
+                    }
+
+                    else{
+
+                        let message =
+                            "Cloudinary upload failed.";
+
+
+                        try{
+
+                            const result =
+                                JSON.parse(
+                                    xhr.responseText
+                                );
+
+
+                            if(
+                                result.error &&
+                                result.error.message
+                            ){
+
+                                message =
+                                    result.error.message;
+
+                            }
+
+                        }
+                        catch(error){
+
+                            console.error(
+                                "Cloudinary Error Parse:",
+                                error
+                            );
+
+                        }
+
+
+                        reject(
+                            message
+                        );
+
+                    }
+
+                };
+
+
+            /* =========================================
+               NETWORK ERROR
+            ========================================= */
+
+            xhr.onerror =
+                function(){
+
+                    reject(
+                        "Network error while uploading image to Cloudinary."
+                    );
+
+                };
+
+
+            /* =========================================
+               TIMEOUT
+            ========================================= */
+
+            xhr.ontimeout =
+                function(){
+
+                    reject(
+                        "Image upload timed out. Please check your internet connection and try again."
+                    );
+
+                };
+
+
+            /* =========================================
+               ABORT
+            ========================================= */
+
+            xhr.onabort =
+                function(){
+
+                    reject(
+                        "Image upload was cancelled."
+                    );
+
+                };
+
+
+            /* =========================================
+               START UPLOAD
+            ========================================= */
+
+            xhr.send(
+                formData
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   SAVE GALLERY
+===================================================== */
+
+saveButton.addEventListener(
+    "click",
+    async function(){
+
+        const title =
+            titleInput.value.trim();
+
+
+        /* =============================================
+           IMAGE CHECK
+        ============================================= */
+
+        if(!selectedImageFile){
+
+            statusBox.textContent =
+                "❌ Please select an image.";
+
+            return;
+
+        }
+
+
+        /* =============================================
+           TITLE CHECK
+        ============================================= */
+
+        if(!title){
+
+            statusBox.textContent =
+                "❌ Please enter image title.";
+
+            titleInput.focus();
+
+            return;
+
+        }
+
+
+        /* =============================================
+           ADMIN CHECK
+        ============================================= */
+
+        const user =
+            firebase.auth().currentUser;
+
+
+        if(!user){
+
+            statusBox.textContent =
+                "❌ Admin login required.";
+
+            return;
+
+        }
+
+
+        /* =============================================
+           DISABLE BUTTONS
+        ============================================= */
+
+        saveButton.disabled =
+            true;
+
+        cancelButton.disabled =
+            true;
+
+
+        saveButton.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+
+
+        try{
+
+            /* =========================================
+               CLOUDINARY UPLOAD
+            ========================================= */
+
+            statusBox.textContent =
+                "Preparing image...";
+
+
+            const uploadResult =
+                await uploadImageToCloudinary(
+                    selectedImageFile
+                );
+
+
+            if(
+                !uploadResult ||
+                !uploadResult.secure_url
+            ){
+
+                throw new Error(
+                    "Image upload failed."
+                );
+
+            }
+
+
+            const imageUrl =
+                uploadResult.secure_url;
+
+
+            statusBox.textContent =
+                "Image uploaded. Saving...";
+
+
+            /* =========================================
+               FIRESTORE SAVE
+            ========================================= */
+
+            await firebase
+                .firestore()
+                .collection("gallery")
+                .add({
+
+                    title:
+                        title,
+
+                    image:
+                        imageUrl,
+
+                    storagePath:
+                        "",
+
+                    cloudinaryPublicId:
+                        uploadResult.public_id ||
+                        "",
+
+                    uploadedBy:
+                        user.email ||
+                        "Admin",
+
+                    createdAt:
+                        firebase.firestore
+                            .FieldValue
+                            .serverTimestamp()
+
+                });
+
+
+            /* =========================================
+               SUCCESS
+            ========================================= */
+
+            statusBox.textContent =
+                "🔥 Gallery image uploaded successfully!";
+
+
+            titleInput.value =
+                "";
+
+            imageInput.value =
+                "";
+
+            selectedImageFile =
+                null;
+
+            previewImage.src =
+                "";
+
+            previewBox.style.display =
+                "none";
+
+            fileNameBox.textContent =
+                "";
+
+
+            hideCancelButton();
+
+
+            saveButton.innerHTML =
+                '<i class="fa-solid fa-check"></i> Saved Successfully';
+
+
+            /* =========================================
+               REDIRECT
+            ========================================= */
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        "gallery.html";
+
+                },
+                1000
+            );
+
+        }
+
+
+        catch(error){
+
+            console.error(
+                "Gallery Upload Error:",
+                error
+            );
+
+
+            statusBox.textContent =
+                "❌ Upload failed: " +
+                (
+                    error.message ||
+                    error
+                );
+
+
+            saveButton.disabled =
+                false;
+
+            cancelButton.disabled =
+                false;
+
+
+            saveButton.innerHTML =
+                '<i class="fa-solid fa-cloud-arrow-up"></i> Upload & Save Image';
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CANCEL SELECTED IMAGE
+===================================================== */
+
+cancelButton.addEventListener(
+    "click",
+    function(){
+
+        /* =============================================
+           CLEAR IMAGE
+        ============================================= */
+
+        imageInput.value =
+            "";
+
+        selectedImageFile =
+            null;
+
+
+        /* =============================================
+           CLEAR PREVIEW
+        ============================================= */
+
+        previewImage.src =
+            "";
+
+        previewBox.style.display =
+            "none";
+
+
+        /* =============================================
+           CLEAR FILE NAME
+        ============================================= */
+
+        fileNameBox.textContent =
+            "";
+
+
+        /* =============================================
+           CLEAR STATUS
+        ============================================= */
+
+        statusBox.textContent =
+            "";
+
+
+        /* =============================================
+           CLEAR TITLE
+        ============================================= */
+
+        titleInput.value =
+            "";
+
+
+        /* =============================================
+           HIDE CANCEL
+        ============================================= */
+
+        hideCancelButton();
+
+
+        /* =============================================
+           RESET SAVE BUTTON
+        ============================================= */
+
+        saveButton.disabled =
+            false;
+
+        saveButton.innerHTML =
+            '<i class="fa-solid fa-cloud-arrow-up"></i> Upload & Save Image';
+
+    }
+);
+
+</script>
+
 
 </body>
-
 </html>

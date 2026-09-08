@@ -12,132 +12,487 @@ if (!imageId) {
 
 const docRef = db.collection("gallery").doc(imageId);
 
-// Load Image Data
-docRef.get()
-.then((doc)=>{
+const titleInput =
+    document.getElementById("title");
 
-    if(!doc.exists){
+const imageInput =
+    document.getElementById("image");
+
+const preview =
+    document.getElementById("preview");
+
+const updateButton =
+    document.getElementById("updateGallery");
+
+const fileNameBox =
+    document.getElementById("galleryFileName");
+
+const statusBox =
+    document.getElementById("galleryStatus");
+
+let currentImage = "";
+
+let selectedImageFile = null;
+
+
+/* =========================================================
+   IMAGE URL FIX
+   ========================================================= */
+
+function getImageUrl(image) {
+
+    if (!image) return "";
+
+    image = String(image).trim();
+
+    // Firebase / Cloudinary / any full URL
+    if (
+        image.startsWith("http://") ||
+        image.startsWith("https://") ||
+        image.startsWith("data:")
+    ) {
+
+        return image;
+
+    }
+
+    // Root-relative path
+    if (image.startsWith("/")) {
+
+        return image;
+
+    }
+
+    // Local image path from admin page
+    return "../" + image;
+
+}
+
+
+/* =========================================================
+   LOAD IMAGE DATA
+   ========================================================= */
+
+docRef.get()
+
+.then((doc) => {
+
+    if (!doc.exists) {
 
         alert("Image Not Found!");
 
-        window.location.href="gallery.html";
+        window.location.href =
+            "gallery.html";
 
         return;
 
     }
 
-    const g = doc.data();
+    const g = doc.data() || {};
 
-    document.getElementById("title").value = g.title || "";
-    document.getElementById("image").value = g.image || "";
+    titleInput.value =
+        g.title || "";
 
-    document.getElementById("preview").src = "../" + g.image;
+    currentImage =
+        g.image || "";
+
+    preview.src =
+        getImageUrl(currentImage);
+
+})
+
+.catch((error) => {
+
+    console.error(
+        "Gallery Load Error:",
+        error
+    );
+
+    alert(
+        "Unable to load gallery image."
+    );
 
 });
 
-// Live Preview
-document.getElementById("image").addEventListener("input",()=>{
 
-    document.getElementById("preview").src =
-        "../" + document.getElementById("image").value;
+/* =========================================================
+   DIRECT IMAGE SELECT
+   ========================================================= */
 
-});
+if (imageInput) {
 
-// Update Image
-document.getElementById("updateGallery").addEventListener("click",()=>{
+    imageInput.addEventListener(
+        "change",
+        function () {
 
-    const updatedTitle =
-        document.getElementById("title").value.trim();
+            const file =
+                this.files &&
+                this.files[0];
 
-    const updatedImage =
-        document.getElementById("image").value.trim();
+            selectedImageFile =
+                file || null;
 
-    if (!updatedTitle || !updatedImage) {
+            if (!file) {
 
-        alert("Please fill all required fields.");
-        return;
+                fileNameBox.textContent =
+                    "";
 
-    }
+                return;
 
-    docRef.update({
+            }
 
-        title: updatedTitle,
+            if (!file.type.startsWith("image/")) {
 
-        image: updatedImage
+                this.value = "";
 
-    })
+                selectedImageFile =
+                    null;
 
-    .then(()=>{
+                statusBox.textContent =
+                    "❌ Please select a valid image.";
 
-        // ==========================================
-        // ANDROID APP FCM NOTIFICATION
-        // ==========================================
+                return;
+
+            }
+
+            fileNameBox.textContent =
+                "New image: " + file.name;
+
+            statusBox.textContent =
+                "";
+
+            const reader =
+                new FileReader();
+
+            reader.onload =
+                function (event) {
+
+                    preview.src =
+                        event.target.result;
+
+                };
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE GALLERY IMAGE
+   ========================================================= */
+
+updateButton.addEventListener(
+    "click",
+    async () => {
+
+        const updatedTitle =
+            titleInput.value.trim();
+
+        if (!updatedTitle) {
+
+            alert(
+                "Please enter image title."
+            );
+
+            return;
+
+        }
+
+        const user =
+            firebase.auth().currentUser;
+
+        if (!user) {
+
+            alert(
+                "Admin login required."
+            );
+
+            return;
+
+        }
+
+        updateButton.disabled =
+            true;
+
+        updateButton.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
+
 
         try {
 
-            fetch(
-                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
-                {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: {
-                        "Content-Type": "text/plain;charset=utf-8"
-                    },
-                    body: JSON.stringify({
+            let updatedImage =
+                currentImage;
 
-                        type: "gallery",
+            let newStoragePath =
+                "";
 
-                        priority: "normal",
 
-                        title: "🖼️ Gallery Updated",
+            /* =================================================
+               NEW IMAGE SELECTED
+               ================================================= */
+
+            if (selectedImageFile) {
+
+                statusBox.textContent =
+                    "Uploading new image... 0%";
+
+
+                const safeName =
+                    selectedImageFile.name
+                        .replace(
+                            /[^a-zA-Z0-9._-]/g,
+                            "_"
+                        );
+
+
+                newStoragePath =
+                    "gallery/" +
+                    Date.now() +
+                    "_" +
+                    safeName;
+
+
+                const storageRef =
+                    firebase.storage()
+                        .ref(newStoragePath);
+
+
+                const uploadTask =
+                    storageRef.put(
+                        selectedImageFile
+                    );
+
+
+                await new Promise(
+                    (resolve, reject) => {
+
+                        uploadTask.on(
+
+                            "state_changed",
+
+                            (snapshot) => {
+
+                                const percent =
+                                    Math.round(
+                                        (
+                                            snapshot.bytesTransferred /
+                                            snapshot.totalBytes
+                                        ) * 100
+                                    );
+
+                                statusBox.textContent =
+                                    "Uploading new image... " +
+                                    percent +
+                                    "%";
+
+                            },
+
+                            (error) => {
+
+                                reject(error);
+
+                            },
+
+                            () => {
+
+                                resolve();
+
+                            }
+
+                        );
+
+                    }
+                );
+
+
+                statusBox.textContent =
+                    "Getting new image URL...";
+
+
+                updatedImage =
+                    await storageRef
+                        .getDownloadURL();
+
+            }
+
+
+            /* =================================================
+               UPDATE FIRESTORE
+               ================================================= */
+
+            statusBox.textContent =
+                "Saving changes...";
+
+
+            const updateData = {
+
+                title:
+                    updatedTitle,
+
+                image:
+                    updatedImage,
+
+                updatedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            };
+
+
+            if (newStoragePath) {
+
+                updateData.storagePath =
+                    newStoragePath;
+
+            }
+
+
+            await docRef.update(
+                updateData
+            );
+
+
+            /* =================================================
+               ANDROID APP FCM NOTIFICATION
+               ================================================= */
+
+            try {
+
+                fetch(
+                    "https://script.google.com/macros/s/AKfycbyazs42LLTr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
+                    {
+
+                        method:
+                            "POST",
+
+                        mode:
+                            "no-cors",
+
+                        headers: {
+
+                            "Content-Type":
+                                "text/plain;charset=utf-8"
+
+                        },
 
                         body:
-                            "Gallery image updated: " +
-                            updatedTitle,
+                            JSON.stringify({
 
-                        link: "/gallery.html",
+                                type:
+                                    "gallery",
 
-                        updateType: "gallery",
+                                priority:
+                                    "normal",
 
-                        targetPlayerId: "ALL",
+                                title:
+                                    "🖼️ Gallery Updated",
 
-                        senderEmail:
-                            firebase.auth().currentUser?.email || "Admin"
+                                body:
+                                    "Gallery image updated: " +
+                                    updatedTitle,
 
-                    })
-                }
-            ).catch((error) => {
+                                link:
+                                    "/gallery.html",
+
+                                updateType:
+                                    "gallery",
+
+                                targetPlayerId:
+                                    "ALL",
+
+                                senderEmail:
+                                    firebase.auth()
+                                        .currentUser?.email ||
+                                    "Admin"
+
+                            })
+
+                    }
+                )
+
+                .catch((error) => {
+
+                    console.warn(
+                        "4FU ANDROID FCM GALLERY UPDATE ERROR:",
+                        error
+                    );
+
+                });
+
+            }
+
+            catch (error) {
 
                 console.warn(
                     "4FU ANDROID FCM GALLERY UPDATE ERROR:",
                     error
                 );
 
-            });
+            }
 
-        } catch (error) {
 
-            console.warn(
-                "4FU ANDROID FCM GALLERY UPDATE ERROR:",
-                error
+            /* =================================================
+               SUCCESS
+               ================================================= */
+
+            statusBox.textContent =
+                "🔥 Gallery updated successfully!";
+
+
+            updateButton.innerHTML =
+                '<i class="fa-solid fa-check"></i> Updated Successfully';
+
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        "gallery.html";
+
+                },
+                1000
             );
+
 
         }
 
-        // ==========================================
+        catch (error) {
 
-        alert("✅ Gallery Updated Successfully!");
+            console.error(
+                "Gallery Update Error:",
+                error
+            );
 
-        window.location.href="gallery.html";
 
-    })
+            statusBox.textContent =
+                "❌ Update failed: " +
+                (
+                    error.message ||
+                    "Unknown error"
+                );
 
-    .catch((err)=>{
 
-        console.log(err);
+            alert(
+                "Update Failed!\n\n" +
+                (
+                    error.message ||
+                    "Unknown error"
+                )
+            );
 
-        alert("Update Failed!");
 
-    });
+            updateButton.disabled =
+                false;
 
-});
+
+            updateButton.innerHTML =
+                '<i class="fa-solid fa-floppy-disk"></i> Update Image';
+
+        }
+
+    }
+);

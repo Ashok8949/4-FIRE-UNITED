@@ -1,17 +1,419 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Add Clip | 4 FIRE UNITED</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="CSS/dashboard.css">
 
+<style>
+*{box-sizing:border-box}
+
+body{
+    visibility:hidden;
+}
+
+.add-clip-wrap{
+    max-width:980px;
+    margin:0 auto;
+}
+
+.clip-form-card{
+    position:relative;
+    overflow:hidden;
+    margin-top:22px;
+    padding:30px;
+    border:1px solid rgba(255,114,0,.18);
+    border-radius:24px;
+    background:
+        radial-gradient(circle at 100% 0%,rgba(255,114,0,.09),transparent 32%),
+        radial-gradient(circle at 0% 100%,rgba(255,114,0,.055),transparent 30%),
+        rgba(255,255,255,.018);
+    box-shadow:0 20px 60px rgba(0,0,0,.28);
+}
+
+.clip-form-card:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.025) 50%,transparent 70%);
+}
+
+.form-heading{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:24px;
+}
+
+.form-heading-icon{
+    width:48px;
+    height:48px;
+    display:grid;
+    place-items:center;
+    border-radius:14px;
+    background:rgba(255,114,0,.1);
+    border:1px solid rgba(255,114,0,.25);
+    color:#ff7200;
+    font-size:20px;
+}
+
+.form-heading h2{
+    margin:0;
+    font-family:"Bebas Neue",sans-serif;
+    font-size:28px;
+    letter-spacing:1.4px;
+}
+
+.form-heading p{
+    margin:3px 0 0;
+    color:#777;
+    font-size:11px;
+}
+
+.form-grid{
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-label{
+    color:#aaa;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+}
+
+.clip-form-card input,
+.clip-form-card select,
+.clip-form-card textarea{
+    width:100%;
+    border:1px solid rgba(255,255,255,.1);
+    outline:none;
+    border-radius:12px;
+    background:rgba(0,0,0,.28);
+    color:#fff;
+    padding:13px 14px;
+    font-family:Poppins,sans-serif;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.clip-form-card input::placeholder,
+.clip-form-card textarea::placeholder{
+    color:#666;
+}
+
+.clip-form-card input:focus,
+.clip-form-card select:focus,
+.clip-form-card textarea:focus{
+    border-color:rgba(255,114,0,.6);
+    box-shadow:0 0 0 3px rgba(255,114,0,.07);
+    background:rgba(255,114,0,.025);
+}
+
+.clip-form-card select option{
+    background:#111;
+    color:#fff;
+}
+
+.clip-form-card textarea{
+    min-height:125px;
+    resize:vertical;
+}
+
+.file-zone{
+    position:relative;
+    min-height:135px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    border:1.5px dashed rgba(255,114,0,.3);
+    border-radius:15px;
+    background:rgba(0,0,0,.2);
+    cursor:pointer;
+    transition:.3s ease;
+}
+
+.file-zone:hover,
+.file-zone.selected{
+    border-color:#ff7200;
+    background:rgba(255,114,0,.055);
+    transform:translateY(-1px);
+}
+
+.file-zone input{
+    display:none;
+}
+
+.file-zone-content i{
+    display:block;
+    color:#ff7200;
+    font-size:30px;
+    margin-bottom:9px;
+}
+
+.file-zone-content strong{
+    display:block;
+    color:#fff;
+    font-size:13px;
+}
+
+.file-zone-content span{
+    display:block;
+    margin-top:4px;
+    color:#666;
+    font-size:10px;
+}
+
+.file-zone-content .selected-name{
+    color:#ff8a2a;
+    margin-top:8px;
+    font-weight:600;
+    word-break:break-word;
+}
+
+.upload-section{
+    position:relative;
+    margin-top:22px;
+    padding-top:22px;
+    border-top:1px solid rgba(255,255,255,.07);
+}
+
+.section-mini-title{
+    margin-bottom:13px;
+    color:#888;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+}
+
+.url-wrap{
+    display:none;
+}
+
+.featured-box{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-top:20px;
+    padding:14px 16px;
+    border:1px solid rgba(255,114,0,.13);
+    border-radius:14px;
+    background:rgba(255,114,0,.035);
+}
+
+.featured-copy strong{
+    display:block;
+    color:#fff;
+    font-size:12px;
+}
+
+.featured-copy span{
+    display:block;
+    margin-top:3px;
+    color:#666;
+    font-size:10px;
+}
+
+.featured-switch{
+    position:relative;
+    width:48px;
+    height:26px;
+    flex:0 0 auto;
+}
+
+.featured-switch input{
+    display:none;
+}
+
+.switch-slider{
+    position:absolute;
+    inset:0;
+    border-radius:30px;
+    background:#292929;
+    border:1px solid rgba(255,255,255,.1);
+    cursor:pointer;
+    transition:.25s ease;
+}
+
+.switch-slider:before{
+    content:"";
+    position:absolute;
+    width:18px;
+    height:18px;
+    top:3px;
+    left:3px;
+    border-radius:50%;
+    background:#777;
+    transition:.25s ease;
+}
+
+.featured-switch input:checked + .switch-slider{
+    background:rgba(255,114,0,.22);
+    border-color:#ff7200;
+}
+
+.featured-switch input:checked + .switch-slider:before{
+    transform:translateX(22px);
+    background:#ff7200;
+}
+
+.progress-wrap{
+    display:none;
+    margin-top:20px;
+    padding:15px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    background:rgba(0,0,0,.25);
+}
+
+.progress-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:9px;
+}
+
+.progress-title{
+    color:#ddd;
+    font-size:11px;
+    font-weight:600;
+}
+
+.progress-percent{
+    color:#ff7200;
+    font-size:11px;
+    font-weight:700;
+}
+
+#uploadProgress{
+    width:100%;
+    height:6px;
+    display:block;
+    overflow:hidden;
+    border:0;
+    border-radius:20px;
+    appearance:none;
+}
+
+#uploadProgress::-webkit-progress-bar{
+    background:#222;
+    border-radius:20px;
+}
+
+#uploadProgress::-webkit-progress-value{
+    background:#ff7200;
+    border-radius:20px;
+}
+
+#uploadProgress::-moz-progress-bar{
+    background:#ff7200;
+    border-radius:20px;
+}
+
+#uploadStatus{
+    display:block;
+    margin:9px 0 0;
+    color:#777;
+    font-size:10px;
+}
+
+.form-actions{
+    display:flex;
+    gap:10px;
+    margin-top:22px;
+}
+
+#saveClip{
+    flex:1;
+}
+
+.cancel-btn{
+    min-width:130px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:11px;
+    background:rgba(255,255,255,.035);
+    color:#aaa;
+    font-family:Poppins,sans-serif;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s ease;
+}
+
+.cancel-btn:hover{
+    color:#fff;
+    border-color:rgba(255,114,0,.4);
+    background:rgba(255,114,0,.07);
+}
+
+.cancel-btn:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+.save-btn:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+}
+
+@media(max-width:700px){
+    .clip-form-card{
+        padding:20px 16px;
+        border-radius:19px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .form-actions{
+        flex-direction:column;
+    }
+
+    .cancel-btn{
+        min-height:46px;
+    }
+}
+
+@media(max-width:430px){
+    .form-heading h2{
+        font-size:24px;
+    }
+
+    .form-heading-icon{
+        width:42px;
+        height:42px;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -19,81 +421,148 @@
 <div class="main">
 
     <div class="topbar">
-
         <h1>ADD CLIP</h1>
 
         <a href="clips.html" class="back-btn">
-            ← Back
+            <i class="fa-solid fa-arrow-left"></i> Back
         </a>
-
     </div>
 
-    <div class="edit-box">
+    <div class="add-clip-wrap">
 
-        <input type="text" id="title" placeholder="Clip Title">
+        <div class="clip-form-card">
 
-        <input type="text" id="playerName" placeholder="Player Name">
+            <div class="form-heading">
+                <div class="form-heading-icon">
+                    <i class="fa-solid fa-film"></i>
+                </div>
 
-        <input type="file"
-       id="thumbnail"
-       accept="image/*">
+                <div>
+                    <h2>GAMEPLAY CLIP</h2>
+                    <p>Add a new video, YouTube video or Instagram Reel to 4FU.</p>
+                </div>
+            </div>
 
-        <input type="file"
-       id="videoFile"
-       accept="video/mp4,video/webm,video/quicktime">
+            <div class="form-grid">
 
-        <input type="text" id="category" placeholder="Category">
+                <div class="form-group">
+                    <label class="form-label">Clip Title</label>
+                    <input type="text" id="title" placeholder="Enter clip title">
+                </div>
 
-        <select id="clipType">
+                <div class="form-group">
+                    <label class="form-label">Player Name</label>
+                    <input type="text" id="playerName" placeholder="Enter player name">
+                </div>
 
-    <option value="video">Upload Video</option>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <input type="text" id="category" placeholder="e.g. Ranked, Tournament, Montage">
+                </div>
 
-    <option value="youtube">YouTube</option>
+                <div class="form-group">
+                    <label class="form-label">Clip Type</label>
+                    <select id="clipType">
+                        <option value="video">Upload Video</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="instagram">Instagram Reel</option>
+                    </select>
+                </div>
 
-    <option value="instagram">Instagram Reel</option>
+            </div>
 
-</select>
+            <div class="upload-section">
 
-<input type="url"
-       id="videoUrl"
-       placeholder="Paste YouTube / Instagram URL"
-       style="display:none;">
+                <div class="section-mini-title">Media</div>
 
-        <textarea id="description" placeholder="Description"></textarea>
+                <div class="form-grid">
 
-        <div class="featured-option">
+                    <div class="form-group" id="thumbnailGroup">
+                        <label class="form-label">Thumbnail</label>
 
-    <label>
+                        <label class="file-zone" for="thumbnail" id="thumbnailZone">
+                            <input type="file" id="thumbnail" accept="image/jpeg,image/png,image/webp,image/*">
 
-        <input
-            type="checkbox"
-            id="featured">
+                            <div class="file-zone-content">
+                                <i class="fa-solid fa-image"></i>
+                                <strong>Select Thumbnail</strong>
+                                <span>JPG • PNG • WEBP</span>
+                                <span class="selected-name" id="thumbnailName"></span>
+                            </div>
+                        </label>
+                    </div>
 
-        ⭐ Make this Featured Clip
+                    <div class="form-group" id="videoGroup">
+                        <label class="form-label">Video File</label>
 
-    </label>
+                        <label class="file-zone" for="videoFile" id="videoZone">
+                            <input type="file" id="videoFile" accept="video/mp4,video/webm,video/quicktime">
 
-</div>
+                            <div class="file-zone-content">
+                                <i class="fa-solid fa-video"></i>
+                                <strong>Select Video</strong>
+                                <span>MP4 • WEBM • MOV</span>
+                                <span class="selected-name" id="videoName"></span>
+                            </div>
+                        </label>
+                    </div>
 
-        <progress
-    id="uploadProgress"
-    value="0"
-    max="100"
-    style="width:100%;display:none;margin:15px 0;">
-</progress>
+                    <div class="form-group full url-wrap" id="urlGroup">
+                        <label class="form-label">Video URL</label>
+                        <input type="url" id="videoUrl" placeholder="Paste YouTube / Instagram Reel URL">
+                    </div>
 
-<p id="uploadStatus"
-   style="display:none;
-          margin-top:10px;
-          color:#ff8a00;
-          font-weight:600;">
-</p>
+                </div>
 
-        <button class="save-btn" id="saveClip">
+            </div>
 
-            Save Clip
+            <div class="form-group" style="position:relative;margin-top:20px;">
+                <label class="form-label">Description</label>
+                <textarea id="description" placeholder="Write a short description about this clip..."></textarea>
+            </div>
 
-        </button>
+            <div class="featured-box">
+
+                <div class="featured-copy">
+                    <strong>⭐ Make this Featured Clip</strong>
+                    <span>This clip will replace the current featured clip.</span>
+                </div>
+
+                <label class="featured-switch">
+                    <input type="checkbox" id="featured">
+                    <span class="switch-slider"></span>
+                </label>
+
+            </div>
+
+            <div class="progress-wrap" id="progressWrap">
+
+                <div class="progress-top">
+                    <span class="progress-title" id="progressTitle">Preparing upload...</span>
+                    <span class="progress-percent" id="progressPercent">0%</span>
+                </div>
+
+                <progress id="uploadProgress" value="0" max="100"></progress>
+
+                <p id="uploadStatus"></p>
+
+            </div>
+
+            <div class="form-actions">
+
+                <button class="save-btn" id="saveClip" type="button">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    Upload &amp; Save Clip
+                </button>
+
+                <button class="cancel-btn" id="cancelClip" type="button">
+                    <i class="fa-solid fa-xmark"></i>
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
 
     </div>
 
@@ -103,11 +572,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 
-
 <script src="js/firebase.js"></script>
 <script src="js/auth-guard.js"></script>
 <script src="js/add-clip.js"></script>
 
 </body>
-
 </html>

@@ -1,496 +1,1176 @@
 const clipType = document.getElementById("clipType");
+const thumbnailInput = document.getElementById("thumbnail");
 const videoFile = document.getElementById("videoFile");
 const videoUrl = document.getElementById("videoUrl");
 
 const saveBtn = document.getElementById("saveClip");
+const cancelBtn = document.getElementById("cancelClip");
 
 const progress = document.getElementById("uploadProgress");
 const status = document.getElementById("uploadStatus");
+const progressWrap = document.getElementById("progressWrap");
+const progressTitle = document.getElementById("progressTitle");
+const progressPercent = document.getElementById("progressPercent");
+
+const thumbnailZone = document.getElementById("thumbnailZone");
+const videoZone = document.getElementById("videoZone");
+const thumbnailName = document.getElementById("thumbnailName");
+const videoName = document.getElementById("videoName");
+const urlGroup = document.getElementById("urlGroup");
+const thumbnailGroup = document.getElementById("thumbnailGroup");
+const videoGroup = document.getElementById("videoGroup");
+
+const FCM_URL =
+    "https://script.google.com/macros/s/AKfycbyazs42LLTr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
+
+const CLOUDINARY_CLOUD_NAME = "vuto9fey";
+const CLOUDINARY_UPLOAD_PRESET = "4fu_clips";
+
+let uploadInProgress = false;
+
+
+/* =========================================================
+   CLIP TYPE
+========================================================= */
 
 clipType.addEventListener("change", () => {
 
-    if (clipType.value === "video") {
+    const isVideo = clipType.value === "video";
 
-        videoFile.style.display = "block";
-        videoUrl.style.display = "none";
+    thumbnailGroup.style.display = isVideo ? "flex" : "none";
+    videoGroup.style.display = isVideo ? "flex" : "none";
+    urlGroup.style.display = isVideo ? "none" : "flex";
 
-    } else {
+    if (!isVideo) {
 
-        videoFile.style.display = "none";
-        videoUrl.style.display = "block";
+        thumbnailInput.value = "";
+        videoFile.value = "";
+
+        thumbnailName.textContent = "";
+        videoName.textContent = "";
+
+        thumbnailZone.classList.remove("selected");
+        videoZone.classList.remove("selected");
 
     }
 
 });
 
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
 function resetProgress() {
 
-    progress.style.display = "none";
+    progressWrap.style.display = "none";
+
     progress.value = 0;
 
-    status.style.display = "none";
-    status.innerText = "";
+    progressPercent.textContent = "0%";
+
+    progressTitle.textContent = "Preparing upload...";
+
+    status.textContent = "";
 
 }
 
-function showProgress(text) {
 
-    progress.style.display = "block";
+function showProgress(title, value = 0) {
 
-    status.style.display = "block";
+    progressWrap.style.display = "block";
 
-    status.innerText = text;
+    progress.value = value;
+
+    progressPercent.textContent =
+        value + "%";
+
+    progressTitle.textContent =
+        title;
+
+    status.textContent =
+        title;
 
 }
 
-function setProgress(value,text){
 
-    progress.value=value;
+function setProgress(value, text) {
 
-    status.innerText=text;
-
-}
-
-function uploadToCloudinary(file,resourceType="image"){
-
-    return new Promise((resolve,reject)=>{
-
-        const formData=new FormData();
-
-        formData.append("file",file);
-
-        formData.append("upload_preset","4fu_clips");
-
-        const xhr=new XMLHttpRequest();
-
-        xhr.open(
-
-            "POST",
-
-            `https://api.cloudinary.com/v1_1/vuto9fey/${resourceType}/upload`
-
+    const safeValue =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(value) || 0
+            )
         );
 
-        xhr.upload.onprogress=(e)=>{
+    progress.value =
+        safeValue;
 
-            if(e.lengthComputable){
+    progressPercent.textContent =
+        Math.round(safeValue) + "%";
 
-                const percent=Math.round(
+    progressTitle.textContent =
+        text;
 
-                    (e.loaded/e.total)*100
+    status.textContent =
+        text;
 
+}
+
+
+/* =========================================================
+   CLOUDINARY UPLOAD
+========================================================= */
+
+function uploadToCloudinary(
+    file,
+    resourceType = "image"
+) {
+
+    return new Promise((resolve, reject) => {
+
+        if (!file) {
+
+            reject(
+                "No file selected."
+            );
+
+            return;
+
+        }
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "file",
+            file
+        );
+
+
+        formData.append(
+            "upload_preset",
+            CLOUDINARY_UPLOAD_PRESET
+        );
+
+
+        const xhr =
+            new XMLHttpRequest();
+
+
+        const uploadUrl =
+            `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
+
+
+        xhr.open(
+            "POST",
+            uploadUrl,
+            true
+        );
+
+
+        /*
+         * Large video uploads can take time.
+         */
+
+        xhr.timeout =
+            900000;
+
+
+        xhr.upload.onprogress =
+            (event) => {
+
+                if (!event.lengthComputable) {
+                    return;
+                }
+
+
+                const percent =
+                    Math.round(
+                        (
+                            event.loaded /
+                            event.total
+                        ) * 100
+                    );
+
+
+                setProgress(
+                    percent,
+                    resourceType === "image"
+                        ? "Uploading thumbnail..."
+                        : "Uploading video..."
                 );
 
-                progress.value=percent;
+            };
 
-            }
 
-        };
+        xhr.onload =
+            () => {
 
-        xhr.onload=()=>{
+                let response = {};
 
-            if(xhr.status===200){
 
-                resolve(
+                try {
 
-                    JSON.parse(xhr.responseText)
+                    response =
+                        JSON.parse(
+                            xhr.responseText || "{}"
+                        );
 
+                }
+                catch (error) {
+
+                    response = {};
+
+                }
+
+
+                if (
+                    xhr.status >= 200 &&
+                    xhr.status < 300
+                ) {
+
+                    if (
+                        response.secure_url
+                    ) {
+
+                        resolve(
+                            response
+                        );
+
+                        return;
+
+                    }
+
+
+                    reject(
+                        "Cloudinary did not return a file URL."
+                    );
+
+                    return;
+
+                }
+
+
+                let message =
+                    "Cloudinary upload failed.";
+
+
+                if (
+                    response.error &&
+                    response.error.message
+                ) {
+
+                    message =
+                        response.error.message;
+
+                }
+
+
+                reject(
+                    message
                 );
 
-            }else{
+            };
 
-                reject("Cloudinary Upload Failed");
 
-            }
+        xhr.onerror =
+            () => {
 
-        };
+                reject(
+                    "Network error while uploading to Cloudinary."
+                );
 
-        xhr.onerror=()=>{
+            };
 
-            reject("Network Error");
 
-        };
+        xhr.ontimeout =
+            () => {
 
-        xhr.send(formData);
+                reject(
+                    "Upload timed out. Please check your internet connection and try again."
+                );
+
+            };
+
+
+        xhr.onabort =
+            () => {
+
+                reject(
+                    "Upload cancelled."
+                );
+
+            };
+
+
+        xhr.send(
+            formData
+        );
 
     });
 
 }
 
-saveBtn.addEventListener("click", async () => {
 
-    try {
+/* =========================================================
+   THUMBNAIL FILE SELECT
+========================================================= */
 
-        saveBtn.disabled = true;
+thumbnailInput.addEventListener(
+    "change",
+    () => {
 
-        let thumbnail = "";
+        const file =
+            thumbnailInput.files[0];
 
-        let finalVideo = "";
 
-        const title =
-            document.getElementById("title").value.trim();
+        if (!file) {
 
-        const player =
-            document.getElementById("playerName").value.trim();
+            thumbnailName.textContent =
+                "";
 
-        const category =
-            document.getElementById("category").value.trim();
-
-        const description =
-            document.getElementById("description").value.trim();
-
-        const featured =
-            document.getElementById("featured").checked;
-
-        if(title===""){
-
-            alert("Enter Title");
-
-            saveBtn.disabled=false;
-
-            return;
-
-        }
-
-        if(player===""){
-
-            alert("Enter Player Name");
-
-            saveBtn.disabled=false;
-
-            return;
-
-        }
-
-        if(category===""){
-
-            alert("Enter Category");
-
-            saveBtn.disabled=false;
-
-            return;
-
-        }
-
-        if(clipType.value==="video"){
-
-            const image=
-                document.getElementById("thumbnail").files[0];
-
-            const video=
-                document.getElementById("videoFile").files[0];
-
-            if(!image){
-
-                alert("Select Thumbnail");
-
-                saveBtn.disabled=false;
-
-                return;
-
-            }
-
-            if(!video){
-
-                alert("Select Video");
-
-                saveBtn.disabled=false;
-
-                return;
-
-            }
-
-            showProgress("Uploading Thumbnail...");
-
-            setProgress(5,"Uploading Thumbnail...");
-
-            const imgUpload =
-                await uploadToCloudinary(
-                    image,
-                    "image"
-                );
-
-            thumbnail =
-                imgUpload.secure_url;
-
-            setProgress(10,"Thumbnail Uploaded");
-
-            showProgress("Uploading Video...");
-
-            const videoUpload =
-                await uploadToCloudinary(
-                    video,
-                    "video"
-                );
-
-            finalVideo =
-                videoUpload.secure_url;
-
-            setProgress(
-                100,
-                "Video Uploaded Successfully"
+            thumbnailZone.classList.remove(
+                "selected"
             );
 
+            return;
+
         }
 
-        else {
 
-            finalVideo = videoUrl.value.trim();
+        thumbnailName.textContent =
+            `${file.name} • ${(file.size / 1024 / 1024).toFixed(2)} MB`;
 
-            if (finalVideo === "") {
 
-                alert("Enter URL");
+        thumbnailZone.classList.add(
+            "selected"
+        );
 
-                saveBtn.disabled = false;
+    }
+);
+
+
+/* =========================================================
+   VIDEO FILE SELECT
+========================================================= */
+
+videoFile.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            videoFile.files[0];
+
+
+        if (!file) {
+
+            videoName.textContent =
+                "";
+
+            videoZone.classList.remove(
+                "selected"
+            );
+
+            return;
+
+        }
+
+
+        videoName.textContent =
+            `${file.name} • ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+
+
+        videoZone.classList.add(
+            "selected"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   RESET FORM
+========================================================= */
+
+function resetForm() {
+
+    document.getElementById(
+        "title"
+    ).value = "";
+
+
+    document.getElementById(
+        "playerName"
+    ).value = "";
+
+
+    document.getElementById(
+        "category"
+    ).value = "";
+
+
+    document.getElementById(
+        "description"
+    ).value = "";
+
+
+    thumbnailInput.value =
+        "";
+
+
+    videoFile.value =
+        "";
+
+
+    videoUrl.value =
+        "";
+
+
+    document.getElementById(
+        "featured"
+    ).checked = false;
+
+
+    thumbnailName.textContent =
+        "";
+
+
+    videoName.textContent =
+        "";
+
+
+    thumbnailZone.classList.remove(
+        "selected"
+    );
+
+
+    videoZone.classList.remove(
+        "selected"
+    );
+
+
+    clipType.value =
+        "video";
+
+
+    clipType.dispatchEvent(
+        new Event("change")
+    );
+
+}
+
+
+/* =========================================================
+   CANCEL
+========================================================= */
+
+cancelBtn.addEventListener(
+    "click",
+    () => {
+
+        if (uploadInProgress) {
+            return;
+        }
+
+
+        window.location.href =
+            "clips.html";
+
+    }
+);
+
+
+/* =========================================================
+   SAVE CLIP
+========================================================= */
+
+saveBtn.addEventListener(
+    "click",
+    async () => {
+
+        if (uploadInProgress) {
+            return;
+        }
+
+
+        const title =
+            document
+                .getElementById("title")
+                .value
+                .trim();
+
+
+        const player =
+            document
+                .getElementById("playerName")
+                .value
+                .trim();
+
+
+        const category =
+            document
+                .getElementById("category")
+                .value
+                .trim();
+
+
+        const description =
+            document
+                .getElementById("description")
+                .value
+                .trim();
+
+
+        const featured =
+            document
+                .getElementById("featured")
+                .checked;
+
+
+        /* =================================================
+           VALIDATION
+        ================================================= */
+
+        if (!title) {
+
+            alert(
+                "Enter Title"
+            );
+
+            document
+                .getElementById("title")
+                .focus();
+
+            return;
+
+        }
+
+
+        if (!player) {
+
+            alert(
+                "Enter Player Name"
+            );
+
+            document
+                .getElementById("playerName")
+                .focus();
+
+            return;
+
+        }
+
+
+        if (!category) {
+
+            alert(
+                "Enter Category"
+            );
+
+            document
+                .getElementById("category")
+                .focus();
+
+            return;
+
+        }
+
+
+        if (
+            clipType.value === "video"
+        ) {
+
+            if (
+                !thumbnailInput.files[0]
+            ) {
+
+                alert(
+                    "Select Thumbnail"
+                );
 
                 return;
 
             }
+
+
+            if (
+                !videoFile.files[0]
+            ) {
+
+                alert(
+                    "Select Video"
+                );
+
+                return;
+
+            }
+
+        }
+        else {
+
+            const url =
+                videoUrl.value.trim();
+
+
+            if (!url) {
+
+                alert(
+                    "Enter URL"
+                );
+
+                videoUrl.focus();
+
+                return;
+
+            }
+
 
             if (
                 clipType.value === "instagram" &&
-                !finalVideo.includes("instagram.com/reel/")
+                !(
+                    url.includes(
+                        "instagram.com/reel/"
+                    ) ||
+                    url.includes(
+                        "instagram.com/p/"
+                    )
+                )
             ) {
 
-                alert("Enter a valid Instagram Reel URL");
+                alert(
+                    "Enter a valid Instagram Reel URL"
+                );
 
-                saveBtn.disabled = false;
+                videoUrl.focus();
 
                 return;
 
             }
+
 
             if (
                 clipType.value === "youtube" &&
                 !(
-                    finalVideo.includes("youtube.com") ||
-                    finalVideo.includes("youtu.be")
+                    url.includes(
+                        "youtube.com"
+                    ) ||
+                    url.includes(
+                        "youtu.be"
+                    )
                 )
             ) {
 
-                alert("Enter a valid YouTube URL");
+                alert(
+                    "Enter a valid YouTube URL"
+                );
 
-                saveBtn.disabled = false;
+                videoUrl.focus();
 
                 return;
 
             }
 
-            thumbnail = "";
+        }
+
+
+        /* =================================================
+           AUTH
+        ================================================= */
+
+        const user =
+            firebase
+                .auth()
+                .currentUser;
+
+
+        if (!user) {
+
+            alert(
+                "Admin login required."
+            );
+
+            return;
 
         }
 
-        if (featured) {
 
-            const oldFeatured = await db.collection("clips")
-                .where("featured", "==", true)
-                .get();
+        /* =================================================
+           START
+        ================================================= */
 
-            const batch = db.batch();
-
-            oldFeatured.forEach(doc => {
-
-                batch.update(doc.ref, {
-
-                    featured: false
-
-                });
-
-            });
-
-            await batch.commit();
-
-        }
-
-        showProgress("Saving Clip...");
-
-        await db.collection("clips").add({
-
-            title:title,
-
-            playerName:player,
-
-            playerId:"",
-
-            thumbnail:thumbnail,
-
-            videoUrl:finalVideo,
-
-            clipType:clipType.value,
-
-            category:category,
-
-            description:description,
-
-            featured: featured,
-
-            createdAt:
-            firebase.firestore.FieldValue.serverTimestamp()
-
-        });
-
-        setProgress(
-            100,
-            "Clip Saved Successfully"
-        );
+        uploadInProgress =
+            true;
 
 
-        // ==========================================
-        // ANDROID APP FCM NOTIFICATION
-        // ==========================================
+        saveBtn.disabled =
+            true;
+
+
+        cancelBtn.disabled =
+            true;
+
+
+        saveBtn.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+
 
         try {
 
-            fetch(
-                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
-                {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: {
-                        "Content-Type": "text/plain;charset=utf-8"
-                    },
-                    body: JSON.stringify({
+            let thumbnail =
+                "";
 
-                        type: "clip",
+            let finalVideo =
+                "";
 
-                        priority: "normal",
 
-                        title: "🎬 New Clip Added",
+            /* =================================================
+               VIDEO UPLOAD
+            ================================================= */
+
+            if (
+                clipType.value === "video"
+            ) {
+
+                const image =
+                    thumbnailInput.files[0];
+
+
+                const video =
+                    videoFile.files[0];
+
+
+                /* Thumbnail */
+
+                showProgress(
+                    "Uploading thumbnail...",
+                    0
+                );
+
+
+                const imgUpload =
+                    await uploadToCloudinary(
+                        image,
+                        "image"
+                    );
+
+
+                thumbnail =
+                    imgUpload.secure_url;
+
+
+                setProgress(
+                    100,
+                    "Thumbnail uploaded successfully."
+                );
+
+
+                /* Video */
+
+                showProgress(
+                    "Preparing video upload...",
+                    0
+                );
+
+
+                const videoUpload =
+                    await uploadToCloudinary(
+                        video,
+                        "video"
+                    );
+
+
+                finalVideo =
+                    videoUpload.secure_url;
+
+
+                setProgress(
+                    100,
+                    "Video uploaded successfully."
+                );
+
+            }
+
+
+            /* =================================================
+               URL CLIP
+            ================================================= */
+
+            else {
+
+                finalVideo =
+                    videoUrl.value.trim();
+
+
+                thumbnail =
+                    "";
+
+            }
+
+
+            /* =================================================
+               FEATURED CLIP
+            ================================================= */
+
+            if (featured) {
+
+                showProgress(
+                    "Updating featured clip...",
+                    100
+                );
+
+
+                const oldFeatured =
+                    await db
+                        .collection("clips")
+                        .where(
+                            "featured",
+                            "==",
+                            true
+                        )
+                        .get();
+
+
+                const batch =
+                    db.batch();
+
+
+                oldFeatured.forEach(
+                    doc => {
+
+                        batch.update(
+                            doc.ref,
+                            {
+                                featured:
+                                    false
+                            }
+                        );
+
+                    }
+                );
+
+
+                if (!oldFeatured.empty) {
+
+                    await batch.commit();
+
+                }
+
+            }
+
+
+            /* =================================================
+               FIRESTORE
+            ================================================= */
+
+            showProgress(
+                "Saving clip...",
+                100
+            );
+
+
+            await db
+                .collection("clips")
+                .add({
+
+                    title:
+                        title,
+
+                    playerName:
+                        player,
+
+                    playerId:
+                        "",
+
+                    thumbnail:
+                        thumbnail,
+
+                    videoUrl:
+                        finalVideo,
+
+                    clipType:
+                        clipType.value,
+
+                    category:
+                        category,
+
+                    description:
+                        description,
+
+                    featured:
+                        featured,
+
+                    createdAt:
+                        firebase
+                            .firestore
+                            .FieldValue
+                            .serverTimestamp()
+
+                });
+
+
+            /* =================================================
+               ANDROID FCM
+            ================================================= */
+
+            try {
+
+                fetch(
+                    FCM_URL,
+                    {
+                        method:
+                            "POST",
+
+                        mode:
+                            "no-cors",
+
+                        headers: {
+                            "Content-Type":
+                                "text/plain;charset=utf-8"
+                        },
 
                         body:
-                            player +
-                            " added a new gameplay clip: " +
-                            title,
+                            JSON.stringify({
 
-                        link: "/clips.html",
+                                type:
+                                    "clip",
 
-                        updateType: "clip",
+                                priority:
+                                    "normal",
 
-                        targetPlayerId: "ALL",
+                                title:
+                                    "🎬 New Clip Added",
 
-                        senderEmail:
-                            firebase.auth().currentUser?.email || "Admin"
+                                body:
+                                    player +
+                                    " added a new gameplay clip: " +
+                                    title,
 
-                    })
-                }
-            ).catch((error) => {
+                                link:
+                                    "/clips.html",
+
+                                updateType:
+                                    "clip",
+
+                                targetPlayerId:
+                                    "ALL",
+
+                                senderEmail:
+                                    firebase
+                                        .auth()
+                                        .currentUser
+                                        ?.email ||
+                                    "Admin"
+
+                            })
+
+                    }
+                )
+                .catch(
+                    error => {
+
+                        console.warn(
+                            "4FU ANDROID FCM CLIP ERROR:",
+                            error
+                        );
+
+                    }
+                );
+
+            }
+            catch (error) {
 
                 console.warn(
                     "4FU ANDROID FCM CLIP ERROR:",
                     error
                 );
 
-            });
+            }
 
-        } catch (error) {
 
-            console.warn(
-                "4FU ANDROID FCM CLIP ERROR:",
-                error
+            /* =================================================
+               SUCCESS
+            ================================================= */
+
+            setProgress(
+                100,
+                "Clip saved successfully!"
             );
+
+
+            alert(
+                "✅ Clip Added Successfully!"
+            );
+
+
+            resetForm();
+
+            resetProgress();
+
+
+            window.location.href =
+                "clips.html";
 
         }
 
-        // ==========================================
+
+        catch (error) {
+
+            console.error(
+                "Add Clip Error:",
+                error
+            );
 
 
-        alert("✅ Clip Added Successfully!");
+            const message =
+                error &&
+                error.message
+                    ? error.message
+                    : String(error);
 
-        resetProgress();
 
-        saveBtn.disabled = false;
+            status.textContent =
+                "❌ " + message;
 
-        window.location.href = "clips.html";
 
-    }
+            progressWrap.style.display =
+                "block";
 
-    catch(err){
 
-        console.error(err);
+            alert(
+                "❌ Clip upload failed:\n\n" +
+                message
+            );
 
-        alert(err);
 
-        resetProgress();
+            saveBtn.disabled =
+                false;
 
-        saveBtn.disabled = false;
 
-    }
+            cancelBtn.disabled =
+                false;
 
-});
 
-clipType.dispatchEvent(new Event("change"));
+            saveBtn.innerHTML =
+                '<i class="fa-solid fa-cloud-arrow-up"></i> Upload & Save Clip';
 
-document.getElementById("title").addEventListener("keypress",(e)=>{
+        }
 
-    if(e.key==="Enter"){
 
-        document.getElementById("playerName").focus();
+        finally {
 
-    }
+            uploadInProgress =
+                false;
 
-});
-
-document.getElementById("playerName").addEventListener("keypress",(e)=>{
-
-    if(e.key==="Enter"){
-
-        document.getElementById("category").focus();
-
-    }
-
-});
-
-document.getElementById("category").addEventListener("keypress",(e)=>{
-
-    if(e.key==="Enter"){
-
-        document.getElementById("description").focus();
+        }
 
     }
+);
 
-});
 
-document.getElementById("description").addEventListener("keydown",(e)=>{
+/* =========================================================
+   ENTER KEY NAVIGATION
+========================================================= */
 
-    if(e.ctrlKey && e.key==="Enter"){
+document
+    .getElementById("title")
+    .addEventListener(
+        "keypress",
+        (e) => {
 
-        saveBtn.click();
+            if (
+                e.key === "Enter"
+            ) {
 
-    }
+                document
+                    .getElementById(
+                        "playerName"
+                    )
+                    .focus();
 
-});
+            }
 
-window.addEventListener("load", () => {
+        }
+    );
 
-    resetProgress();
 
-});
+document
+    .getElementById("playerName")
+    .addEventListener(
+        "keypress",
+        (e) => {
 
-videoFile.addEventListener("change", () => {
+            if (
+                e.key === "Enter"
+            ) {
 
-    if (videoFile.files.length > 0) {
+                document
+                    .getElementById(
+                        "category"
+                    )
+                    .focus();
 
-        const file = videoFile.files[0];
+            }
 
-        const size = (file.size / 1024 / 1024).toFixed(2);
+        }
+    );
 
-        status.style.display = "block";
 
-        status.innerText =
-            `Selected Video : ${file.name} (${size} MB)`;
+document
+    .getElementById("category")
+    .addEventListener(
+        "keypress",
+        (e) => {
 
-    }
+            if (
+                e.key === "Enter"
+            ) {
 
-});
+                document
+                    .getElementById(
+                        "description"
+                    )
+                    .focus();
 
-document.getElementById("thumbnail").addEventListener("change", () => {
+            }
 
-    if (document.getElementById("thumbnail").files.length > 0) {
+        }
+    );
 
-        status.style.display = "block";
 
-        status.innerText = "Thumbnail Selected";
+/* =================================================
+   CTRL + ENTER
+================================================= */
 
-    }
+document
+    .getElementById("description")
+    .addEventListener(
+        "keydown",
+        (e) => {
 
-});
+            if (
+                e.ctrlKey &&
+                e.key === "Enter"
+            ) {
+
+                saveBtn.click();
+
+            }
+
+        }
+    );
+
+
+/* =================================================
+   INITIALIZE
+================================================= */
+
+clipType.dispatchEvent(
+    new Event("change")
+);
+
+resetProgress();
