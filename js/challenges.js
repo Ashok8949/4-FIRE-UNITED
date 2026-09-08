@@ -584,7 +584,7 @@ Thank you! 🔥`;
 
 
                     window.open(
-                        "https://ig.me/m/4fireunited",
+                        "https://ig.me/m/4fireunitedofficial",
                         "_blank"
                     );
 
