@@ -321,7 +321,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
                             data.name +
                             " updated their player profile.",
 
-                        link: "/players.html",
+                        link: "/players/player.html?id=" + encodeURIComponent(playerId),
 
                         updateType: "player_update",
 
