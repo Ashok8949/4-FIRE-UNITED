@@ -2316,3 +2316,651 @@ body{
     }
 
 }
+
+/* =========================================================
+   4FU ADMIN COMMAND CENTER — ADD-ON CSS
+   Existing CSS ko delete/replace mat karna.
+   ========================================================= */
+
+.cc-command-center {
+    width: 100%;
+    margin-top: 24px;
+}
+
+.cc-command-center *,
+.cc-command-center *::before,
+.cc-command-center *::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   STAT GRID
+   ========================= */
+
+.cc-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.cc-stat-card {
+    position: relative;
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.035);
+    backdrop-filter: blur(12px);
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.cc-stat-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,.16);
+    box-shadow: 0 12px 35px rgba(0,0,0,.18);
+}
+
+.cc-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.cc-stat-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 20px;
+    background: rgba(255,255,255,.07);
+}
+
+.cc-stat-label {
+    margin-top: 14px;
+    font-size: 13px;
+    opacity: .65;
+}
+
+.cc-stat-value {
+    margin-top: 5px;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 800;
+}
+
+
+/* =========================
+   MAIN GRID
+   ========================= */
+
+.cc-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   PANELS
+   ========================= */
+
+.cc-panel {
+    min-width: 0;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.035);
+    backdrop-filter: blur(12px);
+}
+
+.cc-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.cc-panel-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.cc-panel-subtitle {
+    margin-top: 4px;
+    font-size: 12px;
+    opacity: .6;
+}
+
+
+/* =========================
+   ACTION REQUIRED
+   ========================= */
+
+#actionRequiredList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cc-action-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.06);
+    transition: .2s ease;
+}
+
+.cc-action-item:hover {
+    transform: translateX(3px);
+    background: rgba(255,255,255,.055);
+}
+
+.cc-action-high {
+    border-left: 3px solid #ff5b5b;
+}
+
+.cc-action-medium {
+    border-left: 3px solid #ffb84d;
+}
+
+.cc-action-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: rgba(255,255,255,.06);
+}
+
+.cc-action-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.cc-action-content strong {
+    display: block;
+    font-size: 14px;
+}
+
+.cc-action-content small {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    opacity: .58;
+    line-height: 1.4;
+}
+
+.cc-action-btn,
+.cc-health-btn {
+    border: 0;
+    border-radius: 9px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(255,255,255,.09);
+    color: inherit;
+    transition: .2s ease;
+}
+
+.cc-action-btn:hover,
+.cc-health-btn:hover {
+    background: rgba(255,255,255,.16);
+    transform: translateY(-1px);
+}
+
+.cc-no-action,
+.cc-health-good {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+}
+
+.cc-no-action span,
+.cc-health-good span {
+    font-size: 22px;
+}
+
+.cc-no-action strong,
+.cc-health-good strong {
+    display: block;
+    font-size: 14px;
+}
+
+.cc-no-action small,
+.cc-health-good small {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    opacity: .6;
+}
+
+
+/* =========================
+   GLOBAL SEARCH
+   ========================= */
+
+.cc-search-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.cc-search-box {
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.09);
+    background: rgba(255,255,255,.04);
+}
+
+.cc-search-box span {
+    font-size: 18px;
+    opacity: .65;
+}
+
+.cc-search-box input {
+    width: 100%;
+    height: 48px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font-size: 14px;
+}
+
+.cc-search-box input::placeholder {
+    opacity: .5;
+}
+
+#globalSearchResults,
+#searchResults {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 8px;
+}
+
+.cc-search-result {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px;
+    text-align: left;
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 12px;
+    background: rgba(255,255,255,.035);
+    color: inherit;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.cc-search-result:hover {
+    background: rgba(255,255,255,.075);
+    transform: translateX(2px);
+}
+
+.cc-search-icon {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255,255,255,.06);
+}
+
+.cc-search-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.cc-search-info strong {
+    display: block;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cc-search-info small {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    opacity: .55;
+}
+
+.cc-search-arrow {
+    opacity: .5;
+}
+
+.cc-search-empty {
+    padding: 16px;
+    text-align: center;
+    font-size: 12px;
+    opacity: .55;
+}
+
+
+/* =========================
+   PROFILE HEALTH
+   ========================= */
+
+#profileHealthList {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.cc-health-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px;
+    border-radius: 13px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.06);
+}
+
+.cc-health-icon {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: rgba(255,255,255,.06);
+}
+
+.cc-health-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.cc-health-info strong {
+    display: block;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cc-health-info small {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    opacity: .55;
+    line-height: 1.4;
+}
+
+.cc-health-btn {
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   RECENT ACTIVITY
+   ========================= */
+
+#recentActivityList {
+    display: flex;
+    flex-direction: column;
+}
+
+.cc-activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.cc-activity-item:last-child {
+    border-bottom: 0;
+}
+
+.cc-activity-icon {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255,255,255,.06);
+}
+
+.cc-activity-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.cc-activity-info strong {
+    display: block;
+    font-size: 12px;
+}
+
+.cc-activity-info small {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    opacity: .55;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cc-activity-item time {
+    flex-shrink: 0;
+    font-size: 10px;
+    opacity: .5;
+}
+
+.cc-empty-activity {
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    opacity: .5;
+}
+
+
+/* =========================
+   QUICK ACTIONS
+   ========================= */
+
+.cc-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.cc-quick-action {
+    min-height: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 13px;
+    border: 1px solid rgba(255,255,255,.07);
+    background: rgba(255,255,255,.035);
+    color: inherit;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.cc-quick-action:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,.07);
+}
+
+.cc-quick-action-icon {
+    font-size: 20px;
+}
+
+.cc-quick-action span:last-child {
+    font-size: 10px;
+    opacity: .7;
+}
+
+
+/* =========================
+   REFRESH BUTTON
+   ========================= */
+
+.cc-refresh-btn {
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.04);
+    color: inherit;
+    border-radius: 9px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: .2s ease;
+}
+
+.cc-refresh-btn:hover {
+    background: rgba(255,255,255,.08);
+}
+
+.cc-refresh-btn:disabled {
+    opacity: .5;
+    cursor: wait;
+}
+
+
+/* =========================
+   LIGHT THEME SUPPORT
+   ========================= */
+
+body.light-theme .cc-stat-card,
+body.light-theme .cc-panel,
+body.light-theme .cc-search-box {
+    border-color: rgba(0,0,0,.08);
+    background: rgba(0,0,0,.025);
+}
+
+body.light-theme .cc-action-item,
+body.light-theme .cc-health-item,
+body.light-theme .cc-search-result,
+body.light-theme .cc-quick-action {
+    border-color: rgba(0,0,0,.07);
+    background: rgba(0,0,0,.025);
+}
+
+body.light-theme .cc-action-item:hover,
+body.light-theme .cc-search-result:hover,
+body.light-theme .cc-quick-action:hover {
+    background: rgba(0,0,0,.045);
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1100px) {
+
+    .cc-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cc-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cc-quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .cc-stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .cc-stat-card {
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    .cc-stat-value {
+        font-size: 24px;
+    }
+
+    .cc-panel {
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .cc-action-item {
+        align-items: flex-start;
+    }
+
+    .cc-action-btn {
+        padding: 7px 9px;
+    }
+
+    .cc-health-item {
+        align-items: flex-start;
+    }
+
+    .cc-health-btn {
+        padding: 7px 9px;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .cc-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cc-quick-actions {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cc-action-item {
+        flex-wrap: wrap;
+    }
+
+    .cc-action-btn {
+        margin-left: 50px;
+    }
+
+    .cc-panel-header {
+        align-items: flex-start;
+    }
+
+    .cc-activity-item time {
+        display: none;
+    }
+}

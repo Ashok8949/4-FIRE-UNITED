@@ -321,11 +321,12 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
                             data.name +
                             " updated their player profile.",
 
-                        link: "/players/player.html?id=" + encodeURIComponent(playerId),
+                        link: "/player-profile.html?id=" + encodeURIComponent(playerId),
 
                         updateType: "player_update",
 
                         targetPlayerId: playerId,
+                        playerId: playerId,
 
                         senderEmail:
                             firebase.auth().currentUser?.email || "Admin"

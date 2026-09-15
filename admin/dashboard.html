@@ -174,6 +174,115 @@
 
         </div>
 
+
+        <!-- ==========================
+             NEW 4FU COMMAND CENTER
+             Existing dashboard above is preserved.
+        =========================== -->
+        <div class="dashboard-section command-center-section">
+            <div class="cc-heading-row">
+                <div>
+                    <h2><i class="fa-solid fa-gauge-high"></i> 4FU COMMAND CENTER</h2>
+                    <p class="cc-subtitle">Everything important for your admin work, in one place.</p>
+                </div>
+                <div class="cc-live"><span></span> LIVE</div>
+            </div>
+
+            <div class="cc-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="globalAdminSearch" type="search" placeholder="Search players, tournaments, applications, messages, clips..." autocomplete="off">
+                <kbd>CTRL</kbd><kbd>K</kbd>
+                <div id="globalSearchResults" class="global-search-results" hidden></div>
+            </div>
+
+            <div class="cc-grid">
+                <div class="cc-panel action-required-panel">
+                    <div class="cc-panel-head">
+                        <div>
+                            <h3><i class="fa-solid fa-bolt"></i> Action Required</h3>
+                            <p>Things that may need your attention.</p>
+                        </div>
+                        <span id="actionRequiredTotal" class="cc-badge">0</span>
+                    </div>
+                    <div id="actionRequiredList" class="action-required-list">
+                        <div class="cc-loading"><i class="fa-solid fa-spinner fa-spin"></i> Checking...</div>
+                    </div>
+                </div>
+
+                <div class="cc-panel profile-health-panel">
+                    <div class="cc-panel-head">
+                        <div>
+                            <h3><i class="fa-solid fa-heart-pulse"></i> Profile Health</h3>
+                            <p>Quick check for incomplete player data.</p>
+                        </div>
+                        <span id="profileHealthScore" class="health-score">--</span>
+                    </div>
+                    <div class="health-progress"><span id="profileHealthProgress"></span></div>
+                    <div id="profileHealthList" class="health-list">
+                        <div class="cc-loading"><i class="fa-solid fa-spinner fa-spin"></i> Checking players...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cc-panel recent-admin-activity-panel">
+                <div class="cc-panel-head">
+                    <div>
+                        <h3><i class="fa-solid fa-clock-rotate-left"></i> Admin Activity</h3>
+                        <p>Recent activity detected across 4FU.</p>
+                    </div>
+                    <button type="button" id="refreshCommandCenter" class="cc-refresh-btn">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                </div>
+                <div id="adminActivityList" class="admin-activity-list">
+                    <div class="cc-loading"><i class="fa-solid fa-spinner fa-spin"></i> Loading activity...</div>
+                </div>
+            </div>
+        </div>
+
+
+        <style>
+            /* NEW COMMAND CENTER STYLES - existing dashboard.css is untouched */
+            .command-center-section{margin-top:24px;}
+            .cc-heading-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:20px;}
+            .cc-heading-row h2{margin-bottom:4px;}
+            .cc-subtitle{color:#999;font-size:14px;}
+            .cc-live{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;letter-spacing:1px;color:#bbb;background:#151515;border:1px solid rgba(255,255,255,.08);padding:8px 12px;border-radius:999px;}
+            .cc-live span{width:8px;height:8px;border-radius:50%;background:#39d353;box-shadow:0 0 10px #39d353;}
+            .cc-search-box{position:relative;display:flex;align-items:center;gap:10px;background:#151515;border:1px solid rgba(255,255,255,.1);border-radius:15px;padding:13px 15px;margin-bottom:22px;}
+            .cc-search-box>i{color:#ff7b00;font-size:17px;}
+            .cc-search-box input{flex:1;background:transparent;border:0;outline:0;color:#fff;font-family:Poppins,sans-serif;font-size:14px;min-width:0;}
+            .cc-search-box input::placeholder{color:#777;}
+            .cc-search-box kbd{font-size:10px;color:#888;border:1px solid #333;border-radius:5px;padding:3px 6px;background:#101010;}
+            .global-search-results{position:absolute;left:0;right:0;top:58px;background:#171717;border:1px solid rgba(255,123,0,.35);border-radius:13px;z-index:50;max-height:320px;overflow:auto;box-shadow:0 15px 35px rgba(0,0,0,.45);padding:8px;}
+            .cc-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;}
+            .cc-panel{background:#151515;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:22px;box-shadow:0 8px 25px rgba(0,0,0,.18);}
+            .cc-panel-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px;}
+            .cc-panel-head h3{font-size:19px;margin-bottom:4px;}
+            .cc-panel-head h3 i{color:#ff7b00;margin-right:8px;}
+            .cc-panel-head p{font-size:12px;color:#777;}
+            .cc-badge,.health-score{min-width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(255,123,0,.12);border:1px solid rgba(255,123,0,.25);color:#ff8a1c;font-weight:700;}
+            .action-required-list,.health-list,.admin-activity-list{display:flex;flex-direction:column;gap:10px;}
+            .cc-loading{color:#777;font-size:13px;padding:15px 0;text-align:center;}
+            .cc-action-item,.health-item,.admin-activity-item{display:flex;align-items:center;gap:12px;background:#101010;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;}
+            .cc-action-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;background:rgba(255,123,0,.1);color:#ff7b00;flex:0 0 auto;}
+            .cc-action-info,.health-info,.activity-info{flex:1;min-width:0;}
+            .cc-action-info strong,.health-info strong,.activity-info strong{display:block;font-size:13px;color:#eee;}
+            .cc-action-info span,.health-info span,.activity-info span{display:block;font-size:11px;color:#777;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+            .cc-action-btn{border:1px solid rgba(255,123,0,.35);background:transparent;color:#ff8a1c;border-radius:8px;padding:7px 10px;font-size:11px;font-weight:600;cursor:pointer;}
+            .cc-action-btn:hover{background:#ff7b00;color:#111;}
+            .health-progress{height:7px;background:#292929;border-radius:99px;overflow:hidden;margin:-2px 0 16px;}
+            .health-progress span{display:block;height:100%;width:0;background:#ff7b00;border-radius:99px;transition:width .5s ease;}
+            .health-dot{width:9px;height:9px;border-radius:50%;background:#ff7b00;flex:0 0 auto;}
+            .health-dot.ok{background:#39d353;}
+            .cc-refresh-btn{border:1px solid rgba(255,255,255,.1);background:#101010;color:#ddd;border-radius:9px;padding:8px 11px;cursor:pointer;font-family:Poppins;font-size:11px;}
+            .cc-refresh-btn:hover{border-color:#ff7b00;color:#ff8a1c;}
+            .admin-activity-item .activity-time{font-size:10px;color:#666;white-space:nowrap;}
+            .search-empty{padding:18px;text-align:center;color:#777;font-size:13px;}
+            @media(max-width:1000px){.cc-grid{grid-template-columns:1fr;}.cards{grid-template-columns:repeat(2,1fr);}.action-grid{grid-template-columns:repeat(2,1fr);}}
+            @media(max-width:650px){.main{padding:20px;}.cc-heading-row{align-items:flex-start;flex-direction:column;}.cc-search-box kbd{display:none;}.cards{grid-template-columns:1fr;}.action-grid{grid-template-columns:1fr;}.cc-panel{padding:16px;}.cc-action-item,.health-item,.admin-activity-item{align-items:flex-start;}.cc-action-btn{margin-left:auto;}}
+        </style>
+
         <!-- Dashboard Statistics -->
 
         <div class="cards">
@@ -495,6 +604,9 @@
 
         </div>
 
+
+
+
     </div>
 
     <!-- Firebase -->
@@ -508,6 +620,361 @@
     <script src="js/auth-guard.js?v=1783829699314"></script>
     <script src="js/dashboard.js?v=1783829699314"></script>
     <script src="js/notifications.js"></script>
+
+    <script>
+    /* =========================================================
+       4FU COMMAND CENTER - FULL ADMIN SEARCH
+       Searches multiple Firestore collections.
+       Notifications are NOT modified.
+    ========================================================= */
+    (() => {
+        const oldInput = document.getElementById("globalAdminSearch");
+        if (!oldInput) return;
+
+        // Remove listeners that dashboard.js may already have attached.
+        const input = oldInput.cloneNode(true);
+        oldInput.replaceWith(input);
+
+        const resultsBox = document.getElementById("globalSearchResults");
+        if (!resultsBox) return;
+
+        const SEARCH_SOURCES = [
+            {
+                collection: "players",
+                label: "Player",
+                icon: "fa-users",
+                page: "players.html",
+                getTitle: d => d.name || d.playerName || d.username || d.fullName || "Unnamed Player",
+                getText: d => [d.role, d.position, d.uid, d.id, d.gameUid, d.inGameName]
+                    .filter(Boolean).join(" • ")
+            },
+            {
+                collection: "tournaments",
+                label: "Tournament",
+                icon: "fa-trophy",
+                page: "tournaments.html",
+                getTitle: d => d.title || d.name || d.tournamentName || "Untitled Tournament",
+                getText: d => [d.status, d.type, d.mode, d.date]
+                    .filter(Boolean).join(" • ")
+            },
+            {
+                collection: "joinApplications",
+                label: "Application",
+                icon: "fa-file-circle-check",
+                page: "applications.html",
+                getTitle: d => d.name || d.fullName || d.playerName || "Team Application",
+                getText: d => [d.email, d.phone, d.rank, d.status]
+                    .filter(Boolean).join(" • ")
+            },
+            {
+                collection: "contactMessages",
+                label: "Message",
+                icon: "fa-envelope",
+                page: "messages.html",
+                getTitle: d => d.name || d.fullName || d.email || "Contact Message",
+                getText: d => [d.subject, d.email, d.status]
+                    .filter(Boolean).join(" • ")
+            },
+            {
+                collection: "announcements",
+                label: "Announcement",
+                icon: "fa-bullhorn",
+                page: "announcements.html",
+                getTitle: d => d.title || d.heading || d.name || "Announcement",
+                getText: d => [d.category, d.type, d.status]
+                    .filter(Boolean).join(" • ")
+            },
+            {
+                collection: "challengeRegistrations",
+                label: "Challenge",
+                icon: "fa-fire",
+                page: "challenge-registrations.html",
+                getTitle: d => d.teamName || d.name || d.leaderName || d.playerName || "Challenge Registration",
+                getText: d => [d.challengeType, d.mode, d.status, d.phone]
+                    .filter(Boolean).join(" • ")
+            },
+            {
+                collection: "gallery",
+                label: "Gallery",
+                icon: "fa-image",
+                page: "gallery.html",
+                getTitle: d => d.title || d.name || d.caption || "Gallery Item",
+                getText: d => [d.category, d.description, d.type]
+                    .filter(Boolean).join(" • ")
+            },
+            {
+                collection: "clips",
+                label: "Gameplay Clip",
+                icon: "fa-film",
+                page: "clips.html",
+                getTitle: d => d.title || d.name || d.caption || d.clipTitle || "Gameplay Clip",
+                getText: d => [
+                    d.playerName,
+                    d.player,
+                    d.teamName,
+                    d.category,
+                    d.description,
+                    d.type,
+                    d.status,
+                    d.weapon
+                ].filter(Boolean).join(" • ")
+            }
+        ];
+
+        let allRecords = [];
+        let loaded = false;
+        let loadingPromise = null;
+
+        const escapeHtml = value => String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+        const searchableText = (source, data, docId) => {
+            const values = [];
+
+            values.push(source.getTitle(data));
+            values.push(source.getText(data));
+            values.push(docId);
+
+            // Also search every primitive field in the Firestore document.
+            Object.entries(data || {}).forEach(([key, value]) => {
+                if (value === null || value === undefined) return;
+
+                if (typeof value === "string" ||
+                    typeof value === "number" ||
+                    typeof value === "boolean") {
+                    values.push(key, String(value));
+                }
+            });
+
+            return values.join(" ").toLowerCase();
+        };
+
+        async function loadSearchData() {
+            if (loaded) return allRecords;
+            if (loadingPromise) return loadingPromise;
+
+            loadingPromise = Promise.all(
+                SEARCH_SOURCES.map(async source => {
+                    try {
+                        const snapshot = await db.collection(source.collection).get();
+
+                        return snapshot.docs.map(doc => {
+                            const data = doc.data() || {};
+
+                            return {
+                                source,
+                                id: doc.id,
+                                data,
+                                title: source.getTitle(data),
+                                text: source.getText(data),
+                                search: searchableText(source, data, doc.id)
+                            };
+                        });
+                    } catch (error) {
+                        console.warn(
+                            "4FU Search: could not read " + source.collection,
+                            error
+                        );
+                        return [];
+                    }
+                })
+            ).then(groups => {
+                allRecords = groups.flat();
+                loaded = true;
+                return allRecords;
+            });
+
+            return loadingPromise;
+        }
+
+        function openResult(record) {
+            const page = record.source.page;
+            const id = encodeURIComponent(record.id);
+
+            // Keep navigation simple and safe for the existing admin pages.
+            if (record.source.collection === "players") {
+                window.location.href = page + "?id=" + id;
+            } else {
+                window.location.href = page;
+            }
+        }
+
+        function renderResults(matches, query) {
+            if (!query) {
+                resultsBox.hidden = true;
+                resultsBox.innerHTML = "";
+                return;
+            }
+
+            if (!matches.length) {
+                resultsBox.innerHTML =
+                    '<div class="search-empty">' +
+                    'No players, tournaments, applications, messages, clips or other records found.' +
+                    '</div>';
+                resultsBox.hidden = false;
+                return;
+            }
+
+            resultsBox.innerHTML = matches.map((record, index) => `
+                <button
+                    type="button"
+                    class="cc-search-result"
+                    data-search-index="${index}"
+                >
+                    <span class="cc-search-result-icon">
+                        <i class="fa-solid ${escapeHtml(record.source.icon)}"></i>
+                    </span>
+                    <span class="cc-search-result-info">
+                        <strong>${escapeHtml(record.title)}</strong>
+                        <small>
+                            ${escapeHtml(record.source.label)}
+                            ${record.text ? " • " + escapeHtml(record.text) : ""}
+                        </small>
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square cc-search-result-arrow"></i>
+                </button>
+            `).join("");
+
+            resultsBox.hidden = false;
+
+            resultsBox.querySelectorAll(".cc-search-result").forEach((button, index) => {
+                button.addEventListener("click", () => openResult(matches[index]));
+            });
+        }
+
+        let searchTimer = null;
+
+        async function performSearch() {
+            const query = input.value.trim().toLowerCase();
+
+            if (!query) {
+                renderResults([], "");
+                return;
+            }
+
+            resultsBox.hidden = false;
+            resultsBox.innerHTML =
+                '<div class="cc-loading">' +
+                '<i class="fa-solid fa-spinner fa-spin"></i> Searching 4FU...' +
+                '</div>';
+
+            const records = await loadSearchData();
+
+            const matches = records
+                .filter(record => record.search.includes(query))
+                .sort((a, b) => {
+                    const aTitle = String(a.title).toLowerCase();
+                    const bTitle = String(b.title).toLowerCase();
+
+                    const aExact = aTitle.startsWith(query) ? 0 : 1;
+                    const bExact = bTitle.startsWith(query) ? 0 : 1;
+
+                    return aExact - bExact;
+                })
+                .slice(0, 20);
+
+            renderResults(matches, query);
+        }
+
+        input.addEventListener("input", () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(performSearch, 180);
+        });
+
+        input.addEventListener("focus", () => {
+            if (input.value.trim()) performSearch();
+        });
+
+        // CTRL + K / CMD + K focuses the Command Center search.
+        document.addEventListener("keydown", event => {
+            if ((event.ctrlKey || event.metaKey) &&
+                event.key.toLowerCase() === "k") {
+                event.preventDefault();
+                input.focus();
+                input.select();
+            }
+
+            if (event.key === "Escape") {
+                resultsBox.hidden = true;
+            }
+        });
+
+        document.addEventListener("click", event => {
+            if (!event.target.closest(".cc-search-box")) {
+                resultsBox.hidden = true;
+            }
+        });
+
+        // Extra styling for the multi-section result list.
+        const style = document.createElement("style");
+        style.textContent = `
+            .cc-search-result {
+                width:100%;
+                display:flex;
+                align-items:center;
+                gap:12px;
+                padding:11px;
+                border:0;
+                border-radius:10px;
+                background:transparent;
+                color:#fff;
+                text-align:left;
+                cursor:pointer;
+                font-family:Poppins,sans-serif;
+            }
+            .cc-search-result:hover {
+                background:rgba(255,123,0,.10);
+            }
+            .cc-search-result-icon {
+                width:36px;
+                height:36px;
+                min-width:36px;
+                display:grid;
+                place-items:center;
+                border-radius:9px;
+                background:rgba(255,123,0,.10);
+                color:#ff7b00;
+            }
+            .cc-search-result-info {
+                min-width:0;
+                flex:1;
+            }
+            .cc-search-result-info strong {
+                display:block;
+                color:#eee;
+                font-size:13px;
+                font-weight:600;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+            }
+            .cc-search-result-info small {
+                display:block;
+                margin-top:3px;
+                color:#777;
+                font-size:10px;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+            }
+            .cc-search-result-arrow {
+                color:#666;
+                font-size:11px;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Warm the cache after Firebase is available, without affecting the UI.
+        if (typeof db !== "undefined") {
+            loadSearchData().catch(console.error);
+        }
+    })();
+    </script>
+
 
     <audio id="notificationSound" preload="auto">
         <source src="sounds/notification.mp3" type="audio/mpeg">

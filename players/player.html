@@ -12,22 +12,312 @@
 <link rel="stylesheet" href="../CSS/responsive.css?v=1783829699314">
 <link rel="stylesheet" href="../CSS/animations.css?v=1783829699314">
 
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314"
+>
 
 <link rel="icon" href="../images/logo/logo.png">
 
+
+<style>
+
+/* =========================================
+   GAME CENTER
+========================================= */
+
+.game-center-section {
+    width: 100%;
+    padding: 80px 8%;
+    background: #080808;
+}
+
+.game-center-title {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.game-center-title h5 {
+    color: #ff6a00;
+    font-size: 15px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.game-center-title h2 {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 48px;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.game-center-title p {
+    color: #999;
+    margin-top: 10px;
+}
+
+
+/* =========================================
+   ADD GAME PANEL
+========================================= */
+
+.game-add-panel {
+    max-width: 1000px;
+    margin: 0 auto 40px;
+    padding: 25px;
+    border: 1px solid rgba(255, 106, 0, 0.25);
+    border-radius: 18px;
+    background: #111111;
+    box-shadow: 0 0 25px rgba(255, 106, 0, 0.08);
+}
+
+.game-add-panel h3 {
+    color: #ff6a00;
+    margin-bottom: 18px;
+    font-size: 20px;
+}
+
+.game-add-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.game-select {
+    flex: 1;
+    height: 52px;
+    padding: 0 16px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #191919;
+    color: #ffffff;
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+    outline: none;
+}
+
+.game-select:focus {
+    border-color: #ff6a00;
+}
+
+.game-add-btn {
+    height: 52px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ff6a00, #ff8500);
+    color: #ffffff;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.game-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 106, 0, 0.25);
+}
+
+.game-add-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.game-note {
+    margin-top: 12px;
+    color: #777;
+    font-size: 12px;
+}
+
+
+/* =========================================
+   GAMES GRID
+========================================= */
+
+.player-games-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.game-card {
+    position: relative;
+    padding: 25px;
+    min-height: 190px;
+    border-radius: 18px;
+    border: 1px solid #292929;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(255, 106, 0, 0.10),
+            transparent 45%
+        ),
+        #111111;
+    transition: 0.3s ease;
+    overflow: hidden;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 106, 0, 0.55);
+    box-shadow: 0 12px 35px rgba(255, 106, 0, 0.10);
+}
+
+.game-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 106, 0, 0.12);
+    color: #ff6a00;
+    font-size: 25px;
+    margin-bottom: 18px;
+}
+
+.game-card h3 {
+    color: #ffffff;
+    margin: 0 0 5px;
+    font-size: 20px;
+}
+
+.game-card p {
+    color: #777;
+    font-size: 13px;
+    margin: 0 0 18px;
+}
+
+.open-game-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    border-radius: 8px;
+    background: #ff6a00;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.open-game-btn:hover {
+    background: #ff8500;
+    transform: translateY(-2px);
+}
+
+.remove-game-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 60, 60, 0.25);
+    background: rgba(255, 60, 60, 0.08);
+    color: #ff5555;
+    cursor: pointer;
+}
+
+.remove-game-btn:hover {
+    background: rgba(255, 60, 60, 0.18);
+}
+
+.no-games {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 45px 20px;
+    text-align: center;
+    border: 1px dashed #333;
+    border-radius: 18px;
+    color: #777;
+}
+
+.no-games i {
+    color: #ff6a00;
+    font-size: 35px;
+    margin-bottom: 15px;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .player-games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .game-center-section {
+        padding: 60px 5%;
+    }
+
+    .game-center-title h2 {
+        font-size: 38px;
+    }
+
+    .game-add-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .game-select,
+    .game-add-btn {
+        width: 100%;
+    }
+
+    .player-games-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================
+   GAME CENTER LOADING
+========================================= */
+
+.game-loading {
+    text-align: center;
+    color: #777;
+    padding: 30px;
+}
+
+.game-loading i {
+    color: #ff6a00;
+    margin-right: 8px;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-    
 
 <div class="loader">
-<h1>4 FIRE UNITED</h1>
+
+    <h1>4 FIRE UNITED</h1>
+
 </div>
+
 
 <header>
 
@@ -37,30 +327,68 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?
 
 <a href="../index.html">
 
-<img src="../images/logo/logo.png" alt="Logo">
+<img
+    src="../images/logo/logo.png"
+    alt="Logo"
+>
 
 </a>
 
 </div>
 
+
 <ul class="nav-links">
 
-<li><a href="../index.html">Home</a></li>
-<li><a href="../team.html" class="active">Team</a></li>
-<li><a href="../tournaments.html">Tournaments</a></li>
-<li><a href="../gallery.html">Gallery</a></li>
-<li><a href="../join.html">Join Us</a></li>
-<li><a href="../contact.html">Contact</a></li>
+<li>
+<a href="../index.html">
+Home
+</a>
+</li>
+
+<li>
+<a href="../team.html" class="active">
+Team
+</a>
+</li>
+
+<li>
+<a href="../tournaments.html">
+Tournaments
+</a>
+</li>
+
+<li>
+<a href="../gallery.html">
+Gallery
+</a>
+</li>
+
+<li>
+<a href="../join.html">
+Join Us
+</a>
+</li>
+
+<li>
+<a href="../contact.html">
+Contact
+</a>
+</li>
 
 </ul>
 
+
 <div class="nav-buttons">
 
-<a href="../join.html" class="join-btn">
+<a
+    href="../join.html"
+    class="join-btn"
+>
 Join Team
 </a>
 
 </div>
+
 
 <div class="menu-btn">
 
@@ -72,376 +400,1744 @@ Join Team
 
 </header>
 
+
+
 <section class="player-banner">
-    <div class="hero-bg">
-    <div class="glow glow1"></div>
-    <div class="glow glow2"></div>
-    <div class="grid-overlay"></div>
+
+<div class="hero-bg">
+
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
+
+<div class="grid-overlay"></div>
+
 </div>
+
 
 <div class="player-overlay"></div>
+
+
 <div class="hero-effects">
 
-    <span class="fire fire1"></span>
-    <span class="fire fire2"></span>
-    <span class="fire fire3"></span>
-    <span class="fire fire4"></span>
+<span class="fire fire1"></span>
+<span class="fire fire2"></span>
+<span class="fire fire3"></span>
+<span class="fire fire4"></span>
 
-    <div class="light-beam beam1"></div>
-    <div class="light-beam beam2"></div>
+<div class="light-beam beam1"></div>
+<div class="light-beam beam2"></div>
 
 </div>
+
 
 <div class="player-container">
 
-    <div class="player-left">
 
-    <div class="player-image-box">
+<div class="player-left">
 
-        <div class="player-ring"></div>
+<div class="player-image-box">
 
-        <div class="player-ring ring2"></div>
+<div class="player-ring"></div>
 
-        <div class="player-image-glow"></div>
+<div class="player-ring ring2"></div>
 
-        <img
+<div class="player-image-glow"></div>
+
+
+<img
     id="player-image"
     src="../images/logo/logo.png"
-    alt="4fu-Ashok.">
+    alt="4fu-Ashok."
+>
 
-        <div class="player-level-badge">
 
-            <i class="fa-solid fa-fire"></i>
+<div class="player-level-badge">
 
-            LV <span id="player-level-badge">70</span>
+<i class="fa-solid fa-fire"></i>
 
-        </div>
+LV
 
-    </div>
+<span id="player-level-badge">
+70
+</span>
 
 </div>
+
+</div>
+
+</div>
+
+
 
 <div class="player-right">
-    <div class="player-info-panel">
 
-    <div class="player-top">
+<div class="player-info-panel">
 
-    <img src="../images/logo/logo.png"
-         class="team-logo"
-         alt="4 FIRE UNITED">
 
-    <span class="verified-player">
+<div class="player-top">
 
-        <i class="fa-solid fa-circle-check"></i>
+<img
+    src="../images/logo/logo.png"
+    class="team-logo"
+    alt="4 FIRE UNITED"
+>
 
-        OFFICIAL PLAYER
 
-    </span>
+<span class="verified-player">
+
+<i class="fa-solid fa-circle-check"></i>
+
+OFFICIAL PLAYER
+
+</span>
 
 </div>
 
-    <div class="role-badge">
+
+
+<div class="role-badge">
 
 <i class="fa-solid fa-crosshairs"></i>
 
-<span id="player-role">Primary Rusher</span>
+<span id="player-role">
+Primary Rusher
+</span>
 
 </div>
+
+
 
 <div class="player-ribbon">
 
-    <i class="fa-solid fa-shield-halved"></i>
+<i class="fa-solid fa-shield-halved"></i>
 
-    OFFICIAL 4 FIRE UNITED PLAYER
+OFFICIAL 4 FIRE UNITED PLAYER
 
 </div>
 
-    <h1 id="player-name">4fu-Ashok.</h1>
-    <div class="player-meta">
 
-    <span>
-    <i class="fa-solid fa-location-dot"></i>
-    <img
+
+<h1 id="player-name">
+4fu-Ashok.
+</h1>
+
+
+
+<div class="player-meta">
+
+<span>
+
+<i class="fa-solid fa-location-dot"></i>
+
+<img
     id="player-flag"
     src=""
     alt="Flag"
-    class="country-flag">
+    class="country-flag"
+>
 
-<span id="player-country">India</span>
+<span id="player-country">
+India
 </span>
+
+</span>
+
 
 <span>
-    <i class="fa-solid fa-calendar"></i>
-    Since <span id="player-since">2024</span>
+
+<i class="fa-solid fa-calendar"></i>
+
+Since
+
+<span id="player-since">
+2024
+</span>
+
 </span>
 
 </div>
 
-    <div class="player-stats-grid">
 
-    <div class="stat-card rank-card">
 
-        <div id="player-rank-badge" class="rank-badge heroic">
+<div class="player-stats-grid">
 
-            <i id="rank-icon" class="fa-solid fa-crown"></i>
 
-            <span id="player-rank">Heroic</span>
+<div class="stat-card rank-card">
 
-        </div>
+<div
+    id="player-rank-badge"
+    class="rank-badge heroic"
+>
 
-    </div>
+<i
+    id="rank-icon"
+    class="fa-solid fa-crown"
+></i>
 
-    <div class="stat-card">
-
-        <h2 id="player-level">70</h2>
-
-        <span>Level</span>
-
-    </div>
-        
-
-    <div class="stat-card">
-        <h2 id="player-kd">5.82</h2>
-        <span>KD</span>
-    </div>
-
-    <div class="stat-card">
-        <h2 id="player-headshot">81%</h2>
-        <span>Headshot</span>
-    </div>
-
-    <div class="stat-card">
-        <h2 id="player-matches">520</h2>
-        <span>Matches</span>
-    </div>
-
-    <div class="stat-card">
-        <h2 id="player-booyah">158</h2>
-        <span>Booyah</span>
-    </div>
+<span id="player-rank">
+Heroic
+</span>
 
 </div>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<h2 id="player-level">
+70
+</h2>
+
+<span>
+Level
+</span>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<h2 id="player-kd">
+5.82
+</h2>
+
+<span>
+KD
+</span>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<h2 id="player-headshot">
+81%
+</h2>
+
+<span>
+Headshot
+</span>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<h2 id="player-matches">
+520
+</h2>
+
+<span>
+Matches
+</span>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<h2 id="player-booyah">
+158
+</h2>
+
+<span>
+Booyah
+</span>
+
+</div>
+
+
+</div>
+
+
 
 <div class="player-info-bar">
 
-    <div>
-        <strong>UID</strong>
-        <p id="player-uid">2156033329</p>
-    </div>
 
-    <div>
-        <strong>Guild</strong>
-        <p id="player-guild">BL!zereXE</p>
-    </div>
+<div>
 
-    <div>
-        <strong>Language</strong>
-        <p id="player-language">English</p>
-    </div>
+<strong>
+UID
+</strong>
+
+<p id="player-uid">
+2156033329
+</p>
 
 </div>
 
-    <br>
 
-<div class="player-social">
+<div>
 
-    <a id="playerInstagram"
-       href="#"
-       target="_blank"
-       class="btn1">
+<strong>
+Guild
+</strong>
 
-       <i class="fa-brands fa-instagram"></i>
-
-       Instagram
-
-    </a>
-
-    <a id="playerYoutube"
-       href="#"
-       target="_blank"
-       class="btn1">
-
-       <i class="fa-brands fa-youtube"></i>
-
-       YouTube
-
-    </a>
-
-    <a id="playerDiscord"
-       href="#"
-       target="_blank"
-       class="btn1">
-
-       <i class="fa-brands fa-discord"></i>
-
-       Discord
-
-    </a>
-
-    <a id="playerFacebook"
-       href="#"
-       target="_blank"
-       class="btn1">
-
-       <i class="fa-brands fa-facebook"></i>
-
-       Facebook
-
-    </a>
+<p id="player-guild">
+BL!zereXE
+</p>
 
 </div>
-<div id="player-edit-area" style="display:none; margin-top:15px;">
 
-    <a id="edit-player-btn"
-       href="#"
-       class="btn1">
 
-        <i class="fa-solid fa-user-pen"></i>
-        Edit Profile
+<div>
 
-    </a>
+<strong>
+Language
+</strong>
+
+<p id="player-language">
+English
+</p>
 
 </div>
+
+
+</div>
+
 
 <br>
 
-<a href="../team.html" class="btn1">
 
-    ← Back To Team
+
+<div class="player-social">
+
+
+<a
+    id="playerInstagram"
+    href="#"
+    target="_blank"
+    class="btn1"
+>
+
+<i class="fa-brands fa-instagram"></i>
+
+Instagram
 
 </a>
 
-</div> <!-- player-info-panel -->
 
-</div> <!-- player-right -->
+<a
+    id="playerYoutube"
+    href="#"
+    target="_blank"
+    class="btn1"
+>
 
-</div> <!-- player-container -->
+<i class="fa-brands fa-youtube"></i>
+
+YouTube
+
+</a>
+
+
+<a
+    id="playerDiscord"
+    href="#"
+    target="_blank"
+    class="btn1"
+>
+
+<i class="fa-brands fa-discord"></i>
+
+Discord
+
+</a>
+
+
+<a
+    id="playerFacebook"
+    href="#"
+    target="_blank"
+    class="btn1"
+>
+
+<i class="fa-brands fa-facebook"></i>
+
+Facebook
+
+</a>
+
+
+</div>
+
+
+
+<div
+    id="player-edit-area"
+    style="display:none; margin-top:15px;"
+>
+
+<a
+    id="edit-player-btn"
+    href="#"
+    class="btn1"
+>
+
+<i class="fa-solid fa-user-pen"></i>
+
+Edit Profile
+
+</a>
+
+</div>
+
+
+<br>
+
+
+<a
+    href="../team.html"
+    class="btn1"
+>
+
+← Back To Team
+
+</a>
+
+
+</div>
+
+</div>
+
+</div>
 
 </section>
 
 
+
+<!-- =========================================
+     GAME CENTER
+========================================= -->
+
+<section
+    id="game-center-section"
+    class="game-center-section"
+>
+
+
+<div class="game-center-title">
+
+<h5>
+PLAYER GAME CENTER
+</h5>
+
+<h2>
+MY GAMES
+</h2>
+
+<p>
+Games installed on your phone can be opened directly from your 4FU profile.
+</p>
+
+</div>
+
+
+
+<!-- ADD GAME PANEL -->
+
+<div
+    id="game-add-panel"
+    class="game-add-panel"
+    style="display:none;"
+>
+
+<h3>
+
+<i class="fa-solid fa-gamepad"></i>
+
+Add Game To My Profile
+
+</h3>
+
+
+<div class="game-add-row">
+
+
+<select
+    id="game-selector"
+    class="game-select"
+>
+
+<option value="">
+Select a game
+</option>
+
+<option value="freefiremax">
+Free Fire MAX
+</option>
+
+<option value="freefire">
+Free Fire
+</option>
+
+<option value="bgmi">
+BGMI
+</option>
+
+<option value="pubgmobile">
+PUBG Mobile
+</option>
+
+<option value="codmobile">
+Call of Duty Mobile
+</option>
+
+<option value="efootball">
+eFootball
+</option>
+
+<option value="clashofclans">
+Clash of Clans
+</option>
+
+<option value="clashroyale">
+Clash Royale
+</option>
+
+</select>
+
+
+
+<button
+    id="add-game-btn"
+    class="game-add-btn"
+    type="button"
+>
+
+<i class="fa-solid fa-plus"></i>
+
+Add Game
+
+</button>
+
+
+</div>
+
+
+<div class="game-note">
+
+<i class="fa-solid fa-circle-info"></i>
+
+Game link automatically selected hoga. Phone me game installed hone par app open hogi.
+
+</div>
+
+</div>
+
+
+
+<!-- GAMES -->
+
+<div id="player-games-container">
+
+<div class="game-loading">
+
+<i class="fa-solid fa-spinner fa-spin"></i>
+
+Loading games...
+
+</div>
+
+</div>
+
+
+</section>
+
+
+
+<!-- =========================================
+     CAREER
+========================================= -->
 
 <section class="career-section">
 
-    <div class="section-title">
 
-        <h5>PLAYER OVERVIEW</h5>
+<div class="section-title">
 
-        <h2>Career Highlights</h2>
+<h5>
+PLAYER OVERVIEW
+</h5>
 
-    </div>
+<h2>
+Career Highlights
+</h2>
 
-    <div class="career-grid">
+</div>
 
-        <div class="career-card">
-            <i class="fa-solid fa-crosshairs"></i>
-            <h3 id="player-kd-copy">5.82</h3>
-            <p>Kill / Death Ratio</p>
-        </div>
 
-        <div class="career-card">
-            <i class="fa-solid fa-bullseye"></i>
-            <h3 id="player-headshot-copy">81%</h3>
-            <p>Headshot Rate</p>
-        </div>
 
-        <div class="career-card">
-            <i class="fa-solid fa-trophy"></i>
-            <h3 id="player-booyah-copy">158</h3>
-            <p>Booyah Wins</p>
-        </div>
+<div class="career-grid">
 
-        <div class="career-card">
-            <i class="fa-solid fa-gamepad"></i>
-            <h3 id="player-matches-copy">520</h3>
-            <p>Total Matches</p>
-        </div>
 
-    </div>
+<div class="career-card">
+
+<i class="fa-solid fa-crosshairs"></i>
+
+<h3 id="player-kd-copy">
+5.82
+</h3>
+
+<p>
+Kill / Death Ratio
+</p>
+
+</div>
+
+
+
+<div class="career-card">
+
+<i class="fa-solid fa-bullseye"></i>
+
+<h3 id="player-headshot-copy">
+81%
+</h3>
+
+<p>
+Headshot Rate
+</p>
+
+</div>
+
+
+
+<div class="career-card">
+
+<i class="fa-solid fa-trophy"></i>
+
+<h3 id="player-booyah-copy">
+158
+</h3>
+
+<p>
+Booyah Wins
+</p>
+
+</div>
+
+
+
+<div class="career-card">
+
+<i class="fa-solid fa-gamepad"></i>
+
+<h3 id="player-matches-copy">
+520
+</h3>
+
+<p>
+Total Matches
+</p>
+
+</div>
+
+
+</div>
 
 </section>
+
+
+
+<!-- =========================================
+     FAVORITE WEAPON
+========================================= -->
 
 <section class="favorite-weapon">
 
-    <div class="section-title">
-        <h5>LOADOUT</h5>
-        <h2>Favorite Weapon</h2>
-    </div>
 
-    <div class="weapon-card">
+<div class="section-title">
 
-        <div class="weapon-image">
+<h5>
+LOADOUT
+</h5>
 
-            <img id="player-weapon-image"
-                 src="../images/logo/logo.png"
-                 alt="Weapon">
+<h2>
+Favorite Weapon
+</h2>
 
-        </div>
+</div>
 
-        <div class="weapon-info">
 
-            <h2 id="player-weapon">M1887</h2>
 
-            <h4 id="player-weapon-type">
-                SHOTGUN
-            </h4>
+<div class="weapon-card">
 
-            <div class="weapon-stars">
-                ★★★★★
-            </div>
 
-            <p id="player-weapon-quote">
-                One Tap King
-            </p>
+<div class="weapon-image">
 
-        </div>
+<img
+    id="player-weapon-image"
+    src="../images/logo/logo.png"
+    alt="Weapon"
+>
 
-    </div>
+</div>
+
+
+
+<div class="weapon-info">
+
+<h2 id="player-weapon">
+M1887
+</h2>
+
+<h4 id="player-weapon-type">
+SHOTGUN
+</h4>
+
+<div class="weapon-stars">
+★★★★★
+</div>
+
+<p id="player-weapon-quote">
+One Tap King
+</p>
+
+</div>
+
+
+</div>
 
 </section>
 
+
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+
 <footer>
 
-    <h2>4 FIRE UNITED</h2>
 
-    <p>Forged In Fire. United In Victory.</p>
+<h2>
+4 FIRE UNITED
+</h2>
 
-    <div class="footer-social">
 
-        <a href="#"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#"><i class="fa-brands fa-youtube"></i></a>
-        <a href="#"><i class="fa-brands fa-discord"></i></a>
-        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+<p>
+Forged In Fire. United In Victory.
+</p>
 
-    </div>
 
-    <div class="footer-links">
+<div class="footer-social">
 
-        <a href="../index.html">Home</a>
-        <a href="../team.html">Team</a>
-        <a href="../gallery.html">Gallery</a>
-        <a href="../contact.html">Contact</a>
+<a href="#">
+<i class="fa-brands fa-instagram"></i>
+</a>
 
-    </div>
+<a href="#">
+<i class="fa-brands fa-youtube"></i>
+</a>
 
-    <p class="copyright">
-        © <span id="year"></span> 4 FIRE UNITED
-    </p>
+<a href="#">
+<i class="fa-brands fa-discord"></i>
+</a>
+
+<a href="#">
+<i class="fa-brands fa-facebook"></i>
+</a>
+
+</div>
+
+
+
+<div class="footer-links">
+
+<a href="../index.html">
+Home
+</a>
+
+<a href="../team.html">
+Team
+</a>
+
+<a href="../gallery.html">
+Gallery
+</a>
+
+<a href="../contact.html">
+Contact
+</a>
+
+</div>
+
+
+
+<p class="copyright">
+
+©
+
+<span id="year"></span>
+
+4 FIRE UNITED
+
+</p>
+
 
 </footer>
 
+
+
+<!-- =========================================
+     EXISTING SCRIPTS
+========================================= -->
+
 <script src="../js/main.js?v=1783829699314"></script>
+
 <script src="../js/animation.js?v=1783829699314"></script>
+
 <script src="../js/particles.js?v=1783829699314"></script>
 
 
-    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
 
+
 <script src="../js/firebase.js?v=1783829699314"></script>
+
 <script src="../js/players.js?v=1783829699314"></script>
 
+
+
+<!-- =========================================
+     GAME CENTER + PLAYER EDIT ACCESS
+========================================= -->
+
+<script>
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const playerKey =
+    params.get("id");
+
+
+
+/* =========================================
+   GAME DATABASE
+========================================= */
+
+const GAME_DATABASE = {
+
+    freefiremax: {
+
+        name: "Free Fire MAX",
+
+        icon: "fa-solid fa-fire",
+
+        description: "Garena Free Fire MAX",
+
+        link: "freefiremax://"
+
+    },
+
+
+    freefire: {
+
+        name: "Free Fire",
+
+        icon: "fa-solid fa-fire-flame-curved",
+
+        description: "Garena Free Fire",
+
+        link: "freefire://"
+
+    },
+
+
+    bgmi: {
+
+        name: "BGMI",
+
+        icon: "fa-solid fa-crosshairs",
+
+        description: "Battlegrounds Mobile India",
+
+        link: "bgmi://"
+
+    },
+
+
+    pubgmobile: {
+
+        name: "PUBG Mobile",
+
+        icon: "fa-solid fa-gun",
+
+        description: "PUBG Mobile",
+
+        link: "pubgmobile://"
+
+    },
+
+
+    codmobile: {
+
+        name: "Call of Duty Mobile",
+
+        icon: "fa-solid fa-bullseye",
+
+        description: "Call of Duty Mobile",
+
+        link: "codm://"
+
+    },
+
+
+    efootball: {
+
+        name: "eFootball",
+
+        icon: "fa-solid fa-futbol",
+
+        description: "eFootball Mobile",
+
+        link: "efootball://"
+
+    },
+
+
+    clashofclans: {
+
+        name: "Clash of Clans",
+
+        icon: "fa-solid fa-shield-halved",
+
+        description: "Clash of Clans",
+
+        link: "clashofclans://"
+
+    },
+
+
+    clashroyale: {
+
+        name: "Clash Royale",
+
+        icon: "fa-solid fa-crown",
+
+        description: "Clash Royale",
+
+        link: "clashroyale://"
+
+    }
+
+};
+
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const gameAddPanel =
+    document.getElementById(
+        "game-add-panel"
+    );
+
+
+const gameSelector =
+    document.getElementById(
+        "game-selector"
+    );
+
+
+const addGameBtn =
+    document.getElementById(
+        "add-game-btn"
+    );
+
+
+const gamesContainer =
+    document.getElementById(
+        "player-games-container"
+    );
+
+
+
+/* =========================================
+   LOAD PLAYER
+========================================= */
+
+function loadPlayerGameCenter() {
+
+    if (!playerKey) {
+
+        gamesContainer.innerHTML = `
+
+            <div class="no-games">
+
+                <i class="fa-solid fa-user-slash"></i>
+
+                <h3>
+                    Player Not Found
+                </h3>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    db.collection("players")
+        .doc(playerKey)
+        .get()
+
+        .then((doc) => {
+
+            if (!doc.exists) {
+
+                gamesContainer.innerHTML = `
+
+                    <div class="no-games">
+
+                        <i class="fa-solid fa-user-slash"></i>
+
+                        <h3>
+                            Player Not Found
+                        </h3>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            const player =
+                doc.data();
+
+
+            renderPlayerGames(
+                player.games || []
+            );
+
+        })
+
+        .catch((error) => {
+
+            console.error(
+                "Game Center Error:",
+                error
+            );
+
+
+            gamesContainer.innerHTML = `
+
+                <div class="no-games">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <h3>
+                        Unable To Load Games
+                    </h3>
+
+                </div>
+
+            `;
+
+        });
+
+}
+
+
+
+/* =========================================
+   RENDER GAMES
+========================================= */
+
+function renderPlayerGames(games) {
+
+    if (!games || games.length === 0) {
+
+        gamesContainer.innerHTML = `
+
+            <div class="no-games">
+
+                <i class="fa-solid fa-gamepad"></i>
+
+                <h3>
+                    No Games Added
+                </h3>
+
+                <p>
+                    Player ne abhi koi game add nahi kiya.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    gamesContainer.innerHTML = `
+
+        <div class="player-games-grid">
+
+            ${games.map(
+                (game, index) => {
+
+                    const info =
+                        GAME_DATABASE[
+                            game.gameId
+                        ];
+
+
+                    if (!info) {
+
+                        return "";
+
+                    }
+
+
+                    return `
+
+                        <div
+                            class="game-card"
+                        >
+
+                            <div
+                                class="game-icon"
+                            >
+
+                                <i
+                                    class="${info.icon}"
+                                ></i>
+
+                            </div>
+
+
+                            <h3>
+
+                                ${escapeGameText(
+                                    info.name
+                                )}
+
+                            </h3>
+
+
+                            <p>
+
+                                ${escapeGameText(
+                                    info.description
+                                )}
+
+                            </p>
+
+
+                            <a
+
+                                href="${info.link}"
+
+                                class="open-game-btn"
+
+                                onclick="openGame('${info.link}')"
+
+                            >
+
+                                <i
+                                    class="fa-solid fa-play"
+                                ></i>
+
+                                Open Game
+
+                            </a>
+
+
+                            ${
+                                game.owner === true
+                                    ? `
+
+                                        <button
+
+                                            type="button"
+
+                                            class="remove-game-btn"
+
+                                            onclick="removeGame('${game.gameId}')"
+
+                                            title="Remove Game"
+
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-xmark"
+                                            ></i>
+
+                                        </button>
+
+                                    `
+                                    : ""
+                            }
+
+                        </div>
+
+                    `;
+
+                }
+            ).join("")}
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =========================================
+   ADD GAME
+========================================= */
+
+if (addGameBtn) {
+
+    addGameBtn.addEventListener(
+        "click",
+        addGame
+    );
+
+}
+
+
+
+function addGame() {
+
+    const gameId =
+        gameSelector.value;
+
+
+    if (!gameId) {
+
+        alert(
+            "Please select a game."
+        );
+
+        return;
+
+    }
+
+
+    const game =
+        GAME_DATABASE[gameId];
+
+
+    if (!game) {
+
+        alert(
+            "Invalid game selected."
+        );
+
+        return;
+
+    }
+
+
+    addGameBtn.disabled = true;
+
+
+    db.collection("players")
+        .doc(playerKey)
+        .get()
+
+        .then((doc) => {
+
+            if (!doc.exists) {
+
+                throw new Error(
+                    "Player profile not found."
+                );
+
+            }
+
+
+            const player =
+                doc.data();
+
+
+            let games =
+                Array.isArray(player.games)
+                    ? player.games
+                    : [];
+
+
+            const alreadyAdded =
+                games.some(
+                    item =>
+                        item.gameId === gameId
+                );
+
+
+            if (alreadyAdded) {
+
+                throw new Error(
+                    "This game is already added."
+                );
+
+            }
+
+
+            games.push({
+
+                gameId: gameId,
+
+                name: game.name,
+
+                link: game.link,
+
+                owner: true,
+
+                addedAt:
+                    new Date().toISOString()
+
+            });
+
+
+            return db.collection("players")
+                .doc(playerKey)
+                .update({
+
+                    games: games
+
+                });
+
+        })
+
+        .then(() => {
+
+            alert(
+                game.name +
+                " added successfully!"
+            );
+
+
+            gameSelector.value = "";
+
+
+            loadPlayerGameCenter();
+
+        })
+
+        .catch((error) => {
+
+            console.error(
+                "Add game error:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Unable to add game."
+            );
+
+        })
+
+        .finally(() => {
+
+            addGameBtn.disabled = false;
+
+        });
+
+}
+
+
+
+/* =========================================
+   REMOVE GAME
+========================================= */
+
+function removeGame(gameId) {
+
+    if (
+        !confirm(
+            "Remove this game from your profile?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    db.collection("players")
+        .doc(playerKey)
+        .get()
+
+        .then((doc) => {
+
+            if (!doc.exists) {
+
+                throw new Error(
+                    "Player profile not found."
+                );
+
+            }
+
+
+            const player =
+                doc.data();
+
+
+            const games =
+                Array.isArray(player.games)
+                    ? player.games
+                    : [];
+
+
+            const updatedGames =
+                games.filter(
+                    game =>
+                        game.gameId !== gameId
+                );
+
+
+            return db.collection("players")
+                .doc(playerKey)
+                .update({
+
+                    games: updatedGames
+
+                });
+
+        })
+
+        .then(() => {
+
+            loadPlayerGameCenter();
+
+        })
+
+        .catch((error) => {
+
+            console.error(
+                "Remove game error:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Unable to remove game."
+            );
+
+        });
+
+}
+
+
+
+/* =========================================
+   OPEN GAME
+========================================= */
+
+function openGame(link) {
+
+    if (!link) {
+
+        return;
+
+    }
+
+
+    /*
+        Browser app ko direct open
+        karne ki koshish karega.
+
+        Agar app installed nahi hai,
+        browser normally kuch nahi karega.
+    */
+
+    setTimeout(() => {
+
+        window.location.href = link;
+
+    }, 100);
+
+}
+
+
+
+/* =========================================
+   PLAYER LOGIN ACCESS
+========================================= */
+
+auth.onAuthStateChanged(
+    (user) => {
+
+        if (!user) {
+
+            loadPlayerGameCenter();
+
+            return;
+
+        }
+
+
+        db.collection("players")
+            .doc(playerKey)
+            .get()
+
+            .then((doc) => {
+
+                if (!doc.exists) {
+
+                    loadPlayerGameCenter();
+
+                    return;
+
+                }
+
+
+                const player =
+                    doc.data();
+
+
+                const loginEmail =
+                    String(
+                        player.loginEmail || ""
+                    ).toLowerCase();
+
+
+                const userEmail =
+                    String(
+                        user.email || ""
+                    ).toLowerCase();
+
+
+                /*
+                    Sirf apni profile ka owner
+                    Game Center me Add Game
+                    dekh sakta hai.
+                */
+
+                if (
+                    loginEmail &&
+                    loginEmail === userEmail
+                ) {
+
+                    gameAddPanel.style.display =
+                        "block";
+
+
+                    /*
+                        Existing games ko owner
+                        controls ke saath mark karo.
+                    */
+
+                    db.collection("players")
+                        .doc(playerKey)
+                        .get()
+
+                        .then((doc) => {
+
+                            if (!doc.exists) {
+
+                                return;
+
+                            }
+
+
+                            const data =
+                                doc.data();
+
+
+                            const games =
+                                Array.isArray(
+                                    data.games
+                                )
+                                    ? data.games
+                                    : [];
+
+
+                            renderPlayerGames(
+                                games.map(
+                                    game => ({
+                                        ...game,
+                                        owner: true
+                                    })
+                                )
+                            );
+
+                        });
+
+                }
+
+
+                loadPlayerGameCenter();
+
+            })
+
+            .catch((error) => {
+
+                console.error(
+                    "Auth/player error:",
+                    error
+                );
+
+                loadPlayerGameCenter();
+
+            });
+
+    }
+);
+
+
+
+/* =========================================
+   HTML ESCAPE
+========================================= */
+
+function escapeGameText(value) {
+
+    return String(value || "")
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+/* =========================================
+   INITIAL LOAD
+========================================= */
+
+loadPlayerGameCenter();
+
+</script>
+
+
+
+<!-- =========================================
+     WEAPON PARALLAX
+========================================= -->
+
+<script>
+
+const weaponCard =
+    document.querySelector(
+        ".weapon-card"
+    );
+
+
+const weaponImg =
+    document.querySelector(
+        ".weapon-image img"
+    );
+
+
+if (
+    weaponCard &&
+    weaponImg
+) {
+
+    weaponCard.addEventListener(
+        "mousemove",
+        (e) => {
+
+            const rect =
+                weaponCard.getBoundingClientRect();
+
+
+            const x =
+                e.clientX -
+                rect.left;
+
+
+            const y =
+                e.clientY -
+                rect.top;
+
+
+            const moveX =
+                (
+                    x -
+                    rect.width / 2
+                ) / 20;
+
+
+            const moveY =
+                (
+                    y -
+                    rect.height / 2
+                ) / 20;
+
+
+            weaponImg.style.transform =
+                `
+                translate(
+                    ${moveX}px,
+                    ${moveY}px
+                )
+                rotate(
+                    ${moveX / 2}deg
+                )
+                scale(1.08)
+                `;
+
+        }
+    );
+
+
+    weaponCard.addEventListener(
+        "mouseleave",
+        () => {
+
+            weaponImg.style.transform =
+                "translate(0,0) rotate(0deg) scale(1)";
+
+        }
+    );
+
+}
+
+</script>
+
+
 </body>
+
 </html>
