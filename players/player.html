@@ -27,249 +27,478 @@
 
 <style>
 
-/* =========================================
-   GAME CENTER
-========================================= */
+/* ================================
+   4FU GAME CENTER
+================================ */
 
 .game-center-section {
     width: 100%;
-    padding: 80px 8%;
-    background: #080808;
+    max-width: 1200px;
+    margin: 70px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 .game-center-title {
     text-align: center;
-    margin-bottom: 45px;
+    margin-bottom: 35px;
 }
 
 .game-center-title h5 {
+    margin: 0 0 8px;
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
     color: #ff6a00;
-    font-size: 15px;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
+    opacity: .8;
 }
 
 .game-center-title h2 {
+    margin: 0;
     font-family: "Bebas Neue", sans-serif;
     font-size: 48px;
-    color: #ffffff;
-    margin: 0;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    color: #fff;
 }
 
 .game-center-title p {
+    margin: 10px auto 0;
+    max-width: 650px;
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
     color: #999;
-    margin-top: 10px;
 }
 
 
-/* =========================================
-   ADD GAME PANEL
-========================================= */
+/* ================================
+   ADD GAME
+================================ */
 
 .game-add-panel {
+    width: 100%;
     max-width: 1000px;
     margin: 0 auto 40px;
     padding: 25px;
-    border: 1px solid rgba(255, 106, 0, 0.25);
-    border-radius: 18px;
-    background: #111111;
-    box-shadow: 0 0 25px rgba(255, 106, 0, 0.08);
+    box-sizing: border-box;
+
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.08),
+            rgba(255,255,255,.025)
+        );
+
+    backdrop-filter: blur(15px);
 }
 
 .game-add-panel h3 {
+    margin: 0 0 18px;
     color: #ff6a00;
-    margin-bottom: 18px;
-    font-size: 20px;
+    font-family: "Poppins", sans-serif;
 }
 
 .game-add-row {
     display: flex;
-    gap: 12px;
     align-items: center;
+    gap: 12px;
 }
 
 .game-select {
     flex: 1;
+    min-width: 0;
     height: 52px;
     padding: 0 16px;
-    border-radius: 10px;
-    border: 1px solid #333;
-    background: #191919;
-    color: #ffffff;
+
+    box-sizing: border-box;
+
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.15);
+
+    background: #111;
+    color: #fff;
+
+    outline: none;
+
     font-family: "Poppins", sans-serif;
     font-size: 15px;
-    outline: none;
 }
 
 .game-select:focus {
     border-color: #ff6a00;
 }
 
+.game-select option {
+    background: #111;
+    color: #fff;
+}
+
 .game-add-btn {
     height: 52px;
+    flex-shrink: 0;
+
     padding: 0 24px;
+
     border: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #ff6a00, #ff8500);
-    color: #ffffff;
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        #ff3b00,
+        #ff6a00
+    );
+
+    color: #fff;
+
     font-family: "Poppins", sans-serif;
     font-weight: 600;
+
     cursor: pointer;
-    transition: 0.3s ease;
+
+    transition: .25s ease;
 }
 
 .game-add-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 106, 0, 0.25);
+    box-shadow: 0 10px 25px rgba(255,70,0,.3);
 }
 
-.game-add-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
+.game-help-text {
+    margin: 14px 0 0;
 
-.game-note {
-    margin-top: 12px;
-    color: #777;
     font-size: 12px;
+    color: #777;
 }
 
 
-/* =========================================
+/* ================================
    GAMES GRID
-========================================= */
+================================ */
 
 .player-games-grid {
-    max-width: 1000px;
+    width: 100%;
+    max-width: 1100px;
+
     margin: 0 auto;
+
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+
+    grid-template-columns: 1fr;
+
+    gap: 22px;
 }
+
+
+/* ================================
+   GAME CARD
+================================ */
 
 .game-card {
     position: relative;
-    padding: 25px;
-    min-height: 190px;
-    border-radius: 18px;
-    border: 1px solid #292929;
+
+    width: 100%;
+    min-height: 150px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 22px 26px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    border: 1px solid rgba(255,255,255,.10);
+
     background:
         radial-gradient(
-            circle at top right,
-            rgba(255, 106, 0, 0.10),
-            transparent 45%
+            circle at left center,
+            rgba(255,80,0,.13),
+            transparent 38%
         ),
-        #111111;
-    transition: 0.3s ease;
-    overflow: hidden;
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.08),
+            rgba(255,255,255,.025)
+        );
+
+    backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.25);
+
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
 }
 
 .game-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255, 106, 0, 0.55);
-    box-shadow: 0 12px 35px rgba(255, 106, 0, 0.10);
+    transform: translateY(-4px);
+
+    border-color:
+        rgba(255,90,20,.45);
+
+    box-shadow:
+        0 20px 55px rgba(255,70,0,.12);
 }
 
+
+/* ================================
+   GAME LOGO
+================================ */
+
 .game-icon {
-    width: 58px;
-    height: 58px;
-    border-radius: 14px;
+    position: relative;
+    z-index: 2;
+
+    width: 82px;
+    height: 82px;
+
+    min-width: 82px;
+
+    flex-shrink: 0;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 106, 0, 0.12);
-    color: #ff6a00;
-    font-size: 25px;
-    margin-bottom: 18px;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    background: rgba(0,0,0,.35);
+
+    border: 1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.3);
 }
 
-.game-card h3 {
-    color: #ffffff;
-    margin: 0 0 5px;
-    font-size: 20px;
+.game-icon img {
+    width: 100%;
+    height: 100%;
+
+    padding: 4px;
+
+    box-sizing: border-box;
+
+    object-fit: contain;
+
+    display: block;
+
+    transition:
+        transform .35s ease;
 }
 
-.game-card p {
+.game-card:hover .game-icon img {
+    transform: scale(1.08);
+}
+
+
+/* ================================
+   GAME INFO
+================================ */
+
+.game-info {
+    position: relative;
+    z-index: 2;
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding-right: 40px;
+}
+
+.game-info h3 {
+    margin: 0 0 6px;
+
+    color: #fff;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    white-space: normal;
+
+    overflow-wrap: anywhere;
+}
+
+.game-info p {
+    margin: 0;
+
     color: #777;
+
+    font-family: "Poppins", sans-serif;
+
     font-size: 13px;
-    margin: 0 0 18px;
+}
+
+
+/* ================================
+   OPEN GAME
+================================ */
+
+.game-action {
+    position: relative;
+    z-index: 2;
+
+    flex-shrink: 0;
+
+    margin-left: auto;
 }
 
 .open-game-btn {
+    min-width: 180px;
+    height: 52px;
+
     display: inline-flex;
+
     align-items: center;
+    justify-content: center;
+
     gap: 8px;
-    padding: 9px 15px;
-    border-radius: 8px;
-    background: #ff6a00;
-    color: #ffffff;
+
+    padding: 0 18px;
+
+    box-sizing: border-box;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    color: #fff;
+
     text-decoration: none;
+
+    font-family: "Poppins", sans-serif;
+
     font-size: 13px;
+
     font-weight: 600;
-    transition: 0.3s ease;
+
+    white-space: nowrap;
+
+    transition: .25s ease;
 }
 
 .open-game-btn:hover {
-    background: #ff8500;
+    background:
+        linear-gradient(
+            135deg,
+            #ff3b00,
+            #ff6a00
+        );
+
+    border-color: transparent;
+
     transform: translateY(-2px);
 }
 
+
+/* ================================
+   DELETE
+================================ */
+
 .remove-game-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 60, 60, 0.25);
-    background: rgba(255, 60, 60, 0.08);
-    color: #ff5555;
+
+    z-index: 10;
+
+    top: 10px;
+    right: 10px;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #d92929;
+
+    color: #fff;
+
     cursor: pointer;
+
+    transition: .2s ease;
 }
 
 .remove-game-btn:hover {
-    background: rgba(255, 60, 60, 0.18);
+    transform: scale(1.08) rotate(90deg);
+
+    background: #ff2020;
 }
 
-.no-games {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 45px 20px;
+
+/* ================================
+   LOADING / EMPTY
+================================ */
+
+.no-games,
+.games-loading {
+    width: 100%;
+
+    min-height: 170px;
+
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
     text-align: center;
-    border: 1px dashed #333;
-    border-radius: 18px;
-    color: #777;
-}
 
-.no-games i {
-    color: #ff6a00;
-    font-size: 35px;
-    margin-bottom: 15px;
+    border-radius: 20px;
+
+    border: 1px dashed rgba(255,255,255,.12);
+
+    background: rgba(255,255,255,.025);
 }
 
 
-/* =========================================
+/* ================================
    MOBILE
-========================================= */
+================================ */
 
-@media (max-width: 900px) {
-
-    .player-games-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-@media (max-width: 600px) {
+@media (max-width: 700px) {
 
     .game-center-section {
-        padding: 60px 5%;
+        margin: 45px auto;
+        padding: 0 14px;
     }
 
     .game-center-title h2 {
         font-size: 38px;
+    }
+
+    .game-add-panel {
+        padding: 18px;
     }
 
     .game-add-row {
@@ -282,27 +511,293 @@
         width: 100%;
     }
 
-    .player-games-grid {
-        grid-template-columns: 1fr;
+    .game-card {
+        min-height: 120px;
+
+        padding: 16px;
+
+        gap: 13px;
+
+        border-radius: 18px;
     }
 
+    .game-icon {
+        width: 64px;
+        height: 64px;
+
+        min-width: 64px;
+
+        border-radius: 15px;
+    }
+
+    .game-info {
+        padding-right: 25px;
+    }
+
+    .game-info h3 {
+        font-size: 16px;
+    }
+
+    .game-info p {
+        font-size: 11px;
+    }
+
+    .open-game-btn {
+        width: 120px;
+        min-width: 120px;
+
+        height: 42px;
+
+        padding: 0 8px;
+
+        font-size: 11px;
+    }
+
+    .remove-game-btn {
+        width: 29px;
+        height: 29px;
+
+        top: 8px;
+        right: 8px;
+    }
 }
 
 
-/* =========================================
-   GAME CENTER LOADING
-========================================= */
+/* ================================
+   SMALL MOBILE
+================================ */
 
-.game-loading {
+@media (max-width: 480px) {
+
+    .game-card {
+        min-height: 105px;
+
+        padding: 14px;
+
+        gap: 10px;
+    }
+
+    .game-icon {
+        width: 56px;
+        height: 56px;
+
+        min-width: 56px;
+    }
+
+    .game-info {
+        padding-right: 20px;
+    }
+
+    .game-info h3 {
+        font-size: 14px;
+    }
+
+    .game-info p {
+        font-size: 10px;
+    }
+
+    .open-game-btn {
+        width: 96px;
+        min-width: 96px;
+
+        height: 36px;
+
+        padding: 0 5px;
+
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   4FU LIVE FREE FIRE STATS - ADDITION ONLY
+========================================================= */
+.ff-live-stats-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 70px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+.ff-live-title {
     text-align: center;
-    color: #777;
-    padding: 30px;
+    margin-bottom: 28px;
+}
+.ff-live-title h5 {
+    margin: 0 0 8px;
+    color: #ff6a00;
+    font: 700 13px "Poppins", sans-serif;
+    letter-spacing: 3px;
+}
+.ff-live-title h2 {
+    margin: 0;
+    color: #fff;
+    font: 48px "Bebas Neue", sans-serif;
+    letter-spacing: 2px;
+}
+.ff-live-sync {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 9px;
+    color: #888;
+    font: 600 11px "Poppins", sans-serif;
+}
+.ff-live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #20d46b;
+    box-shadow: 0 0 12px rgba(32,212,107,.8);
+}
+.ff-live-top-grid,
+.ff-live-mode-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+.ff-live-card {
+    min-height: 115px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+    backdrop-filter: blur(12px);
+    box-sizing: border-box;
+}
+.ff-live-card i {
+    color: #ff6a00;
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+.ff-live-card strong {
+    display: block;
+    color: #fff;
+    font: 700 24px "Poppins", sans-serif;
+    line-height: 1.2;
+}
+.ff-live-card span {
+    display: block;
+    margin-top: 5px;
+    color: #888;
+    font: 500 11px "Poppins", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.ff-live-modes {
+    margin-top: 22px;
+}
+.ff-live-modes-title {
+    margin: 0 0 14px;
+    color: #fff;
+    font: 700 18px "Poppins", sans-serif;
+}
+.ff-live-mode-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.ff-live-mode-card {
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.035);
+}
+.ff-live-mode-card h3 {
+    margin: 0 0 14px;
+    color: #ff6a00;
+    font: 700 18px "Poppins", sans-serif;
+}
+.ff-live-mode-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    color: #999;
+    font: 500 12px "Poppins", sans-serif;
+}
+.ff-live-mode-row:last-child { border-bottom: 0; }
+.ff-live-mode-row b { color: #fff; }
+@media (max-width: 800px) {
+    .ff-live-top-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ff-live-mode-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+    .ff-live-stats-section { margin: 45px auto; padding: 0 14px; }
+    .ff-live-title h2 { font-size: 38px; }
+    .ff-live-top-grid { gap: 10px; }
+    .ff-live-card { min-height: 100px; padding: 15px; }
+    .ff-live-card strong { font-size: 20px; }
 }
 
-.game-loading i {
-    color: #ff6a00;
-    margin-right: 8px;
-}
+
+/* =========================================================
+   4FU LIVE INTELLIGENCE - PREMIUM PROFILE UI
+========================================================= */
+.ffx-section{width:100%;max-width:1200px;margin:85px auto 70px;padding:0 20px;box-sizing:border-box;position:relative}
+.ffx-section:before{content:"";position:absolute;left:5%;right:5%;top:80px;height:420px;background:radial-gradient(circle,rgba(255,75,0,.12),transparent 68%);filter:blur(45px);pointer-events:none}
+.ffx-head{position:relative;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px}
+.ffx-kicker{display:inline-flex;align-items:center;gap:8px;color:#ff7620;font:700 11px "Poppins",sans-serif;letter-spacing:2px}
+.ffx-head h2{margin:8px 0 5px;color:#fff;font:52px "Bebas Neue",sans-serif;letter-spacing:3px}
+.ffx-head p{margin:0;color:#858585;font:500 12px "Poppins",sans-serif}
+.ffx-live-pill{display:flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid rgba(32,212,107,.2);border-radius:999px;background:rgba(32,212,107,.04);white-space:nowrap}
+.ffx-live-pill span{width:7px;height:7px;border-radius:50%;background:#20d46b;box-shadow:0 0 14px #20d46b;animation:ffxPulse 1.4s infinite}
+.ffx-live-pill b{color:#d7ffe6;font:700 10px "Poppins",sans-serif;letter-spacing:1px}
+.ffx-live-pill small{color:#777;font:500 9px "Poppins",sans-serif}
+.ffx-overview{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+.ffx-main-card,.ffx-rank-card,.ffx-total-grid>div,.ffx-mode-card,.ffx-info-card{border:1px solid rgba(255,255,255,.09);background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.018));backdrop-filter:blur(17px);box-shadow:0 18px 50px rgba(0,0,0,.22)}
+.ffx-main-card,.ffx-rank-card{border-radius:22px;padding:22px}
+.ffx-card-top{display:flex;justify-content:space-between;align-items:center;color:#9a9a9a;font:700 10px "Poppins",sans-serif;letter-spacing:1.2px}
+.ffx-card-top i{color:#ff6a00;margin-right:6px}.ffx-card-top em{font-style:normal;color:#20d46b;font-size:9px}
+.ffx-big-stat{margin:22px 0 18px}.ffx-big-stat strong{display:block;color:#fff;font:700 48px "Poppins",sans-serif;line-height:1}.ffx-big-stat span{color:#777;font:700 9px "Poppins",sans-serif;letter-spacing:1.4px}
+.ffx-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ffx-metrics div{padding:12px;border-radius:13px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}
+.ffx-metrics b{display:block;color:#fff;font:700 18px "Poppins",sans-serif}.ffx-metrics span{color:#777;font:600 8px "Poppins",sans-serif;letter-spacing:1px}
+.ffx-rank-line{display:flex;justify-content:space-between;align-items:center;margin-top:14px;color:#777;font:600 9px "Poppins",sans-serif;letter-spacing:.7px}.ffx-rank-line b{color:#fff;font-size:12px}
+.ffx-progress{height:4px;margin-top:7px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}.ffx-progress i{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#ff3b00,#ff9b32);box-shadow:0 0 12px rgba(255,90,20,.5);transition:width 1s ease}
+.ffx-new-grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}.ffx-new-stat{min-height:112px;padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.018));box-shadow:0 18px 50px rgba(0,0,0,.22);transition:.25s}.ffx-new-stat:hover{transform:translateY(-4px);border-color:rgba(255,106,0,.3)}.ffx-new-stat i{display:block;color:#ff6a00;font-size:15px;margin-bottom:12px}.ffx-new-stat span{display:block;color:#777;font:600 8px "Poppins",sans-serif;letter-spacing:1px}.ffx-new-stat b{display:block;margin-top:5px;color:#fff;font:700 23px "Poppins",sans-serif}.ffx-new-columns{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:16px}.ffx-new-card{min-height:0}.ffx-mode-grid-new{margin-top:0}.ffx-mode-grid-new .ffx-mode-foot{gap:10px;flex-wrap:wrap}.ffx-mode-grid-new .ffx-mode-foot span{white-space:nowrap}@media(max-width:900px){.ffx-new-grid{grid-template-columns:repeat(2,1fr)}.ffx-new-columns{grid-template-columns:1fr}}@media(max-width:600px){.ffx-new-grid{grid-template-columns:1fr 1fr;gap:9px}.ffx-new-stat{min-height:94px;padding:13px}.ffx-new-stat b{font-size:19px}.ffx-mode-grid-new .ffx-mode-foot{font-size:8px}}
+.ffx-total-grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.ffx-total-grid>div{min-height:92px;padding:15px;border-radius:17px;box-sizing:border-box;transition:.25s}.ffx-total-grid>div:hover{transform:translateY(-3px);border-color:rgba(255,106,0,.3)}
+.ffx-total-grid i{display:block;color:#ff6a00;font-size:14px;margin-bottom:9px}.ffx-total-grid b{display:block;color:#fff;font:700 20px "Poppins",sans-serif}.ffx-total-grid span{color:#777;font:600 8px "Poppins",sans-serif;letter-spacing:1px}
+.ffx-subhead{display:flex;justify-content:space-between;align-items:center;margin:28px 0 14px;color:#fff;font:700 14px "Poppins",sans-serif}.ffx-subhead span{border-left:3px solid #ff6a00;padding-left:9px}.ffx-subhead small{color:#666;font:600 8px "Poppins",sans-serif;letter-spacing:1px}
+.ffx-mode-grid{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ffx-mode-card{border-radius:21px;padding:19px;transition:.3s}.ffx-mode-card:hover{transform:translateY(-5px);border-color:rgba(255,106,0,.3)}
+.ffx-mode-card header{display:flex;align-items:center;gap:11px;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.06)}
+.ffx-mode-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:11px;color:#ff6a00;background:rgba(255,106,0,.08);border:1px solid rgba(255,106,0,.13)}
+.ffx-mode-card h3{margin:0;color:#fff;font:700 16px "Poppins",sans-serif}.ffx-mode-card header small{color:#777;font:500 9px "Poppins",sans-serif}
+.ffx-mode-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}.ffx-mode-stats div{padding:9px 5px;text-align:center;border-radius:10px;background:rgba(255,255,255,.025)}
+.ffx-mode-stats b{display:block;color:#fff;font:700 14px "Poppins",sans-serif}.ffx-mode-stats span{display:block;margin-top:2px;color:#777;font:500 7px "Poppins",sans-serif;text-transform:uppercase}
+.ffx-mode-foot{display:flex;justify-content:space-between;margin-top:13px;color:#777;font:600 9px "Poppins",sans-serif}.ffx-mode-foot b{color:#ff8a45}
+.ffx-bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.ffx-info-card{border-radius:21px;padding:0 20px 18px}.ffx-info-card .ffx-subhead{margin:20px 0 12px}
+.ffx-info-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ffx-info-list div{display:flex;justify-content:space-between;gap:8px;padding:10px 11px;border-radius:10px;background:rgba(255,255,255,.025)}.ffx-info-list span{color:#777;font:500 9px "Poppins",sans-serif}.ffx-info-list b{color:#eee;font:600 9px "Poppins",sans-serif;text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ffx-pet-empty{min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:#666}.ffx-pet-empty i{font-size:27px;color:#ff6a00}.ffx-pet-empty span{font:500 10px "Poppins",sans-serif}
+/* =========================================================
+   LIVE SOLO / DUO / SQUAD CAREER CARDS
+   ========================================================= */
+.ffx-live-modes-wrap{position:relative;margin-top:18px}
+.ffx-live-modes-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 13px;padding-left:11px;border-left:3px solid #ff6a00;color:#fff;font:700 14px "Poppins",sans-serif}
+.ffx-live-modes-title small{color:#666;font:600 8px "Poppins",sans-serif;letter-spacing:1px}
+.ffx-live-mode-grid-new{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.ffx-live-mode-card-new{border:1px solid rgba(255,255,255,.09);border-radius:21px;padding:19px;background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.018));backdrop-filter:blur(17px);box-shadow:0 18px 50px rgba(0,0,0,.22);transition:.3s}
+.ffx-live-mode-card-new:hover{transform:translateY(-5px);border-color:rgba(255,106,0,.3)}
+.ffx-live-mode-head{display:flex;align-items:center;gap:11px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.ffx-live-mode-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:11px;color:#ff6a00;background:rgba(255,106,0,.08);border:1px solid rgba(255,106,0,.13);flex-shrink:0}
+.ffx-live-mode-head h3{margin:0;color:#fff;font:700 16px "Poppins",sans-serif}
+.ffx-live-mode-head small{display:block;margin-top:2px;color:#777;font:500 8px "Poppins",sans-serif}
+.ffx-live-mode-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.ffx-live-mode-stats div{padding:9px 5px;text-align:center;border-radius:10px;background:rgba(255,255,255,.025)}
+.ffx-live-mode-stats b{display:block;color:#fff;font:700 14px "Poppins",sans-serif}
+.ffx-live-mode-stats span{display:block;margin-top:2px;color:#777;font:500 7px "Poppins",sans-serif;text-transform:uppercase}
+.ffx-live-mode-foot{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.ffx-live-mode-foot div{padding:8px 6px;border-radius:9px;background:rgba(255,255,255,.025);text-align:center}
+.ffx-live-mode-foot b{display:block;color:#ff8a45;font:700 12px "Poppins",sans-serif}
+.ffx-live-mode-foot span{display:block;margin-top:2px;color:#777;font:500 7px "Poppins",sans-serif;text-transform:uppercase}
+@media(max-width:900px){.ffx-live-mode-grid-new{grid-template-columns:1fr}}
+@media(max-width:600px){.ffx-live-mode-card-new{padding:15px}.ffx-live-mode-grid-new{gap:10px}.ffx-live-mode-stats{gap:6px}.ffx-live-mode-stats b{font-size:13px}.ffx-live-mode-foot{gap:6px}}
+
+.ffx-share-wrap{position:relative;margin-top:16px;padding:22px 24px;border:1px solid rgba(255,106,0,.14);border-radius:20px;background:linear-gradient(100deg,rgba(255,75,0,.08),rgba(255,255,255,.025));display:flex;justify-content:space-between;align-items:center;gap:20px}.ffx-share-wrap h3{margin:5px 0 3px;color:#fff;font:700 20px "Poppins",sans-serif}.ffx-share-wrap p{margin:0;color:#777;font:500 10px "Poppins",sans-serif}.ffx-share-wrap button,.ffx-copy-link{border:0;border-radius:12px;padding:13px 17px;color:#fff;background:linear-gradient(135deg,#ff3b00,#ff6a00);font:700 10px "Poppins",sans-serif;cursor:pointer;box-shadow:0 10px 28px rgba(255,70,0,.18);transition:.25s}.ffx-share-wrap button:hover,.ffx-copy-link:hover{transform:translateY(-2px)}
+.ffx-share-modal{display:none;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center}.ffx-share-modal.show{display:flex}.ffx-share-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px)}.ffx-share-dialog{position:relative;z-index:2;width:min(380px,calc(100% - 28px));padding:14px;border-radius:24px;background:#111;border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 90px rgba(0,0,0,.5)}.ffx-close{position:absolute;right:12px;top:12px;width:32px;height:32px;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;cursor:pointer}.ffx-share-card{padding:20px;border-radius:19px;background:radial-gradient(circle at 100% 0,rgba(255,91,20,.17),transparent 35%),linear-gradient(145deg,#181818,#0b0b0b);border:1px solid rgba(255,255,255,.08)}.ffx-share-brand{display:flex;justify-content:space-between;color:#ff7620;font:700 9px "Poppins",sans-serif;letter-spacing:1.5px}.ffx-share-player{display:flex;align-items:center;gap:12px;margin:24px 0 18px}.ffx-share-player img{width:55px;height:55px;border-radius:15px;object-fit:cover;border:1px solid rgba(255,106,0,.3)}.ffx-share-player b{display:block;color:#fff;font:700 18px "Poppins",sans-serif}.ffx-share-player small{color:#777;font:500 9px "Poppins",sans-serif}.ffx-share-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.ffx-share-stats div{padding:10px;text-align:center;border-radius:10px;background:rgba(255,255,255,.045)}.ffx-share-stats b{display:block;color:#fff;font:700 16px "Poppins",sans-serif}.ffx-share-stats small{color:#777;font:600 7px "Poppins",sans-serif}.ffx-qr{display:flex;align-items:center;justify-content:center;width:132px;height:132px;margin:18px auto 10px;padding:6px;background:#fff;border-radius:10px}.ffx-qr img,.ffx-qr canvas{max-width:100%;max-height:100%}.ffx-share-url{display:block;color:#666;text-align:center;font:500 7px "Poppins",sans-serif;word-break:break-all}.ffx-copy-link{display:block;width:100%;margin-top:10px}
+@keyframes ffxPulse{50%{opacity:.45;transform:scale(.8)}}
+@media(max-width:900px){.ffx-overview{grid-template-columns:1fr}.ffx-mode-grid{grid-template-columns:1fr}.ffx-total-grid{grid-template-columns:repeat(2,1fr)}.ffx-bottom-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.ffx-section{margin:55px auto 45px;padding:0 14px}.ffx-head{align-items:flex-start;flex-direction:column}.ffx-head h2{font-size:40px}.ffx-live-pill{width:max-content}.ffx-main-card,.ffx-rank-card{padding:17px}.ffx-big-stat strong{font-size:40px}.ffx-total-grid{gap:9px}.ffx-total-grid>div{min-height:86px;padding:12px}.ffx-total-grid b{font-size:17px}.ffx-info-list{grid-template-columns:1fr}.ffx-share-wrap{align-items:flex-start;flex-direction:column;padding:18px}.ffx-share-wrap button{width:100%}}
 
 </style>
 
@@ -816,141 +1311,271 @@ Edit Profile
      GAME CENTER
 ========================================= -->
 
-<section
-    id="game-center-section"
-    class="game-center-section"
->
+<section class="game-center-section">
+
+    <div class="game-center-title">
+
+        <h5>PLAYER GAME CENTER</h5>
+
+        <h2>MY GAMES</h2>
+
+        <p>
+            Games installed on your phone can be opened directly from your 4FU profile.
+        </p>
+
+    </div>
 
 
-<div class="game-center-title">
+    <!-- ADD GAME PANEL -->
 
-<h5>
-PLAYER GAME CENTER
-</h5>
+    <div
+        id="game-add-panel"
+        class="game-add-panel"
+        style="display:none;"
+    >
 
-<h2>
-MY GAMES
-</h2>
+        <h3>
 
-<p>
-Games installed on your phone can be opened directly from your 4FU profile.
-</p>
+            <i class="fa-solid fa-gamepad"></i>
 
-</div>
+            Add Game To My Profile
 
-
-
-<!-- ADD GAME PANEL -->
-
-<div
-    id="game-add-panel"
-    class="game-add-panel"
-    style="display:none;"
->
-
-<h3>
-
-<i class="fa-solid fa-gamepad"></i>
-
-Add Game To My Profile
-
-</h3>
+        </h3>
 
 
-<div class="game-add-row">
+        <div class="game-add-row">
+
+            <select
+                id="game-selector"
+                class="game-select"
+            >
+
+                <option value="">
+                    Select a game
+                </option>
+
+                <option value="freefiremax">
+                    Free Fire MAX
+                </option>
+
+                <option value="freefire">
+                    Free Fire
+                </option>
+
+                <option value="bgmi">
+                    BGMI
+                </option>
+
+                <option value="pubgmobile">
+                    PUBG Mobile
+                </option>
+
+                <option value="codmobile">
+                    Call of Duty Mobile
+                </option>
+
+                <option value="efootball">
+                    eFootball
+                </option>
+
+                <option value="clashofclans">
+                    Clash of Clans
+                </option>
+
+                <option value="clashroyale">
+                    Clash Royale
+                </option>
+
+            </select>
 
 
-<select
-    id="game-selector"
-    class="game-select"
->
+            <button
+                id="add-game-btn"
+                class="game-add-btn"
+                type="button"
+            >
 
-<option value="">
-Select a game
-</option>
+                <i class="fa-solid fa-plus"></i>
 
-<option value="freefiremax">
-Free Fire MAX
-</option>
+                Add Game
 
-<option value="freefire">
-Free Fire
-</option>
+            </button>
 
-<option value="bgmi">
-BGMI
-</option>
-
-<option value="pubgmobile">
-PUBG Mobile
-</option>
-
-<option value="codmobile">
-Call of Duty Mobile
-</option>
-
-<option value="efootball">
-eFootball
-</option>
-
-<option value="clashofclans">
-Clash of Clans
-</option>
-
-<option value="clashroyale">
-Clash Royale
-</option>
-
-</select>
+        </div>
 
 
+        <p class="game-help-text">
 
-<button
-    id="add-game-btn"
-    class="game-add-btn"
-    type="button"
->
+            <i class="fa-solid fa-circle-info"></i>
 
-<i class="fa-solid fa-plus"></i>
+            Game link automatically selected game ka hoga.
+            Phone me game installed hone par app open hogi.
 
-Add Game
+        </p>
 
-</button>
+    </div>
 
 
-</div>
+    <!-- PLAYER GAMES -->
 
+    <div
+        id="player-games-container"
+        class="player-games-grid"
+    >
 
-<div class="game-note">
+        <div class="games-loading">
 
-<i class="fa-solid fa-circle-info"></i>
+            <i class="fa-solid fa-spinner fa-spin"></i>
 
-Game link automatically selected hoga. Phone me game installed hone par app open hogi.
+            Loading games...
 
-</div>
+        </div>
 
-</div>
-
-
-
-<!-- GAMES -->
-
-<div id="player-games-container">
-
-<div class="game-loading">
-
-<i class="fa-solid fa-spinner fa-spin"></i>
-
-Loading games...
-
-</div>
-
-</div>
-
+    </div>
 
 </section>
 
 
+
+
+<!-- =========================================
+     4FU FREE FIRE LIVE PROFILE
+========================================= -->
+<section class="ffx-section" id="ffx-live-intelligence">
+    <div class="ffx-head">
+        <div>
+            <span class="ffx-kicker"><i class="fa-solid fa-satellite-dish"></i> 4FU FREE FIRE LIVE PROFILE</span>
+            <h2>LIVE DATA</h2>
+            
+        </div>
+        <div class="ffx-live-pill"><span></span><b id="ffx-live-label">LIVE SYNC</b><small id="ffx-updated">Waiting...</small></div>
+    </div>
+
+    <div class="ffx-new-grid">
+        <article class="ffx-new-stat">
+            <i class="fa-solid fa-heart"></i><span>LIKES</span><b id="ffx-likes">—</b>
+        </article>
+        <article class="ffx-new-stat">
+            <i class="fa-solid fa-ranking-star"></i><span>BR RANKING POINTS</span><b id="ffx-br-rp">—</b>
+        </article>
+        <article class="ffx-new-stat">
+            <i class="fa-solid fa-shield-halved"></i><span>CS RANK</span><b id="ffx-cs-rank">—</b>
+        </article>
+        <article class="ffx-new-stat">
+            <i class="fa-solid fa-chart-simple"></i><span>CS RANKING POINTS</span><b id="ffx-cs-rp">—</b>
+        </article>
+    </div>
+
+    <div class="ffx-new-columns">
+        <article class="ffx-info-card ffx-new-card">
+            <div class="ffx-subhead"><span>ADDITIONAL API DETAILS</span><small>NEW DATA</small></div>
+            <div class="ffx-info-list">
+                <div><span>Guild ID</span><b id="ffx-guild-id">—</b></div>
+                <div><span>Gender</span><b id="ffx-gender">—</b></div>
+                <div><span>Release Version</span><b id="ffx-version">—</b></div>
+            </div>
+        </article>
+
+        <article class="ffx-info-card ffx-pet-card ffx-new-card">
+            <div class="ffx-subhead"><span>PET PROFILE</span><small>NEW API DATA</small></div>
+            <div id="ffx-pet-content"><div class="ffx-pet-empty"><i class="fa-solid fa-paw"></i><span>Waiting for pet data...</span></div></div>
+        </article>
+    </div>
+
+    <!-- LIVE SOLO / DUO / SQUAD CAREER DATA -->
+    <div class="ffx-live-modes-wrap">
+        <div class="ffx-live-modes-title">
+            <span>LIVE CAREER MODES</span>
+            <small>SOLO • DUO • SQUAD</small>
+        </div>
+
+        <div class="ffx-live-mode-grid-new">
+            <article class="ffx-live-mode-card-new">
+                <div class="ffx-live-mode-head">
+                    <div class="ffx-live-mode-icon"><i class="fa-solid fa-user"></i></div>
+                    <div><h3>SOLO</h3><small>BR CAREER</small></div>
+                </div>
+                <div class="ffx-live-mode-stats">
+                    <div><b id="ffx-solo-matches">—</b><span>Matches</span></div>
+                    <div><b id="ffx-solo-wins">—</b><span>Wins</span></div>
+                    <div><b id="ffx-solo-kills">—</b><span>Kills</span></div>
+                    <div><b id="ffx-solo-deaths">—</b><span>Deaths</span></div>
+                    <div><b id="ffx-solo-hs">—</b><span>Headshots</span></div>
+                    <div><b id="ffx-solo-hsk">—</b><span>HS Kills</span></div>
+                </div>
+                <div class="ffx-live-mode-foot">
+                    <div><b id="ffx-solo-kd">—</b><span>K/D</span></div>
+                    <div><b id="ffx-solo-winrate">—</b><span>Win Rate</span></div>
+                    <div><b id="ffx-solo-hsrate">—</b><span>HS Rate</span></div>
+                </div>
+            </article>
+
+            <article class="ffx-live-mode-card-new">
+                <div class="ffx-live-mode-head">
+                    <div class="ffx-live-mode-icon"><i class="fa-solid fa-user-group"></i></div>
+                    <div><h3>DUO</h3><small>BR CAREER</small></div>
+                </div>
+                <div class="ffx-live-mode-stats">
+                    <div><b id="ffx-duo-matches">—</b><span>Matches</span></div>
+                    <div><b id="ffx-duo-wins">—</b><span>Wins</span></div>
+                    <div><b id="ffx-duo-kills">—</b><span>Kills</span></div>
+                    <div><b id="ffx-duo-deaths">—</b><span>Deaths</span></div>
+                    <div><b id="ffx-duo-hs">—</b><span>Headshots</span></div>
+                    <div><b id="ffx-duo-hsk">—</b><span>HS Kills</span></div>
+                </div>
+                <div class="ffx-live-mode-foot">
+                    <div><b id="ffx-duo-kd">—</b><span>K/D</span></div>
+                    <div><b id="ffx-duo-winrate">—</b><span>Win Rate</span></div>
+                    <div><b id="ffx-duo-hsrate">—</b><span>HS Rate</span></div>
+                </div>
+            </article>
+
+            <article class="ffx-live-mode-card-new">
+                <div class="ffx-live-mode-head">
+                    <div class="ffx-live-mode-icon"><i class="fa-solid fa-users"></i></div>
+                    <div><h3>SQUAD</h3><small>QUAD • BR CAREER</small></div>
+                </div>
+                <div class="ffx-live-mode-stats">
+                    <div><b id="ffx-squad-matches">—</b><span>Matches</span></div>
+                    <div><b id="ffx-squad-wins">—</b><span>Wins</span></div>
+                    <div><b id="ffx-squad-kills">—</b><span>Kills</span></div>
+                    <div><b id="ffx-squad-deaths">—</b><span>Deaths</span></div>
+                    <div><b id="ffx-squad-hs">—</b><span>Headshots</span></div>
+                    <div><b id="ffx-squad-hsk">—</b><span>HS Kills</span></div>
+                </div>
+                <div class="ffx-live-mode-foot">
+                    <div><b id="ffx-squad-kd">—</b><span>K/D</span></div>
+                    <div><b id="ffx-squad-winrate">—</b><span>Win Rate</span></div>
+                    <div><b id="ffx-squad-hsrate">—</b><span>HS Rate</span></div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <div class="ffx-share-wrap">
+        <div>
+            <span class="ffx-kicker"><i class="fa-solid fa-share-nodes"></i> 4FU PLAYER CARD</span>
+            <h3>Share Live Profile</h3>
+            <p>QR opens this exact player profile.</p>
+        </div>
+        <button type="button" id="ffx-share-btn"><i class="fa-solid fa-qrcode"></i> SHARE PLAYER</button>
+    </div>
+
+    <div class="ffx-share-modal" id="ffx-share-modal" aria-hidden="true">
+        <div class="ffx-share-backdrop" id="ffx-share-close"></div>
+        <div class="ffx-share-dialog">
+            <button type="button" class="ffx-close" id="ffx-share-x"><i class="fa-solid fa-xmark"></i></button>
+            <div class="ffx-share-card">
+                <div class="ffx-share-brand"><span>4 FIRE UNITED</span><i class="fa-solid fa-fire"></i></div>
+                <div class="ffx-share-player"><img id="ffx-share-img" src="../images/logo/logo.png" alt=""><div><b id="ffx-share-name">Player</b><small id="ffx-share-uid">UID —</small></div></div>
+                <div class="ffx-share-stats"><div><b id="ffx-share-kd">—</b><small>K/D</small></div><div><b id="ffx-share-rp">—</b><small>BR RP</small></div><div><b id="ffx-share-likes">—</b><small>LIKES</small></div></div>
+                <div class="ffx-qr" id="ffx-qr"></div>
+                <small class="ffx-share-url" id="ffx-share-url"></small>
+            </div>
+            <button type="button" class="ffx-copy-link" id="ffx-copy-link"><i class="fa-solid fa-link"></i> COPY PROFILE LINK</button>
+        </div>
+    </div>
+</section>
 
 <!-- =========================================
      CAREER
@@ -1207,935 +1832,10 @@ Contact
 
 <script src="../js/firebase.js?v=1783829699314"></script>
 
-<script src="../js/players.js?v=1783829699314"></script>
+<script src="../js/freeFireService.js?v=1783829699316"></script>
+<script src="../js/players.js?v=1783829699316"></script>
 
 
-
-<!-- =========================================
-     GAME CENTER + PLAYER EDIT ACCESS
-========================================= -->
-
-<script>
-
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
-const playerKey =
-    params.get("id");
-
-
-
-/* =========================================
-   GAME DATABASE
-========================================= */
-
-const GAME_DATABASE = {
-
-    freefiremax: {
-
-        name: "Free Fire MAX",
-
-        icon: "fa-solid fa-fire",
-
-        description: "Garena Free Fire MAX",
-
-        link: "freefiremax://"
-
-    },
-
-
-    freefire: {
-
-        name: "Free Fire",
-
-        icon: "fa-solid fa-fire-flame-curved",
-
-        description: "Garena Free Fire",
-
-        link: "freefire://"
-
-    },
-
-
-    bgmi: {
-
-        name: "BGMI",
-
-        icon: "fa-solid fa-crosshairs",
-
-        description: "Battlegrounds Mobile India",
-
-        link: "bgmi://"
-
-    },
-
-
-    pubgmobile: {
-
-        name: "PUBG Mobile",
-
-        icon: "fa-solid fa-gun",
-
-        description: "PUBG Mobile",
-
-        link: "pubgmobile://"
-
-    },
-
-
-    codmobile: {
-
-        name: "Call of Duty Mobile",
-
-        icon: "fa-solid fa-bullseye",
-
-        description: "Call of Duty Mobile",
-
-        link: "codm://"
-
-    },
-
-
-    efootball: {
-
-        name: "eFootball",
-
-        icon: "fa-solid fa-futbol",
-
-        description: "eFootball Mobile",
-
-        link: "efootball://"
-
-    },
-
-
-    clashofclans: {
-
-        name: "Clash of Clans",
-
-        icon: "fa-solid fa-shield-halved",
-
-        description: "Clash of Clans",
-
-        link: "clashofclans://"
-
-    },
-
-
-    clashroyale: {
-
-        name: "Clash Royale",
-
-        icon: "fa-solid fa-crown",
-
-        description: "Clash Royale",
-
-        link: "clashroyale://"
-
-    }
-
-};
-
-
-
-/* =========================================
-   ELEMENTS
-========================================= */
-
-const gameAddPanel =
-    document.getElementById(
-        "game-add-panel"
-    );
-
-
-const gameSelector =
-    document.getElementById(
-        "game-selector"
-    );
-
-
-const addGameBtn =
-    document.getElementById(
-        "add-game-btn"
-    );
-
-
-const gamesContainer =
-    document.getElementById(
-        "player-games-container"
-    );
-
-
-
-/* =========================================
-   LOAD PLAYER
-========================================= */
-
-function loadPlayerGameCenter() {
-
-    if (!playerKey) {
-
-        gamesContainer.innerHTML = `
-
-            <div class="no-games">
-
-                <i class="fa-solid fa-user-slash"></i>
-
-                <h3>
-                    Player Not Found
-                </h3>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    db.collection("players")
-        .doc(playerKey)
-        .get()
-
-        .then((doc) => {
-
-            if (!doc.exists) {
-
-                gamesContainer.innerHTML = `
-
-                    <div class="no-games">
-
-                        <i class="fa-solid fa-user-slash"></i>
-
-                        <h3>
-                            Player Not Found
-                        </h3>
-
-                    </div>
-
-                `;
-
-                return;
-
-            }
-
-
-            const player =
-                doc.data();
-
-
-            renderPlayerGames(
-                player.games || []
-            );
-
-        })
-
-        .catch((error) => {
-
-            console.error(
-                "Game Center Error:",
-                error
-            );
-
-
-            gamesContainer.innerHTML = `
-
-                <div class="no-games">
-
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-
-                    <h3>
-                        Unable To Load Games
-                    </h3>
-
-                </div>
-
-            `;
-
-        });
-
-}
-
-
-
-/* =========================================
-   RENDER GAMES
-========================================= */
-
-function renderPlayerGames(games) {
-
-    if (!games || games.length === 0) {
-
-        gamesContainer.innerHTML = `
-
-            <div class="no-games">
-
-                <i class="fa-solid fa-gamepad"></i>
-
-                <h3>
-                    No Games Added
-                </h3>
-
-                <p>
-                    Player ne abhi koi game add nahi kiya.
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    gamesContainer.innerHTML = `
-
-        <div class="player-games-grid">
-
-            ${games.map(
-                (game, index) => {
-
-                    const info =
-                        GAME_DATABASE[
-                            game.gameId
-                        ];
-
-
-                    if (!info) {
-
-                        return "";
-
-                    }
-
-
-                    return `
-
-                        <div
-                            class="game-card"
-                        >
-
-                            <div
-                                class="game-icon"
-                            >
-
-                                <i
-                                    class="${info.icon}"
-                                ></i>
-
-                            </div>
-
-
-                            <h3>
-
-                                ${escapeGameText(
-                                    info.name
-                                )}
-
-                            </h3>
-
-
-                            <p>
-
-                                ${escapeGameText(
-                                    info.description
-                                )}
-
-                            </p>
-
-
-                            <a
-
-                                href="${info.link}"
-
-                                class="open-game-btn"
-
-                                onclick="openGame('${info.link}')"
-
-                            >
-
-                                <i
-                                    class="fa-solid fa-play"
-                                ></i>
-
-                                Open Game
-
-                            </a>
-
-
-                            ${
-                                game.owner === true
-                                    ? `
-
-                                        <button
-
-                                            type="button"
-
-                                            class="remove-game-btn"
-
-                                            onclick="removeGame('${game.gameId}')"
-
-                                            title="Remove Game"
-
-                                        >
-
-                                            <i
-                                                class="fa-solid fa-xmark"
-                                            ></i>
-
-                                        </button>
-
-                                    `
-                                    : ""
-                            }
-
-                        </div>
-
-                    `;
-
-                }
-            ).join("")}
-
-        </div>
-
-    `;
-
-}
-
-
-
-/* =========================================
-   ADD GAME
-========================================= */
-
-if (addGameBtn) {
-
-    addGameBtn.addEventListener(
-        "click",
-        addGame
-    );
-
-}
-
-
-
-function addGame() {
-
-    const gameId =
-        gameSelector.value;
-
-
-    if (!gameId) {
-
-        alert(
-            "Please select a game."
-        );
-
-        return;
-
-    }
-
-
-    const game =
-        GAME_DATABASE[gameId];
-
-
-    if (!game) {
-
-        alert(
-            "Invalid game selected."
-        );
-
-        return;
-
-    }
-
-
-    addGameBtn.disabled = true;
-
-
-    db.collection("players")
-        .doc(playerKey)
-        .get()
-
-        .then((doc) => {
-
-            if (!doc.exists) {
-
-                throw new Error(
-                    "Player profile not found."
-                );
-
-            }
-
-
-            const player =
-                doc.data();
-
-
-            let games =
-                Array.isArray(player.games)
-                    ? player.games
-                    : [];
-
-
-            const alreadyAdded =
-                games.some(
-                    item =>
-                        item.gameId === gameId
-                );
-
-
-            if (alreadyAdded) {
-
-                throw new Error(
-                    "This game is already added."
-                );
-
-            }
-
-
-            games.push({
-
-                gameId: gameId,
-
-                name: game.name,
-
-                link: game.link,
-
-                owner: true,
-
-                addedAt:
-                    new Date().toISOString()
-
-            });
-
-
-            return db.collection("players")
-                .doc(playerKey)
-                .update({
-
-                    games: games
-
-                });
-
-        })
-
-        .then(() => {
-
-            alert(
-                game.name +
-                " added successfully!"
-            );
-
-
-            gameSelector.value = "";
-
-
-            loadPlayerGameCenter();
-
-        })
-
-        .catch((error) => {
-
-            console.error(
-                "Add game error:",
-                error
-            );
-
-
-            alert(
-                error.message ||
-                "Unable to add game."
-            );
-
-        })
-
-        .finally(() => {
-
-            addGameBtn.disabled = false;
-
-        });
-
-}
-
-
-
-/* =========================================
-   REMOVE GAME
-========================================= */
-
-function removeGame(gameId) {
-
-    if (
-        !confirm(
-            "Remove this game from your profile?"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    db.collection("players")
-        .doc(playerKey)
-        .get()
-
-        .then((doc) => {
-
-            if (!doc.exists) {
-
-                throw new Error(
-                    "Player profile not found."
-                );
-
-            }
-
-
-            const player =
-                doc.data();
-
-
-            const games =
-                Array.isArray(player.games)
-                    ? player.games
-                    : [];
-
-
-            const updatedGames =
-                games.filter(
-                    game =>
-                        game.gameId !== gameId
-                );
-
-
-            return db.collection("players")
-                .doc(playerKey)
-                .update({
-
-                    games: updatedGames
-
-                });
-
-        })
-
-        .then(() => {
-
-            loadPlayerGameCenter();
-
-        })
-
-        .catch((error) => {
-
-            console.error(
-                "Remove game error:",
-                error
-            );
-
-
-            alert(
-                error.message ||
-                "Unable to remove game."
-            );
-
-        });
-
-}
-
-
-
-/* =========================================
-   OPEN GAME
-========================================= */
-
-function openGame(link) {
-
-    if (!link) {
-
-        return;
-
-    }
-
-
-    /*
-        Browser app ko direct open
-        karne ki koshish karega.
-
-        Agar app installed nahi hai,
-        browser normally kuch nahi karega.
-    */
-
-    setTimeout(() => {
-
-        window.location.href = link;
-
-    }, 100);
-
-}
-
-
-
-/* =========================================
-   PLAYER LOGIN ACCESS
-========================================= */
-
-auth.onAuthStateChanged(
-    (user) => {
-
-        if (!user) {
-
-            loadPlayerGameCenter();
-
-            return;
-
-        }
-
-
-        db.collection("players")
-            .doc(playerKey)
-            .get()
-
-            .then((doc) => {
-
-                if (!doc.exists) {
-
-                    loadPlayerGameCenter();
-
-                    return;
-
-                }
-
-
-                const player =
-                    doc.data();
-
-
-                const loginEmail =
-                    String(
-                        player.loginEmail || ""
-                    ).toLowerCase();
-
-
-                const userEmail =
-                    String(
-                        user.email || ""
-                    ).toLowerCase();
-
-
-                /*
-                    Sirf apni profile ka owner
-                    Game Center me Add Game
-                    dekh sakta hai.
-                */
-
-                if (
-                    loginEmail &&
-                    loginEmail === userEmail
-                ) {
-
-                    gameAddPanel.style.display =
-                        "block";
-
-
-                    /*
-                        Existing games ko owner
-                        controls ke saath mark karo.
-                    */
-
-                    db.collection("players")
-                        .doc(playerKey)
-                        .get()
-
-                        .then((doc) => {
-
-                            if (!doc.exists) {
-
-                                return;
-
-                            }
-
-
-                            const data =
-                                doc.data();
-
-
-                            const games =
-                                Array.isArray(
-                                    data.games
-                                )
-                                    ? data.games
-                                    : [];
-
-
-                            renderPlayerGames(
-                                games.map(
-                                    game => ({
-                                        ...game,
-                                        owner: true
-                                    })
-                                )
-                            );
-
-                        });
-
-                }
-
-
-                loadPlayerGameCenter();
-
-            })
-
-            .catch((error) => {
-
-                console.error(
-                    "Auth/player error:",
-                    error
-                );
-
-                loadPlayerGameCenter();
-
-            });
-
-    }
-);
-
-
-
-/* =========================================
-   HTML ESCAPE
-========================================= */
-
-function escapeGameText(value) {
-
-    return String(value || "")
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-
-/* =========================================
-   INITIAL LOAD
-========================================= */
-
-loadPlayerGameCenter();
-
-</script>
-
-
-
-<!-- =========================================
-     WEAPON PARALLAX
-========================================= -->
-
-<script>
-
-const weaponCard =
-    document.querySelector(
-        ".weapon-card"
-    );
-
-
-const weaponImg =
-    document.querySelector(
-        ".weapon-image img"
-    );
-
-
-if (
-    weaponCard &&
-    weaponImg
-) {
-
-    weaponCard.addEventListener(
-        "mousemove",
-        (e) => {
-
-            const rect =
-                weaponCard.getBoundingClientRect();
-
-
-            const x =
-                e.clientX -
-                rect.left;
-
-
-            const y =
-                e.clientY -
-                rect.top;
-
-
-            const moveX =
-                (
-                    x -
-                    rect.width / 2
-                ) / 20;
-
-
-            const moveY =
-                (
-                    y -
-                    rect.height / 2
-                ) / 20;
-
-
-            weaponImg.style.transform =
-                `
-                translate(
-                    ${moveX}px,
-                    ${moveY}px
-                )
-                rotate(
-                    ${moveX / 2}deg
-                )
-                scale(1.08)
-                `;
-
-        }
-    );
-
-
-    weaponCard.addEventListener(
-        "mouseleave",
-        () => {
-
-            weaponImg.style.transform =
-                "translate(0,0) rotate(0deg) scale(1)";
-
-        }
-    );
-
-}
-
-</script>
 
 
 </body>

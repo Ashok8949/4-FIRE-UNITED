@@ -249,8 +249,331 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
 
     <script src="js/firebase.js?v=1783829699314"></script>
+    <script src="../js/freeFireService.js?v=1783829699315"></script>
     <script src="js/auth-guard.js?v=1783829699314"></script>
-    <script src="js/edit-player.js?v=1783829699314"></script>
+    <script src="js/edit-player.js?v=1783829699315"></script>
+
+    <!-- =========================================
+         4FU LIVE FREE FIRE ADMIN EDIT SYNC
+         ========================================= -->
+    <script>
+        (function () {
+            "use strict";
+
+            let lastFetchedUid = "";
+            let fetchTimer = null;
+
+            function pick(...values) {
+                return values.find(
+                    value =>
+                        value !== undefined &&
+                        value !== null &&
+                        value !== ""
+                );
+            }
+
+            function number(value) {
+                if (value === undefined || value === null || value === "") {
+                    return null;
+                }
+
+                const n = Number(String(value).replace(/,/g, "").trim());
+
+                return Number.isFinite(n) ? n : null;
+            }
+
+            function rankNameFromPoints(points) {
+                const rp = number(points);
+
+                if (rp === null) return null;
+
+                if (rp >= 10800) return "Grandmaster";
+                if (rp >= 7700) return "Elite Master";
+                if (rp >= 6500) return "Master";
+                if (rp >= 5400) return "Elite Heroic";
+                if (rp >= 3200) return "Heroic";
+                if (rp >= 2600) return "Diamond V";
+                if (rp >= 2100) return "Platinum IV";
+                if (rp >= 1600) return "Gold IV";
+                if (rp >= 1300) return "Silver III";
+
+                return "Bronze";
+            }
+
+            function setValue(id, value) {
+                const element = document.getElementById(id);
+
+                if (!element || value === undefined || value === null || value === "") {
+                    return;
+                }
+
+                element.value = value;
+            }
+
+            function regionFromCountry(country) {
+                const map = {
+                    India: "IND",
+                    Bangladesh: "BD",
+                    Nepal: "IND",
+                    Pakistan: "PK",
+                    Brazil: "BR",
+                    Indonesia: "ID",
+                    Thailand: "TH",
+                    Vietnam: "VN",
+                    "United States": "US",
+                    Russia: "RU"
+                };
+
+                return map[country] || "IND";
+            }
+
+            function showLiveStatus(message, isError) {
+                const status = document.getElementById("uploadStatus");
+
+                if (!status) return;
+
+                status.style.display = "block";
+                status.textContent = message;
+                status.style.color = isError ? "#ff4d4d" : "#22c55e";
+
+                clearTimeout(status._liveTimer);
+
+                status._liveTimer = setTimeout(() => {
+                    status.style.display = "none";
+                    status.style.color = "#ff8a00";
+                }, 2500);
+            }
+
+            async function fetchAndApplyLiveData(force) {
+                const uidField = document.getElementById("uid");
+
+                if (!uidField || typeof window.getFreeFirePlayer !== "function") {
+                    return;
+                }
+
+                const uid = uidField.value.trim();
+
+                if (!uid) {
+                    return;
+                }
+
+                if (!force && uid === lastFetchedUid) {
+                    return;
+                }
+
+                lastFetchedUid = uid;
+
+                try {
+                    showLiveStatus("Fetching live Free Fire data...", false);
+
+                    const countryField = document.getElementById("country");
+
+                    const region =
+                        (window.playerData && window.playerData.region) ||
+                        (countryField && regionFromCountry(countryField.value)) ||
+                        "IND";
+
+                    const data = await window.getFreeFirePlayer(uid, region);
+
+                    if (!data) {
+                        showLiveStatus("Live API data unavailable. Firestore data kept.", true);
+                        return;
+                    }
+
+                    const basic = data.basicInfo || data.profile || {};
+                    const stats = data.stats || data.playerStats || data.statistics || {};
+
+                    const nickname = pick(
+                        basic.nickname,
+                        data.nickname,
+                        data.name
+                    );
+
+                    const liveGuild = pick(
+                        data.guild,
+                        data.clanName,
+                        data.clan,
+                        data.clanBasicInfo?.clanName,
+                        data.clan_basic_info?.clanName,
+                        data.rawProfile?.clanBasicInfo?.clanName,
+                        data.rawProfile?.clan?.clanName
+                    );
+
+                    const level = pick(
+                        basic.level,
+                        data.level
+                    );
+
+                    const brRankingPoints = pick(
+                        data.rankingPoints,
+                        basic.rankingPoints,
+                        basic.ranking_points,
+                        stats.rankingPoints,
+                        stats.ranking_points
+                    );
+
+                    const liveRank = pick(
+                        basic.rankName,
+                        data.rankName,
+                        rankNameFromPoints(brRankingPoints),
+                        typeof basic.rank === "string" ? basic.rank : null,
+                        typeof data.rank === "string" ? data.rank : null
+                    );
+
+                    const matches = pick(
+                        stats.matches,
+                        stats.gamesPlayed,
+                        stats.gamesplayed,
+                        data.matches
+                    );
+
+                    const wins = pick(
+                        stats.wins,
+                        stats.totalWins,
+                        data.wins,
+                        data.booyah
+                    );
+
+                    const kills = pick(
+                        stats.kills,
+                        stats.totalKills,
+                        data.kills
+                    );
+
+                    const deaths = pick(
+                        stats.deaths,
+                        stats.totalDeaths,
+                        data.deaths
+                    );
+
+                    const kd = pick(
+                        stats.kd,
+                        stats.kdRatio,
+                        data.kd,
+                        (
+                            number(kills) !== null &&
+                            number(deaths) !== null &&
+                            number(deaths) > 0
+                        )
+                            ? (number(kills) / number(deaths)).toFixed(2)
+                            : null
+                    );
+
+                    const headshot = pick(
+                        stats.headshot,
+                        stats.headshotRate,
+                        stats.headshotPercentage,
+                        data.headshot,
+                        data.headshotRate
+                    );
+
+                    /*
+                     * IMPORTANT:
+                     * API nickname = actual Free Fire IGN.
+                     * Do not put it into "Player Name", because
+                     * that field can be the team's display name.
+                     */
+                    setValue("ign", nickname);
+                    setValue("level", level);
+                    setValue("rank", liveRank);
+                    setValue("guild", liveGuild);
+                    setValue("language", pick(
+                        data.language,
+                        data.socialInfo?.language,
+                        data.social?.language
+                    ));
+                    setValue("matches", matches);
+                    setValue("booyah", wins);
+                    setValue("kd", kd);
+                    setValue(
+                        "headshot",
+                        headshot !== undefined && headshot !== null
+                            ? `${headshot}${String(headshot).includes("%") ? "" : "%"}`
+                            : null
+                    );
+
+                    console.info("[4FU ADMIN EDIT] Live Free Fire data applied:", {
+                        uid,
+                        nickname,
+                        level,
+                        liveRank,
+                        brRankingPoints,
+                        matches,
+                        wins,
+                        kills,
+                        deaths,
+                        kd,
+                        headshot,
+                        guild: liveGuild
+                    });
+
+                    showLiveStatus(
+                        liveRank
+                            ? `✓ Live data loaded — ${liveRank}${brRankingPoints ? " • " + brRankingPoints + " RP" : ""}`
+                            : "✓ Live Free Fire data loaded.",
+                        false
+                    );
+
+                } catch (error) {
+                    console.warn(
+                        "[4FU ADMIN EDIT] Live Free Fire data unavailable:",
+                        error
+                    );
+
+                    showLiveStatus(
+                        "Live API unavailable. Existing Firestore values kept.",
+                        true
+                    );
+                }
+            }
+
+            function scheduleFetch(force) {
+                clearTimeout(fetchTimer);
+
+                fetchTimer = setTimeout(() => {
+                    fetchAndApplyLiveData(!!force);
+                }, 600);
+            }
+
+            function init() {
+                const uidField = document.getElementById("uid");
+
+                if (!uidField) return;
+
+                uidField.addEventListener("input", () => {
+                    lastFetchedUid = "";
+                    scheduleFetch(false);
+                });
+
+                uidField.addEventListener("change", () => {
+                    lastFetchedUid = "";
+                    scheduleFetch(true);
+                });
+
+                /*
+                 * edit-player.js loads the Firestore player asynchronously.
+                 * This watcher waits for its UID to appear, then fetches once.
+                 */
+                const watcher = setInterval(() => {
+                    const uid = uidField.value.trim();
+
+                    if (uid && uid !== lastFetchedUid) {
+                        fetchAndApplyLiveData(false);
+                    }
+                }, 700);
+
+                setTimeout(() => {
+                    clearInterval(watcher);
+                }, 15000);
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", init);
+            } else {
+                init();
+            }
+        })();
+    </script>
 
 </body>
 

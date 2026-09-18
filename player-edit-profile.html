@@ -221,6 +221,105 @@
             }
 
         }
+
+        /* ==========================================
+           4FU LIVE FREE FIRE API PANEL
+        ========================================== */
+        .live-api-panel {
+            margin-top: 28px;
+            padding: 22px;
+            border: 1px solid #2b2b2b;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #141414, #0d0d0d);
+            box-shadow: 0 12px 35px rgba(0,0,0,.25);
+        }
+
+        .live-api-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .live-api-title {
+            color: #ff7200;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .live-api-status {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .live-api-refresh {
+            border: 1px solid #ff7200;
+            background: #181818;
+            color: #fff;
+            padding: 9px 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+        }
+
+        .live-api-refresh:hover {
+            background: #ff7200;
+        }
+
+        .live-api-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .live-api-item {
+            background: #181818;
+            border: 1px solid #292929;
+            border-radius: 9px;
+            padding: 12px 13px;
+            min-width: 0;
+        }
+
+        .live-api-label {
+            display: block;
+            color: #888;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+            margin-bottom: 5px;
+        }
+
+        .live-api-value {
+            display: block;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .live-api-note {
+            margin-top: 13px;
+            color: #777;
+            font-size: 11px;
+        }
+
+        @media(max-width:900px) {
+            .live-api-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width:700px) {
+            .live-api-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
     </style>
 
 </head>
@@ -368,6 +467,65 @@
         </div>
 
 
+
+        <!-- =========================================
+             LIVE FREE FIRE API DATA
+        ========================================== -->
+        <section class="live-api-panel">
+            <div class="live-api-head">
+                <div>
+                    <div class="live-api-title">
+                        <i class="fa-solid fa-satellite-dish"></i>
+                        LIVE FREE FIRE DATA
+                    </div>
+                    <div id="liveApiStatus" class="live-api-status">
+                        Connecting to Free Fire API...
+                    </div>
+                </div>
+
+                <button type="button" id="liveApiRefresh" class="live-api-refresh">
+                    <i class="fa-solid fa-rotate"></i>
+                    Refresh Live Data
+                </button>
+            </div>
+
+            <div class="live-api-grid">
+                <div class="live-api-item"><span class="live-api-label">Live IGN</span><span id="liveIgn" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Live UID</span><span id="liveUid" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Guild</span><span id="liveGuild" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Guild ID</span><span id="liveGuildId" class="live-api-value">—</span></div>
+
+                <div class="live-api-item"><span class="live-api-label">Account Level</span><span id="liveLevel" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">BR Rank ID</span><span id="liveBrRank" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">BR Ranking Points</span><span id="liveBrRp" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">CS Rank</span><span id="liveCsRank" class="live-api-value">—</span></div>
+
+                <div class="live-api-item"><span class="live-api-label">CS Ranking Points</span><span id="liveCsRp" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">K/D</span><span id="liveKd" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">HS Rate</span><span id="liveHs" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Win Rate</span><span id="liveWinRate" class="live-api-value">—</span></div>
+
+                <div class="live-api-item"><span class="live-api-label">Matches</span><span id="liveMatches" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Wins</span><span id="liveWins" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Kills</span><span id="liveKills" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Deaths</span><span id="liveDeaths" class="live-api-value">—</span></div>
+
+                <div class="live-api-item"><span class="live-api-label">Headshots</span><span id="liveHeadshots" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">HS Kills</span><span id="liveHsKills" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Likes</span><span id="liveLikes" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Gender</span><span id="liveGender" class="live-api-value">—</span></div>
+
+                <div class="live-api-item"><span class="live-api-label">Language</span><span id="liveLanguage" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Release Version</span><span id="liveVersion" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Pet ID</span><span id="livePetId" class="live-api-value">—</span></div>
+                <div class="live-api-item"><span class="live-api-label">Pet Level</span><span id="livePetLevel" class="live-api-value">—</span></div>
+            </div>
+
+            <div class="live-api-note">
+                Live API values are fetched from the 4FU backend. Existing profile fields remain editable where applicable.
+            </div>
+        </section>
+
         <!-- ========================= -->
         <!-- WEAPON INFORMATION -->
         <!-- ========================= -->
@@ -514,7 +672,10 @@
 
 
     <script src="js/firebase.js"></script>
+
+    <script src="js/freeFireService.js"></script>
     <script src="js/player-edit-profile.js"></script>
+
 
     
 

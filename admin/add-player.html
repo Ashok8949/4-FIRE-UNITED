@@ -16,9 +16,18 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?
 <link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
 
 <style>
-body{
-    visibility:hidden;
+body{visibility:hidden;}
+#liveApiStatus{
+    display:none;
+    margin-top:10px;
+    padding:10px 13px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:600;
 }
+#liveApiStatus.loading{display:block;}
+#liveApiStatus.success{display:block;}
+#liveApiStatus.error{display:block;}
 </style>
 
 </head>
@@ -28,123 +37,70 @@ body{
 <div class="main">
 
     <div class="topbar">
-
         <h1>ADD PLAYER</h1>
-
         <a href="players.html" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i>
             Back
         </a>
-
     </div>
 
    <div class="edit-box">
 
     <div class="player-image-box">
-
-        <img id="previewImage"
-             src="../images/logo/logo.png"
-             alt="Player">
-
-      <label class="upload-btn">
-
-    <i class="fa-solid fa-image"></i>
-
-    Choose Player Image
-
-</label>
-
-<input
-    type="file"
-    id="image"
-    accept="image/*">
-
+        <img id="previewImage" src="../images/logo/logo.png" alt="Player">
+        <label class="upload-btn">
+            <i class="fa-solid fa-image"></i>
+            Choose Player Image
+        </label>
+        <input type="file" id="image" accept="image/*">
     </div>
-
-    <!-- ========================= -->
-    <!-- BASIC INFORMATION -->
-    <!-- ========================= -->
 
     <h2 class="section-title">BASIC INFORMATION</h2>
 
     <div class="form-grid">
 
         <input type="text" id="name" placeholder="Player Name">
-
         <input type="text" id="ign" placeholder="IGN">
 
-        <input type="text" id="uid" placeholder="Free Fire UID">
+        <div class="form-group">
+            <input type="text" id="uid" placeholder="Free Fire UID" autocomplete="off">
+            <div id="liveApiStatus"></div>
+        </div>
 
         <input type="text" id="guild" placeholder="Guild">
-
         <input type="text" id="role" placeholder="Role">
-
         <input type="text" id="language" placeholder="Language">
 
         <select id="country">
+            <option value="">Select Country</option>
+            <option value="India">🇮🇳 India</option>
+            <option value="Bangladesh">🇧🇩 Bangladesh</option>
+            <option value="Nepal">🇳🇵 Nepal</option>
+            <option value="Pakistan">🇵🇰 Pakistan</option>
+            <option value="Brazil">🇧🇷 Brazil</option>
+            <option value="Indonesia">🇮🇩 Indonesia</option>
+            <option value="Thailand">🇹🇭 Thailand</option>
+            <option value="Vietnam">🇻🇳 Vietnam</option>
+            <option value="United States">🇺🇸 United States</option>
+            <option value="Russia">🇷🇺 Russia</option>
+        </select>
 
-    <option value="">Select Country</option>
-
-    <option value="India">🇮🇳 India</option>
-
-    <option value="Bangladesh">🇧🇩 Bangladesh</option>
-
-    <option value="Nepal">🇳🇵 Nepal</option>
-
-    <option value="Pakistan">🇵🇰 Pakistan</option>
-
-    <option value="Brazil">🇧🇷 Brazil</option>
-
-    <option value="Indonesia">🇮🇩 Indonesia</option>
-
-    <option value="Thailand">🇹🇭 Thailand</option>
-
-    <option value="Vietnam">🇻🇳 Vietnam</option>
-
-    <option value="United States">🇺🇸 United States</option>
-
-    <option value="Russia">🇷🇺 Russia</option>
-
-</select>
-
-<input
-    type="number"
-    id="since"
-    placeholder="Joined Since (e.g. 2024)">
-
-        <input
-    type="number"
-    id="displayOrder"
-    placeholder="Display Order (1,2,3...)">
+        <input type="number" id="since" placeholder="Joined Since (e.g. 2024)">
+        <input type="number" id="displayOrder" placeholder="Display Order (1,2,3...)">
 
         <div class="checkbox-group">
+            <label>
+                <input type="checkbox" id="featured">
+                Show on Home Page
+            </label>
+        </div>
 
-    <label>
-
-        <input type="checkbox" id="featured">
-
-        Show on Home Page
-
-    </label>
-
-</div>
-<div class="form-group">
-    <label for="loginEmail">Player Login Email</label>
-    <input
-    type="email"
-    id="loginEmail"
-    placeholder="Player Login Email"
-    required
->
-</div>
-
-        
+        <div class="form-group">
+            <label for="loginEmail">Player Login Email</label>
+            <input type="email" id="loginEmail" placeholder="Player Login Email" required>
+        </div>
 
     </div>
-
-    <!-- ========================= -->
-    <!-- GAME INFORMATION -->
-    <!-- ========================= -->
 
     <h2 class="section-title">GAME INFORMATION</h2>
 
@@ -153,139 +109,71 @@ body{
         <input type="number" id="level" placeholder="Level">
 
         <select id="rank">
-
-    <option value="">Select Rank</option>
-
-    <option value="Bronze">Bronze</option>
-
-    <option value="Silver I">Silver I</option>
-    <option value="Silver II">Silver II</option>
-    <option value="Silver III">Silver III</option>
-
-    <option value="Gold I">Gold I</option>
-    <option value="Gold II">Gold II</option>
-    <option value="Gold III">Gold III</option>
-    <option value="Gold IV">Gold IV</option>
-
-    <option value="Platinum I">Platinum I</option>
-    <option value="Platinum II">Platinum II</option>
-    <option value="Platinum III">Platinum III</option>
-    <option value="Platinum IV">Platinum IV</option>
-
-    <option value="Diamond I">Diamond I</option>
-    <option value="Diamond II">Diamond II</option>
-    <option value="Diamond III">Diamond III</option>
-    <option value="Diamond IV">Diamond IV</option>
-    <option value="Diamond V">Diamond V</option>
-
-    <option value="Heroic">Heroic</option>
-
-    <option value="Elite Heroic">Elite Heroic</option>
-
-    <option value="Master">Master</option>
-
-    <option value="Grandmaster">Grandmaster</option>
-
-</select>
+            <option value="">Select Rank</option>
+            <option value="Bronze">Bronze</option>
+            <option value="Silver I">Silver I</option>
+            <option value="Silver II">Silver II</option>
+            <option value="Silver III">Silver III</option>
+            <option value="Gold I">Gold I</option>
+            <option value="Gold II">Gold II</option>
+            <option value="Gold III">Gold III</option>
+            <option value="Gold IV">Gold IV</option>
+            <option value="Platinum I">Platinum I</option>
+            <option value="Platinum II">Platinum II</option>
+            <option value="Platinum III">Platinum III</option>
+            <option value="Platinum IV">Platinum IV</option>
+            <option value="Diamond I">Diamond I</option>
+            <option value="Diamond II">Diamond II</option>
+            <option value="Diamond III">Diamond III</option>
+            <option value="Diamond IV">Diamond IV</option>
+            <option value="Diamond V">Diamond V</option>
+            <option value="Heroic">Heroic</option>
+            <option value="Elite Heroic">Elite Heroic</option>
+            <option value="Master">Master</option>
+            <option value="Grandmaster">Grandmaster</option>
+        </select>
 
         <input type="text" id="kd" placeholder="KD">
-
         <input type="text" id="headshot" placeholder="Headshot %">
-
         <input type="number" id="matches" placeholder="Matches">
-
         <input type="number" id="booyah" placeholder="Booyah">
-        <input
-    type="text"
-    id="weaponName"
-    placeholder="Favorite Weapon">
 
-    <input
-    type="text"
-    id="weaponType"
-    placeholder="Weapon Type (Shotgun, AR, SMG...)">
+        <input type="text" id="weaponName" placeholder="Favorite Weapon">
+        <input type="text" id="weaponType" placeholder="Weapon Type (Shotgun, AR, SMG...)">
+        <input type="text" id="weaponQuote" placeholder="Weapon Quote">
 
-<input
-    type="text"
-    id="weaponQuote"
-    placeholder="Weapon Quote">
+        <label class="upload-btn">
+            <i class="fa-solid fa-gun"></i>
+            Choose Weapon Image
+        </label>
 
-<label class="upload-btn">
-
-    <i class="fa-solid fa-gun"></i>
-
-    Choose Weapon Image
-
-</label>
-
-<input
-    type="file"
-    id="weaponImage"
-    accept="image/*">
+        <input type="file" id="weaponImage" accept="image/*">
 
     </div>
-
-    <!-- ========================= -->
-    <!-- SOCIAL MEDIA -->
-    <!-- ========================= -->
 
     <h2 class="section-title">SOCIAL MEDIA</h2>
 
     <div class="form-grid">
 
-        <input
-            type="url"
-            id="instagram"
-            placeholder="Instagram Profile Link">
-
-        <input
-            type="url"
-            id="youtube"
-            placeholder="YouTube Channel Link">
-
-        <input
-            type="url"
-            id="discord"
-            placeholder="Discord Profile / Invite Link">
-
-        <input
-            type="url"
-            id="facebook"
-            placeholder="Facebook Profile Link">
+        <input type="url" id="instagram" placeholder="Instagram Profile Link">
+        <input type="url" id="youtube" placeholder="YouTube Channel Link">
+        <input type="url" id="discord" placeholder="Discord Profile / Invite Link">
+        <input type="url" id="facebook" placeholder="Facebook Profile Link">
 
     </div>
 
-    <progress
-    id="uploadProgress"
-    value="0"
-    max="100"
-    style="
-        width:100%;
-        display:none;
-        margin:18px 0;
-    ">
-</progress>
+    <progress id="uploadProgress" value="0" max="100"
+        style="width:100%;display:none;margin:18px 0;"></progress>
 
-<p
-    id="uploadStatus"
-    style="
-        display:none;
-        color:#ff8a00;
-        font-weight:600;
-        margin-bottom:15px;
-    ">
-</p>
+    <p id="uploadStatus"
+        style="display:none;color:#ff8a00;font-weight:600;margin-bottom:15px;"></p>
 
     <button id="savePlayer" class="save-btn">
-
         <i class="fa-solid fa-floppy-disk"></i>
-
         Save Player
-
     </button>
 
 </div>
-
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
@@ -295,8 +183,245 @@ body{
 
 <script src="js/firebase.js?v=1783829699314"></script>
 <script src="js/auth-guard.js?v=1783829699314"></script>
+
+<!-- IMPORTANT: live API service loads BEFORE add-player.js -->
+<script src="js/freeFireService.js?v=1783829699316"></script>
+
+<script>
+(function () {
+    "use strict";
+
+    const uidInput = document.getElementById("uid");
+    const status = document.getElementById("liveApiStatus");
+
+    let timer = null;
+    let requestId = 0;
+
+    function value(...values) {
+        return values.find(v =>
+            v !== undefined && v !== null && v !== ""
+        );
+    }
+
+    function number(v) {
+        if (v === undefined || v === null || v === "") return null;
+        const n = Number(v);
+        return Number.isFinite(n) ? n : null;
+    }
+
+    function rankNameFromPoints(points) {
+        const rp = number(points);
+        if (rp === null) return null;
+
+        if (rp >= 10800) return "Grandmaster";
+        if (rp >= 7700) return "Elite Master";
+        if (rp >= 6500) return "Master";
+        if (rp >= 5400) return "Elite Heroic";
+        if (rp >= 3200) return "Heroic";
+        if (rp >= 2600) return "Diamond V";
+        if (rp >= 2100) return "Platinum IV";
+        if (rp >= 1600) return "Gold IV";
+        if (rp >= 1300) return "Silver III";
+        return "Bronze";
+    }
+
+    function setField(id, val) {
+        const el = document.getElementById(id);
+        if (!el || val === undefined || val === null || val === "") return;
+        el.value = val;
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    function setStatus(type, text) {
+        if (!status) return;
+        status.className = type || "";
+        status.textContent = text || "";
+    }
+
+    function applyLiveData(data) {
+        const basic = data?.basicInfo || {};
+        const stats = data?.stats || {};
+
+        const apiName = value(
+            basic.nickname, data.nickname, data.name
+        );
+
+        const apiLevel = value(
+            basic.level, data.level
+        );
+
+        const brRp = value(
+            data.rankingPoints,
+            basic.rankingPoints,
+            basic.ranking_points,
+            stats.rankingPoints,
+            stats.ranking_points
+        );
+
+        const apiRank = value(
+            basic.rankName,
+            data.rankName,
+            rankNameFromPoints(brRp),
+            basic.rank,
+            data.rank
+        );
+
+        const apiGuild = value(
+            data.guild,
+            data.clanName,
+            data.clan,
+            data.clanBasicInfo?.clanName,
+            data.rawProfile?.clanBasicInfo?.clanName
+        );
+
+        const apiLanguage = value(
+            data.language,
+            data.social?.language,
+            data.rawProfile?.socialBasicInfo?.language,
+            data.rawProfile?.socialInfo?.language
+        );
+
+        const matches = value(stats.matches, data.matches);
+        const wins = value(stats.wins, data.wins);
+        const kills = value(stats.kills, data.kills);
+        const deaths = value(stats.deaths, data.deaths);
+        const kd = value(stats.kd, data.kd);
+        const headshot = value(
+            stats.headshot,
+            stats.headshotRate,
+            data.headshot,
+            data.headshotRate
+        );
+
+        // Only fill fields for which the API has data.
+        setField("name", apiName);
+        setField("ign", apiName);
+        setField("level", apiLevel);
+        setField("rank", apiRank);
+        setField("guild", apiGuild);
+        setField("language", apiLanguage);
+        setField("matches", matches);
+        setField("booyah", wins);
+        setField("kd", kd);
+        setField("headshot", headshot);
+
+        // API's region is IND for India.
+        const region = String(
+            value(basic.region, data.region, "IND")
+        ).toUpperCase();
+
+        const countryMap = {
+            IND: "India",
+            BD: "Bangladesh",
+            NP: "Nepal",
+            PK: "Pakistan",
+            BR: "Brazil",
+            ID: "Indonesia",
+            TH: "Thailand",
+            VN: "Vietnam",
+            US: "United States",
+            RU: "Russia"
+        };
+
+        setField("country", countryMap[region] || "");
+
+        setStatus(
+            "success",
+            "✓ Free Fire data loaded automatically"
+        );
+
+        window.__4FU_LIVE_PLAYER_DATA__ = data;
+    }
+
+    async function fetchLive(uid) {
+        uid = String(uid || "").trim();
+
+        if (!uid) {
+            setStatus("", "");
+            return;
+        }
+
+        if (typeof window.getFreeFirePlayer !== "function") {
+            setStatus(
+                "error",
+                "⚠ Free Fire API service not loaded."
+            );
+            return;
+        }
+
+        const thisRequest = ++requestId;
+
+        setStatus(
+            "loading",
+            "⏳ Fetching Free Fire player data..."
+        );
+
+        try {
+            const data = await window.getFreeFirePlayer(uid, "IND");
+
+            if (thisRequest !== requestId) return;
+
+            if (!data) {
+                setStatus(
+                    "error",
+                    "⚠ No live data found for this UID."
+                );
+                return;
+            }
+
+            applyLiveData(data);
+
+        } catch (error) {
+            if (thisRequest !== requestId) return;
+
+            console.error("[4FU Add Player] Live API error:", error);
+
+            setStatus(
+                "error",
+                "⚠ Could not fetch Free Fire data. You can enter details manually."
+            );
+        }
+    }
+
+    function scheduleFetch() {
+        clearTimeout(timer);
+
+        const uid = String(uidInput?.value || "").trim();
+
+        if (!uid) {
+            setStatus("", "");
+            return;
+        }
+
+        timer = setTimeout(() => {
+            fetchLive(uid);
+        }, 600);
+    }
+
+    if (uidInput) {
+        uidInput.addEventListener("input", scheduleFetch);
+
+        uidInput.addEventListener("change", () => {
+            clearTimeout(timer);
+            fetchLive(uidInput.value);
+        });
+
+        uidInput.addEventListener("blur", () => {
+            clearTimeout(timer);
+            if (uidInput.value.trim()) {
+                fetchLive(uidInput.value);
+            }
+        });
+    }
+
+    window.addEventListener("load", () => {
+        document.body.style.visibility = "visible";
+    });
+})();
+</script>
+
 <script src="js/add-player.js?v=1783829699314"></script>
 
 </body>
-
 </html>
