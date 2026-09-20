@@ -23,45 +23,10 @@ function getHLGamingCredentials(env) {
   };
 }
 
-async function hlgamingImageUrl(imgCode, env) {
-  const { userUid, apiKey } = getHLGamingCredentials(env);
-
-  if (!userUid || !apiKey || imgCode === undefined || imgCode === null || imgCode === "") {
-    return null;
-  }
-
-  const url = new URL(HL_GAMING_API_ROOT);
-  url.searchParams.set("sectionName", "image");
-  url.searchParams.set("useruid", userUid);
-  url.searchParams.set("api", apiKey);
-  url.searchParams.set("img_code", String(imgCode));
-
-  const response = await fetch(url.toString(), {
-    headers: { Accept: "application/json" },
-  });
-
-  const bodyText = await response.text();
-
-  let data;
-  try {
-    data = JSON.parse(bodyText);
-  } catch {
-    return null;
-  }
-
-  if (!response.ok || data?.error) return null;
-
-  const imageUrl = data?.result?.url || data?.result?.imageUrl || null;
-  if (!imageUrl) return null;
-  if (/placeholder|no[-_ ]?image|default[-_ ]?(banner|outfit|image)|not[-_ ]?found/i.test(imageUrl)) return null;
-  return imageUrl;
-}
-
-
 /* =========================================================
    BACKBLAZE B2 PERMANENT FREE FIRE ASSET STORAGE
-   First successful HL image fetch is copied to B2.
-   Later requests are served from B2 without calling HL Gaming.
+   Banner/outfit image delivery is B2-only.
+   The HL image endpoint is never used for these assets.
    ========================================================= */
 
 let b2AuthCache = null;
@@ -116,8 +81,15 @@ async function b2Authorize(env) {
 async function b2DownloadFile(env, fileName) {
   const auth = await b2Authorize(env);
 
+  // B2 credentials are missing/unavailable.
+  // Return null so diagnostic routes can report this cleanly instead of
+  // crashing with "Cannot read properties of null (reading 'downloadUrl')".
+  if (!auth?.downloadUrl || !auth?.authorizationToken) {
+    return null;
+  }
+
   const url =
-    `${auth.downloadUrl}/file/${encodeURIComponent(env.B2_BUCKET_NAME)}/${fileName}`;
+    `${auth.downloadUrl}/file/${encodeURIComponent(getB2Credentials(env).bucketName)}/${fileName}`;
 
   const response = await fetch(url, {
     method: "GET",
@@ -194,217 +166,482 @@ async function b2UploadFile(env, fileName, body, contentType) {
   return true;
 }
 
+
+async function b2ListProfileFileNames(env, uid) {
+  const auth = await b2Authorize(env);
+  if (!auth?.apiUrl || !auth?.authorizationToken || !auth?.allowed?.bucketId) {
+    return [];
+  }
+
+  const url = `${auth.apiUrl}/b2api/v2/b2_list_file_names`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: auth.authorizationToken,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      bucketId: auth.allowed.bucketId,
+      prefix: `freefire/profiles/${String(uid)}`,
+      maxFileCount: 1000,
+    }),
+  });
+
+  if (!response.ok) return [];
+
+  const data = await response.json().catch(() => null);
+  return Array.isArray(data?.files)
+    ? data.files.map((f) => f?.fileName).filter(Boolean)
+    : [];
+}
+
+async function b2CachedProfile(uid, region, env) {
+  const directNames = [
+    `freefire/profiles/${uid}.json`,
+    `freefire/profiles/${uid}_${region}.json`,
+    `freefire/profiles/${uid}-${region}.json`,
+    `freefire/profiles/${region}_${uid}.json`,
+    `freefire/profiles/${uid}.txt`,
+  ];
+
+  const candidates = [...directNames];
+  try {
+    const listed = await b2ListProfileFileNames(env, uid);
+    for (const name of listed) {
+      if (!candidates.includes(name)) candidates.push(name);
+    }
+  } catch {
+    // Direct candidates are still attempted below.
+  }
+
+  for (const fileName of candidates) {
+    try {
+      const stored = await b2DownloadFile(env, fileName);
+      if (!stored) continue;
+
+      const text = new TextDecoder().decode(stored.body).replace(/^\uFEFF/, "").trim();
+      if (!text) continue;
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        continue;
+      }
+
+      // Accept common wrappers used by saved profile snapshots.
+      const profile =
+        data?.profile && typeof data.profile === "object" ? data.profile :
+        data?.data && typeof data.data === "object" ? data.data :
+        data?.result && typeof data.result === "object" ? data.result :
+        data;
+
+      return {
+        data: profile,
+        provider: "Backblaze-B2-profile-cache",
+        fileName,
+      };
+    } catch {
+      // Try the next candidate.
+    }
+  }
+
+  return null;
+}
+
 function b2AssetFileName(asset, imgCode) {
   const safeCode = String(imgCode).replace(/[^0-9A-Za-z_-]/g, "");
   const folder = asset === "banner" ? "banners" : "outfits";
   return `freefire/${folder}/${safeCode}.jpg`;
 }
 
-async function getPermanentHLAsset(asset, imgCode, env) {
+/*
+ * Returns a SHA-256 fingerprint for an already-stored B2 object.
+ * This is B2-only and never calls the HL image API.
+ */
+async function b2Sha256(env, fileName) {
+  const stored = await b2DownloadFile(env, fileName);
+  if (!stored) return null;
+
+  const hashBuffer = await crypto.subtle.digest("SHA-256", stored.body);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hash = hashArray
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+
+  return {
+    sha256: hash,
+    size: stored.body.byteLength,
+    contentType: stored.contentType || "application/octet-stream",
+  };
+}
+
+
+async function publicFFAsset(imgCode) {
+  if (imgCode === undefined || imgCode === null || imgCode === "") return null;
+
+  // Public Free Fire item-asset CDN. No API key and no HL quota.
+  const url = `https://ffitems.devhubx.org/items/${encodeURIComponent(String(imgCode))}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: { Accept: "image/png,image/*;q=0.9" },
+      cf: { cacheTtl: 86400, cacheEverything: true },
+    });
+
+    const contentType = response.headers.get("content-type") || "";
+    if (!response.ok || !contentType.toLowerCase().startsWith("image/")) {
+      return null;
+    }
+
+    const body = await response.arrayBuffer();
+    if (body.byteLength < 256) return null;
+
+    // Reject the known HL Gaming NOT FOUND placeholder even when it is
+    // returned by an independent/public asset provider.
+    const hashBuffer = await crypto.subtle.digest("SHA-256", body);
+    const hash = Array.from(new Uint8Array(hashBuffer))
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+
+    if (
+      hash ===
+      "289b4937145d2768398466e627cf43fbc87bf0b581ed476227a9a2ca39a84c5d"
+    ) {
+      return null;
+    }
+
+    return {
+      body,
+      contentType: contentType || "image/png",
+      source: "FF-Items-Public-CDN",
+    };
+  } catch (error) {
+    console.warn("Public FF asset provider failed:", error?.message || error);
+    return null;
+  }
+}
+
+
+/*
+ * Banner-specific public fallback.
+ *
+ * IMPORTANT:
+ * - No HL image API call.
+ * - Mobileverso is checked first because it has the exact item page for
+ *   banner IDs and exposes the item image in the page metadata.
+ * - Generic FF item CDNs are kept as later fallbacks.
+ */
+async function fetchPublicImage(url) {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Accept: "image/avif,image/webp,image/png,image/jpeg,image/*;q=0.9",
+      },
+      cf: { cacheTtl: 86400, cacheEverything: true },
+    });
+
+    const contentType = response.headers.get("content-type") || "";
+    if (!response.ok || !contentType.toLowerCase().startsWith("image/")) {
+      return null;
+    }
+
+    const body = await response.arrayBuffer();
+    if (body.byteLength < 256) return null;
+
+    const hashBuffer = await crypto.subtle.digest("SHA-256", body);
+    const hash = Array.from(new Uint8Array(hashBuffer))
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+
+    // Known HL Gaming NOT FOUND placeholder.
+    if (
+      hash ===
+      "289b4937145d2768398466e627cf43fbc87bf0b581ed476227a9a2ca39a84c5d"
+    ) {
+      return null;
+    }
+
+    return {
+      body,
+      contentType,
+      sourceUrl: url,
+    };
+  } catch (error) {
+    console.warn(
+      "Public image fetch failed:",
+      url,
+      error?.message || error
+    );
+    return null;
+  }
+}
+
+async function publicFFBannerAsset(imgCode) {
+  if (imgCode === undefined || imgCode === null || imgCode === "") {
+    return null;
+  }
+
+  const id = encodeURIComponent(String(imgCode));
+
+  // 1) Exact item page -> extract its real image URL.
+  // This avoids using the small generic item endpoint as the first choice.
+  const pageUrl = `https://mobileverso.com.br/id/freefire/item/${id}`;
+
+  try {
+    const pageResponse = await fetch(pageUrl, {
+      headers: {
+        Accept: "text/html,application/xhtml+xml",
+      },
+      cf: { cacheTtl: 21600, cacheEverything: true },
+    });
+
+    if (pageResponse.ok) {
+      const html = await pageResponse.text();
+
+      const candidates = [];
+      const addCandidate = (value) => {
+        if (!value) return;
+        const decoded = value
+          .replace(/&amp;/g, "&")
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .trim();
+
+        if (!decoded) return;
+        try {
+          candidates.push(new URL(decoded, pageUrl).toString());
+        } catch {}
+      };
+
+      // Prefer OpenGraph/Twitter image metadata.
+      const metaPatterns = [
+        /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+        /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+        /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
+        /<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i,
+      ];
+
+      for (const pattern of metaPatterns) {
+        const match = html.match(pattern);
+        if (match?.[1]) addCandidate(match[1]);
+      }
+
+      // Then look for an image URL associated with this exact item ID.
+      const imageUrlPatterns = [
+        new RegExp(
+          `https?://[^"'\\\\s<>]+${String(imgCode).replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}[^"'\\\\s<>]*`,
+          "ig"
+        ),
+        new RegExp(
+          `(?:src|data-src)=["']([^"']*${String(imgCode).replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}[^"']*)["']`,
+          "ig"
+        ),
+      ];
+
+      for (const pattern of imageUrlPatterns) {
+        let match;
+        while ((match = pattern.exec(html)) !== null) {
+          addCandidate(match[1] || match[0]);
+        }
+      }
+
+      for (const candidate of [...new Set(candidates)]) {
+        const image = await fetchPublicImage(candidate);
+        if (image) {
+          return {
+            ...image,
+            source: "Mobileverso-Item-Page",
+          };
+        }
+      }
+    }
+  } catch (error) {
+    console.warn(
+      "Mobileverso banner provider failed:",
+      error?.message || error
+    );
+  }
+
+  // 2) Free Fire item image CDN.
+  const genericUrls = [
+    `https://cdn.jsdelivr.net/gh/ShahGCreator/icon@main/PNG/${id}.png`,
+    `https://ffitems.devhubx.org/items/${id}`,
+  ];
+
+  for (const url of genericUrls) {
+    const image = await fetchPublicImage(url);
+    if (image) {
+      return {
+        ...image,
+        source: "FreeFire-Public-Item-CDN",
+      };
+    }
+  }
+
+  return null;
+}
+
+async function getPermanentHLAsset(
+  asset,
+  imgCode,
+  env,
+  uid = null,
+  region = "IND",
+  primaryKey = null
+) {
   const fileName = b2AssetFileName(asset, imgCode);
 
   // =========================================================
-  // 1) ALWAYS CHECK BACKBLAZE FIRST
+  // B2-ONLY ASSET DELIVERY
+  // Banner/outfit images are already permanently stored in B2.
+  // NEVER fall back to primary/public/HL image providers here.
+  // This guarantees zero HL image-API quota usage for assets.
   // =========================================================
-  const stored = await b2DownloadFile(env, fileName);
-
-  if (stored) {
-    return new Response(stored.body, {
-      status: 200,
-      headers: corsHeaders({
-        "Content-Type":
-          stored.contentType || "image/jpeg",
-        "Cache-Control": "public, max-age=31536000, immutable",
-        "X-4FU-Asset": asset,
-        "X-4FU-Provider": "Backblaze-B2",
-        "X-4FU-Cache": "HIT",
-      }),
-    });
-  }
-
-  // =========================================================
-  // 2) B2 MISS → ONLY NOW CALL HL GAMING
-  // =========================================================
-  const imageUrl = await hlgamingImageUrl(imgCode, env);
-
-  if (!imageUrl) {
+  let stored;
+  try {
+    stored = await b2DownloadFile(env, fileName);
+  } catch (error) {
     return json(
       {
         success: false,
-        error: `HL Gaming did not return a ${asset} image for ${imgCode}`,
-        cache: "MISS",
+        error: "Backblaze B2 asset lookup failed",
+        details: error?.message || String(error),
+        asset,
+        img_code: String(imgCode),
+        b2_file: fileName,
+        imageApiCalled: false,
+        imageApiQuotaUsed: false,
       },
       502
     );
   }
 
-  // =========================================================
-  // 3) DOWNLOAD IMAGE FROM HL
-  // =========================================================
-  const imageResponse = await fetch(imageUrl, {
-    headers: {
-      Accept: "image/*",
-    },
-  });
-
-  if (!imageResponse.ok) {
-    const errorBody = await imageResponse.text();
-
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: `HL image download failed`,
-        status: imageResponse.status,
-        details: errorBody.slice(0, 300),
-      }),
+  if (!stored) {
+    return json(
       {
-        status: imageResponse.status,
-        headers: corsHeaders({
-          "Content-Type": "application/json; charset=utf-8",
-          "Cache-Control": "no-store",
-        }),
-      }
+        success: false,
+        error: "Asset not found in Backblaze B2",
+        asset,
+        img_code: String(imgCode),
+        b2_file: fileName,
+        b2_bucket: getB2Credentials(env).bucketName,
+        imageApiCalled: false,
+        imageApiQuotaUsed: false,
+        provider: "Backblaze-B2",
+      },
+      404
     );
   }
 
-  const body = await imageResponse.arrayBuffer();
+  // Reject the known bad placeholder if it somehow exists in B2.
+  const storedHashBuffer = await crypto.subtle.digest(
+    "SHA-256",
+    stored.body
+  );
+  const storedHash = Array.from(new Uint8Array(storedHashBuffer))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 
-  // =========================================================
-  // 4) SAVE IMAGE PERMANENTLY TO BACKBLAZE
-  // =========================================================
-  try {
-    await b2UploadFile(
-      env,
-      fileName,
-      body,
-      imageResponse.headers.get("content-type") || "image/jpeg"
-    );
-  } catch (b2WriteError) {
-    // IMPORTANT:
-    // Do NOT silently pretend caching succeeded.
-    console.error(
-      "Backblaze upload failed:",
-      b2WriteError?.message || b2WriteError
-    );
-
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: "Image fetched from HL Gaming but could not be saved to Backblaze",
-        details: b2WriteError?.message || "B2 upload failed",
-      }),
+  if (
+    storedHash ===
+    "289b4937145d2768398466e627cf43fbc87bf0b581ed476227a9a2ca39a84c5d"
+  ) {
+    return json(
       {
-        status: 502,
-        headers: corsHeaders({
-          "Content-Type": "application/json; charset=utf-8",
-          "Cache-Control": "no-store",
-        }),
-      }
+        success: false,
+        error: "Backblaze B2 contains the known NOT FOUND placeholder",
+        asset,
+        img_code: String(imgCode),
+        b2_file: fileName,
+        imageApiCalled: false,
+        imageApiQuotaUsed: false,
+      },
+      404
     );
   }
 
-  // =========================================================
-  // 5) RETURN IMAGE
-  // =========================================================
-  return new Response(body, {
+  return new Response(stored.body, {
     status: 200,
     headers: corsHeaders({
-      "Content-Type":
-        imageResponse.headers.get("content-type") || "image/jpeg",
+      "Content-Type": stored.contentType || "image/jpeg",
       "Cache-Control": "public, max-age=31536000, immutable",
       "X-4FU-Asset": asset,
-      "X-4FU-Provider": "HL-Gaming->Backblaze-B2",
-      "X-4FU-Cache": "MISS-SAVED",
+      "X-4FU-Provider": "Backblaze-B2",
+      "X-4FU-Cache": "HIT",
+      "X-4FU-HL-Image-API": "NOT-CALLED",
+      "X-4FU-B2-File": fileName,
     }),
   });
 }
 
 function collectNumericIds(value) {
-  const ids = [];
+  const found = [];
+  const seen = new WeakSet();
 
-  const walk = (item) => {
-    if (item === undefined || item === null || item === "") return;
+  const add = (v) => {
+    if (v === undefined || v === null || v === "") return;
+    const s = String(v).trim();
+    if (/^\d{3,20}$/.test(s) && !found.includes(s)) found.push(s);
+  };
 
-    if (typeof item === "number" && Number.isFinite(item)) {
-      ids.push(String(item));
+  const visit = (v, depth = 0) => {
+    if (v === undefined || v === null || depth > 6) return;
+
+    if (typeof v === "number") {
+      if (Number.isFinite(v)) add(v);
       return;
     }
 
-    if (typeof item === "string") {
-      if (/^https?:\/\//i.test(item)) return;
-      if (/^\d+$/.test(item.trim())) ids.push(item.trim());
+    if (typeof v === "string") {
+      // Asset IDs are numeric. Ignore arbitrary text and URLs.
+      add(v);
       return;
     }
 
-    if (Array.isArray(item)) {
-      item.forEach(walk);
+    if (Array.isArray(v)) {
+      for (const item of v) visit(item, depth + 1);
       return;
     }
 
-    if (item && typeof item === "object") {
-      // Common Free Fire outfit/clothes object shapes.
-      const id =
-        item.id ??
-        item.ID ??
-        item.itemId ??
-        item.itemID ??
-        item.clothesId ??
-        item.clothesID;
+    if (typeof v !== "object") return;
+    if (seen.has(v)) return;
+    seen.add(v);
 
-      if (id !== undefined && id !== null && id !== "") {
-        walk(id);
-      } else {
-        Object.values(item).forEach(walk);
-      }
+    // Free Fire/HL responses use several names for equipped item IDs.
+    const idKeys = [
+      "id", "ID", "Id", "itemId", "ItemId", "ItemID",
+      "clothesId", "ClothesId", "ClothesID", "outfitId", "OutfitId",
+      "OutfitID", "skinId", "SkinId", "SkinID", "imageId", "ImageId",
+      "imageCode", "ImageCode", "img_code", "imgCode", "code", "Code",
+      "assetId", "AssetId", "AssetID",
+    ];
+
+    for (const key of idKeys) {
+      if (Object.prototype.hasOwnProperty.call(v, key)) add(v[key]);
+    }
+
+    // Some providers wrap equipped items inside one of these containers.
+    const nestedKeys = [
+      "clothes", "Clothes", "equippedClothes", "EquippedClothes",
+      "equippedOutfit", "EquippedOutfit", "items", "Items", "data",
+      "result", "Result", "list", "List", "value", "Value",
+    ];
+    for (const key of nestedKeys) {
+      if (Object.prototype.hasOwnProperty.call(v, key)) visit(v[key], depth + 1);
     }
   };
 
-  walk(value);
-  return [...new Set(ids)];
+  visit(value);
+  return found;
 }
 
-async function hlgamingAssetsFromProfile(profileData, env) {
-  const basicInfo =
-    profileData?.basicInfo ||
-    profileData?.basic_info ||
-    {};
-
-  const profileInfo =
-    profileData?.profileInfo ||
-    profileData?.profile_info ||
-    {};
-
-  const bannerId =
-    basicInfo.bannerId ??
-    basicInfo.bannerID ??
-    profileData?.bannerId ??
-    profileData?.bannerID;
-
-  // Existing Free Fire profile response normally exposes equipped clothes
-  // inside profileInfo.clothes. Keep several compatible shapes as fallback.
-  const clothes =
-    profileInfo.clothes ??
-    profileInfo.Clothes ??
-    profileInfo.equippedClothes ??
-    profileInfo.equippedOutfit ??
-    profileData?.clothes ??
-    profileData?.equippedClothes ??
-    [];
-
-  const outfitIds = collectNumericIds(clothes);
-
-  const [banner, ...outfitUrls] = await Promise.all([
-    hlgamingImageUrl(bannerId, env),
-    ...outfitIds.map((id) => hlgamingImageUrl(id, env)),
-  ]);
-
-  return {
-    banner: banner || null,
-    outfit: outfitUrls.find(Boolean) || null,
-    outfits: outfitUrls.filter(Boolean),
-    bannerId: bannerId ?? null,
-    outfitIds,
-  };
+function firstNumericId(...values) {
+  for (const value of values) {
+    const ids = collectNumericIds(value);
+    if (ids.length) return ids[0];
+  }
+  return null;
 }
 
 async function hlgamingAsset(
@@ -413,59 +650,141 @@ async function hlgamingAsset(
   region,
   env,
   profileData = null,
-  outfitIndex = 0
+  outfitIndex = 0,
+  primaryKey = null
 ) {
-  let assets = null;
+  // Resolve IDs first. This NEVER calls the HL image endpoint.
+  let resolvedProfile = profileData;
 
-  if (profileData) {
-    assets = await hlgamingAssetsFromProfile(profileData, env);
-  } else {
-    // Asset-only requests use the existing providers first, then tertiary fallback.
-    const profileResult = await profileDataWithFallback(uid, region, env);
-    assets = await hlgamingAssetsFromProfile(profileResult.data, env);
+  if (!resolvedProfile) {
+    const profileResult = await profileDataWithFallback(
+      uid,
+      region,
+      env
+    );
+    resolvedProfile = profileResult?.data || {};
   }
 
-  const safeIndex = Number.isInteger(outfitIndex) && outfitIndex >= 0
-    ? outfitIndex
-    : 0;
+  function extractAssetIds(data) {
+    const basic =
+      data?.basicInfo ||
+      data?.basic_info ||
+      {};
 
-  const imageUrl =
+    const profile =
+      data?.profileInfo ||
+      data?.profile_info ||
+      {};
+
+    const bannerId =
+      basic.bannerId ??
+      basic.bannerID ??
+      basic.AccountBannerId ??
+      basic.accountBannerId ??
+      data?.bannerId ??
+      data?.bannerID ??
+      data?.AccountBannerId ??
+      data?.accountBannerId ??
+      null;
+
+    const clothes = [
+      profile.clothes,
+      profile.Clothes,
+      profile.equippedClothes,
+      profile.equippedOutfit,
+      profile.EquippedOutfit,
+      data?.clothes,
+      data?.Clothes,
+      data?.equippedClothes,
+      data?.equippedOutfit,
+      data?.EquippedOutfit,
+    ].filter((v) => v !== undefined && v !== null);
+
+    const outfitIds = [
+      ...collectNumericIds(clothes),
+      ...collectNumericIds(profile.EquippedOutfit),
+      ...collectNumericIds(profile.equippedOutfit),
+    ].filter(
+      (value, index, array) =>
+        array.indexOf(value) === index
+    );
+
+    return { bannerId, outfitIds };
+  }
+
+  let ids = extractAssetIds(resolvedProfile);
+
+  // If profile/secondary did not contain IDs, ask HL AccountInfo +
+  // AccountProfileInfo for the numeric IDs. This is NOT the image API,
+  // so it does not consume the HL image quota.
+  const needBanner =
+    asset === "banner" &&
+    (ids.bannerId === null ||
+      ids.bannerId === undefined ||
+      ids.bannerId === "");
+
+  const needOutfit =
+    asset === "outfit" &&
+    ids.outfitIds.length === 0;
+
+  if (needBanner || needOutfit) {
+    try {
+      const hlProfile = await hlgamingProfile(
+        uid,
+        region,
+        env
+      );
+
+      const hlIds = extractAssetIds(hlProfile);
+
+      ids = {
+        bannerId:
+          ids.bannerId ??
+          hlIds.bannerId ??
+          null,
+        outfitIds:
+          ids.outfitIds.length > 0
+            ? ids.outfitIds
+            : hlIds.outfitIds,
+      };
+    } catch (error) {
+      console.warn(
+        "HL profile ID lookup failed:",
+        error?.message || error
+      );
+    }
+  }
+
+  const safeIndex =
+    Number.isInteger(outfitIndex) && outfitIndex >= 0
+      ? outfitIndex
+      : 0;
+
+  const imgCode =
     asset === "banner"
-      ? assets.banner
-      : (assets.outfits?.[safeIndex] || assets.outfit);
+      ? ids.bannerId
+      : ids.outfitIds[safeIndex] ||
+        ids.outfitIds[0];
 
-  if (!imageUrl) {
-    throw new Error(`HL Gaming did not return a ${asset} image URL`);
+  if (
+    imgCode === undefined ||
+    imgCode === null ||
+    imgCode === ""
+  ) {
+    throw new Error(
+      `No ${asset} img_code was found for UID ${uid}`
+    );
   }
 
-  const imageResponse = await fetch(imageUrl, {
-    headers: { Accept: "image/*" },
-  });
-
-  const body = await imageResponse.arrayBuffer();
-
-  if (!imageResponse.ok) {
-    return new Response(body, {
-      status: imageResponse.status,
-      headers: corsHeaders({
-        "Content-Type":
-          imageResponse.headers.get("content-type") ||
-          "text/plain; charset=utf-8",
-        "Cache-Control": "no-store",
-      }),
-    });
-  }
-
-  return new Response(body, {
-    status: 200,
-    headers: corsHeaders({
-      "Content-Type":
-        imageResponse.headers.get("content-type") || "image/jpeg",
-      "Cache-Control": "public, max-age=300",
-      "X-4FU-Asset": asset,
-      "X-4FU-Provider": "HL-Gaming-img_code",
-    }),
-  });
+  // B2-only delivery: no HL image endpoint is called.
+  return await getPermanentHLAsset(
+    asset,
+    imgCode,
+    env,
+    uid,
+    region,
+    primaryKey
+  );
 }
 
 function corsHeaders(extra = {}) {
@@ -834,6 +1153,11 @@ async function hlgamingProfile(uid, region, env) {
     profileResult?.EquippedOutfit ??
     profileResult?.equippedOutfit ??
     profileResult?.clothes ??
+    profileResult?.Clothes ??
+    profileResult?.data?.EquippedOutfit ??
+    profileResult?.data?.equippedOutfit ??
+    profileResult?.data?.clothes ??
+    profileResult?.data?.Clothes ??
     [];
 
   return {
@@ -853,17 +1177,39 @@ async function hlgamingProfile(uid, region, env) {
 async function profileDataWithFallback(uid, region, env) {
   const key = env.FREE_FIRE_API_KEY;
   let primaryError = null;
+
   if (key) {
-    try { return { data: await upstreamJSON("bhau", uid, region, key), provider: "primary" }; }
-    catch (error) { primaryError = error?.message || String(error); }
+    try {
+      return {
+        data: await upstreamJSON("bhau", uid, region, key),
+        provider: "primary",
+      };
+    } catch (error) {
+      primaryError = error?.message || String(error);
+    }
   }
 
-  const secondary = await secondaryJSON("player-profile", { uid, server: region });
-  if (secondary.success) return { data: secondary.data, provider: "secondary" };
+  const secondary = await secondaryJSON("player-profile", {
+    uid,
+    server: region,
+  });
+
+  if (secondary.success) {
+    return {
+      data: normalizeSecondaryProfile(secondary.data),
+      provider: "secondary",
+    };
+  }
 
   try {
-    return { data: await hlgamingProfile(uid, region, env), provider: "hl-gaming" };
+    return {
+      data: await hlgamingProfile(uid, region, env),
+      provider: "hl-gaming",
+    };
   } catch (hlError) {
+    const cachedProfile = await b2CachedProfile(uid, region, env);
+    if (cachedProfile?.data) return cachedProfile;
+
     throw new Error(
       `Profile providers unavailable: primary=${primaryError || "not configured"}; secondary=${secondary.error || "failed"}; hl-gaming=${hlError?.message || "failed"}`
     );
@@ -915,6 +1261,24 @@ function normalizeSecondaryProfile(data) {
     data.credit_score_info ||
     {};
 
+  const profile =
+    data.profileinfo ||
+    data.profileInfo ||
+    data.profile_info ||
+    {};
+
+  const clothes =
+    profile.clothes ??
+    profile.Clothes ??
+    profile.equippedClothes ??
+    profile.equippedOutfit ??
+    data.clothes ??
+    data.Clothes ??
+    data.equippedClothes ??
+    data.EquippedOutfit ??
+    data.equippedOutfit ??
+    [];
+
   return {
     basicInfo: basic,
     clanBasicInfo: clan,
@@ -922,6 +1286,26 @@ function normalizeSecondaryProfile(data) {
     petInfo: pet,
     socialInfo: social,
     creditScoreInfo: credit,
+
+    profileInfo: {
+      ...profile,
+      clothes: Array.isArray(clothes) ? clothes : [],
+    },
+
+    // Keep these at the top level too because some secondary responses
+    // expose banner/outfit data outside profileInfo.
+    bannerId:
+      basic.bannerId ??
+      basic.bannerID ??
+      basic.AccountBannerId ??
+      basic.accountBannerId ??
+      data.bannerId ??
+      data.bannerID ??
+      data.AccountBannerId ??
+      data.accountBannerId ??
+      null,
+
+    clothes: Array.isArray(clothes) ? clothes : [],
 
     userSparkInfo:
       data.userSparkInfo ||
@@ -1124,9 +1508,20 @@ export default {
           fileName
         );
 
+        const b2Credentials = getB2Credentials(env);
+
         return json({
           success: true,
-          b2: true,
+          b2: Boolean(
+            b2Credentials.keyId &&
+            b2Credentials.applicationKey &&
+            b2Credentials.bucketName
+          ),
+          credentialsConfigured: Boolean(
+            b2Credentials.keyId &&
+            b2Credentials.applicationKey &&
+            b2Credentials.bucketName
+          ),
           exists: !!stored,
           fileName,
           message: stored
@@ -1144,6 +1539,194 @@ export default {
               String(error),
           },
           500
+        );
+      }
+    }
+
+    // =====================================================
+    // B2 ONLY FINGERPRINT
+    // DOES NOT CALL HL GAMING / IMAGE API
+    // Used to identify an already-cached placeholder object
+    // without spending HL image quota.
+    // =====================================================
+    if (url.searchParams.get("b2fingerprint") === "1") {
+      const checkAsset =
+        (url.searchParams.get("asset") || "banner")
+          .trim()
+          .toLowerCase();
+
+      const checkImgCode =
+        url.searchParams.get("img_code") ||
+        url.searchParams.get("imgCode") ||
+        url.searchParams.get("id");
+
+      if (
+        (checkAsset !== "banner" && checkAsset !== "outfit") ||
+        !checkImgCode
+      ) {
+        return json(
+          {
+            success: false,
+            error: "Use asset=banner/outfit and img_code",
+          },
+          400
+        );
+      }
+
+      const fileName = b2AssetFileName(checkAsset, checkImgCode);
+
+      try {
+        const fingerprint = await b2Sha256(env, fileName);
+        return json({
+          success: true,
+          b2Only: true,
+          imageApiCalled: false,
+          imageApiQuotaUsed: false,
+          asset: checkAsset,
+          img_code: String(checkImgCode),
+          fileName,
+          exists: Boolean(fingerprint),
+          fingerprint,
+        });
+      } catch (error) {
+        return json(
+          {
+            success: false,
+            b2Only: true,
+            imageApiCalled: false,
+            imageApiQuotaUsed: false,
+            asset: checkAsset,
+            img_code: String(checkImgCode),
+            fileName,
+            error: error?.message || String(error),
+          },
+          500
+        );
+      }
+    }
+
+    // =====================================================
+    // SAFE ASSET DEBUG
+    // DOES NOT CALL HL IMAGE ENDPOINT
+    // Only reads numeric banner/outfit IDs from HL account
+    // endpoints and checks whether the exact object exists in B2.
+    // =====================================================
+    if (url.searchParams.get("assetdebug") === "1") {
+      const debugUid = (url.searchParams.get("uid") || "").trim();
+      const debugRegion = (url.searchParams.get("region") || "IND")
+        .trim()
+        .toUpperCase();
+      const debugAsset = (url.searchParams.get("asset") || "banner")
+        .trim()
+        .toLowerCase();
+
+      if (!/^[0-9]{5,20}$/.test(debugUid)) {
+        return json(
+          { success: false, error: "Invalid UID" },
+          400
+        );
+      }
+
+      if (!/^[A-Z]{2,8}$/.test(debugRegion)) {
+        return json(
+          { success: false, error: "Invalid region" },
+          400
+        );
+      }
+
+      if (debugAsset !== "banner" && debugAsset !== "outfit") {
+        return json(
+          { success: false, error: "asset must be banner or outfit" },
+          400
+        );
+      }
+
+      try {
+        // AccountInfo + AccountProfileInfo only.
+        // IMPORTANT: this is NOT sectionName=image.
+        const hlProfile = await hlgamingProfile(
+          debugUid,
+          debugRegion,
+          env
+        );
+
+        const bannerId =
+          hlProfile?.basicInfo?.bannerId ??
+          null;
+
+        const outfitIds = collectNumericIds(
+          hlProfile?.profileInfo?.clothes || []
+        );
+
+        const ids =
+          debugAsset === "banner"
+            ? (bannerId !== null && bannerId !== undefined && bannerId !== ""
+                ? [String(bannerId)]
+                : [])
+            : outfitIds;
+
+        const results = [];
+
+        for (const imgCode of ids) {
+          const fileName = b2AssetFileName(debugAsset, imgCode);
+
+          let b2Exists = false;
+          let b2Checked = false;
+          let b2Error = null;
+
+          try {
+            const stored = await b2DownloadFile(env, fileName);
+            b2Checked = true;
+            b2Exists = !!stored;
+          } catch (error) {
+            b2Error = error?.message || String(error);
+          }
+
+          results.push({
+            img_code: imgCode,
+            fileName,
+            b2Checked,
+            b2Exists,
+            b2Error,
+          });
+        }
+
+        const b2Credentials = getB2Credentials(env);
+
+        return json({
+          success: true,
+          debugOnly: true,
+          imageApiCalled: false,
+          imageApiQuotaUsed: false,
+          uid: debugUid,
+          region: debugRegion,
+          asset: debugAsset,
+          source: "HL-Gaming-AccountInfo + AccountProfileInfo",
+          bannerId: bannerId ?? null,
+          outfitIds,
+          b2: {
+            credentialsConfigured: Boolean(
+              b2Credentials.keyId &&
+              b2Credentials.applicationKey &&
+              b2Credentials.bucketName
+            ),
+            bucketName: b2Credentials.bucketName || null,
+            results,
+          },
+        });
+      } catch (error) {
+        return json(
+          {
+            success: false,
+            debugOnly: true,
+            imageApiCalled: false,
+            imageApiQuotaUsed: false,
+            uid: debugUid,
+            region: debugRegion,
+            asset: debugAsset,
+            error: error?.message || String(error),
+          },
+          502
         );
       }
     }
@@ -1183,20 +1766,6 @@ export default {
         400
       );
     }
-
-    if (!key) {
-      return json(
-        {
-          success: false,
-          error:
-            "FREE_FIRE_API_KEY is not configured",
-        },
-        500
-      );
-    }
-
-   
-
     /* =====================================================
        EXISTING BANNER / OUTFIT PROXY
        ===================================================== */
@@ -1209,26 +1778,45 @@ export default {
         url.searchParams.get("imgCode") ||
         url.searchParams.get("id");
 
-      const { userUid: hlUserUid, apiKey: hlApiKey } =
-        getHLGamingCredentials(env);
+      if (directImgCode) {
+        // ---------------------------------------------------------
+        // SAFE PRIMARY-ONLY TEST MODE
+        // ?nohl=1 means: B2 first, then existing primary provider ONLY.
+        // NEVER call the HL image endpoint in this mode.
+        // ---------------------------------------------------------
+        if (url.searchParams.get("nohl") === "1") {
+          // Strict B2-only diagnostic/test mode.
+          return await getPermanentHLAsset(
+            asset,
+            directImgCode,
+            env,
+            null,
+            region,
+            null
+          );
+        }
 
-      if (directImgCode && hlUserUid && hlApiKey) {
         try {
-          // IMPORTANT: direct img_code requests MUST use the permanent
-          // B2-first flow only. If B2/HL fails, return the error directly.
-          // Do NOT fall through to hlgamingAsset(), because that can issue
-          // additional HL image requests and burn API quota.
-          return await getPermanentHLAsset(asset, directImgCode, env);
+          // IMPORTANT: explicit banner/outfit image lookup is B2-only.
+          // No primary/public/HL image provider fallback is allowed.
+          return await getPermanentHLAsset(
+            asset,
+            directImgCode,
+            env,
+            uid,
+            region,
+            key
+          );
         } catch (hlDirectError) {
           console.error(
-            "Permanent HL/B2 asset lookup failed:",
+            "Backblaze B2 asset lookup failed:",
             hlDirectError?.message || hlDirectError
           );
 
           return json(
             {
               success: false,
-              error: "Permanent asset lookup failed",
+              error: "Backblaze B2 asset lookup failed",
               details: hlDirectError?.message || String(hlDirectError),
               asset,
               img_code: String(directImgCode),
@@ -1238,45 +1826,57 @@ export default {
         }
       }
 
-      // Prefer HL Gaming when its credentials are configured.
-      // If HL Gaming is unavailable/misconfigured, keep the existing
-      // SiamBhau asset route as a fallback so current 4FU functionality
-      // does not break.
-      const { userUid, apiKey } = getHLGamingCredentials(env);
+      // No img_code in URL:
+      // resolve the asset ID as before, but the actual image is delivered
+      // strictly from Backblaze B2 by getPermanentHLAsset().
+      try {
+        const outfitIndex = Math.max(
+          0,
+          Number.parseInt(
+            url.searchParams.get("outfitIndex") || "0",
+            10
+          ) || 0
+        );
 
-      if (userUid && apiKey) {
-        try {
-          const outfitIndex = Math.max(
-            0,
-            Number.parseInt(url.searchParams.get("outfitIndex") || "0", 10) || 0
-          );
+        return await hlgamingAsset(
+          asset,
+          uid,
+          region,
+          env,
+          null,
+          outfitIndex,
+          key
+        );
+      } catch (assetError) {
+        console.error(
+          `Backblaze B2 ${asset} pipeline failed:`,
+          assetError?.message || assetError
+        );
 
-          return await hlgamingAsset(
+        return json(
+          {
+            success: false,
+            error: `Backblaze B2 ${asset} pipeline failed`,
+            details:
+              assetError?.message ||
+              String(assetError),
             asset,
-            uid,
-            region,
-            env,
-            null,
-            outfitIndex
-          );
-        } catch (hlError) {
-          console.warn(
-            `HL Gaming ${asset} failed; using existing asset provider:`,
-            hlError?.message || hlError
-          );
-        }
+          },
+          502
+        );
       }
-
-      return await upstreamAsset(
-        asset === "banner"
-          ? "banner/profile"
-          : "outfits/outfit",
-        uid,
-        region,
-        key
-      );
     }
 
+
+    if (!key) {
+      return json(
+        {
+          success: false,
+          error: "FREE_FIRE_API_KEY is not configured",
+        },
+        500
+      );
+    }
 
     try {
 
@@ -1307,9 +1907,17 @@ export default {
           try {
             profileData = await hlgamingProfile(uid, region, env);
           } catch (hlError) {
-            throw new Error(
-              `Profile providers unavailable: primary=${primaryProfileError?.message || "failed"}; secondary=${fallback.error || "failed"}; hl-gaming=${hlError?.message || "failed"}`
-            );
+            // Last profile fallback: use the profile snapshot already stored
+            // in Backblaze B2. This keeps the profile page alive even when
+            // the live providers are rate-limited or unavailable.
+            const cachedProfile = await b2CachedProfile(uid, region, env);
+            if (cachedProfile?.data) {
+              profileData = cachedProfile.data;
+            } else {
+              throw new Error(
+                `Profile providers unavailable: primary=${primaryProfileError?.message || "failed"}; secondary=${fallback.error || "failed"}; hl-gaming=${hlError?.message || "failed"}`
+              );
+            }
           }
         }
       }
@@ -1331,9 +1939,10 @@ export default {
         if (fallback.success) {
           statsData = fallback.data;
         } else {
-          throw new Error(
-            `Stats providers unavailable: primary=${primaryStatsError?.message || "failed"}; secondary=${fallback.error || "failed"}; hl-gaming account fallback does not provide detailed mode stats`
-          );
+          // Stats are optional for the profile response. Do not let a
+          // temporary stats-provider/rate-limit failure hide the player's
+          // name, rank, banner, outfits and other profile data.
+          statsData = {};
         }
       }
 
@@ -1476,52 +2085,198 @@ export default {
 
       // IMPORTANT: do NOT call HL image endpoints while building the profile JSON.
       // Return stable Worker proxy URLs using the numeric image codes instead.
-      // The actual HL image request happens only on the first image load, and
-      // that image is then persisted in Backblaze B2.
+      // The browser receives explicit B2 asset proxy URLs; image delivery is
+      // strictly Backblaze B2 and never uses the HL image endpoint.
+      // ---------------------------------------------------------
+      // ASSET ID RESOLUTION
+      //
+      // Primary/secondary profile providers can return the normal
+      // profile data without exposing AccountBannerId/EquippedOutfit.
+      // In that case, ask HL AccountInfo + AccountProfileInfo for the
+      // NUMERIC IDs only. These are account endpoints, NOT the HL image
+      // endpoint, so image quota is not consumed here.
+      //
+      // Once IDs are known, the browser receives img_code URLs.
+      // The image request is always Backblaze B2 only.
+      // ---------------------------------------------------------
+
       const basicInfoForAssets =
-        profileData?.basicInfo || profileData?.basic_info || {};
+        profileData?.basicInfo ||
+        profileData?.basic_info ||
+        {};
+
       const profileInfoForAssets =
-        profileData?.profileInfo || profileData?.profile_info || {};
+        profileData?.profileInfo ||
+        profileData?.profile_info ||
+        {};
 
-      const bannerIdForAssets =
-        basicInfoForAssets.bannerId ??
-        basicInfoForAssets.bannerID ??
-        profileData?.bannerId ??
-        profileData?.bannerID ??
-        null;
+      let resolvedBannerId =
+        firstNumericId(
+          basicInfoForAssets.bannerId,
+          basicInfoForAssets.bannerID,
+          basicInfoForAssets.AccountBannerId,
+          basicInfoForAssets.accountBannerId,
+          profileData?.bannerId,
+          profileData?.bannerID,
+          profileData?.AccountBannerId,
+          profileData?.accountBannerId
+        );
 
-      const clothesForAssets =
-        profileInfoForAssets.clothes ??
-        profileInfoForAssets.Clothes ??
-        profileInfoForAssets.equippedClothes ??
-        profileInfoForAssets.equippedOutfit ??
-        profileData?.clothes ??
-        profileData?.equippedClothes ??
-        [];
+      let resolvedOutfitIds = [
+        ...collectNumericIds(
+          profileInfoForAssets.clothes
+        ),
+        ...collectNumericIds(
+          profileInfoForAssets.Clothes
+        ),
+        ...collectNumericIds(
+          profileInfoForAssets.equippedClothes
+        ),
+        ...collectNumericIds(
+          profileInfoForAssets.equippedOutfit
+        ),
+        ...collectNumericIds(
+          profileInfoForAssets.EquippedOutfit
+        ),
+        ...collectNumericIds(
+          profileData?.clothes
+        ),
+        ...collectNumericIds(
+          profileData?.equippedClothes
+        ),
+        ...collectNumericIds(
+          profileData?.equippedOutfit
+        ),
+        ...collectNumericIds(
+          profileData?.EquippedOutfit
+        ),
+      ].filter(
+        (value, index, array) =>
+          array.indexOf(value) === index
+      );
 
-      const outfitIdsForAssets = collectNumericIds(clothesForAssets);
+      // Secondary normalized profile is also available in this request.
+      if (secondaryProfile) {
+        const secondaryBasic =
+          secondaryProfile.basicInfo || {};
 
-      // IMPORTANT:
-      // Never expose the third-party HL Gaming image URLs directly to the browser.
-      // The browser should load the images through this Worker so hotlink/CORS/
-      // referrer restrictions on the provider cannot break the profile UI.
+        const secondaryProfileInfo =
+          secondaryProfile.profileInfo || {};
+
+        resolvedBannerId =
+          resolvedBannerId ??
+          secondaryBasic.bannerId ??
+          secondaryBasic.bannerID ??
+          secondaryBasic.AccountBannerId ??
+          secondaryBasic.accountBannerId ??
+          secondaryProfile.bannerId ??
+          secondaryProfile.bannerID ??
+          null;
+
+        resolvedOutfitIds = [
+          ...resolvedOutfitIds,
+          ...collectNumericIds(
+            secondaryProfileInfo.clothes
+          ),
+          ...collectNumericIds(
+            secondaryProfileInfo.Clothes
+          ),
+          ...collectNumericIds(
+            secondaryProfileInfo.equippedOutfit
+          ),
+          ...collectNumericIds(
+            secondaryProfileInfo.EquippedOutfit
+          ),
+          ...collectNumericIds(
+            secondaryProfile.clothes
+          ),
+          ...collectNumericIds(
+            secondaryProfile.equippedOutfit
+          ),
+          ...collectNumericIds(
+            secondaryProfile.EquippedOutfit
+          ),
+        ].filter(
+          (value, index, array) =>
+            array.indexOf(value) === index
+        );
+      }
+
+      // If either asset is still missing, get the numeric IDs directly
+      // from HL's account endpoints. Again: NO image endpoint here.
+      if (
+        (resolvedBannerId === null ||
+          resolvedBannerId === undefined ||
+          resolvedBannerId === "") ||
+        resolvedOutfitIds.length === 0
+      ) {
+        try {
+          const hlAssetProfile =
+            await hlgamingProfile(
+              uid,
+              region,
+              env
+            );
+
+          const hlBasic =
+            hlAssetProfile?.basicInfo || {};
+
+          const hlProfile =
+            hlAssetProfile?.profileInfo || {};
+
+          resolvedBannerId =
+            resolvedBannerId ??
+            firstNumericId(
+              hlBasic.bannerId,
+              hlBasic.bannerID,
+              hlBasic.AccountBannerId,
+              hlBasic.accountBannerId
+            );
+
+          resolvedOutfitIds = [
+            ...resolvedOutfitIds,
+            ...collectNumericIds(hlProfile.clothes),
+            ...collectNumericIds(hlProfile.Clothes),
+            ...collectNumericIds(hlProfile.EquippedOutfit),
+            ...collectNumericIds(hlProfile.equippedOutfit),
+          ].filter(
+            (value, index, array) =>
+              array.indexOf(value) === index
+          );
+        } catch (assetIdError) {
+          console.warn(
+            "HL asset ID lookup failed:",
+            assetIdError?.message || assetIdError
+          );
+        }
+      }
+
       const fallbackBanner =
         `${origin}${path}?uid=${encodedUID}&region=${encodedRegion}&asset=banner`;
 
       const fallbackOutfit =
         `${origin}${path}?uid=${encodedUID}&region=${encodedRegion}&asset=outfit`;
 
-      const proxyBanner = bannerIdForAssets
-        ? `${origin}${path}?uid=${encodedUID}&region=${encodedRegion}&asset=banner&img_code=${encodeURIComponent(String(bannerIdForAssets))}`
-        : fallbackBanner;
+      // Explicit img_code is important: it makes the proxy request
+      // independent of the profile/stat provider on the next request.
+      const proxyBanner =
+        resolvedBannerId !== null &&
+        resolvedBannerId !== undefined &&
+        resolvedBannerId !== ""
+          ? `${origin}${path}?uid=${encodedUID}&region=${encodedRegion}&asset=banner&img_code=${encodeURIComponent(String(resolvedBannerId))}`
+          : fallbackBanner;
 
-      const proxyOutfits = outfitIdsForAssets.map((imgCode) =>
-        `${origin}${path}?uid=${encodedUID}&region=${encodedRegion}&asset=outfit&img_code=${encodeURIComponent(String(imgCode))}`
-      );
+      const proxyOutfits =
+        resolvedOutfitIds.map(
+          (imgCode) =>
+            `${origin}${path}?uid=${encodedUID}&region=${encodedRegion}&asset=outfit&img_code=${encodeURIComponent(String(imgCode))}`
+        );
 
       const assets = {
         banner: proxyBanner,
-        outfit: proxyOutfits[0] || fallbackOutfit,
+        outfit:
+          proxyOutfits[0] ||
+          fallbackOutfit,
         outfits: proxyOutfits,
       };
 
