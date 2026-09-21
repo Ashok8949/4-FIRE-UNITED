@@ -249,6 +249,86 @@ async function b2CachedProfile(uid, region, env) {
   return null;
 }
 
+
+function b2CombinedCacheFileName(uid, region) {
+  const safeUid = String(uid).replace(/[^0-9]/g, "");
+  const safeRegion = String(region).replace(/[^A-Za-z0-9_-]/g, "").toUpperCase();
+  return `freefire/profiles-cache/${safeUid}_${safeRegion}.json`;
+}
+
+async function b2ReadCombinedCache(uid, region, env) {
+  const fileName = b2CombinedCacheFileName(uid, region);
+
+  try {
+    const stored = await b2DownloadFile(env, fileName);
+    if (!stored) return null;
+
+    const text = new TextDecoder()
+      .decode(stored.body)
+      .replace(/^\uFEFF/, "")
+      .trim();
+
+    if (!text) return null;
+
+    const data = JSON.parse(text);
+    if (!data || typeof data !== "object") return null;
+
+    return {
+      data: data.data && typeof data.data === "object" ? data.data : data,
+      updatedAt:
+        data.updatedAt ||
+        data.cachedAt ||
+        data.savedAt ||
+        null,
+      fileName,
+    };
+  } catch (error) {
+    console.warn(
+      "B2 combined profile cache read failed:",
+      error?.message || error
+    );
+    return null;
+  }
+}
+
+async function b2WriteCombinedCache(uid, region, env, data) {
+  const fileName = b2CombinedCacheFileName(uid, region);
+
+  const payload = {
+    version: 1,
+    uid: String(uid),
+    region: String(region).toUpperCase(),
+    updatedAt: new Date().toISOString(),
+    data,
+  };
+
+  try {
+    await b2UploadFile(
+      env,
+      fileName,
+      JSON.stringify(payload),
+      "application/json"
+    );
+
+    return {
+      success: true,
+      fileName,
+      updatedAt: payload.updatedAt,
+    };
+  } catch (error) {
+    console.warn(
+      "B2 combined profile cache write failed:",
+      error?.message || error
+    );
+
+    return {
+      success: false,
+      fileName,
+      error: error?.message || String(error),
+    };
+  }
+}
+
 function b2AssetFileName(asset, imgCode) {
   const safeCode = String(imgCode).replace(/[^0-9A-Za-z_-]/g, "");
   const folder = asset === "banner" ? "banners" : "outfits";
@@ -1868,7 +1948,69 @@ export default {
     }
 
 
+    /*
+     * =========================================================
+     * SAVED PROFILE MODE
+     *
+     * Default:
+     *   Return the last successfully saved profile from B2.
+     *   NO primary/secondary/HL profile API call is made.
+     *
+     * Manual refresh:
+     *   ?refresh=1
+     *   Fetch live data, then save the successful combined
+     *   response back to B2.
+     *
+     * If refresh fails, the previous B2 snapshot is returned.
+     * =========================================================
+     */
+    const forceRefresh =
+      url.searchParams.get("refresh") === "1" ||
+      url.searchParams.get("update") === "1" ||
+      url.searchParams.get("force") === "1";
+
+    const savedProfileCache =
+      await b2ReadCombinedCache(uid, region, env);
+
+    if (!forceRefresh && savedProfileCache?.data) {
+      return json(
+        {
+          ...savedProfileCache.data,
+          dataSource: "Backblaze-B2-saved",
+          liveApiCalled: false,
+          lastUpdated: savedProfileCache.updatedAt,
+          updateRequired: true,
+        },
+        200,
+        {
+          "Cache-Control": "no-store",
+          "X-4FU-Data-Source": "Backblaze-B2-saved",
+          "X-4FU-Live-API": "NOT-CALLED",
+        }
+      );
+    }
+
     if (!key) {
+      if (savedProfileCache?.data) {
+        return json(
+          {
+            ...savedProfileCache.data,
+            dataSource: "Backblaze-B2-saved-fallback",
+            liveApiCalled: false,
+            lastUpdated: savedProfileCache.updatedAt,
+            updateFailed: true,
+            updateError: "FREE_FIRE_API_KEY is not configured",
+            updateRequired: true,
+          },
+          200,
+          {
+            "Cache-Control": "no-store",
+            "X-4FU-Data-Source": "Backblaze-B2-saved-fallback",
+            "X-4FU-Live-API": "NOT-CALLED",
+          }
+        );
+      }
+
       return json(
         {
           success: false,
@@ -2301,7 +2443,7 @@ export default {
          COMBINED RESPONSE
          =================================================== */
 
-      return json({
+      const combinedResponse = {
 
         success: true,
 
@@ -2693,9 +2835,66 @@ export default {
             ? secondaryStatsResult.data
             : null,
 
-      });
+      };
+
+      const savedUpdate = await b2WriteCombinedCache(
+        uid,
+        region,
+        env,
+        combinedResponse
+      );
+
+      return json(
+        {
+          ...combinedResponse,
+          dataSource: "live-api",
+          liveApiCalled: true,
+          lastUpdated:
+            savedUpdate.success
+              ? savedUpdate.updatedAt
+              : new Date().toISOString(),
+          cacheSaved: savedUpdate.success,
+          cacheFile: savedUpdate.fileName,
+          updateRequired: false,
+          cacheSaveError:
+            savedUpdate.success
+              ? null
+              : savedUpdate.error,
+        },
+        200,
+        {
+          "Cache-Control": "no-store",
+          "X-4FU-Data-Source": "live-api",
+          "X-4FU-Live-API": "CALLED",
+        }
+      );
 
     } catch (error) {
+      /*
+       * If a manual refresh fails, NEVER destroy/replace the last
+       * successful snapshot. Return it instead.
+       */
+      if (forceRefresh && savedProfileCache?.data) {
+        return json(
+          {
+            ...savedProfileCache.data,
+            dataSource: "Backblaze-B2-saved-fallback",
+            liveApiCalled: false,
+            lastUpdated: savedProfileCache.updatedAt,
+            updateFailed: true,
+            updateError:
+              error?.message ||
+              "Live API update failed; showing last saved data",
+            updateRequired: true,
+          },
+          200,
+          {
+            "Cache-Control": "no-store",
+            "X-4FU-Data-Source": "Backblaze-B2-saved-fallback",
+            "X-4FU-Live-API": "NOT-CALLED",
+          }
+        );
+      }
 
       return json(
         {
