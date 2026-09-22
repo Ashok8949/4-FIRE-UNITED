@@ -12,5 +12,8 @@
     "@cloudflare/vitest-plugin": "^1.0.0",
     "vitest": "~4.1.0",
     "wrangler": "^4.134.0"
+  },
+  "dependencies": {
+    "@huggingface/inference": "^4.13.30"
   }
 }
