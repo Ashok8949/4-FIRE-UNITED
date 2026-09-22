@@ -15,65 +15,7 @@ const docRef = db.collection("tournaments").doc(tournamentId);
 // Android FCM Notification
 // =========================
 
-const FOUR_FU_ANDROID_FCM_URL =
-    "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec";
 
-function send4FUTournamentUpdateNotification(tournament) {
-
-    try {
-
-        fetch(FOUR_FU_ANDROID_FCM_URL, {
-
-            method: "POST",
-
-            mode: "no-cors",
-
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-
-            body: JSON.stringify({
-
-                type: "major",
-
-                updateType: "tournament",
-
-                priority: "normal",
-
-                title: "🏆 Tournament Updated",
-
-                body:
-                    tournament.title +
-                    " tournament details have been updated.",
-
-                link: "/tournaments.html",
-
-                targetPlayerId: "ALL",
-
-                senderEmail:
-                    auth.currentUser?.email || "Admin"
-
-            })
-
-        }).catch((error) => {
-
-            console.warn(
-                "4FU ANDROID FCM TOURNAMENT UPDATE ERROR:",
-                error
-            );
-
-        });
-
-    } catch (error) {
-
-        console.warn(
-            "4FU ANDROID FCM TOURNAMENT UPDATE ERROR:",
-            error
-        );
-
-    }
-
-}
 
 
 // =========================

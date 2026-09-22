@@ -295,62 +295,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
         );
 
 
-        // ==========================================
-        // ANDROID APP FCM NOTIFICATION
-        // ==========================================
-
-        try {
-
-            fetch(
-                "https://script.google.com/macros/s/AKfycbyazs42LLtr5ulUJDf1y2EuDRzUKrHwD_B1DzFE1q1BipaBooQMPit6T5dKJeAfMy4_/exec",
-                {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: {
-                        "Content-Type": "text/plain;charset=utf-8"
-                    },
-                    body: JSON.stringify({
-
-                        type: "player_update",
-
-                        priority: "normal",
-
-                        title: "📝 Player Profile Updated",
-
-                        body:
-                            data.name +
-                            " updated their player profile.",
-
-                        link: "/player-profile.html?id=" + encodeURIComponent(playerId),
-
-                        updateType: "player_update",
-
-                        targetPlayerId: playerId,
-                        playerId: playerId,
-
-                        senderEmail:
-                            firebase.auth().currentUser?.email || "Admin"
-
-                    })
-                }
-            ).catch((error) => {
-
-                console.warn(
-                    "4FU ANDROID FCM PLAYER UPDATE ERROR:",
-                    error
-                );
-
-            });
-
-        } catch (error) {
-
-            console.warn(
-                "4FU ANDROID FCM PLAYER UPDATE ERROR:",
-                error
-            );
-
-        }
-
+        
         // ==========================================
 
 
