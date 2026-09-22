@@ -157,6 +157,26 @@
                 padding: 7px 18px !important;
             }
         }
+
+        /* 4FU APP DOWNLOAD BUTTON */
+        #download4fuBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #download4fuBtn i {
+            font-size: 15px;
+        }
+
+        @media (max-width: 600px) {
+            #download4fuBtn {
+                width: 100%;
+            }
+        }
     </style>
 
 
@@ -317,6 +337,14 @@
 
                     <a href="join.html" class="btn2">
                         Join Us
+                    </a>
+
+                    <a id="download4fuBtn"
+                       href="/app/4FireUnited.apk"
+                       class="btn2"
+                       download>
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        Download 4FU App
                     </a>
 
                 </div>
@@ -837,6 +865,20 @@
             window.addEventListener("mouseup", stop);
             target.addEventListener("dragstart", e => e.preventDefault());
             target.addEventListener("contextmenu", e => e.preventDefault());
+        })();
+    </script>
+
+    <!-- Hide app download button inside the 4FU Android WebView -->
+    <script>
+        (() => {
+            const isAndroidWebView =
+                /Android/i.test(navigator.userAgent) &&
+                /;\s*wv\)/i.test(navigator.userAgent);
+
+            if (isAndroidWebView) {
+                const btn = document.getElementById("download4fuBtn");
+                if (btn) btn.remove();
+            }
         })();
     </script>
 

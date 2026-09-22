@@ -736,6 +736,11 @@
 .ffx-section{width:100%;max-width:1200px;margin:85px auto 70px;padding:0 20px;box-sizing:border-box;position:relative}
 .ffx-section:before{content:"";position:absolute;left:5%;right:5%;top:80px;height:420px;background:radial-gradient(circle,rgba(255,75,0,.12),transparent 68%);filter:blur(45px);pointer-events:none}
 .ffx-head{position:relative;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px}
+.ffx-head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.ffx-update-btn{border:1px solid rgba(255,106,0,.35);border-radius:999px;padding:10px 15px;background:linear-gradient(135deg,#ff3b00,#ff6a00);color:#fff;font:700 10px "Poppins",sans-serif;letter-spacing:.7px;cursor:pointer;box-shadow:0 10px 28px rgba(255,70,0,.16);transition:.25s;white-space:nowrap}
+.ffx-update-btn:hover{transform:translateY(-2px);box-shadow:0 13px 32px rgba(255,70,0,.24)}
+.ffx-update-btn:disabled{opacity:.65;cursor:wait;transform:none}
+.ffx-update-btn i{margin-right:6px}
 .ffx-kicker{display:inline-flex;align-items:center;gap:8px;color:#ff7620;font:700 11px "Poppins",sans-serif;letter-spacing:2px}
 .ffx-head h2{margin:8px 0 5px;color:#fff;font:52px "Bebas Neue",sans-serif;letter-spacing:3px}
 .ffx-head p{margin:0;color:#858585;font:500 12px "Poppins",sans-serif}
@@ -798,6 +803,477 @@
 @keyframes ffxPulse{50%{opacity:.45;transform:scale(.8)}}
 @media(max-width:900px){.ffx-overview{grid-template-columns:1fr}.ffx-mode-grid{grid-template-columns:1fr}.ffx-total-grid{grid-template-columns:repeat(2,1fr)}.ffx-bottom-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.ffx-section{margin:55px auto 45px;padding:0 14px}.ffx-head{align-items:flex-start;flex-direction:column}.ffx-head h2{font-size:40px}.ffx-live-pill{width:max-content}.ffx-main-card,.ffx-rank-card{padding:17px}.ffx-big-stat strong{font-size:40px}.ffx-total-grid{gap:9px}.ffx-total-grid>div{min-height:86px;padding:12px}.ffx-total-grid b{font-size:17px}.ffx-info-list{grid-template-columns:1fr}.ffx-share-wrap{align-items:flex-start;flex-direction:column;padding:18px}.ffx-share-wrap button{width:100%}}
+
+
+/* =========================================================
+   4FU LIVE FREE FIRE VISUAL ASSETS — PREMIUM COMBINED
+========================================================= */
+
+.ffx-visual-grid{
+    position:relative;
+    display:block;
+    width:100%;
+    margin-top:16px;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.ffx-visual-card{
+    position:relative;
+    width:100%;
+    box-sizing:border-box;
+
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:21px;
+    padding:18px;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(255,106,0,.055),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.075),
+            rgba(255,255,255,.018)
+        );
+
+    backdrop-filter:blur(17px);
+    -webkit-backdrop-filter:blur(17px);
+
+    box-shadow:
+        0 18px 50px rgba(0,0,0,.22),
+        inset 0 1px 0 rgba(255,255,255,.025);
+
+    overflow:hidden;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+========================================================= */
+
+.ffx-visual-card .ffx-subhead{
+    position:relative;
+    z-index:2;
+
+    margin:0 0 12px;
+}
+
+
+/* =========================================================
+   FREE FIRE BANNER
+========================================================= */
+
+/* =========================================================
+   FREE FIRE BANNER — FULL WIDTH / NO BLACK SIDES
+========================================================= */
+
+.ffx-banner-box{
+    position:relative;
+
+    width:100%;
+    height:235px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    border-radius:17px;
+
+    background:#050505;
+
+    border:1px solid rgba(255,255,255,.07);
+
+    box-shadow:
+        inset 0 0 35px rgba(0,0,0,.55),
+        0 10px 28px rgba(0,0,0,.20);
+}
+
+
+/* actual banner */
+.ffx-banner-box img{
+    display:block;
+
+    width:100%;
+    height:100%;
+
+    /*
+       Full box fill karega.
+       Side black bars nahi aayengi.
+    */
+    object-fit:cover;
+    object-position:center center;
+
+    transform:none !important;
+
+    filter:
+        saturate(1.02)
+        contrast(1.02)
+        brightness(1.01);
+
+    transition:
+        filter .3s ease;
+}
+
+
+/* hover par zoom nahi */
+.ffx-banner-box:hover img{
+    transform:none !important;
+
+    filter:
+        saturate(1.06)
+        contrast(1.04)
+        brightness(1.02);
+}
+
+
+/* Tablet */
+@media(max-width:1000px){
+
+    .ffx-banner-box{
+        height:210px;
+    }
+
+}
+
+
+/* Mobile */
+@media(max-width:600px){
+
+    .ffx-banner-box{
+        height:160px;
+        border-radius:14px;
+    }
+
+}
+
+/* =========================================================
+   OUTFITS HEADING
+========================================================= */
+
+.ffx-outfits-head{
+    margin-top:22px !important;
+    margin-bottom:12px !important;
+}
+
+
+/* =========================================================
+   OUTFITS GRID
+========================================================= */
+
+.ffx-outfits-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,minmax(0,1fr));
+
+    gap:12px;
+
+    width:100%;
+}
+
+
+/* =========================================================
+   OUTFIT CARD
+========================================================= */
+
+.ffx-outfit-item{
+    position:relative;
+
+    min-width:0;
+
+    aspect-ratio:1 / 1;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    border-radius:15px;
+
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(255,106,0,.10),
+            rgba(0,0,0,.72) 72%
+        );
+
+    border:1px solid rgba(255,255,255,.065);
+
+    box-shadow:
+        inset 0 0 25px rgba(0,0,0,.35),
+        0 8px 20px rgba(0,0,0,.16);
+
+    transition:
+        transform .28s ease,
+        border-color .28s ease,
+        box-shadow .28s ease;
+}
+
+
+/* outfit hover */
+
+.ffx-outfit-item:hover{
+    transform:translateY(-4px);
+
+    border-color:rgba(255,106,0,.42);
+
+    box-shadow:
+        inset 0 0 28px rgba(255,106,0,.055),
+        0 14px 30px rgba(0,0,0,.28),
+        0 0 22px rgba(255,106,0,.07);
+}
+
+
+/* =========================================================
+   OUTFIT IMAGE
+========================================================= */
+
+.ffx-outfit-item img{
+    display:block;
+
+    width:100%;
+    height:100%;
+
+    padding:8px;
+    box-sizing:border-box;
+
+    object-fit:contain;
+    object-position:center;
+
+    filter:
+        saturate(1.05)
+        contrast(1.04)
+        brightness(1.025);
+
+    transition:
+        transform .35s ease,
+        filter .3s ease;
+}
+
+
+/* outfit image hover */
+
+.ffx-outfit-item:hover img{
+    transform:scale(1.045);
+
+    filter:
+        saturate(1.1)
+        contrast(1.06)
+        brightness(1.045);
+}
+
+
+/* =========================================================
+   OUTFIT LABEL
+========================================================= */
+
+.ffx-outfit-label{
+    position:absolute;
+
+    left:8px;
+    bottom:8px;
+
+    z-index:3;
+
+    padding:5px 8px;
+
+    border-radius:7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(10,10,10,.92),
+            rgba(20,20,20,.78)
+        );
+
+    border:1px solid rgba(255,255,255,.075);
+
+    color:#c5c5c5;
+
+    font:
+        700 8px "Poppins",sans-serif;
+
+    letter-spacing:.8px;
+
+    box-shadow:
+        0 5px 14px rgba(0,0,0,.3);
+
+    pointer-events:none;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.ffx-outfits-loading{
+    min-height:180px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#666;
+
+    font:
+        600 9px "Poppins",sans-serif;
+
+    letter-spacing:1px;
+
+    grid-column:1 / -1;
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media(min-width:1001px){
+
+    .ffx-banner-box{
+        height:235px;
+    }
+
+    .ffx-outfits-grid{
+        grid-template-columns:
+            repeat(5,minmax(0,1fr));
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width:1000px){
+
+    .ffx-banner-box{
+        height:210px;
+    }
+
+    .ffx-outfits-grid{
+        grid-template-columns:
+            repeat(3,minmax(0,1fr));
+
+        gap:10px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:600px){
+
+    .ffx-visual-card{
+        padding:14px;
+        border-radius:18px;
+    }
+
+    .ffx-banner-box{
+        height:160px;
+        border-radius:14px;
+    }
+
+    .ffx-outfits-grid{
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+
+        gap:9px;
+    }
+
+    .ffx-outfit-item{
+        border-radius:13px;
+    }
+
+    .ffx-outfit-item img{
+        padding:5px;
+    }
+
+    .ffx-outfit-label{
+        left:6px;
+        bottom:6px;
+
+        padding:4px 6px;
+
+        font-size:7px;
+    }
+
+    .ffx-outfits-loading{
+        min-height:150px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media(max-width:380px){
+
+    .ffx-banner-box{
+        height:140px;
+    }
+
+    .ffx-outfits-grid{
+        gap:7px;
+    }
+
+    .ffx-outfit-item img{
+        padding:4px;
+    }
+
+}
+
+
+
+/* =========================================================
+   4FU BANNER SIZE FIX — USE IMAGE'S NATURAL ASPECT RATIO
+========================================================= */
+.ffx-banner-box{
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    aspect-ratio:auto !important;
+    display:block !important;
+    overflow:hidden;
+    border-radius:17px;
+    background:#050505;
+    border:1px solid rgba(255,255,255,.07);
+    box-shadow:
+        inset 0 0 35px rgba(0,0,0,.55),
+        0 10px 28px rgba(0,0,0,.20);
+}
+
+.ffx-banner-box img{
+    display:block !important;
+    width:100% !important;
+    height:auto !important;
+    max-width:100% !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+    transform:none !important;
+}
+
+@media(max-width:600px){
+    .ffx-banner-box{
+        height:auto !important;
+        min-height:0 !important;
+    }
+}
 
 </style>
 
@@ -1448,7 +1924,12 @@ Edit Profile
             <h2>LIVE DATA</h2>
             
         </div>
-        <div class="ffx-live-pill"><span></span><b id="ffx-live-label">LIVE SYNC</b><small id="ffx-updated">Waiting...</small></div>
+        <div class="ffx-head-actions">
+            <div class="ffx-live-pill"><span></span><b id="ffx-live-label">SAVED DATA</b><small id="ffx-updated">Waiting...</small></div>
+            <button type="button" class="ffx-update-btn" id="ffx-update-btn">
+                <i class="fa-solid fa-rotate"></i> UPDATE DATA
+            </button>
+        </div>
     </div>
 
     <div class="ffx-new-grid">
@@ -1481,6 +1962,47 @@ Edit Profile
             <div id="ffx-pet-content"><div class="ffx-pet-empty"><i class="fa-solid fa-paw"></i><span>Waiting for pet data...</span></div></div>
         </article>
     </div>
+
+
+
+    <!-- LIVE FREE FIRE BANNER + OUTFIT -->
+    <!-- LIVE FREE FIRE BANNER + OUTFITS -->
+<div class="ffx-visual-grid">
+
+    <article class="ffx-visual-card">
+
+        <!-- BANNER HEADER -->
+        <div class="ffx-subhead">
+            <span>FREE FIRE BANNER</span>
+            <small>LIVE API • PNG</small>
+        </div>
+
+        <!-- BANNER -->
+        <div class="ffx-banner-box">
+            <img
+                id="ffx-banner-img"
+                src="../images/logo/logo.png"
+                alt="Free Fire player banner"
+                loading="lazy"
+            >
+        </div>
+
+        <!-- OUTFITS HEADER -->
+        <div class="ffx-subhead ffx-outfits-head">
+            <span>LIVE OUTFITS</span>
+            <small>LIVE API • EQUIPPED</small>
+        </div>
+
+        <!-- OUTFITS -->
+        <div id="ffx-outfits-grid" class="ffx-outfits-grid">
+            <div class="ffx-outfits-loading">
+                Loading outfits...
+            </div>
+        </div>
+
+    </article>
+
+</div>
 
     <!-- LIVE SOLO / DUO / SQUAD CAREER DATA -->
     <div class="ffx-live-modes-wrap">
@@ -1833,7 +2355,7 @@ Contact
 <script src="../js/firebase.js?v=1783829699314"></script>
 
 <script src="../js/freeFireService.js?v=1783829699316"></script>
-<script src="../js/players.js?v=1783829699316"></script>
+<script src="../js/players.js?v=1783829699317"></script>
 
 
 

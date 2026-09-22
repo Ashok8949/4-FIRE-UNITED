@@ -67,3 +67,5 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+android-console-api/client_secret.json
+android-console-api/oauth_token.json

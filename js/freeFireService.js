@@ -8,7 +8,7 @@
     "use strict";
 
     const FREE_FIRE_API_BASE_URL =
-        "https://4fu-freefire-backend.4fu-freefire.workers.dev";
+        "https://4fu-freefire-backend.4fu-freefire-backend.workers.dev";
 
     const REQUEST_TIMEOUT_MS = 10000;
 
@@ -21,7 +21,7 @@
         );
     }
 
-    async function getFreeFirePlayer(uid, region) {
+    async function getFreeFirePlayer(uid, region, forceUpdate = false) {
         if (!uid) return null;
 
         const url = new URL(FREE_FIRE_API_BASE_URL);
@@ -31,6 +31,15 @@
             String(region || "IND").toUpperCase()
         );
 
+        /*
+         * Normal page load = saved B2 data.
+         * Manual Update button = refresh=1, which tells the Worker
+         * to fetch live APIs and save the successful result to B2.
+         */
+        if (forceUpdate) {
+            url.searchParams.set("refresh", "1");
+        }
+
         const controller = new AbortController();
         const timeout = setTimeout(
             () => controller.abort(),
@@ -38,7 +47,11 @@
         );
 
         try {
-            console.info("[4FU] Fetching Free Fire live data...");
+            console.info(
+                forceUpdate
+                    ? "[4FU] Fetching fresh Free Fire data..."
+                    : "[4FU] Fetching saved Free Fire data..."
+            );
 
             const response = await fetch(url.toString(), {
                 method: "GET",
@@ -172,7 +185,7 @@
             };
 
             console.info(
-                "[4FU] Free Fire live data received:",
+                "[4FU] Free Fire data received:",
                 result
             );
 

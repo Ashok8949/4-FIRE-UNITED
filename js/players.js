@@ -243,13 +243,35 @@
        LIVE FREE FIRE DATA
     ===================================================== */
 
-   function applyLiveFreeFireData(data) {
+   function applyLiveFreeFireData(data, savedPlayer = null) {
 
     if (!data || typeof data !== "object") return;
 
-    const basic = data.basicInfo || data.basic_info || data.profile || data;
-    const stats = data.stats || data.playerStats || data.statistics || data;
-    const clan = data.clanBasicInfo || data.clan_basic_info || {};
+    const basic =
+        data.basicInfo ||
+        data.basic_info ||
+        data.profile?.basicInfo ||
+        data.profile?.basic_info ||
+        data.secondaryProfile?.basicInfo ||
+        data.secondaryProfile?.basic_info ||
+        data;
+
+    const stats =
+        data.stats ||
+        data.playerStats ||
+        data.statistics ||
+        data.rawStats ||
+        data.detailedStats ||
+        data.detailed ||
+        data.modeStats ||
+        data;
+    const clan =
+    data.clanBasicInfo ||
+    data.clan_basic_info ||
+    data.profile?.clanBasicInfo ||
+    data.profile?.clan_basic_info ||
+    data.secondaryProfile?.clanBasicInfo ||
+    {};
 
     const pick = (...values) => values.find(value =>
         value !== undefined && value !== null && value !== ""
@@ -416,16 +438,44 @@
         el.textContent = value === undefined || value === null || value === "" ? "—" : value;
     };
 
-    const likes = pick(data.likes, data.liked, basic.likes, basic.liked);
+    const likes = pick(
+        data.likes,
+        data.liked,
+        basic.likes,
+        basic.liked,
+        data.profile?.basicInfo?.likes,
+        data.profile?.basicInfo?.liked,
+        data.secondaryProfile?.basicInfo?.likes,
+        data.secondaryProfile?.basicInfo?.liked
+    );
+
     const brRp = pick(
         data.rankingPoints,
         basic.rankingPoints,
         basic.ranking_points,
         stats.rankingPoints,
-        stats.ranking_points
+        stats.ranking_points,
+        data.profile?.basicInfo?.rankingPoints,
+        data.profile?.basicInfo?.ranking_points,
+        data.secondaryProfile?.basicInfo?.rankingPoints,
+        data.secondaryProfile?.basicInfo?.ranking_points
     );
-    const csRank = pick(data.csRank, basic.csRank, basic.cs_rank);
-    const csRp = pick(data.csRankingPoints, basic.csRankingPoints, basic.cs_ranking_points);
+
+    const csRank = pick(
+        data.csRank,
+        basic.csRank,
+        basic.cs_rank,
+        data.profile?.basicInfo?.csRank,
+        data.profile?.basicInfo?.cs_rank
+    );
+
+    const csRp = pick(
+        data.csRankingPoints,
+        basic.csRankingPoints,
+        basic.cs_ranking_points,
+        data.profile?.basicInfo?.csRankingPoints,
+        data.profile?.basicInfo?.cs_ranking_points
+    );
     const accountLevel = pick(data.level, basic.level);
     const region = pick(data.region, basic.region, "IND");
     const guildId = pick(
@@ -433,12 +483,37 @@
         data.clanId,
         clan.clanId,
         clan.id,
+        data.profile?.clanBasicInfo?.clanId,
+        data.profile?.clan_basic_info?.clanId,
+        data.secondaryProfile?.clanBasicInfo?.clanId,
         data.rawProfile?.clanBasicInfo?.clanId,
         data.rawProfile?.clan?.clanId
     );
-    const social = data.socialInfo || data.social_info || data.rawProfile?.socialInfo || {};
-    const language = pick(data.language, social.language, social.languageCode);
-    const gender = pick(data.gender, social.gender, data.rawProfile?.gender);
+    const social =
+        data.socialInfo ||
+        data.social_info ||
+        data.profile?.socialInfo ||
+        data.profile?.social_info ||
+        data.secondaryProfile?.socialInfo ||
+        data.secondaryProfile?.social_info ||
+        data.rawProfile?.socialInfo ||
+        {};
+
+    const language = pick(
+        data.language,
+        social.language,
+        social.languageCode,
+        social.language_code
+    );
+
+    const gender = pick(
+        data.gender,
+        social.gender,
+        social.genderName,
+        social.genderType,
+        data.profile?.gender,
+        data.rawProfile?.gender
+    );
     const releaseVersion = pick(
         data.releaseVersion,
         data.rawProfile?.releaseVersion,
@@ -461,8 +536,253 @@
     setLive("ffx-version", releaseVersion);
     setLive("ffx-account-level", accountLevel);
 
+    /* =========================================================
+       LIVE FREE FIRE VISUAL ASSETS
+       Always route profile banner/outfits through the 4FU Worker.
+       The Worker checks B2 first, then public providers, and only
+       uses HL Gaming as the final fallback.
+    ========================================================= */
+
+    const BACKEND =
+        "https://4fu-freefire-backend.4fu-freefire-backend.workers.dev";
+
+    const assets = data.assets || data.assetUrls || {};
+
+    const savedBannerId =
+        savedPlayer?.bannerId ??
+        savedPlayer?.bannerID ??
+        savedPlayer?.basicInfo?.bannerId ??
+        savedPlayer?.basicInfo?.bannerID;
+
+    const savedOutfitSource =
+        savedPlayer?.outfitIds ??
+        savedPlayer?.outfits ??
+        savedPlayer?.clothes ??
+        savedPlayer?.equippedClothes ??
+        savedPlayer?.profileInfo?.clothes ??
+        savedPlayer?.profileInfo?.Clothes ??
+        savedPlayer?.profileInfo?.equippedClothes ??
+        savedPlayer?.profileInfo?.equippedOutfit;
+
+    /*
+     * Convert any provider URL returned by the live API into our
+     * Worker asset URL. This prevents the frontend from loading
+     * HL/public provider URLs directly and guarantees B2-first.
+     */
+    function workerAssetUrl(asset, imgCode) {
+        if (imgCode === undefined || imgCode === null || imgCode === "") {
+            return null;
+        }
+
+        const workerUid = liveUid || savedPlayer?.uid || savedPlayer?.UID || "";
+        const workerRegion = region || savedPlayer?.region || "IND";
+
+        return (
+            `${BACKEND}/?asset=${encodeURIComponent(asset)}` +
+            `&img_code=${encodeURIComponent(String(imgCode))}` +
+            `&uid=${encodeURIComponent(String(workerUid))}` +
+            `&region=${encodeURIComponent(String(workerRegion))}`
+        );
+    }
+
+    function extractImgCode(value) {
+        if (!value) return null;
+
+        try {
+            const parsed = new URL(String(value), window.location.href);
+            return (
+                parsed.searchParams.get("img_code") ||
+                parsed.searchParams.get("imgCode") ||
+                parsed.searchParams.get("item_id") ||
+                parsed.searchParams.get("itemId") ||
+                null
+            );
+        } catch {
+            return null;
+        }
+    }
+
+    function numericIds(value) {
+        const ids = [];
+
+        function walk(item) {
+            if (item === undefined || item === null || item === "") return;
+
+            if (typeof item === "number" && Number.isFinite(item)) {
+                ids.push(String(item));
+                return;
+            }
+
+            if (typeof item === "string") {
+                const s = item.trim();
+                if (/^\d+$/.test(s)) ids.push(s);
+                return;
+            }
+
+            if (Array.isArray(item)) {
+                item.forEach(walk);
+                return;
+            }
+
+            if (typeof item === "object") {
+                const id =
+                    item.id ??
+                    item.ID ??
+                    item.itemId ??
+                    item.itemID ??
+                    item.img_code ??
+                    item.imgCode ??
+                    item.clothesId ??
+                    item.clothesID;
+
+                if (id !== undefined && id !== null && id !== "") {
+                    walk(id);
+                }
+            }
+        }
+
+        walk(value);
+
+        return [...new Set(ids)];
+    }
+
+    /*
+     * Prefer explicit IDs from the live response. If an API provider
+     * only returned image URLs, extract img_code from those URLs and
+     * still route them through the Worker.
+     */
+    const bannerId =
+        pick(
+            data.bannerId,
+            data.bannerID,
+            basic.bannerId,
+            basic.bannerID,
+            data.profile?.bannerId,
+            data.profile?.bannerID,
+            data.secondaryProfile?.bannerId,
+            data.secondaryProfile?.bannerID,
+            savedBannerId,
+            extractImgCode(assets.banner),
+            extractImgCode(data.bannerUrl),
+            extractImgCode(data.bannerURL)
+        );
+
+    const liveOutfitIds = numericIds(
+        pick(
+            data.outfitIds,
+            data.outfits,
+            data.clothes,
+            data.equippedClothes,
+            data.profileInfo?.clothes,
+            data.profileInfo?.Clothes,
+            data.profileInfo?.equippedClothes,
+            data.profileInfo?.equippedOutfit,
+            data.profile?.outfitIds,
+            data.profile?.outfits,
+            data.profile?.clothes,
+            data.profile?.equippedClothes,
+            data.secondaryProfile?.outfitIds,
+            data.secondaryProfile?.outfits,
+            data.secondaryProfile?.clothes,
+            data.secondaryProfile?.equippedClothes
+        )
+    );
+
+    // IMPORTANT: keep Firestore-saved equipped outfit IDs as a fallback
+    // even when the live profile API succeeds but omits outfit IDs.
+    const savedOutfitIds = numericIds(savedOutfitSource);
+    const outfitIds = [...new Set([...liveOutfitIds, ...savedOutfitIds])];
+
+    let outfitCodes = outfitIds.slice();
+
+    /*
+     * If IDs were not exposed separately, recover them from the
+     * provider URLs returned by the API.
+     */
+    if (!outfitCodes.length) {
+        const returnedOutfitUrls = Array.isArray(assets.outfits)
+            ? assets.outfits.filter(Boolean)
+            : [];
+
+        outfitCodes = returnedOutfitUrls
+            .map(extractImgCode)
+            .filter(Boolean);
+    }
+
+    const bannerUrl =
+        workerAssetUrl("banner", bannerId);
+
+    const outfitUrls =
+        outfitCodes
+            .slice(0, 5)
+            .map(id => workerAssetUrl("outfit", id))
+            .filter(Boolean);
+
+    const bannerImg = getElement("ffx-banner-img");
+    if (bannerImg && bannerUrl) {
+        bannerImg.src = bannerUrl;
+        bannerImg.alt = `${liveName || "Free Fire"} banner`;
+        bannerImg.style.opacity = "1";
+        bannerImg.onerror = () => {
+            bannerImg.style.opacity = "0.45";
+        };
+    }
+
+    /* LIVE OUTFITS — always use Worker/B2-first URLs. */
+    const outfitsGrid = getElement("ffx-outfits-grid");
+    if (outfitsGrid) {
+        outfitsGrid.innerHTML = "";
+
+        if (outfitUrls.length) {
+            outfitUrls.slice(0, 5).forEach((url, index) => {
+                const item = document.createElement("div");
+                item.className = "ffx-outfit-item";
+
+                const img = document.createElement("img");
+                img.src = url;
+                img.alt = `${liveName || "Free Fire"} outfit ${index + 1}`;
+                img.loading = "eager";
+
+                const label = document.createElement("span");
+                label.className = "ffx-outfit-label";
+                label.textContent = `OUTFIT ${index + 1}`;
+
+                img.addEventListener("error", () => {
+                    item.remove();
+
+                    if (!outfitsGrid.querySelector(".ffx-outfit-item")) {
+                        outfitsGrid.innerHTML =
+                            '<div class="ffx-outfits-loading">Outfit images unavailable</div>';
+                    }
+                }, { once: true });
+
+                item.appendChild(img);
+                item.appendChild(label);
+                outfitsGrid.appendChild(item);
+            });
+        } else {
+            outfitsGrid.innerHTML =
+                '<div class="ffx-outfits-loading">Outfit images unavailable</div>';
+        }
+    }
+
+    /* Extra profile metadata exposed by the same API response. */
+    setLive("ffx-banner-id", pick(data.bannerId, basic.bannerId));
+    setLive("ffx-title", pick(data.title, basic.title));
+    setLive("ffx-season-id", pick(data.seasonId, basic.seasonId));
+
     /* Pet information from the API. */
-    const pet = data.petInfo || data.pet || data.rawProfile?.petInfo || data.rawProfile?.pet;
+    const pet =
+        data.petInfo && Object.keys(data.petInfo).length
+            ? data.petInfo
+            : data.profile?.petInfo && Object.keys(data.profile.petInfo).length
+                ? data.profile.petInfo
+                : data.secondaryProfile?.petInfo && Object.keys(data.secondaryProfile.petInfo).length
+                    ? data.secondaryProfile.petInfo
+                    : data.pet ||
+                      data.rawProfile?.petInfo ||
+                      data.rawProfile?.pet ||
+                      null;
     const petBox = getElement("ffx-pet-content");
     if (petBox) {
         if (pet && typeof pet === "object") {
@@ -471,7 +791,9 @@
                 ["Pet Name", pick(pet.name, pet.petName, pet.nickname)],
                 ["Level", pick(pet.level, pet.petLevel)],
                 ["Skill", pick(pet.skill, pet.skillName)],
-                ["Selected", pick(pet.selected, pet.isSelected)]
+                ["Selected", pick(pet.selected, pet.isSelected)],
+                ["Skin ID", pick(pet.skinId, pet.petSkinId, pet.skinID)],
+                ["Selected Skill ID", pick(pet.selectedSkillId, pet.skillId, pet.selected_skill_id)]
             ].filter(item => item[1] !== undefined && item[1] !== null && item[1] !== "");
 
             if (values.length) {
@@ -532,7 +854,15 @@
         return null;
     }
 
-    const rawStats = data.rawStats || data.raw_stats || data.stats || data;
+    const rawStats =
+        data.rawStats && Object.keys(data.rawStats).length
+            ? data.rawStats
+            : data.detailedStats ||
+              data.detailed ||
+              data.modeStats ||
+              data.raw_stats ||
+              data.stats ||
+              data;
     const modeRoots = {
         solo: ["solo", "soloStats", "soloCareer", "soloMode"],
         duo: ["duo", "duoStats", "duoCareer", "duoMode"],
@@ -641,6 +971,145 @@ function initLiveShareCard() {
 }
 
     /* =====================================================
+       LIVE B2 ASSETS
+       Banner/outfit images are ALWAYS loaded through the
+       4FU Worker -> Backblaze B2 path. No HL image API.
+    ===================================================== */
+    function applyLiveFreeFireAssets(data, savedPlayer = {}) {
+        if (!data || typeof data !== "object") return;
+
+        const BACKEND =
+            "https://4fu-freefire-backend.4fu-freefire-backend.workers.dev";
+
+        const pick = (...values) => values.find(value =>
+            value !== undefined && value !== null && value !== ""
+        );
+
+        const assets = data.assets || data.rawProfile?.assets || data.profile?.assets || {};
+        const bannerImg = getElement("ffx-banner-img");
+        const outfitImg = getElement("ffx-outfit-img");
+        const outfitsGrid = getElement("ffx-outfits-grid");
+
+        const bannerDirect = pick(assets.banner, data.bannerUrl, data.bannerURL);
+        const outfitDirect = pick(
+            assets.outfit,
+            Array.isArray(assets.outfits) ? assets.outfits[0] : null,
+            data.outfitUrl,
+            data.outfitURL
+        );
+
+        const bannerId = pick(
+            data.bannerId, data.bannerID,
+            data.basicInfo?.bannerId, data.basicInfo?.bannerID,
+            data.profile?.bannerId, data.profile?.bannerID,
+            savedPlayer.bannerId, savedPlayer.bannerID,
+            savedPlayer.basicInfo?.bannerId, savedPlayer.basicInfo?.bannerID
+        );
+
+        const outfitValues = pick(
+            data.outfitIds, data.outfits, data.clothes, data.equippedClothes,
+            data.profileInfo?.clothes, data.profileInfo?.Clothes,
+            data.profileInfo?.equippedClothes, data.profileInfo?.equippedOutfit,
+            savedPlayer.outfitIds, savedPlayer.outfits, savedPlayer.clothes,
+            savedPlayer.equippedClothes, savedPlayer.profileInfo?.clothes,
+            savedPlayer.profileInfo?.Clothes, savedPlayer.profileInfo?.equippedClothes,
+            savedPlayer.profileInfo?.equippedOutfit
+        );
+
+        function collectIds(value) {
+            const ids = [];
+            const walk = item => {
+                if (item === undefined || item === null || item === "") return;
+                if (typeof item === "number" && Number.isFinite(item)) {
+                    ids.push(String(item)); return;
+                }
+                if (typeof item === "string") {
+                    const v = item.trim();
+                    if (/^\d+$/.test(v)) ids.push(v);
+                    return;
+                }
+                if (Array.isArray(item)) { item.forEach(walk); return; }
+                if (typeof item === "object") {
+                    const id = item.id ?? item.ID ?? item.itemId ?? item.itemID ??
+                        item.clothesId ?? item.clothesID;
+                    if (id !== undefined && id !== null && id !== "") walk(id);
+                }
+            };
+            walk(value);
+            return [...new Set(ids)];
+        }
+
+        const outfitIds = collectIds(outfitValues);
+        const b2 = (asset, id) => id
+            ? `${BACKEND}/?asset=${encodeURIComponent(asset)}&img_code=${encodeURIComponent(id)}`
+            : null;
+
+        const bannerUrl = bannerDirect || b2("banner", bannerId);
+        const outfitUrl = outfitDirect || b2("outfit", outfitIds[0]);
+
+        if (bannerImg && bannerUrl) {
+            bannerImg.src = bannerUrl;
+            bannerImg.style.opacity = "1";
+        }
+
+        if (outfitImg && outfitUrl) {
+            outfitImg.src = outfitUrl;
+            outfitImg.style.opacity = "1";
+        }
+
+        // Render the Worker-provided outfit URLs first.
+        // These URLs are already routed through the 4FU Worker -> B2,
+        // so we do not rebuild the URL or accidentally lose uid/region.
+        if (outfitsGrid) {
+            outfitsGrid.innerHTML = "";
+
+            const workerOutfitUrls = Array.isArray(assets.outfits)
+                ? assets.outfits.filter(Boolean).slice(0, 5)
+                : [];
+
+            const urls = workerOutfitUrls.length
+                ? workerOutfitUrls
+                : outfitIds.slice(0, 5).map(id => b2("outfit", id)).filter(Boolean);
+
+            if (!urls.length) {
+                outfitsGrid.innerHTML = '<div class="ffx-outfits-loading">Outfit images unavailable</div>';
+            } else {
+                urls.forEach((url, index) => {
+                    const item = document.createElement("div");
+                    item.className = "ffx-outfit-item";
+
+                    const img = document.createElement("img");
+                    img.src = url;
+                    img.alt = `${savedPlayer?.ign || "Free Fire"} outfit ${index + 1}`;
+                    img.loading = "eager";
+
+                    img.addEventListener("error", () => {
+                        item.remove();
+                        if (!outfitsGrid.querySelector(".ffx-outfit-item")) {
+                            outfitsGrid.innerHTML = '<div class="ffx-outfits-loading">Outfit images unavailable</div>';
+                        }
+                    }, { once: true });
+
+                    const label = document.createElement("span");
+                    label.className = "ffx-outfit-label";
+                    label.textContent = `OUTFIT ${index + 1}`;
+
+                    item.appendChild(img);
+                    item.appendChild(label);
+                    outfitsGrid.appendChild(item);
+                });
+            }
+        }
+
+        console.info("[4FU] B2 assets applied:", {
+            banner: !!bannerUrl,
+            outfit: !!outfitUrl,
+            outfitId: outfitIds[0] || null,
+            provider: "Backblaze-B2"
+        });
+    }
+
+    /* =====================================================
        LOAD PLAYER
     ===================================================== */
 
@@ -666,29 +1135,295 @@ function initLiveShareCard() {
             
 
             /* =================================================
+               MANUAL UPDATE DATA BUTTON
+            ================================================= */
+            const updateBtn = getElement("ffx-update-btn");
+            if (updateBtn && typeof window.getFreeFirePlayer === "function" && p.uid) {
+                updateBtn.addEventListener("click", async () => {
+                    if (updateBtn.disabled) return;
+                    const oldHtml = updateBtn.innerHTML;
+                    updateBtn.disabled = true;
+                    updateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> UPDATING...';
+                    setText("ffx-live-label", "UPDATING");
+                    setText("ffx-updated", "Fetching live data...");
+                    try {
+                        const freshData = await window.getFreeFirePlayer(p.uid, p.region || "IND", true);
+                        if (!freshData) throw new Error("No updated Free Fire data received.");
+                        applyLiveFreeFireData(freshData, p);
+                        applyLiveFreeFireAssets(freshData, p);
+                        setText("ffx-live-label", "UPDATED");
+                        setText("ffx-updated", `Updated ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`);
+                    } catch (error) {
+                        console.error("[4FU] Manual update failed:", error);
+                        setText("ffx-live-label", "SAVED DATA");
+                        setText("ffx-updated", "Update failed — saved data kept");
+                        alert("Free Fire data update failed.\n\nOld saved data is still safe.\n\n" + error.message);
+                    } finally {
+                        updateBtn.disabled = false;
+                        updateBtn.innerHTML = oldHtml;
+                    }
+                });
+            }
+
+
+            /* =================================================
                FETCH LIVE FREE FIRE DATA
             ================================================= */
 
-            if (
-                typeof window.getFreeFirePlayer === "function" &&
-                p.uid
-            ) {
-                window.getFreeFirePlayer(
-                    p.uid,
-                    p.region || "IND"
-                )
-                    .then((liveData) => {
-                        if (liveData) {
-                            applyLiveFreeFireData(liveData);
-                        }
-                    })
-                    .catch((error) => {
-                        console.warn(
-                            "[4FU] Live Free Fire data unavailable:",
-                            error
-                        );
-                    });
+           /* =================================================
+   FETCH LIVE FREE FIRE DATA
+================================================= */
+
+if (
+    typeof window.getFreeFirePlayer === "function" &&
+    p.uid
+) {
+    window.getFreeFirePlayer(
+        p.uid,
+        p.region || "IND"
+    )
+        .then((liveData) => {
+            if (liveData) {
+                applyLiveFreeFireData(liveData, p);
+                applyLiveFreeFireAssets(liveData, p);
             }
+        })
+        .catch((error) => {
+            console.warn(
+                "[4FU] Live Free Fire data unavailable:",
+                error
+            );
+
+            /* =========================================
+               B2 ASSET FALLBACK
+               Profile API fail hone par bhi
+               saved banner/outfit IDs se images load karo.
+               HL Gaming ko yahan call nahi kiya ja raha.
+            ========================================= */
+
+            const BACKEND =
+                "https://4fu-freefire-backend.4fu-freefire-backend.workers.dev";
+
+            const pick = (...values) =>
+                values.find(
+                    value =>
+                        value !== undefined &&
+                        value !== null &&
+                        value !== ""
+                );
+
+            const bannerId = pick(
+                p.bannerId,
+                p.bannerID,
+                p.basicInfo?.bannerId,
+                p.basicInfo?.bannerID
+            );
+
+            const outfitSource = pick(
+                p.outfitIds,
+                p.outfits,
+                p.clothes,
+                p.equippedClothes,
+                p.profileInfo?.clothes,
+                p.profileInfo?.Clothes,
+                p.profileInfo?.equippedClothes,
+                p.profileInfo?.equippedOutfit
+            );
+
+            function collectIds(value) {
+                const ids = [];
+
+                function walk(item) {
+                    if (
+                        item === undefined ||
+                        item === null ||
+                        item === ""
+                    ) {
+                        return;
+                    }
+
+                    if (
+                        typeof item === "number" &&
+                        Number.isFinite(item)
+                    ) {
+                        ids.push(String(item));
+                        return;
+                    }
+
+                    if (typeof item === "string") {
+                        const value = item.trim();
+
+                        if (/^\d+$/.test(value)) {
+                            ids.push(value);
+                        }
+
+                        return;
+                    }
+
+                    if (Array.isArray(item)) {
+                        item.forEach(walk);
+                        return;
+                    }
+
+                    if (
+                        typeof item === "object"
+                    ) {
+                        const id =
+                            item.id ??
+                            item.ID ??
+                            item.itemId ??
+                            item.itemID ??
+                            item.clothesId ??
+                            item.clothesID;
+
+                        if (
+                            id !== undefined &&
+                            id !== null &&
+                            id !== ""
+                        ) {
+                            walk(id);
+                        }
+                    }
+                }
+
+                walk(value);
+
+                return [
+                    ...new Set(ids)
+                ];
+            }
+
+            const outfitIds =
+                collectIds(outfitSource);
+
+            function b2Asset(
+                asset,
+                imgCode
+            ) {
+                if (!imgCode) return null;
+
+                return (
+                    `${BACKEND}/?asset=${encodeURIComponent(asset)}` +
+                    `&img_code=${encodeURIComponent(imgCode)}`
+                );
+            }
+
+            /* =========================================
+               BANNER
+            ========================================= */
+
+            const bannerImg =
+                getElement("ffx-banner-img");
+
+            const bannerUrl =
+                b2Asset(
+                    "banner",
+                    bannerId
+                );
+
+            if (
+                bannerImg &&
+                bannerUrl
+            ) {
+                bannerImg.src =
+                    bannerUrl;
+
+                bannerImg.alt =
+                    `${p.ign || "Free Fire"} banner`;
+
+                bannerImg.style.opacity = "1";
+            }
+
+            /* =========================================
+               OUTFITS
+            ========================================= */
+
+            const outfitsGrid =
+                getElement("ffx-outfits-grid");
+
+            if (outfitsGrid) {
+                outfitsGrid.innerHTML = "";
+
+                const urls =
+                    outfitIds
+                        .slice(0, 5)
+                        .map(id =>
+                            b2Asset(
+                                "outfit",
+                                id
+                            )
+                        )
+                        .filter(Boolean);
+
+                if (urls.length) {
+
+                    urls.forEach(
+                        (url, index) => {
+
+                            const item =
+                                document.createElement(
+                                    "div"
+                                );
+
+                            item.className =
+                                "ffx-outfit-item";
+
+                            const img =
+                                document.createElement(
+                                    "img"
+                                );
+
+                            img.src = url;
+
+                            img.alt =
+                                `${p.ign || "Free Fire"} outfit ${index + 1}`;
+
+                            img.loading =
+                                "eager";
+
+                            const label =
+                                document.createElement(
+                                    "span"
+                                );
+
+                            label.className =
+                                "ffx-outfit-label";
+
+                            label.textContent =
+                                `OUTFIT ${index + 1}`;
+
+                            img.onerror =
+                                () => {
+                                    item.remove();
+
+                                    if (
+                                        !outfitsGrid.querySelector(
+                                            ".ffx-outfit-item"
+                                        )
+                                    ) {
+                                        outfitsGrid.innerHTML =
+                                            '<div class="ffx-outfits-loading">Outfit images unavailable</div>';
+                                    }
+                                };
+
+                            item.appendChild(img);
+                            item.appendChild(label);
+
+                            outfitsGrid.appendChild(
+                                item
+                            );
+                        }
+                    );
+
+                } else {
+
+                    outfitsGrid.innerHTML =
+                        '<div class="ffx-outfits-loading">Outfit images unavailable</div>';
+
+                }
+            }
+        });
+}
 
 /* =================================================
                PAGE TITLE
