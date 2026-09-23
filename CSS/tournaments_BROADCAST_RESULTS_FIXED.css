@@ -1,0 +1,1223 @@
+
+/* =========================================================
+   4FU TOURNAMENT CENTER — FULL BROADCAST UI
+   This intentionally replaces the small normal-card look.
+   ========================================================= */
+
+#tournament-grid {
+  width: min(1500px, calc(100% - 40px));
+  margin: 70px auto 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 38px;
+}
+
+.fourfu-broadcast-hero,
+.fourfu-next-hero {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(255,76,0,.14), transparent 34%),
+    radial-gradient(circle at 10% 90%, rgba(255,122,0,.08), transparent 30%),
+    #0b0b0d;
+  box-shadow:
+    0 35px 100px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+.fourfu-broadcast-hero::before,
+.fourfu-next-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(115deg, rgba(255,69,0,.08), transparent 25%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 80px,
+      rgba(255,255,255,.012) 81px
+    );
+}
+
+.fourfu-broadcast-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  background: rgba(0,0,0,.22);
+}
+
+.fourfu-live-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.fourfu-live-dot {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border-radius: 50%;
+  background: #ff3131;
+  box-shadow: 0 0 0 6px rgba(255,49,49,.10);
+  animation: fourfu-live-pulse 1.15s infinite;
+}
+
+.fourfu-broadcast-viewers {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(255,255,255,.58);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.fourfu-broadcast-viewers strong {
+  color: #fff;
+  font-size: 13px;
+}
+
+.fourfu-broadcast-heading {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 25px;
+  padding: 28px 30px 24px;
+}
+
+.fourfu-kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(255,126,39,.9);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.fourfu-broadcast-heading h2,
+.fourfu-next-copy h2 {
+  margin: 0;
+  color: #fff;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(38px, 5vw, 68px);
+  line-height: .92;
+  letter-spacing: .5px;
+}
+
+.fourfu-broadcast-heading p {
+  margin: 10px 0 0;
+  color: rgba(255,255,255,.56);
+  font-size: 12px;
+}
+
+.fourfu-broadcast-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 9px 13px;
+  border: 1px solid rgba(255,50,50,.45);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255,40,40,.09);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.fourfu-broadcast-live-badge span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3030;
+  animation: fourfu-live-pulse 1.15s infinite;
+}
+
+.fourfu-broadcast-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(290px, .65fr);
+  gap: 20px;
+  padding: 0 30px 30px;
+}
+
+.fourfu-player-wrap {
+  overflow: hidden;
+  min-width: 0;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 18px;
+  background: #050505;
+  box-shadow: 0 20px 50px rgba(0,0,0,.35);
+}
+
+.fourfu-youtube-player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #000;
+}
+
+.fourfu-player-footer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+
+.fourfu-player-footer > div {
+  min-width: 0;
+  padding: 15px 16px;
+}
+
+.fourfu-player-footer > div + div {
+  border-left: 1px solid rgba(255,255,255,.07);
+}
+
+.fourfu-player-footer span {
+  display: block;
+  margin-bottom: 5px;
+  color: rgba(255,255,255,.38);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.fourfu-player-footer strong {
+  display: block;
+  overflow: hidden;
+  color: #fff;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fourfu-broadcast-side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fourfu-side-block {
+  padding: 19px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 17px;
+  background: rgba(255,255,255,.025);
+}
+
+.fourfu-side-title {
+  display: block;
+  margin-bottom: 14px;
+  color: rgba(255,255,255,.38);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.6px;
+}
+
+.fourfu-info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.055);
+}
+
+.fourfu-info-row:last-child {
+  border-bottom: 0;
+}
+
+.fourfu-info-row span {
+  color: rgba(255,255,255,.42);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.fourfu-info-row strong {
+  overflow: hidden;
+  color: #fff;
+  font-size: 11px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fourfu-info-row .fourfu-prize {
+  color: #ff812d;
+}
+
+.fourfu-live-state-block {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,45,45,.09),
+      rgba(255,255,255,.02)
+    );
+}
+
+.fourfu-state-live {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.fourfu-state-live .fourfu-live-dot {
+  width: 7px;
+  height: 7px;
+  flex-basis: 7px;
+}
+
+.fourfu-live-state-block p {
+  margin: 9px 0 0;
+  color: rgba(255,255,255,.43);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.fourfu-hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fourfu-hero-actions a {
+  flex: 1 1 150px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 11px 15px;
+  border-radius: 11px;
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .8px;
+  transition: transform .2s ease, filter .2s ease;
+}
+
+.fourfu-hero-actions a:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.fourfu-primary-action {
+  color: #080808;
+  background: linear-gradient(135deg, #ff7b21, #ff4e00);
+}
+
+.fourfu-secondary-action {
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.055);
+}
+
+.fourfu-next-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr);
+  min-height: 450px;
+}
+
+.fourfu-next-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 55px;
+}
+
+.fourfu-upcoming-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  margin: 8px 0 14px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255,180,60,.22);
+  border-radius: 999px;
+  color: #ffc56b;
+  background: rgba(255,180,60,.07);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.fourfu-next-copy > p {
+  max-width: 620px;
+  margin: 14px 0 0;
+  color: rgba(255,255,255,.5);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.fourfu-countdown-large {
+  margin: 25px 0 22px;
+}
+
+.fourfu-countdown-large span {
+  display: block;
+  color: rgba(255,255,255,.36);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.7px;
+}
+
+.fourfu-countdown-large strong {
+  display: block;
+  margin-top: 3px;
+  color: #fff;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(44px, 6vw, 72px);
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.fourfu-next-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 25px;
+}
+
+.fourfu-next-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 9px;
+  color: rgba(255,255,255,.62);
+  background: rgba(255,255,255,.03);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.fourfu-next-meta i {
+  color: #ff7721;
+}
+
+.fourfu-next-visual {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+  background: #090909;
+}
+
+.fourfu-next-visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 450px;
+  object-fit: cover;
+}
+
+.fourfu-next-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      #0b0b0d 0%,
+      rgba(11,11,13,.52) 18%,
+      transparent 60%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(0,0,0,.65),
+      transparent 50%
+    );
+}
+
+.fourfu-next-date {
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+  z-index: 2;
+  max-width: 260px;
+  padding: 13px 15px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(10px);
+}
+
+.fourfu-next-date span {
+  display: block;
+  margin-bottom: 4px;
+  color: rgba(255,255,255,.4);
+  font-size: 8px;
+  letter-spacing: 1.2px;
+}
+
+.fourfu-next-date strong {
+  display: block;
+  color: #fff;
+  font-size: 11px;
+}
+
+.fourfu-next-placeholder {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: 450px;
+  color: rgba(255,255,255,.12);
+  font-size: 90px;
+}
+
+.fourfu-section {
+  position: relative;
+}
+
+.fourfu-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 15px;
+}
+
+.fourfu-section-heading span {
+  display: block;
+  margin-bottom: 4px;
+  color: #ff7521;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.8px;
+}
+
+.fourfu-section-heading h2 {
+  margin: 0;
+  color: #fff;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 34px;
+  letter-spacing: .5px;
+}
+
+.fourfu-section-heading > i {
+  color: rgba(255,255,255,.18);
+  font-size: 24px;
+}
+
+.fourfu-event-list {
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 18px;
+  background: rgba(255,255,255,.02);
+}
+
+.fourfu-event-row {
+  display: grid;
+  grid-template-columns: 150px minmax(0,1fr) 150px;
+  gap: 18px;
+  align-items: center;
+  padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,.055);
+  transition: background .2s ease;
+}
+
+.fourfu-event-row:last-child {
+  border-bottom: 0;
+}
+
+.fourfu-event-row:hover {
+  background: rgba(255,255,255,.025);
+}
+
+.fourfu-event-thumb {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  background: #080808;
+}
+
+.fourfu-event-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fourfu-event-thumb > i {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: rgba(255,255,255,.18);
+}
+
+.fourfu-row-status {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  padding: 5px 7px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(0,0,0,.72);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .8px;
+}
+
+.fourfu-row-status.live {
+  border: 1px solid rgba(255,60,60,.45);
+}
+
+.fourfu-row-status.live::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: #ff3333;
+}
+
+.fourfu-event-main {
+  min-width: 0;
+}
+
+.fourfu-event-main > span {
+  color: rgba(255,255,255,.35);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.fourfu-event-main h3 {
+  overflow: hidden;
+  margin: 5px 0;
+  color: #fff;
+  font-size: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fourfu-event-main p {
+  margin: 0;
+  color: rgba(255,255,255,.4);
+  font-size: 9px;
+}
+
+.fourfu-event-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.fourfu-event-right strong {
+  color: #fff;
+  font-size: 13px;
+}
+
+.fourfu-event-right small {
+  color: rgba(255,255,255,.32);
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.fourfu-event-right a {
+  margin-top: 5px;
+  padding: 7px 11px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 8px;
+  color: #fff;
+  background: rgba(255,255,255,.04);
+  text-decoration: none;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .8px;
+}
+
+.fourfu-empty-state,
+.fourfu-loading-state {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 22px;
+  background: rgba(255,255,255,.018);
+  text-align: center;
+}
+
+.fourfu-empty-state i {
+  color: rgba(255,255,255,.15);
+  font-size: 60px;
+}
+
+.fourfu-empty-state h2 {
+  margin: 5px 0 0;
+  color: #fff;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 34px;
+}
+
+.fourfu-empty-state p,
+.fourfu-loading-state span {
+  margin: 0;
+  color: rgba(255,255,255,.4);
+  font-size: 11px;
+}
+
+.fourfu-loading-state strong {
+  color: #fff;
+  font-size: 14px;
+}
+
+.fourfu-loading-ring {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 5px;
+  border: 3px solid rgba(255,255,255,.10);
+  border-top-color: #ff6e1d;
+  border-radius: 50%;
+  animation: fourfu-spin .8s linear infinite;
+}
+
+@keyframes fourfu-live-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: .45;
+    transform: scale(.78);
+  }
+}
+
+@keyframes fourfu-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1000px) {
+  #tournament-grid {
+    width: min(100% - 24px, 900px);
+    margin-top: 45px;
+  }
+
+  .fourfu-broadcast-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fourfu-next-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .fourfu-next-visual {
+    min-height: 320px;
+  }
+
+  .fourfu-next-visual img {
+    min-height: 320px;
+    max-height: 420px;
+  }
+
+  .fourfu-next-overlay {
+    background:
+      linear-gradient(
+        0deg,
+        #0b0b0d 0%,
+        rgba(11,11,13,.20) 55%,
+        transparent 100%
+      );
+  }
+}
+
+@media (max-width: 680px) {
+  #tournament-grid {
+    width: calc(100% - 18px);
+    margin: 35px auto 70px;
+  }
+
+  .fourfu-broadcast-top {
+    padding: 14px 16px;
+  }
+
+  .fourfu-broadcast-heading {
+    padding: 23px 18px 19px;
+  }
+
+  .fourfu-broadcast-heading h2,
+  .fourfu-next-copy h2 {
+    font-size: 42px;
+  }
+
+  .fourfu-broadcast-grid {
+    padding: 0 12px 12px;
+  }
+
+  .fourfu-player-footer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .fourfu-player-footer > div:last-child {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid rgba(255,255,255,.07);
+  }
+
+  .fourfu-next-copy {
+    padding: 35px 22px;
+  }
+
+  .fourfu-next-visual,
+  .fourfu-next-visual img {
+    min-height: 260px;
+  }
+
+  .fourfu-event-row {
+    grid-template-columns: 95px minmax(0,1fr);
+    gap: 12px;
+  }
+
+  .fourfu-event-right {
+    grid-column: 2;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .fourfu-event-main h3 {
+    font-size: 14px;
+  }
+
+  .fourfu-broadcast-viewers {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 430px) {
+  .fourfu-broadcast-heading {
+    display: block;
+  }
+
+  .fourfu-broadcast-live-badge {
+    margin-top: 13px;
+  }
+
+  .fourfu-hero-actions a {
+    flex-basis: 100%;
+  }
+
+  .fourfu-event-row {
+    grid-template-columns: 82px minmax(0,1fr);
+  }
+
+  .fourfu-event-main h3 {
+    font-size: 13px;
+  }
+}
+
+
+/* =========================================================
+   4FU BROADCAST POLISH — MOBILE + NO EMPTY GAP
+   ========================================================= */
+
+html, body {
+  overflow-x: hidden;
+}
+
+#tournament-grid {
+  width: min(1500px, calc(100% - 40px));
+  margin: 18px auto 90px !important;
+  min-height: 0;
+}
+
+.fourfu-broadcast-hero {
+  margin-top: 0;
+}
+
+.fourfu-broadcast-heading h2 {
+  max-width: 900px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.fourfu-broadcast-heading p {
+  max-width: 900px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fourfu-kicker {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1000px) {
+  #tournament-grid {
+    width: min(100% - 24px, 900px);
+    margin: 12px auto 70px !important;
+  }
+
+  .fourfu-broadcast-heading h2 {
+    font-size: clamp(34px, 7vw, 58px);
+  }
+}
+
+@media (max-width: 680px) {
+  #tournament-grid {
+    width: calc(100% - 20px);
+    margin: 0 auto 55px !important;
+    gap: 24px;
+  }
+
+  .fourfu-broadcast-hero,
+  .fourfu-next-hero {
+    border-radius: 18px;
+  }
+
+  .fourfu-broadcast-top {
+    min-height: 56px;
+    padding: 14px 16px;
+  }
+
+  .fourfu-broadcast-heading {
+    padding: 22px 18px 16px;
+  }
+
+  .fourfu-kicker {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+  }
+
+  .fourfu-broadcast-heading h2 {
+    margin-top: 2px;
+    max-width: 100%;
+    font-size: clamp(30px, 8.5vw, 44px);
+    line-height: .98;
+    -webkit-line-clamp: 3;
+  }
+
+  .fourfu-broadcast-heading p {
+    margin-top: 9px;
+    max-width: 100%;
+    font-size: 10px;
+  }
+
+  .fourfu-broadcast-live-badge {
+    margin-top: 11px;
+  }
+
+  .fourfu-broadcast-grid {
+    gap: 12px;
+    padding: 0 10px 10px;
+  }
+
+  .fourfu-player-wrap {
+    border-radius: 14px;
+  }
+
+  .fourfu-youtube-player {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+  }
+
+  .fourfu-player-footer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .fourfu-player-footer > div {
+    padding: 13px 12px;
+  }
+
+  .fourfu-player-footer > div:last-child {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid rgba(255,255,255,.07);
+  }
+
+  .fourfu-player-footer strong {
+    font-size: 11px;
+  }
+
+  .fourfu-broadcast-side {
+    gap: 10px;
+  }
+
+  .fourfu-side-block {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .fourfu-info-row {
+    padding: 8px 0;
+  }
+
+  .fourfu-info-row strong {
+    max-width: 58%;
+  }
+
+  .fourfu-hero-actions a {
+    min-height: 46px;
+  }
+
+  .fourfu-next-copy {
+    padding: 30px 20px;
+  }
+
+  .fourfu-next-copy h2 {
+    font-size: clamp(34px, 9vw, 48px);
+  }
+
+  .fourfu-next-visual,
+  .fourfu-next-visual img {
+    min-height: 220px;
+  }
+
+  .fourfu-event-row {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 11px;
+    padding: 10px;
+  }
+
+  .fourfu-event-thumb {
+    min-height: 72px;
+  }
+
+  .fourfu-event-main h3 {
+    font-size: 13px;
+    line-height: 1.15;
+  }
+}
+
+@media (max-width: 430px) {
+  #tournament-grid {
+    width: calc(100% - 14px);
+  }
+
+  .fourfu-broadcast-top {
+    padding: 13px 14px;
+  }
+
+  .fourfu-broadcast-viewers strong {
+    font-size: 12px;
+  }
+
+  .fourfu-broadcast-heading {
+    padding: 20px 15px 14px;
+  }
+
+  .fourfu-broadcast-heading h2 {
+    font-size: 31px;
+  }
+
+  .fourfu-broadcast-grid {
+    padding: 0 7px 7px;
+  }
+}
+
+
+/* =========================================================
+   4FU RESULTS / EVENT ROW FIX
+   Prevent archive cards from clipping on tablet/mobile.
+   ========================================================= */
+
+.fourfu-results-section,
+.fourfu-section {
+  width: 100%;
+  min-width: 0;
+}
+
+.fourfu-event-list {
+  width: 100%;
+  min-width: 0;
+}
+
+.fourfu-event-row {
+  min-width: 0;
+}
+
+.fourfu-event-main {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.fourfu-event-main h3 {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fourfu-event-right {
+  min-width: 0;
+}
+
+/* Tablet / small desktop */
+@media (max-width: 900px) {
+  .fourfu-event-row {
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 14px;
+    padding: 12px;
+  }
+
+  .fourfu-event-thumb {
+    width: 150px;
+    min-width: 0;
+  }
+
+  .fourfu-event-main {
+    min-width: 0;
+  }
+
+  .fourfu-event-main h3 {
+    max-width: 100%;
+    font-size: 15px;
+  }
+
+  .fourfu-event-right {
+    grid-column: 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    min-width: 0;
+    margin-top: -4px;
+  }
+
+  .fourfu-event-right small {
+    margin-right: 4px;
+  }
+
+  .fourfu-event-right a {
+    margin-top: 0;
+  }
+}
+
+/* Phone */
+@media (max-width: 600px) {
+  .fourfu-section-heading {
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .fourfu-section-heading h2 {
+    font-size: 30px;
+  }
+
+  .fourfu-section-heading > i {
+    font-size: 20px;
+  }
+
+  .fourfu-event-row {
+    grid-template-columns: 105px minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px;
+    align-items: start;
+  }
+
+  .fourfu-event-thumb {
+    width: 105px;
+    aspect-ratio: 16 / 9;
+    border-radius: 9px;
+  }
+
+  .fourfu-row-status {
+    left: 5px;
+    top: 5px;
+    padding: 4px 6px;
+    font-size: 6px;
+  }
+
+  .fourfu-event-main {
+    padding-top: 1px;
+  }
+
+  .fourfu-event-main > span {
+    display: block;
+    overflow: hidden;
+    max-width: 100%;
+    font-size: 7px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fourfu-event-main h3 {
+    display: -webkit-box;
+    max-width: 100%;
+    margin: 4px 0;
+    font-size: 14px;
+    line-height: 1.15;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .fourfu-event-main p {
+    overflow: hidden;
+    max-width: 100%;
+    font-size: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fourfu-event-right {
+    grid-column: 2;
+    width: 100%;
+    min-width: 0;
+    margin-top: 0;
+    padding-top: 1px;
+  }
+
+  .fourfu-event-right strong {
+    font-size: 11px;
+  }
+
+  .fourfu-event-right small {
+    font-size: 6px;
+  }
+
+  .fourfu-event-right a {
+    padding: 7px 11px;
+    font-size: 7px;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .fourfu-event-row {
+    grid-template-columns: 90px minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .fourfu-event-thumb {
+    width: 90px;
+  }
+
+  .fourfu-event-main h3 {
+    font-size: 13px;
+  }
+
+  .fourfu-event-right {
+    flex-wrap: wrap;
+  }
+}
