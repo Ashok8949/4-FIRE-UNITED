@@ -19,6 +19,102 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?
 body{
     visibility:hidden;
 }
+
+.auto-help{
+    margin:0 0 20px;
+    padding:14px 16px;
+    border:1px solid rgba(255,115,0,.28);
+    border-radius:12px;
+    background:rgba(255,115,0,.06);
+    color:#ddd;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.auto-help strong{
+    color:#ff7300;
+}
+
+.auto-preview{
+    display:none;
+    margin-top:22px;
+    padding:16px;
+    border:1px solid rgba(255,115,0,.25);
+    border-radius:14px;
+    background:#0d0d0d;
+}
+
+.auto-preview.show{
+    display:block;
+}
+
+.auto-preview-grid{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:18px;
+    align-items:start;
+}
+
+.auto-preview img{
+    width:100%;
+    aspect-ratio:16/9;
+    object-fit:cover;
+    border-radius:10px;
+    display:block;
+}
+
+.auto-preview h3{
+    margin:0 0 8px;
+    font-size:20px;
+}
+
+.auto-preview p{
+    margin:5px 0;
+    color:#aaa;
+    font-size:13px;
+}
+
+.auto-status{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin-top:8px;
+    padding:6px 10px;
+    border-radius:999px;
+    background:#181818;
+    font-size:11px;
+    font-weight:700;
+}
+
+.auto-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#777;
+}
+
+.auto-dot.live{
+    background:#ff3131;
+    box-shadow:0 0 10px rgba(255,49,49,.8);
+}
+
+.optional-fields{
+    margin-top:22px;
+}
+
+.optional-title{
+    margin:0 0 12px;
+    font-size:13px;
+    color:#ff7300;
+    letter-spacing:1px;
+    font-weight:700;
+}
+
+@media(max-width:600px){
+    .auto-preview-grid{
+        grid-template-columns:1fr;
+    }
+}
 </style>
 
 </head>
@@ -32,75 +128,82 @@ body{
         <h1>EDIT TOURNAMENT</h1>
 
         <a href="tournaments.html" class="back-btn">
-
             <i class="fa-solid fa-arrow-left"></i>
-
             Back
-
         </a>
 
     </div>
 
     <div class="edit-card">
 
-        <h2 class="section-title">TOURNAMENT INFORMATION</h2>
+        <h2 class="section-title">YOUTUBE TOURNAMENT</h2>
+
+        <div class="auto-help">
+            <strong>⚡ Automatic Tournament Setup</strong><br>
+            YouTube Live / Watch link change karo aur baaki tournament data
+            YouTube se automatically refresh ho jayega.
+        </div>
 
         <div class="form-grid">
 
             <input
                 type="text"
-                id="title"
-                placeholder="Tournament Title">
+                id="liveLink"
+                placeholder="YouTube Live / Watch Link"
+                autocomplete="off"
+                style="grid-column:1/-1;"
+            >
 
-            <input
-                type="text"
-                id="game"
-                placeholder="Game">
+        </div>
 
-            <input
-                type="text"
-                id="mode"
-                placeholder="Mode">
+        <div id="autoPreview" class="auto-preview">
 
-            <input
-                type="date"
-                id="date">
+            <div class="auto-preview-grid">
 
-            <input
-                type="time"
-                id="time">
+                <img id="previewThumbnail" src="" alt="YouTube thumbnail">
 
-            <input
-                type="text"
-                id="prize"
-                placeholder="Prize Pool">
+                <div>
 
-            <input
-                type="text"
-                id="status"
-                placeholder="Status">
+                    <h3 id="previewTitle">Loading...</h3>
 
-            <input
-                type="text"
-                id="registration"
-                placeholder="Registration Link">
+                    <p id="previewChannel"></p>
+
+                    <p id="previewDate"></p>
+
+                    <p id="previewGame"></p>
+
+                    <span id="previewStatus" class="auto-status">
+                        <span class="auto-dot"></span>
+                        <span>Checking...</span>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="optional-fields">
+
+            <div class="optional-title">
+                OPTIONAL MANUAL INFO
+            </div>
+
+            <div class="form-grid">
 
                 <input
-    type="text"
-    id="liveLink"
-    placeholder="Live Match Link (YouTube / Loco / Rooter)">
+                    type="text"
+                    id="prize"
+                    placeholder="Prize Pool (optional)"
+                >
 
-    <select id="liveStatus">
+                <input
+                    type="text"
+                    id="registration"
+                    placeholder="Registration Link (optional)"
+                >
 
-    <option value="">Select Live Status</option>
-
-    <option value="Upcoming">Upcoming</option>
-
-    <option value="Live">🔴 Live</option>
-
-    <option value="Ended">Ended</option>
-
-</select>
+            </div>
 
         </div>
 
@@ -108,9 +211,8 @@ body{
             id="updateTournament"
             class="save-btn">
 
-            <i class="fa-solid fa-floppy-disk"></i>
-
-            Update Tournament
+            <i class="fa-solid fa-rotate"></i>
+            Refresh & Update Tournament
 
         </button>
 
@@ -127,5 +229,4 @@ body{
 <script src="js/edit-tournament.js?v=1783829699314"></script>
 
 </body>
-
 </html>

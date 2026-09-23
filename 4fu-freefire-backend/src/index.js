@@ -1523,6 +1523,463 @@ function detailedMode(mode) {
 }
 
 
+
+/* =========================================================
+   4FU YOUTUBE LIVE TOURNAMENT API
+   - API key stays in Worker secret: YOUTUBE_API_KEY
+   - Uses videos.list (1 quota unit/request)
+   - Returns LIVE / UPCOMING / ENDED metadata
+   - Optional notification webhook:
+       env.YOUTUBE_LIVE_NOTIFY_URL
+     This is intentionally optional so existing notification
+     infrastructure is never guessed or overwritten.
+   ========================================================= */
+
+function extractYouTubeVideoId(value) {
+  if (!value) return null;
+
+  const raw = String(value).trim();
+
+  // Raw 11-character YouTube video ID.
+  if (/^[A-Za-z0-9_-]{11}$/.test(raw)) return raw;
+
+  try {
+    const url = new URL(raw);
+
+    if (
+      url.hostname === "youtu.be" ||
+      url.hostname === "www.youtu.be"
+    ) {
+      const id = url.pathname.split("/").filter(Boolean)[0];
+      return /^[A-Za-z0-9_-]{11}$/.test(id || "") ? id : null;
+    }
+
+    if (
+      url.hostname === "youtube.com" ||
+      url.hostname === "www.youtube.com" ||
+      url.hostname === "m.youtube.com" ||
+      url.hostname === "youtube-nocookie.com" ||
+      url.hostname === "www.youtube-nocookie.com"
+    ) {
+      const queryId = url.searchParams.get("v");
+      if (/^[A-Za-z0-9_-]{11}$/.test(queryId || "")) return queryId;
+
+      const parts = url.pathname.split("/").filter(Boolean);
+      const index = parts.findIndex((part) =>
+        ["live", "embed", "shorts", "v"].includes(part.toLowerCase())
+      );
+
+      if (index >= 0) {
+        const id = parts[index + 1];
+        if (/^[A-Za-z0-9_-]{11}$/.test(id || "")) return id;
+      }
+    }
+  } catch {
+    // Not a URL; handled above as a raw ID only.
+  }
+
+  // Last-resort extraction for links embedded in text.
+  const match = raw.match(
+    /(?:v=|youtu\.be\/|youtube\.com\/(?:live\/|embed\/|shorts\/|v\/))([A-Za-z0-9_-]{11})/
+  );
+
+  return match?.[1] || null;
+}
+
+function youtubeStatusFromDetails(details) {
+  /*
+   * videos.list does not expose the Live Streaming API's
+   * broadcast lifecycle field. For a public video ID, the
+   * reliable public lifecycle signals are:
+   *
+   * UPCOMING = scheduledStartTime exists, actualStartTime absent
+   * LIVE     = actualStartTime exists, actualEndTime absent
+   * ENDED    = actualEndTime exists
+   */
+  if (details?.actualEndTime) {
+    return "ENDED";
+  }
+
+  if (details?.actualStartTime) {
+    return "LIVE";
+  }
+
+  if (details?.scheduledStartTime) {
+    return "UPCOMING";
+  }
+
+  return "UNKNOWN";
+}
+
+async function getYouTubeLiveInfo(videoId, env) {
+  const apiKey = env.YOUTUBE_API_KEY;
+
+  if (!apiKey) {
+    throw new Error(
+      "YOUTUBE_API_KEY is not configured in Worker secrets"
+    );
+  }
+
+  if (!/^[A-Za-z0-9_-]{11}$/.test(String(videoId || ""))) {
+    throw new Error("Invalid YouTube video ID");
+  }
+
+  // ------------------------------------------------------------
+  // QUOTA-SAFE CACHE
+  // One YouTube lookup per video per 60 seconds across users.
+  // PROFILE_CACHE is already bound to this Worker.
+  // ------------------------------------------------------------
+  const youtubeCacheKey =
+    `youtube-live-v2:${videoId}`;
+
+  if (env.PROFILE_CACHE) {
+    try {
+      const cached =
+        await env.PROFILE_CACHE.get(
+          youtubeCacheKey,
+          { type: "json" }
+        );
+
+      if (cached?.success) {
+        return {
+          ...cached,
+          cacheHit: true,
+          fetchedAt:
+            cached.fetchedAt ||
+            new Date().toISOString(),
+        };
+      }
+    } catch (cacheError) {
+      console.warn(
+        "4FU YouTube KV cache read failed:",
+        cacheError
+      );
+    }
+  }
+
+  const endpoint = new URL(
+    "https://www.googleapis.com/youtube/v3/videos"
+  );
+
+  endpoint.searchParams.set(
+    "part",
+    "snippet,contentDetails,liveStreamingDetails,status,statistics"
+  );
+  endpoint.searchParams.set("id", videoId);
+  endpoint.searchParams.set("key", apiKey);
+
+  const response = await fetch(endpoint.toString(), {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    cf: {
+      cacheTtl: 60,
+      cacheEverything: true,
+    },
+  });
+
+  const text = await response.text();
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error(
+      `YouTube API returned non-JSON HTTP ${response.status}`
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      data?.error?.message ||
+      `YouTube API HTTP ${response.status}`
+    );
+  }
+
+  const video = data?.items?.[0];
+
+  if (!video) {
+    throw new Error(
+      "YouTube video not found or is not accessible"
+    );
+  }
+
+  const details =
+    video.liveStreamingDetails || {};
+
+  const status =
+    youtubeStatusFromDetails(details);
+
+  const result = {
+    success: true,
+
+    videoId,
+
+    status,
+
+    isLive: status === "LIVE",
+
+    title:
+      video.snippet?.title ||
+      "4FU Tournament",
+
+    description:
+      video.snippet?.description ||
+      "",
+
+    channelId:
+      video.snippet?.channelId ||
+      null,
+
+    channelTitle:
+      video.snippet?.channelTitle ||
+      null,
+
+    publishedAt:
+      video.snippet?.publishedAt ||
+      null,
+
+    thumbnail:
+      video.snippet?.thumbnails?.maxres?.url ||
+      video.snippet?.thumbnails?.high?.url ||
+      video.snippet?.thumbnails?.medium?.url ||
+      video.snippet?.thumbnails?.default?.url ||
+      `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+
+    scheduledStartTime:
+      details.scheduledStartTime ||
+      null,
+
+    scheduledEndTime:
+      details.scheduledEndTime ||
+      null,
+
+    actualStartTime:
+      details.actualStartTime ||
+      null,
+
+    actualEndTime:
+      details.actualEndTime ||
+      null,
+
+    concurrentViewers:
+      details.concurrentViewers !== undefined
+        ? Number(details.concurrentViewers)
+        : null,
+
+    activeLiveChatId:
+      details.activeLiveChatId ||
+      null,
+
+    duration:
+      video.contentDetails?.duration ||
+      null,
+
+    privacyStatus:
+      video.status?.privacyStatus ||
+      null,
+
+    embeddable:
+      video.status?.embeddable !== false,
+
+    viewCount:
+      video.statistics?.viewCount
+        ? Number(video.statistics.viewCount)
+        : null,
+
+    likeCount:
+      video.statistics?.likeCount
+        ? Number(video.statistics.likeCount)
+        : null,
+
+    watchUrl:
+      `https://www.youtube.com/watch?v=${videoId}`,
+
+    embedUrl:
+      `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`,
+
+    fetchedAt:
+      new Date().toISOString(),
+
+    cacheHit: false,
+  };
+
+  if (env.PROFILE_CACHE) {
+    try {
+      await env.PROFILE_CACHE.put(
+        youtubeCacheKey,
+        JSON.stringify(result),
+        {
+          expirationTtl: 60,
+        }
+      );
+    } catch (cacheError) {
+      console.warn(
+        "4FU YouTube KV cache write failed:",
+        cacheError
+      );
+    }
+  }
+
+  return result;
+}
+
+async function maybeNotifyYouTubeLive(info, query, env) {
+  /*
+   * Optional hook only.
+   *
+   * We do NOT assume the existing 4FU notification endpoint because
+   * the Worker source does not contain one. If YOUTUBE_LIVE_NOTIFY_URL
+   * is configured later, the Worker can POST a notification payload to
+   * that existing/approved sender.
+   */
+  const notifyUrl =
+    env.YOUTUBE_LIVE_NOTIFY_URL;
+
+  if (
+    !notifyUrl ||
+    !info?.isLive
+  ) {
+    return {
+      attempted: false,
+      sent: false,
+      reason: !notifyUrl
+        ? "YOUTUBE_LIVE_NOTIFY_URL not configured"
+        : "Tournament is not live",
+    };
+  }
+
+  const notificationKey =
+    `youtube-live-notified:${String(
+      query.tournamentId ||
+      info.videoId
+    )}:${info.videoId}`;
+
+  // Use the existing PROFILE_CACHE KV binding only if available.
+  // This prevents duplicate sends when the route is polled.
+  if (env.PROFILE_CACHE) {
+    const alreadySent =
+      await env.PROFILE_CACHE.get(
+        notificationKey
+      );
+
+    if (alreadySent) {
+      return {
+        attempted: false,
+        sent: false,
+        duplicate: true,
+      };
+    }
+  }
+
+  const payload = {
+    type: "tournament_live",
+    priority: "high",
+
+    title:
+      query.title ||
+      info.title ||
+      "4FU Tournament is LIVE!",
+
+    body:
+      `${query.title || info.title || "4FU Tournament"} is now LIVE. Tap to watch.`,
+
+    link:
+      query.pageLink ||
+      info.watchUrl,
+
+    youtubeVideoId:
+      info.videoId,
+
+    youtubeUrl:
+      info.watchUrl,
+
+    tournamentId:
+      query.tournamentId ||
+      null,
+
+    status:
+      info.status,
+
+    viewers:
+      info.concurrentViewers,
+
+    scheduledStartTime:
+      info.scheduledStartTime,
+
+    actualStartTime:
+      info.actualStartTime,
+
+    source:
+      "YouTube Data API",
+
+    sentAt:
+      new Date().toISOString(),
+  };
+
+  try {
+    const response = await fetch(
+      notifyUrl,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body:
+          JSON.stringify(payload),
+      }
+    );
+
+    const responseText =
+      await response.text();
+
+    if (!response.ok) {
+      return {
+        attempted: true,
+        sent: false,
+        status: response.status,
+        error:
+          responseText.slice(0, 500),
+      };
+    }
+
+    if (env.PROFILE_CACHE) {
+      await env.PROFILE_CACHE.put(
+        notificationKey,
+        JSON.stringify({
+          sentAt:
+            new Date().toISOString(),
+          videoId:
+            info.videoId,
+        }),
+        {
+          expirationTtl:
+            60 * 60 * 24 * 7,
+        }
+      );
+    }
+
+    return {
+      attempted: true,
+      sent: true,
+      status: response.status,
+    };
+  } catch (error) {
+    return {
+      attempted: true,
+      sent: false,
+      error:
+        error?.message ||
+        String(error),
+    };
+  }
+}
+
+
 /* =========================================================
    WORKER
    ========================================================= */
@@ -1536,6 +1993,101 @@ export default {
         status: 204,
         headers: corsHeaders(),
       });
+    }
+
+
+    /* =====================================================
+       YOUTUBE LIVE TOURNAMENT ROUTE
+       GET /?youtubeLive=1&videoId=VIDEO_ID
+       Optional:
+         &tournamentId=...
+         &title=...
+         &pageLink=...
+         &notify=1
+       ===================================================== */
+    if (
+      url.searchParams.get("youtubeLive") === "1" ||
+      url.searchParams.get("youtube") === "live"
+    ) {
+      const videoId =
+        extractYouTubeVideoId(
+          url.searchParams.get("videoId") ||
+          url.searchParams.get("liveLink") ||
+          url.searchParams.get("url")
+        );
+
+      if (!videoId) {
+        return json(
+          {
+            success: false,
+            error:
+              "Invalid or missing YouTube videoId/liveLink/url",
+          },
+          400
+        );
+      }
+
+      try {
+        const info =
+          await getYouTubeLiveInfo(
+            videoId,
+            env
+          );
+
+        let notification = null;
+
+        if (
+          url.searchParams.get("notify") === "1"
+        ) {
+          notification =
+            await maybeNotifyYouTubeLive(
+              info,
+              {
+                tournamentId:
+                  url.searchParams.get(
+                    "tournamentId"
+                  ),
+                title:
+                  url.searchParams.get(
+                    "title"
+                  ),
+                pageLink:
+                  url.searchParams.get(
+                    "pageLink"
+                  ),
+              },
+              env
+            );
+        }
+
+        return json(
+          {
+            ...info,
+            notification,
+          },
+          200,
+          {
+            "Cache-Control":
+              "public, max-age=60, s-maxage=60",
+            "X-4FU-YouTube":
+              "videos.list",
+          }
+        );
+      } catch (error) {
+        return json(
+          {
+            success: false,
+            error:
+              error?.message ||
+              "YouTube live lookup failed",
+          },
+          502,
+          {
+            "Cache-Control":
+              "no-store",
+          }
+        );
+      }
     }
 
     if (request.method !== "GET") {

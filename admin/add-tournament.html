@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -15,10 +14,93 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?
 
 <link rel="stylesheet" href="CSS/dashboard.css?v=1783829699314">
 
-
 <style>
 body{
     visibility:hidden;
+}
+
+.auto-help{
+    margin: 0 0 20px;
+    padding: 14px 16px;
+    border: 1px solid rgba(255,115,0,.28);
+    border-radius: 12px;
+    background: rgba(255,115,0,.06);
+    color: #ddd;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.auto-help strong{
+    color:#ff7300;
+}
+
+.auto-preview{
+    display:none;
+    margin-top:22px;
+    padding:16px;
+    border:1px solid rgba(255,115,0,.25);
+    border-radius:14px;
+    background:#0d0d0d;
+}
+
+.auto-preview.show{
+    display:block;
+}
+
+.auto-preview-grid{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:18px;
+    align-items:start;
+}
+
+.auto-preview img{
+    width:100%;
+    aspect-ratio:16/9;
+    object-fit:cover;
+    border-radius:10px;
+    display:block;
+}
+
+.auto-preview h3{
+    margin:0 0 8px;
+    font-size:20px;
+}
+
+.auto-preview p{
+    margin:5px 0;
+    color:#aaa;
+    font-size:13px;
+}
+
+.auto-status{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin-top:8px;
+    padding:6px 10px;
+    border-radius:999px;
+    background:#181818;
+    font-size:11px;
+    font-weight:700;
+}
+
+.auto-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#777;
+}
+
+.auto-dot.live{
+    background:#ff3131;
+    box-shadow:0 0 10px rgba(255,49,49,.8);
+}
+
+@media(max-width:600px){
+    .auto-preview-grid{
+        grid-template-columns:1fr;
+    }
 }
 </style>
 </head>
@@ -28,65 +110,58 @@ body{
 <div class="main">
 
     <div class="topbar">
-
         <h1>ADD TOURNAMENT</h1>
 
         <a href="tournaments.html" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i>
             Back
         </a>
-
     </div>
 
     <div class="edit-card">
 
-        <h2 class="section-title">TOURNAMENT INFORMATION</h2>
+        <h2 class="section-title">YOUTUBE TOURNAMENT</h2>
+
+        <div class="auto-help">
+            <strong>⚡ Automatic Tournament Setup</strong><br>
+            Bas YouTube Live / Watch link paste karo. YouTube se title, thumbnail,
+            live status, scheduled/actual time, channel, views aur broadcast data
+            automatically fetch hoga.
+        </div>
 
         <div class="form-grid">
 
-            <input type="text" id="title" placeholder="Tournament Title">
-
-            <input type="text" id="game" placeholder="Game">
-
-            <input type="text" id="mode" placeholder="Mode">
-
-            <input type="date" id="date">
-
-            <input type="time" id="time">
-
-            <input type="text" id="prize" placeholder="Prize Pool">
-
-            <input type="text" id="status" placeholder="Status">
-
-            <input type="text" id="registration" placeholder="Registration Link">
             <input
-    type="text"
-    id="registration"
-    placeholder="Registration Link">
-
-<input
-    type="text"
-    id="liveLink"
-    placeholder="Live Match Link (YouTube / Loco / Rooter)">
-
-<select id="liveStatus">
-
-    <option value="Upcoming">Upcoming</option>
-
-    <option value="Live">🔴 Live</option>
-
-    <option value="Ended">Ended</option>
-
-</select>
+                type="text"
+                id="liveLink"
+                placeholder="Paste YouTube Live / Watch Link"
+                autocomplete="off"
+                style="grid-column:1/-1;"
+            >
 
         </div>
 
+        <div id="autoPreview" class="auto-preview">
+            <div class="auto-preview-grid">
+                <img id="previewThumbnail" src="" alt="YouTube thumbnail">
+
+                <div>
+                    <h3 id="previewTitle">Loading...</h3>
+                    <p id="previewChannel"></p>
+                    <p id="previewDate"></p>
+                    <p id="previewGame"></p>
+
+                    <span id="previewStatus" class="auto-status">
+                        <span class="auto-dot"></span>
+                        <span>Checking...</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
         <button id="saveTournament" class="save-btn">
-
-            <i class="fa-solid fa-floppy-disk"></i>
-
-            Save Tournament
-
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            Fetch & Add Tournament
         </button>
 
     </div>
@@ -102,5 +177,4 @@ body{
 <script src="js/add-tournament.js?v=1783829699314"></script>
 
 </body>
-
 </html>
