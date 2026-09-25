@@ -870,8 +870,9 @@ async function hlgamingAsset(
 function corsHeaders(extra = {}) {
   return {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Max-Age": "86400",
     ...extra,
   };
 }
@@ -1980,11 +1981,1832 @@ async function maybeNotifyYouTubeLive(info, query, env) {
 }
 
 
+
+/* =========================================================
+   4FU PRO / RAZORPAY - CLOUDFLARE WORKER BACKEND
+   Uses the SAME worker as the existing Free Fire API.
+   Existing routes remain untouched.
+   Required Worker secrets:
+     RAZORPAY_KEY_ID
+     RAZORPAY_KEY_SECRET
+     RAZORPAY_PRO_PLAN_ID
+     RAZORPAY_WEBHOOK_SECRET
+     FIREBASE_PROJECT_ID
+     FIREBASE_SERVICE_ACCOUNT_JSON
+   Optional:
+     PRO_PRICE_INR (default 49)
+   ========================================================= */
+
+let proFirebaseTokenCache = null;
+let proFirebaseKeyCache = null;
+let proServiceTokenCache = null;
+
+function proBase64Url(bytes) {
+  let binary = "";
+  const arr = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+  for (let i = 0; i < arr.length; i += 1) binary += String.fromCharCode(arr[i]);
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function proBase64UrlString(value) {
+  return proBase64Url(new TextEncoder().encode(value));
+}
+
+function proJson(data, status = 200) {
+  return json(data, status, {
+    "Cache-Control": "no-store",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  });
+}
+
+function proIsoFromUnix(value) {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? new Date(n * 1000).toISOString() : null;
+}
+
+async function proHmacHex(secret, message) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(message)
+  );
+  return Array.from(new Uint8Array(signature))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+async function proHmacVerify(secret, message, expectedHex) {
+  const actual = await proHmacHex(secret, message);
+  if (!actual || !expectedHex || actual.length !== expectedHex.length) return false;
+
+  let diff = 0;
+  for (let i = 0; i < actual.length; i += 1) {
+    diff |= actual.charCodeAt(i) ^ expectedHex.charCodeAt(i);
+  }
+  return diff === 0;
+}
+
+async function proFirebasePublicKeys() {
+  const now = Date.now();
+  if (proFirebaseKeyCache && proFirebaseKeyCache.expiresAt > now) {
+    return proFirebaseKeyCache.keys;
+  }
+
+  const response = await fetch(
+    "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
+    { headers: { Accept: "application/json" } }
+  );
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok || !data?.keys || !Array.isArray(data.keys)) {
+    throw new Error("Firebase public keys unavailable");
+  }
+
+  const cacheControl = response.headers.get("Cache-Control") || "";
+  const maxAgeMatch = cacheControl.match(/max-age=(\\d+)/i);
+  const maxAgeSeconds = maxAgeMatch ? Number(maxAgeMatch[1]) : 3600;
+  const ttl = Math.min(Math.max(maxAgeSeconds, 300), 24 * 60 * 60);
+
+  proFirebaseKeyCache = {
+    keys: data.keys,
+    expiresAt: now + ttl * 1000,
+  };
+
+  return data.keys;
+}
+
+function proBase64UrlBytes(value) {
+  const normalized = String(value || "")
+    .replace(/-/g, "+")
+    .replace(/_/g, "/");
+  const padded = normalized + "=".repeat((4 - (normalized.length % 4)) % 4);
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+async function proFirebaseIdToken(idToken, env) {
+  if (!idToken) throw new Error("Firebase ID token is required");
+
+  const now = Math.floor(Date.now() / 1000);
+  if (
+    proFirebaseTokenCache &&
+    proFirebaseTokenCache.token === idToken &&
+    proFirebaseTokenCache.exp > now + 30
+  ) {
+    return proFirebaseTokenCache.claims;
+  }
+
+  const parts = String(idToken).split(".");
+  if (parts.length !== 3) throw new Error("Invalid Firebase ID token");
+
+  let header;
+  let claims;
+  try {
+    header = JSON.parse(
+      new TextDecoder().decode(proBase64UrlBytes(parts[0]))
+    );
+    claims = JSON.parse(
+      new TextDecoder().decode(proBase64UrlBytes(parts[1]))
+    );
+  } catch {
+    throw new Error("Invalid Firebase ID token");
+  }
+
+  const projectId = env.FIREBASE_PROJECT_ID || "fire-united";
+
+  if (
+    header?.alg !== "RS256" ||
+    !header?.kid ||
+    claims?.aud !== projectId ||
+    claims?.iss !== `https://securetoken.google.com/${projectId}` ||
+    !claims?.sub ||
+    String(claims.sub).length > 128 ||
+    Number(claims.exp || 0) <= now ||
+    Number(claims.iat || 0) > now + 60 ||
+    Number(claims.auth_time || 0) > now + 60
+  ) {
+    throw new Error("Firebase ID token audience/issuer/expiry mismatch");
+  }
+
+  const keys = await proFirebasePublicKeys();
+  const jwk = keys.find((key) => key?.kid === header.kid);
+  if (!jwk) {
+    // Google can rotate keys while a Worker isolate still has an old cache.
+    proFirebaseKeyCache = null;
+    const refreshedKeys = await proFirebasePublicKeys();
+    const refreshedJwk = refreshedKeys.find((key) => key?.kid === header.kid);
+    if (!refreshedJwk) throw new Error("Firebase ID token signing key not found");
+    return await proVerifyFirebaseJwt(
+      idToken,
+      header,
+      claims,
+      refreshedJwk,
+      now
+    );
+  }
+
+  return await proVerifyFirebaseJwt(idToken, header, claims, jwk, now);
+}
+
+async function proVerifyFirebaseJwt(idToken, header, claims, jwk, now) {
+  const signingInput = `${String(idToken).split(".")[0]}.${String(idToken).split(".")[1]}`;
+  const signature = proBase64UrlBytes(String(idToken).split(".")[2]);
+
+  let publicKey;
+  try {
+    publicKey = await crypto.subtle.importKey(
+      "jwk",
+      jwk,
+      { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+      false,
+      ["verify"]
+    );
+  } catch {
+    throw new Error("Firebase public key import failed");
+  }
+
+  const valid = await crypto.subtle.verify(
+    "RSASSA-PKCS1-v1_5",
+    publicKey,
+    signature,
+    new TextEncoder().encode(signingInput)
+  );
+
+  if (!valid) throw new Error("Invalid Firebase ID token signature");
+
+  proFirebaseTokenCache = {
+    token: idToken,
+    claims,
+    exp: Number(claims.exp || 0),
+  };
+
+  return claims;
+}
+
+function proServiceAccount(env) {
+  const raw = env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  if (!raw) throw new Error("FIREBASE_SERVICE_ACCOUNT_JSON is not configured");
+
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON");
+  }
+
+  if (!data.client_email || !data.private_key) {
+    throw new Error("Firebase service account is missing client_email/private_key");
+  }
+
+  return data;
+}
+
+async function proServiceAccountAccessToken(env) {
+  const now = Math.floor(Date.now() / 1000);
+  if (proServiceTokenCache && proServiceTokenCache.exp > now + 60) {
+    return proServiceTokenCache.token;
+  }
+
+  const account = proServiceAccount(env);
+  const header = proBase64UrlString(
+    JSON.stringify({ alg: "RS256", typ: "JWT" })
+  );
+  const claim = proBase64UrlString(
+    JSON.stringify({
+      iss: account.client_email,
+      scope: "https://www.googleapis.com/auth/datastore",
+      aud: "https://oauth2.googleapis.com/token",
+      iat: now,
+      exp: now + 3600,
+    })
+  );
+  const unsigned = `${header}.${claim}`;
+
+  const pem = account.private_key
+    .replace(/\\n/g, "\n")
+    .replace(/\r/g, "");
+
+  const base64 = pem
+    .replace("-----BEGIN PRIVATE KEY-----", "")
+    .replace("-----END PRIVATE KEY-----", "")
+    .replace(/\s+/g, "");
+
+  const binary = atob(base64);
+  const keyBytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    keyBytes[i] = binary.charCodeAt(i);
+  }
+
+  const privateKey = await crypto.subtle.importKey(
+    "pkcs8",
+    keyBytes.buffer,
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+
+  const signature = await crypto.subtle.sign(
+    "RSASSA-PKCS1-v1_5",
+    privateKey,
+    new TextEncoder().encode(unsigned)
+  );
+
+  const assertion = `${unsigned}.${proBase64Url(signature)}`;
+
+  const response = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body:
+      "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer" +
+      `&assertion=${encodeURIComponent(assertion)}`,
+  });
+
+  const data = await response.json().catch(() => null);
+  if (!response.ok || !data?.access_token) {
+    throw new Error(
+      data?.error_description ||
+      data?.error ||
+      `Google token exchange HTTP ${response.status}`
+    );
+  }
+
+  proServiceTokenCache = {
+    token: data.access_token,
+    exp: now + Number(data.expires_in || 3600),
+  };
+
+  return data.access_token;
+}
+
+async function proFirestoreRequest(path, method, body, env) {
+  const projectId = env.FIREBASE_PROJECT_ID || "fire-united";
+  const token = await proServiceAccountAccessToken(env);
+  const endpoint =
+    `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(projectId)}` +
+    `/databases/(default)/documents/${path}`;
+
+  const response = await fetch(endpoint, {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : null;
+
+  if (!response.ok) {
+    throw new Error(
+      data?.error?.message ||
+      `Firestore HTTP ${response.status}`
+    );
+  }
+
+  return data;
+}
+
+function proFirestoreValue(value) {
+  if (value === null || value === undefined) return { nullValue: null };
+  if (typeof value === "boolean") return { booleanValue: value };
+  if (typeof value === "number" && Number.isInteger(value)) {
+    return { integerValue: String(value) };
+  }
+  if (typeof value === "number") return { doubleValue: value };
+  return { stringValue: String(value) };
+}
+
+function proFirestoreFields(data) {
+  const fields = {};
+  for (const [key, value] of Object.entries(data || {})) {
+    fields[key] = proFirestoreValue(value);
+  }
+  return fields;
+}
+
+async function proFindPlayer(claims, env) {
+  const projectId = env.FIREBASE_PROJECT_ID || "fire-united";
+  const token = await proServiceAccountAccessToken(env);
+
+  async function query(field, value) {
+    const endpoint =
+      `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(projectId)}` +
+      `/databases/(default)/documents:runQuery`;
+
+    const body = {
+      structuredQuery: {
+        from: [{ collectionId: "players" }],
+        where: {
+          fieldFilter: {
+            field: { fieldPath: field },
+            op: "EQUAL",
+            value: { stringValue: String(value) },
+          },
+        },
+        limit: 1,
+      },
+    };
+
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json().catch(() => []);
+    if (!response.ok) {
+      throw new Error(data?.error?.message || `Firestore query HTTP ${response.status}`);
+    }
+
+    const row = Array.isArray(data)
+      ? data.find((item) => item?.document?.name)
+      : null;
+
+    if (!row?.document) return null;
+
+    const document = row.document;
+    const fields = {};
+    for (const [key, value] of Object.entries(document.fields || {})) {
+      fields[key] =
+        value.stringValue ??
+        value.integerValue ??
+        value.doubleValue ??
+        value.booleanValue ??
+        value.timestampValue ??
+        value.nullValue ??
+        null;
+    }
+
+    return {
+      path: document.name.split("/documents/")[1],
+      id: document.name.split("/").pop(),
+      fields,
+    };
+  }
+
+  const uid = claims.sub;
+  const email = claims.email || "";
+
+  const byUid = await query("uid", uid);
+  if (byUid) return byUid;
+
+  if (email) {
+    const byEmail = await query("loginEmail", email);
+    if (byEmail) return byEmail;
+  }
+
+  throw new Error("Player profile not found for this Firebase account");
+}
+
+async function proUpdatePlayer(player, patch, env) {
+  const fields = proFirestoreFields(patch);
+  return proFirestoreRequest(
+    `${player.path}?updateMask.fieldPaths=${Object.keys(fields)
+      .map((key) => encodeURIComponent(key))
+      .join("&updateMask.fieldPaths=")}`,
+    "PATCH",
+    { fields },
+    env
+  );
+}
+
+
+/* =========================================================
+   4FU PRO PROFILE CUSTOMIZATION
+   - Saved server-side in the player's Firestore document.
+   - Client cannot activate PRO or edit another player's profile.
+   - Admin bypass follows the same server-side email allow-list
+     already used by /pro/status.
+   - Stored as JSON string to keep the existing player document
+     schema backward-compatible.
+   ========================================================= */
+
+const PRO_CUSTOMIZATION_DEFAULTS = {
+  version: 2,
+
+  // IMPORTANT: these are CARD/DATA themes only.
+  // The public player page/banner background is never replaced by this value.
+  theme: "obsidian",
+
+  liveTheme: "inferno-live",
+  motionMode: "smooth",
+  preset: "custom",
+  title: "ELITE",
+
+  frame: {
+    style: "gold",
+    animated: true,
+    edgeShine: true,
+    diamondCorners: true,
+  },
+
+  banner: {
+    animation: true,
+    glow: true,
+    shine: true,
+    border: "snake",
+    style: "cinematic",
+  },
+
+  avatar: {
+    glow: true,
+    pulse: true,
+    ring: "gold",
+    shine: true,
+  },
+
+  mainCard: {
+    snake: true,
+    glow: true,
+    shine: true,
+    tilt: true,
+    pulse: true,
+  },
+
+  weapon: {
+    glow: true,
+    float: true,
+    shine: true,
+    snake: true,
+    parallax: true,
+    style: "fire",
+  },
+
+  stats: {
+    glow: true,
+    fire: false,
+    shine: true,
+    hover: true,
+    numberAnimation: true,
+    numberGlow: true,
+  },
+
+  achievements: {
+    glow: true,
+    shine: true,
+    hover: true,
+  },
+
+  gameCenter: {
+    glow: true,
+    hover: true,
+    shine: true,
+  },
+
+  clips: {
+    premiumFrame: true,
+    glow: true,
+    hover: true,
+    shine: true,
+  },
+
+  gallery: {
+    premiumFrame: true,
+    glow: true,
+    zoom: true,
+    shine: true,
+  },
+
+  atmosphere: {
+    particles: true,
+    ambientGlow: true,
+    floatingLights: true,
+    scrollReveal: true,
+    cursorGlow: false,
+  },
+};
+
+const PRO_CARD_THEMES = [
+  "obsidian",
+  "aurora",
+  "inferno",
+  "cyber",
+  "void",
+  "royal",
+  "crimson",
+  "ice",
+  "galaxy",
+  "toxic",
+  "ember",
+];
+
+const PRO_LIVE_THEMES = PRO_CARD_THEMES.map((theme) => `${theme}-live`);
+
+const PRO_MOTION_MODES = [
+  "cinematic",
+  "smooth",
+  "aggressive",
+  "minimal",
+];
+
+const PRO_PRESETS = [
+  "custom",
+  "king",
+  "esports",
+  "cinematic",
+  "clean",
+  "inferno",
+  "cyber",
+  "royal",
+  "aurora",
+];
+
+function proCustomizationObject(value) {
+  if (!value) return null;
+  if (typeof value === "object") return value;
+
+  try {
+    const parsed = JSON.parse(String(value));
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function proBool(value, fallback) {
+  return typeof value === "boolean" ? value : fallback;
+}
+
+function proString(value, fallback, allowed = null) {
+  const v = typeof value === "string" ? value.trim().toLowerCase() : "";
+  if (!v) return fallback;
+  return Array.isArray(allowed) && !allowed.includes(v) ? fallback : v;
+}
+
+function proCustomizationSanitize(input) {
+  const src = proCustomizationObject(input) || {};
+  const d = PRO_CUSTOMIZATION_DEFAULTS;
+  const fx = src.effects && typeof src.effects === "object"
+    ? src.effects
+    : {};
+
+  const bool = (nestedValue, flatKey, fallback) =>
+    typeof fx[flatKey] === "boolean"
+      ? fx[flatKey]
+      : proBool(nestedValue, fallback);
+
+  const normalized = {
+    version: 2,
+
+    // New 11-theme PRO library.
+    // These never become the public page background.
+    theme: proString(src.theme, d.theme, PRO_CARD_THEMES),
+
+    liveTheme: proString(
+      src.liveTheme,
+      d.liveTheme,
+      PRO_LIVE_THEMES
+    ),
+
+    motionMode: proString(
+      src.motionMode,
+      d.motionMode,
+      PRO_MOTION_MODES
+    ),
+
+    preset: proString(
+      src.preset,
+      d.preset,
+      PRO_PRESETS
+    ),
+
+    title: proString(src.title, d.title, [
+      "ELITE",
+      "LEGEND",
+      "VETERAN",
+      "KING",
+    ]).toUpperCase(),
+
+    frame: {
+      style: proString(
+        src.frame?.style ??
+        src.frameStyle ??
+        fx.frameStyle,
+        d.frame.style,
+        [
+          "none",
+          "gold",
+          "fire",
+          "neon",
+          "ice",
+          "galaxy",
+          "toxic",
+          "royal",
+          "crimson",
+        ]
+      ),
+
+      animated: bool(
+        src.frame?.animated,
+        "animatedFrame",
+        d.frame.animated
+      ),
+
+      edgeShine: bool(
+        src.frame?.edgeShine,
+        "edgeShine",
+        d.frame.edgeShine
+      ),
+
+      diamondCorners: bool(
+        src.frame?.diamondCorners,
+        "diamondCorners",
+        d.frame.diamondCorners
+      ),
+    },
+
+    banner: {
+      animation: bool(
+        src.banner?.animation,
+        "bannerAnimation",
+        d.banner.animation
+      ),
+      glow: bool(
+        src.banner?.glow,
+        "bannerGlow",
+        d.banner.glow
+      ),
+      shine: bool(
+        src.banner?.shine,
+        "bannerShine",
+        d.banner.shine
+      ),
+      border:
+        fx.bannerSnake === true
+          ? "snake"
+          : proString(
+              src.banner?.border,
+              d.banner.border,
+              [
+                "none",
+                "normal",
+                "snake",
+                "fire",
+                "neon",
+                "electric",
+                "gold",
+              ]
+            ),
+      style: proString(
+        src.banner?.style,
+        d.banner.style,
+        [
+          "normal",
+          "cinematic",
+          "zoom",
+          "pan",
+          "float",
+        ]
+      ),
+    },
+
+    avatar: {
+      glow: bool(
+        src.avatar?.glow,
+        "avatarGlow",
+        d.avatar.glow
+      ),
+      pulse: bool(
+        src.avatar?.pulse,
+        "avatarPulse",
+        d.avatar.pulse
+      ),
+      ring:
+        fx.avatarRing === false
+          ? "none"
+          : proString(
+              src.avatar?.ring,
+              d.avatar.ring,
+              [
+                "none",
+                "normal",
+                "gold",
+                "fire",
+                "neon",
+                "cyber",
+              ]
+            ),
+      shine: bool(
+        src.avatar?.shine,
+        "avatarShine",
+        d.avatar.shine
+      ),
+    },
+
+    mainCard: {
+      snake: bool(
+        src.mainCard?.snake,
+        "mainSnake",
+        d.mainCard.snake
+      ),
+      glow: bool(
+        src.mainCard?.glow,
+        "mainGlow",
+        d.mainCard.glow
+      ),
+      shine: bool(
+        src.mainCard?.shine,
+        "mainShine",
+        d.mainCard.shine
+      ),
+      tilt: bool(
+        src.mainCard?.tilt,
+        "mainTilt",
+        d.mainCard.tilt
+      ),
+      pulse: proBool(
+        src.mainCard?.pulse,
+        d.mainCard.pulse
+      ),
+    },
+
+    weapon: {
+      glow: bool(
+        src.weapon?.glow,
+        "weaponGlow",
+        d.weapon.glow
+      ),
+      float: bool(
+        src.weapon?.float,
+        "weaponFloat",
+        d.weapon.float
+      ),
+      shine: bool(
+        src.weapon?.shine,
+        "weaponShine",
+        d.weapon.shine
+      ),
+      snake: bool(
+        src.weapon?.snake,
+        "weaponSnake",
+        d.weapon.snake
+      ),
+      parallax: bool(
+        src.weapon?.parallax,
+        "weaponParallax",
+        d.weapon.parallax
+      ),
+      style: proString(
+        src.weapon?.style,
+        d.weapon.style,
+        [
+          "normal",
+          "fire",
+          "neon",
+          "electric",
+          "gold",
+        ]
+      ),
+    },
+
+    stats: {
+      glow: bool(
+        src.stats?.glow,
+        "statsGlow",
+        d.stats.glow
+      ),
+      fire: bool(
+        src.stats?.fire,
+        "statsFire",
+        d.stats.fire
+      ),
+      shine: bool(
+        src.stats?.shine,
+        "statsShine",
+        d.stats.shine
+      ),
+      hover: bool(
+        src.stats?.hover,
+        "statsHover",
+        d.stats.hover
+      ),
+      numberAnimation: bool(
+        src.stats?.numberAnimation,
+        "numberAnimation",
+        d.stats.numberAnimation
+      ),
+      numberGlow: bool(
+        src.stats?.numberGlow,
+        "statNumberGlow",
+        d.stats.numberGlow
+      ),
+    },
+
+    achievements: {
+      glow: bool(
+        src.achievements?.glow,
+        "achievementGlow",
+        d.achievements.glow
+      ),
+      shine: bool(
+        src.achievements?.shine,
+        "achievementShine",
+        d.achievements.shine
+      ),
+      hover: bool(
+        src.achievements?.hover,
+        "achievementHover",
+        d.achievements.hover
+      ),
+    },
+
+    gameCenter: {
+      glow: bool(
+        src.gameCenter?.glow,
+        "gameGlow",
+        d.gameCenter.glow
+      ),
+      hover: bool(
+        src.gameCenter?.hover,
+        "gameFloat",
+        d.gameCenter.hover
+      ),
+      shine: bool(
+        src.gameCenter?.shine,
+        "gameBorder",
+        d.gameCenter.shine
+      ),
+    },
+
+    clips: {
+      premiumFrame: bool(
+        src.clips?.premiumFrame,
+        "showcaseFrame",
+        d.clips.premiumFrame
+      ),
+      glow: bool(
+        src.clips?.glow,
+        "showcaseGlow",
+        d.clips.glow
+      ),
+      hover: bool(
+        src.clips?.hover,
+        "showcaseZoom",
+        d.clips.hover
+      ),
+      shine: bool(
+        src.clips?.shine,
+        "showcaseShine",
+        d.clips.shine
+      ),
+    },
+
+    gallery: {
+      premiumFrame: bool(
+        src.gallery?.premiumFrame,
+        "showcaseFrame",
+        d.gallery.premiumFrame
+      ),
+      glow: bool(
+        src.gallery?.glow,
+        "showcaseGlow",
+        d.gallery.glow
+      ),
+      zoom: bool(
+        src.gallery?.zoom,
+        "showcaseZoom",
+        d.gallery.zoom
+      ),
+      shine: bool(
+        src.gallery?.shine,
+        "showcaseShine",
+        d.gallery.shine
+      ),
+    },
+
+    atmosphere: {
+      particles: bool(
+        src.atmosphere?.particles,
+        "particles",
+        d.atmosphere.particles
+      ),
+      ambientGlow: bool(
+        src.atmosphere?.ambientGlow,
+        "ambientGlow",
+        d.atmosphere.ambientGlow
+      ),
+      floatingLights: proBool(
+        src.atmosphere?.floatingLights,
+        d.atmosphere.floatingLights
+      ),
+      scrollReveal: bool(
+        src.atmosphere?.scrollReveal,
+        "scrollReveal",
+        d.atmosphere.scrollReveal
+      ),
+      cursorGlow: bool(
+        src.atmosphere?.cursorGlow,
+        "cursorGlow",
+        d.atmosphere.cursorGlow
+      ),
+    },
+  };
+
+  /*
+   * Backward compatibility:
+   * The public profile currently understands the flat `effects` object.
+   * Keep it synchronized with the new structured V2 configuration.
+   */
+  normalized.effects = {
+    // Main card
+    mainSnake: normalized.mainCard.snake,
+    mainGlow: normalized.mainCard.glow,
+    mainShine: normalized.mainCard.shine,
+    mainTilt: normalized.mainCard.tilt,
+
+    // Banner
+    bannerAnimation: normalized.banner.animation,
+    bannerGlow: normalized.banner.glow,
+    bannerShine: normalized.banner.shine,
+    bannerSnake: normalized.banner.border === "snake",
+
+    // Avatar
+    avatarRing: normalized.avatar.ring !== "none",
+    avatarGlow: normalized.avatar.glow,
+    avatarPulse: normalized.avatar.pulse,
+    avatarShine: normalized.avatar.shine,
+    proCrown: true,
+
+    // Weapon
+    weaponGlow: normalized.weapon.glow,
+    weaponFloat: normalized.weapon.float,
+    weaponShine: normalized.weapon.shine,
+    weaponSnake: normalized.weapon.snake,
+    weaponParallax: normalized.weapon.parallax,
+
+    // Stats
+    statsGlow: normalized.stats.glow,
+    statsFire: normalized.stats.fire,
+    statsShine: normalized.stats.shine,
+    statsHover: normalized.stats.hover,
+    numberAnimation: normalized.stats.numberAnimation,
+    statNumberGlow: normalized.stats.numberGlow,
+
+    // Achievements
+    achievementGlow: normalized.achievements.glow,
+    achievementShine: normalized.achievements.shine,
+    achievementHover: normalized.achievements.hover,
+
+    // Game Center
+    gameGlow: normalized.gameCenter.glow,
+    gameFloat: normalized.gameCenter.hover,
+    gameBorder: normalized.gameCenter.shine,
+
+    // Clips/Gallery
+    showcaseFrame:
+      normalized.clips.premiumFrame ||
+      normalized.gallery.premiumFrame,
+    showcaseGlow:
+      normalized.clips.glow ||
+      normalized.gallery.glow,
+    showcaseZoom:
+      normalized.clips.hover ||
+      normalized.gallery.zoom,
+    showcaseShine:
+      normalized.clips.shine ||
+      normalized.gallery.shine,
+
+    // Atmosphere
+    particles: normalized.atmosphere.particles,
+    ambientGlow: normalized.atmosphere.ambientGlow,
+    floatingLights: normalized.atmosphere.floatingLights,
+    scrollReveal: normalized.atmosphere.scrollReveal,
+    cursorGlow: normalized.atmosphere.cursorGlow,
+
+    // New V2 controls
+    animatedFrame: normalized.frame.animated,
+    edgeShine: normalized.frame.edgeShine,
+    diamondCorners: normalized.frame.diamondCorners,
+  };
+
+  return normalized;
+}
+
+async function proCustomizationStatus(claims, env) {
+  const player = await proFindPlayer(claims, env);
+  const adminBypass = proIsAdminClaims(claims, env);
+  const expiresAt = player.fields?.proExpiresAt || null;
+  const expiryMs = expiresAt ? Date.parse(expiresAt) : 0;
+  const active =
+    adminBypass ||
+    (
+      player.fields?.proActive === true &&
+      (!expiryMs || expiryMs > Date.now())
+    );
+
+  return { player, adminBypass, active };
+}
+
+async function proGetCustomization(request, env) {
+  const claims = await proFirebaseIdToken(proAuthHeader(request), env);
+  const { player, active } = await proCustomizationStatus(claims, env);
+
+  if (!active) {
+    return proJson({
+      success: true,
+      proActive: false,
+      customization: null,
+    });
+  }
+
+  const saved = proCustomizationObject(
+    player.fields?.proCustomization
+  );
+
+  return proJson({
+    success: true,
+    proActive: true,
+    customization: proCustomizationSanitize(saved || {}),
+    updatedAt: player.fields?.proCustomizationUpdatedAt || null,
+  });
+}
+
+async function proSaveCustomization(request, env) {
+  const claims = await proFirebaseIdToken(proAuthHeader(request), env);
+  const { player, adminBypass, active } =
+    await proCustomizationStatus(claims, env);
+
+  if (!active) {
+    return proJson(
+      {
+        success: false,
+        error: "Active 4FU PRO is required to save profile customization",
+      },
+      403
+    );
+  }
+
+  const body = await request.json().catch(() => null);
+  const customization = proCustomizationSanitize(
+    body?.customization || body
+  );
+
+  await proUpdatePlayer(
+    player,
+    {
+      proCustomization: JSON.stringify(customization),
+      proCustomizationUpdatedAt: new Date().toISOString(),
+    },
+    env
+  );
+
+  return proJson({
+    success: true,
+    proActive: true,
+    adminBypass,
+    customization,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+async function proPublicCustomization(request, env) {
+  const url = new URL(request.url);
+  const playerId = String(
+    url.searchParams.get("playerId") || ""
+  ).trim();
+
+  if (!playerId || !/^[A-Za-z0-9_-]{1,128}$/.test(playerId)) {
+    return proJson(
+      {
+        success: false,
+        error: "Valid playerId is required",
+      },
+      400
+    );
+  }
+
+  try {
+    const document = await proFirestoreRequest(
+      `players/${encodeURIComponent(playerId)}`,
+      "GET",
+      undefined,
+      env
+    );
+
+    const fields = document?.fields || {};
+    const storedProActive = fields.proActive?.booleanValue === true;
+    const expiresAt =
+      fields.proExpiresAt?.timestampValue ||
+      fields.proExpiresAt?.stringValue ||
+      null;
+    const expiryMs = expiresAt ? Date.parse(expiresAt) : 0;
+
+    const loginEmail =
+      fields.loginEmail?.stringValue || "";
+
+    const adminBypass = proIsAdminClaims(
+      { email: loginEmail },
+      env
+    );
+
+    const proActive =
+      adminBypass ||
+      (
+        storedProActive &&
+        (!expiryMs || expiryMs > Date.now())
+      );
+
+    if (!proActive) {
+      return proJson({
+        success: true,
+        proActive: false,
+        customization: null,
+      });
+    }
+
+    const raw =
+      fields.proCustomization?.stringValue || null;
+
+    return proJson({
+      success: true,
+      proActive: true,
+      customization: proCustomizationSanitize(
+        proCustomizationObject(raw) || {}
+      ),
+      updatedAt:
+        fields.proCustomizationUpdatedAt?.stringValue ||
+        null,
+    });
+  } catch (error) {
+    console.error(
+      "4FU public PRO customization error:",
+      error?.message || error
+    );
+
+    return proJson(
+      {
+        success: false,
+        error: "Unable to read PRO profile customization",
+      },
+      500
+    );
+  }
+}
+
+
+function proAuthHeader(request) {
+  const value = request.headers.get("Authorization") || "";
+  if (!value.toLowerCase().startsWith("bearer ")) return "";
+  return value.slice(7).trim();
+}
+
+async function proRazorpayRequest(path, method, body, env) {
+  if (!env.RAZORPAY_KEY_ID || !env.RAZORPAY_KEY_SECRET) {
+    throw new Error("Razorpay credentials are not configured");
+  }
+
+  const basic = btoa(
+    `${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`
+  );
+
+  const response = await fetch(`https://api.razorpay.com/v1${path}`, {
+    method,
+    headers: {
+      Authorization: `Basic ${basic}`,
+      "Content-Type": "application/json",
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    throw new Error(
+      data?.error?.description ||
+      data?.error?.reason ||
+      `Razorpay HTTP ${response.status}`
+    );
+  }
+
+  return data;
+}
+
+async function proCreateSubscription(request, env) {
+  const initialClaims = await proFirebaseIdToken(proAuthHeader(request), env);
+  if (proIsAdminClaims(initialClaims, env)) {
+    return proJson({
+      success: true,
+      alreadyActive: true,
+      adminBypass: true,
+      proActive: true,
+      proPlan: "admin",
+      proPaymentStatus: "admin",
+      proExpiresAt: null,
+    });
+  }
+  const claims = await proFirebaseIdToken(proAuthHeader(request), env);
+  const player = await proFindPlayer(claims, env);
+
+  const existingExpires = Date.parse(player.fields?.proExpiresAt || "");
+  if (
+    player.fields?.proActive === true &&
+    Number.isFinite(existingExpires) &&
+    existingExpires > Date.now()
+  ) {
+    return proJson({
+      success: true,
+      alreadyActive: true,
+      proActive: true,
+      proExpiresAt: player.fields.proExpiresAt,
+    });
+  }
+
+  const planId =
+    env.RAZORPAY_PRO_PLAN_ID ||
+    "plan_TfxiwIYuTxQILZ";
+
+  const subscription = await proRazorpayRequest(
+    "/subscriptions",
+    "POST",
+    {
+      plan_id: planId,
+      total_count: 120,
+      quantity: 1,
+      customer_notify: 1,
+      notes: {
+        firebaseUid: claims.sub,
+        playerDocId: player.id,
+        playerEmail: claims.email || "",
+        plan: "4FU PRO Monthly",
+        price: "49",
+      },
+    },
+    env
+  );
+
+  await proUpdatePlayer(
+    player,
+    {
+      proPaymentStatus: "created",
+      proPlan: "monthly",
+      proPrice: Number(env.PRO_PRICE_INR || 49),
+      razorpaySubscriptionId: subscription.id,
+      proAutoRenew: true,
+    },
+    env
+  );
+
+  return proJson({
+    success: true,
+    subscriptionId: subscription.id,
+    razorpayKeyId: env.RAZORPAY_KEY_ID,
+    planId,
+    amount: Number(env.PRO_PRICE_INR || 49) * 100,
+    currency: "INR",
+    prefill: {
+      name:
+        player.fields?.displayName ||
+        player.fields?.name ||
+        claims.name ||
+        "",
+      email: claims.email || player.fields?.loginEmail || "",
+    },
+  });
+}
+
+async function proVerifyPayment(request, env) {
+  const initialClaims = await proFirebaseIdToken(proAuthHeader(request), env);
+  if (proIsAdminClaims(initialClaims, env)) {
+    return proJson({
+      success: true,
+      proActive: true,
+      adminBypass: true,
+      proPlan: "admin",
+      proPaymentStatus: "admin",
+      proExpiresAt: null,
+    });
+  }
+  const claims = await proFirebaseIdToken(proAuthHeader(request), env);
+  const body = await request.json().catch(() => null);
+
+  const paymentId = body?.razorpay_payment_id;
+  const subscriptionId = body?.razorpay_subscription_id;
+  const signature = body?.razorpay_signature;
+
+  if (!paymentId || !subscriptionId || !signature) {
+    return proJson(
+      { success: false, error: "Incomplete Razorpay payment response" },
+      400
+    );
+  }
+
+  const valid = await proHmacVerify(
+    env.RAZORPAY_KEY_SECRET,
+    `${paymentId}|${subscriptionId}`,
+    signature
+  );
+
+  if (!valid) {
+    return proJson(
+      { success: false, error: "Invalid Razorpay payment signature" },
+      400
+    );
+  }
+
+  const player = await proFindPlayer(claims, env);
+  const subscription = await proRazorpayRequest(
+    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    "GET",
+    undefined,
+    env
+  );
+
+  const notesUid = subscription?.notes?.firebaseUid;
+  if (notesUid && notesUid !== claims.sub) {
+    return proJson(
+      { success: false, error: "Subscription does not belong to this account" },
+      403
+    );
+  }
+
+  const currentEnd = Number(subscription?.current_end || 0);
+  const expiresAt =
+    proIsoFromUnix(currentEnd) ||
+    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+  const active =
+    subscription?.status === "active" ||
+    subscription?.status === "authenticated";
+
+  await proUpdatePlayer(
+    player,
+    {
+      proActive: active,
+      proPlan: "monthly",
+      proPrice: Number(env.PRO_PRICE_INR || 49),
+      proStartedAt: new Date().toISOString(),
+      proExpiresAt: expiresAt,
+      proPaymentStatus: active ? "paid" : String(subscription?.status || "pending"),
+      razorpaySubscriptionId: subscriptionId,
+      razorpayPaymentId: paymentId,
+      proAutoRenew: subscription?.status !== "cancelled",
+    },
+    env
+  );
+
+  return proJson({
+    success: true,
+    proActive: active,
+    proExpiresAt: expiresAt,
+    subscriptionStatus: subscription?.status || null,
+  });
+}
+
+
+function proAdminEmails(env) {
+  return String(env.PRO_ADMIN_EMAILS || "")
+    .split(",")
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function proIsAdminClaims(claims, env) {
+  const email = String(claims?.email || "").trim().toLowerCase();
+  if (!email) return false;
+  return proAdminEmails(env).includes(email);
+}
+
+async function proPublicStatus(request, env) {
+  const url = new URL(request.url);
+  const playerId = String(url.searchParams.get("playerId") || "").trim();
+
+  if (!playerId || !/^[A-Za-z0-9_-]{1,128}$/.test(playerId)) {
+    return proJson(
+      {
+        success: false,
+        error: "Valid playerId is required",
+      },
+      400
+    );
+  }
+
+  try {
+    const document = await proFirestoreRequest(
+      `players/${encodeURIComponent(playerId)}`,
+      "GET",
+      undefined,
+      env
+    );
+
+    const fields = document?.fields || {};
+    const storedProActive = fields.proActive?.booleanValue === true;
+
+    const expiresAt =
+      fields.proExpiresAt?.timestampValue ||
+      fields.proExpiresAt?.stringValue ||
+      null;
+
+    const expiryMs = expiresAt ? Date.parse(expiresAt) : 0;
+    const storedActive =
+      storedProActive && (!expiryMs || expiryMs > Date.now());
+
+    // Use the SAME server-side admin bypass already used by /pro/status.
+    // No client/admin flag is trusted.
+    const loginEmail =
+      fields.loginEmail?.stringValue ||
+      fields.loginEmail?.stringValue ||
+      "";
+
+    const adminBypass = proIsAdminClaims(
+      { email: loginEmail },
+      env
+    );
+
+    return proJson({
+      success: true,
+      proActive: adminBypass || storedActive,
+      adminBypass,
+    });
+  } catch (error) {
+    console.error("4FU public PRO status error:", error?.message || error);
+
+    return proJson(
+      {
+        success: false,
+        error: "Unable to read player PRO status",
+      },
+      500
+    );
+  }
+}
+
+async function proStatus(request, env) {
+  const claims = await proFirebaseIdToken(proAuthHeader(request), env);
+  const player = await proFindPlayer(claims, env);
+
+  const adminBypass = proIsAdminClaims(claims, env);
+
+  const expiresAt = player.fields?.proExpiresAt || null;
+  const expiryMs = expiresAt ? Date.parse(expiresAt) : 0;
+  const active =
+    adminBypass ||
+    (
+      player.fields?.proActive === true &&
+      (!expiryMs || expiryMs > Date.now())
+    );
+
+  if (
+    !adminBypass &&
+    player.fields?.proActive === true &&
+    expiryMs &&
+    expiryMs <= Date.now()
+  ) {
+    await proUpdatePlayer(
+      player,
+      {
+        proActive: false,
+        proPaymentStatus: "expired",
+        proAutoRenew: false,
+      },
+      env
+    );
+  }
+
+  return proJson({
+    success: true,
+    proActive: active,
+    proAdminBypass: adminBypass,
+    proPlan: adminBypass
+      ? "admin"
+      : (player.fields?.proPlan || null),
+    proPrice: Number(player.fields?.proPrice || env.PRO_PRICE_INR || 49),
+    proStartedAt: player.fields?.proStartedAt || null,
+    proExpiresAt: adminBypass ? null : expiresAt,
+    proPaymentStatus: adminBypass
+      ? "admin"
+      : (
+          active
+            ? player.fields?.proPaymentStatus || "paid"
+            : (
+                expiryMs && expiryMs <= Date.now()
+                  ? "expired"
+                  : player.fields?.proPaymentStatus || "free"
+              )
+        ),
+    razorpaySubscriptionId:
+      player.fields?.razorpaySubscriptionId || null,
+  });
+}
+
+async function proWebhook(request, env) {
+  const rawBody = await request.text();
+  const signature = request.headers.get("X-Razorpay-Signature") || "";
+
+  if (!env.RAZORPAY_WEBHOOK_SECRET) {
+    return new Response("Webhook secret is not configured", { status: 500 });
+  }
+
+  const valid = await proHmacVerify(
+    env.RAZORPAY_WEBHOOK_SECRET,
+    rawBody,
+    signature
+  );
+
+  if (!valid) {
+    return new Response("Invalid webhook signature", { status: 400 });
+  }
+
+  const payload = JSON.parse(rawBody);
+  const event = payload?.event || "";
+  const subscription =
+    payload?.payload?.subscription?.entity ||
+    payload?.payload?.subscription ||
+    null;
+
+  if (!subscription?.id) {
+    return new Response("Webhook received", { status: 200 });
+  }
+
+  const firebaseUid = subscription?.notes?.firebaseUid;
+  if (!firebaseUid) {
+    return new Response("Webhook received without Firebase UID", { status: 200 });
+  }
+
+  let player;
+  try {
+    player = await proFindPlayer({ sub: firebaseUid }, env);
+  } catch (error) {
+    console.warn("PRO webhook player lookup failed:", error?.message || error);
+    return new Response("Webhook received; player not found", { status: 200 });
+  }
+
+  const currentEnd = Number(subscription.current_end || 0);
+  const expiresAt = proIsoFromUnix(currentEnd);
+
+  const activateEvents = new Set([
+    "subscription.activated",
+    "subscription.charged",
+    "subscription.resumed",
+  ]);
+
+  const hardOffEvents = new Set([
+    "subscription.halted",
+    "subscription.completed",
+  ]);
+
+  const cancelled =
+    event === "subscription.cancelled" ||
+    subscription.status === "cancelled";
+
+  if (activateEvents.has(event)) {
+    await proUpdatePlayer(
+      player,
+      {
+        proActive: true,
+        proPlan: "monthly",
+        proPrice: Number(env.PRO_PRICE_INR || 49),
+        proExpiresAt: expiresAt || new Date(
+          Date.now() + 30 * 24 * 60 * 60 * 1000
+        ).toISOString(),
+        proPaymentStatus: "paid",
+        razorpaySubscriptionId: subscription.id,
+        proAutoRenew: true,
+      },
+      env
+    );
+  } else if (hardOffEvents.has(event)) {
+    await proUpdatePlayer(
+      player,
+      {
+        proActive: false,
+        proPaymentStatus: event === "subscription.completed"
+          ? "completed"
+          : "halted",
+        proAutoRenew: false,
+      },
+      env
+    );
+  } else if (cancelled) {
+    const keepUntil =
+      expiresAt && Date.parse(expiresAt) > Date.now();
+
+    await proUpdatePlayer(
+      player,
+      {
+        proActive: keepUntil,
+        proExpiresAt: expiresAt || player.fields?.proExpiresAt || null,
+        proPaymentStatus: "cancelled",
+        razorpaySubscriptionId: subscription.id,
+        proAutoRenew: false,
+      },
+      env
+    );
+  }
+
+  return new Response("OK", { status: 200 });
+}
+
+/* Admin bypass is virtual and is never written to proActive, so the expiry job cannot revoke it. */
+async function proExpireAll(env) {
+  const projectId = env.FIREBASE_PROJECT_ID || "fire-united";
+  const token = await proServiceAccountAccessToken(env);
+
+  const endpoint =
+    `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(projectId)}` +
+    `/databases/(default)/documents:runQuery`;
+
+  const body = {
+    structuredQuery: {
+      from: [{ collectionId: "players" }],
+      where: {
+        fieldFilter: {
+          field: { fieldPath: "proActive" },
+          op: "EQUAL",
+          value: { booleanValue: true },
+        },
+      },
+    },
+  };
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const rows = await response.json().catch(() => []);
+  if (!response.ok) {
+    throw new Error(
+      rows?.error?.message || `Firestore expiry query HTTP ${response.status}`
+    );
+  }
+
+  let expired = 0;
+
+  for (const row of Array.isArray(rows) ? rows : []) {
+    const document = row?.document;
+    if (!document?.name) continue;
+
+    const fields = document.fields || {};
+    const expires =
+      fields.proExpiresAt?.stringValue ||
+      fields.proExpiresAt?.timestampValue ||
+      null;
+
+    if (!expires || Date.parse(expires) > Date.now()) continue;
+
+    const path = document.name.split("/documents/")[1];
+    await proFirestoreRequest(
+      `${path}?updateMask.fieldPaths=proActive&updateMask.fieldPaths=proPaymentStatus&updateMask.fieldPaths=proAutoRenew`,
+      "PATCH",
+      {
+        fields: {
+          proActive: { booleanValue: false },
+          proPaymentStatus: { stringValue: "expired" },
+          proAutoRenew: { booleanValue: false },
+        },
+      },
+      env
+    );
+
+    expired += 1;
+  }
+
+  return expired;
+}
+
+async function proRoute(request, env, url) {
+  try {
+    const path = url.pathname.replace(/\/+$/, "") || "/";
+
+    if (request.method === "GET" && path === "/pro/status") {
+      return await proStatus(request, env);
+    }
+
+    if (request.method === "GET" && path === "/pro/public-status") {
+      return await proPublicStatus(request, env);
+    }
+
+    if (request.method === "GET" && path === "/pro/customization") {
+      return await proGetCustomization(request, env);
+    }
+
+    if (request.method === "POST" && path === "/pro/customization") {
+      return await proSaveCustomization(request, env);
+    }
+
+    if (request.method === "GET" && path === "/pro/public-customization") {
+      return await proPublicCustomization(request, env);
+    }
+
+    if (request.method === "POST" && path === "/pro/create-subscription") {
+      return await proCreateSubscription(request, env);
+    }
+
+    if (request.method === "POST" && path === "/pro/verify") {
+      return await proVerifyPayment(request, env);
+    }
+
+    if (request.method === "POST" && path === "/pro/webhook") {
+      return await proWebhook(request, env);
+    }
+
+    return proJson(
+      {
+        success: false,
+        error: "Unknown PRO endpoint",
+        endpoints: [
+          "/pro/status",
+          "/pro/create-subscription",
+          "/pro/verify",
+          "/pro/webhook",
+        ],
+      },
+      404
+    );
+  } catch (error) {
+    const message = error?.message || String(error);
+    const authError =
+      /Firebase ID token/i.test(message) ||
+      /Firebase public key/i.test(message);
+
+    console.error("4FU PRO route error:", message);
+    return proJson(
+      {
+        success: false,
+        error: message,
+      },
+      authError ? 401 : 500
+    );
+  }
+}
+
 /* =========================================================
    WORKER
    ========================================================= */
 
 export default {
+  async scheduled(controller, env, ctx) {
+    ctx.waitUntil(
+      proExpireAll(env).catch((error) => {
+        console.error("4FU PRO scheduled expiry failed:", error);
+      })
+    );
+  },
+
   async fetch(request, env) {
     const url = new URL(request.url);
 
@@ -1993,6 +3815,12 @@ export default {
         status: 204,
         headers: corsHeaders(),
       });
+    }
+
+
+    // 4FU PRO payment routes live on this SAME worker.
+    if (url.pathname.replace(/\/+$/, "").startsWith("/pro/")) {
+      return await proRoute(request, env, url);
     }
 
 

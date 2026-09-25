@@ -16,7 +16,12 @@
 			"binding": "PROFILE_CACHE",
 			"id": "48c2b5da29fb483c94f7bcd2f003e54b"
 		}
-	]
+	],
+	"triggers": {
+		"crons": [
+			"0 * * * *"
+		]
+	}
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
