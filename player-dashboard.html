@@ -8798,6 +8798,166 @@
         })();
     </script>
 
+
+<style id="fourfu-pro-premium-ui">
+/* 4FU PRO PREMIUM STATUS UI — ADDITION ONLY */
+.fourfu-pro-status-wrap{
+  width:min(100%, 980px);
+  margin:18px 0 26px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,126,0,.42);
+  border-radius:22px;
+  background:linear-gradient(135deg,rgba(255,126,0,.13),rgba(20,20,20,.94) 42%,rgba(255,126,0,.055));
+  box-shadow:0 12px 42px rgba(0,0,0,.45),0 0 28px rgba(255,126,0,.10),inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(14px);
+}
+.fourfu-pro-status-wrap::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.08) 48%,transparent 72%);
+  transform:translateX(-110%);animation:fourfuProSweep 4.8s ease-in-out infinite;
+}
+.fourfu-pro-status-wrap::after{
+  content:"";position:absolute;left:-60px;top:-70px;width:180px;height:180px;border-radius:50%;
+  background:rgba(255,126,0,.18);filter:blur(42px);pointer-events:none;
+}
+.fourfu-pro-status-inner{
+  position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:22px;padding:20px 22px;
+}
+.fourfu-pro-status-main{display:flex;align-items:center;gap:16px;min-width:0}
+.fourfu-pro-crown{
+  width:56px;height:56px;flex:0 0 56px;display:grid;place-items:center;border-radius:16px;
+  font-size:28px;background:linear-gradient(145deg,#ff9a1f,#ff5a00);box-shadow:0 8px 26px rgba(255,100,0,.30),inset 0 1px 0 rgba(255,255,255,.3);
+  animation:fourfuProPulse 2.4s ease-in-out infinite;
+}
+.fourfu-pro-status-title{font-size:20px;font-weight:900;letter-spacing:.8px;color:#fff;line-height:1.15;text-transform:uppercase}
+.fourfu-pro-status-title::after{content:"  •  ACTIVE";color:#36e68a;font-size:11px;letter-spacing:1.2px;vertical-align:middle}
+.fourfu-pro-status-wrap.free .fourfu-pro-status-title::after{content:"  •  AVAILABLE";color:#ff9a1f}
+.fourfu-pro-status-sub{margin-top:6px;color:#c9c9c9;font-size:13px;line-height:1.45}
+.fourfu-pro-status-sub strong{color:#ff9a1f;font-weight:800}
+.fourfu-pro-status-btn{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:0 19px;
+  border-radius:13px;text-decoration:none!important;color:#111!important;font-size:13px;font-weight:900;letter-spacing:.35px;
+  background:linear-gradient(135deg,#ffad2f,#ff6b00);box-shadow:0 8px 22px rgba(255,105,0,.24),inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;
+}
+.fourfu-pro-status-btn:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 12px 28px rgba(255,105,0,.34),0 0 18px rgba(255,126,0,.16)}
+.fourfu-pro-status-wrap.free{border-color:rgba(255,126,0,.28);background:linear-gradient(135deg,rgba(255,126,0,.08),rgba(20,20,20,.94) 48%,rgba(255,126,0,.035))}
+@keyframes fourfuProSweep{0%,55%{transform:translateX(-110%)}80%,100%{transform:translateX(110%)}}
+@keyframes fourfuProPulse{0%,100%{transform:translateY(0) rotate(0);box-shadow:0 8px 26px rgba(255,100,0,.30),inset 0 1px 0 rgba(255,255,255,.3)}50%{transform:translateY(-2px) rotate(-2deg);box-shadow:0 12px 34px rgba(255,100,0,.42),0 0 22px rgba(255,126,0,.14),inset 0 1px 0 rgba(255,255,255,.3)}}
+@media(max-width:720px){
+  .fourfu-pro-status-inner{align-items:stretch;flex-direction:column;padding:16px}
+  .fourfu-pro-status-btn{width:100%}
+  .fourfu-pro-status-title{font-size:17px}
+  .fourfu-pro-status-sub{font-size:12px}
+}
+</style>
+
+<script id="fourfu-pro-status-actual-update">
+/* =========================================================
+   4FU PRO STATUS — ADDITION ONLY
+   Reads entitlement from the existing Worker. It never writes
+   proActive from the browser.
+========================================================= */
+(function(){
+    "use strict";
+
+    const FOURFU_PRO_API =
+        "https://4fu-freefire-backend.4fu-freefire-backend.workers.dev";
+
+    function formatExpiry(value){
+        if(!value) return "";
+        const d = new Date(value);
+        if(Number.isNaN(d.getTime())) return "";
+        return d.toLocaleDateString("en-IN",{
+            day:"2-digit", month:"short", year:"numeric"
+        });
+    }
+
+    function makeCard(active, data){
+        const old=document.getElementById("fourfuProStatusCard");
+        if(old) old.remove();
+
+        const card=document.createElement("section");
+        card.id="fourfuProStatusCard";
+        card.className="fourfu-pro-status-wrap"+(active ? "" : " free");
+
+        const expires=formatExpiry(data && data.proExpiresAt);
+        const sub=active
+            ? (expires
+                ? 'Your premium membership is active • <strong>Until '+expires+'</strong>'
+                : 'Your premium membership is active and ready.')
+            : 'Unlock premium profile, analytics, share card and more.';
+
+        card.innerHTML=
+            '<div class="fourfu-pro-status-inner">'+
+              '<div class="fourfu-pro-status-main">'+
+                '<div class="fourfu-pro-crown">👑</div>'+
+                '<div>'+
+                  '<div class="fourfu-pro-status-title">'+
+                    (active ? '4FU PRO' : '4FU PRO')+
+                  '</div>'+
+                  '<div class="fourfu-pro-status-sub">'+sub+'</div>'+
+                '</div>'+
+              '</div>'+
+              '<a class="fourfu-pro-status-btn" href="pro.html">'+
+                (active ? 'OPEN PRO <i class="fa-solid fa-arrow-right"></i>' : 'GET PRO · ₹49 / MONTH <i class="fa-solid fa-crown"></i>')+
+              '</a>'+
+            '</div>';
+
+        const anchor=document.querySelector(".dashboard");
+        const welcome=anchor && anchor.querySelector(".welcome");
+        if(welcome && welcome.parentNode){
+            welcome.parentNode.insertBefore(card,welcome);
+        }else if(anchor){
+            anchor.insertBefore(card,anchor.firstChild);
+        }
+    }
+
+    async function check(){
+        try{
+            if(!window.firebase || !firebase.auth) return;
+            const user=firebase.auth().currentUser;
+            if(!user) return;
+
+            const token=await user.getIdToken();
+            const response=await fetch(
+                FOURFU_PRO_API+"/pro/status",
+                {
+                    method:"GET",
+                    headers:{
+                        "Authorization":"Bearer "+token,
+                        "Accept":"application/json"
+                    },
+                    cache:"no-store"
+                }
+            );
+
+            const data=await response.json().catch(()=>null);
+            if(response.ok && data && data.success){
+                makeCard(data.proActive === true,data);
+            }else{
+                console.warn("[4FU PRO] Status unavailable.");
+            }
+        }catch(error){
+            console.warn("[4FU PRO] Status check failed:",error);
+        }
+    }
+
+    function start(){
+        if(window.firebase && firebase.auth){
+            firebase.auth().onAuthStateChanged(function(user){
+                if(user) check();
+            });
+        }else{
+            setTimeout(start,500);
+        }
+    }
+
+    start();
+})();
+</script>
+
 </body>
 
 </html>

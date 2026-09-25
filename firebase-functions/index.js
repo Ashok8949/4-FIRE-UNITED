@@ -1,3 +1,4 @@
+/* eslint-disable max-len, require-jsdoc */
 const {setGlobalOptions} = require("firebase-functions");
 const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 const admin = require("firebase-admin");
@@ -338,3 +339,13 @@ exports.sendPushNotification = onDocumentCreated(
       }
     },
 );
+
+// ============================================
+// 4FU PRO PAYMENT SYSTEM
+// ============================================
+
+exports.proPayments =
+    require("./proPayments").proPayments;
+
+exports.expireProEntitlements =
+    require("./proPayments").expireProEntitlements;

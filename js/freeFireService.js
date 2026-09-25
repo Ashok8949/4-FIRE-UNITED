@@ -1,201 +1,249 @@
-/*
- * 4FU - Free Fire Live Data Service
- * Uses the 4FU Cloudflare Worker.
- * No private API key is stored here.
- */
+    /*
+     * 4FU - Free Fire Live Data Service
+     * Uses the 4FU Cloudflare Worker.
+     * No private API key is stored here.
+     */
 
-(function () {
-    "use strict";
+    (function () {
+        "use strict";
 
-    const FREE_FIRE_API_BASE_URL =
-        "https://4fu-freefire-backend.4fu-freefire-backend.workers.dev";
+        const FREE_FIRE_API_BASE_URL =
+            "https://4fu-freefire-backend.4fu-freefire-backend.workers.dev";
 
-    const REQUEST_TIMEOUT_MS = 10000;
+        const REQUEST_TIMEOUT_MS = 10000;
 
-    function firstValue(...values) {
-        return values.find(
-            value =>
-                value !== undefined &&
-                value !== null &&
-                value !== ""
-        );
-    }
-
-    async function getFreeFirePlayer(uid, region, forceUpdate = false) {
-        if (!uid) return null;
-
-        const url = new URL(FREE_FIRE_API_BASE_URL);
-        url.searchParams.set("uid", String(uid));
-        url.searchParams.set(
-            "region",
-            String(region || "IND").toUpperCase()
-        );
-
-        /*
-         * Normal page load = saved B2 data.
-         * Manual Update button = refresh=1, which tells the Worker
-         * to fetch live APIs and save the successful result to B2.
-         */
-        if (forceUpdate) {
-            url.searchParams.set("refresh", "1");
+        function firstValue(...values) {
+            return values.find(
+                value =>
+                    value !== undefined &&
+                    value !== null &&
+                    value !== ""
+            );
         }
 
-        const controller = new AbortController();
-        const timeout = setTimeout(
-            () => controller.abort(),
-            REQUEST_TIMEOUT_MS
-        );
+        async function getFreeFirePlayer(uid, region, forceUpdate = false) {
+            if (!uid) return null;
 
-        try {
-            console.info(
-                forceUpdate
-                    ? "[4FU] Fetching fresh Free Fire data..."
-                    : "[4FU] Fetching saved Free Fire data..."
+            const url = new URL(FREE_FIRE_API_BASE_URL);
+            url.searchParams.set("uid", String(uid));
+            url.searchParams.set(
+                "region",
+                String(region || "IND").toUpperCase()
             );
 
-            const response = await fetch(url.toString(), {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json"
-                },
-                cache: "no-store",
-                signal: controller.signal
-            });
+            /*
+             * Normal page load = saved B2 data.
+             * Manual Update button = refresh=1, which tells the Worker
+             * to fetch live APIs and save the successful result to B2.
+             */
+            if (forceUpdate) {
+                url.searchParams.set("refresh", "1");
+            }
 
-            if (!response.ok) {
-                throw new Error(
-                    `Free Fire API returned HTTP ${response.status}`
+            const controller = new AbortController();
+            const timeout = setTimeout(
+                () => controller.abort(),
+                REQUEST_TIMEOUT_MS
+            );
+
+            try {
+                console.info(
+                    forceUpdate
+                        ? "[4FU] Fetching fresh Free Fire data..."
+                        : "[4FU] Fetching saved Free Fire data..."
                 );
-            }
 
-            const data = await response.json();
+                const response = await fetch(url.toString(), {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    },
+                    cache: "no-store",
+                    signal: controller.signal
+                });
 
-            if (!data || typeof data !== "object") {
-                throw new Error("Invalid Free Fire API response.");
-            }
+                if (!response.ok) {
+                    throw new Error(
+                        `Free Fire API returned HTTP ${response.status}`
+                    );
+                }
 
-            /* Normalize the Worker response without removing raw API data. */
-            const liveGuild = firstValue(
-                data.guild,
-                data.clanName,
-                data.clan,
-                data.clanBasicInfo?.clanName,
-                data.clanBasicInfo?.name,
-                data.clan_basic_info?.clanName,
-                data.clan_basic_info?.name,
-                data.rawProfile?.clanBasicInfo?.clanName,
-                data.rawProfile?.clanBasicInfo?.name,
-                data.rawProfile?.clan?.clanName,
-                data.rawProfile?.clan?.name,
-                data.rawAccount?.clanBasicInfo?.clanName,
-                data.rawAccount?.clanBasicInfo?.name,
-                data.rawAccount?.clan?.clanName,
-                data.rawAccount?.clan?.name
-            );
+                const data = await response.json();
 
-            const result = {
-                ...data,
+                if (!data || typeof data !== "object") {
+                    throw new Error("Invalid Free Fire API response.");
+                }
 
-                basicInfo: {
-                    ...(data.basicInfo || {}),
-                    accountId: firstValue(
-                        data.basicInfo?.accountId,
+                /* Normalize the Worker response without removing raw API data. */
+                const liveGuild = firstValue(
+                    data.guild,
+                    data.clanName,
+                    data.clan,
+                    data.clanBasicInfo?.clanName,
+                    data.clanBasicInfo?.name,
+                    data.clan_basic_info?.clanName,
+                    data.clan_basic_info?.name,
+                    data.rawProfile?.clanBasicInfo?.clanName,
+                    data.rawProfile?.clanBasicInfo?.name,
+                    data.rawProfile?.clan?.clanName,
+                    data.rawProfile?.clan?.name,
+                    data.rawAccount?.clanBasicInfo?.clanName,
+                    data.rawAccount?.clanBasicInfo?.name,
+                    data.rawAccount?.clan?.clanName,
+                    data.rawAccount?.clan?.name
+                );
+
+                const result = {
+                    ...data,
+
+                    /*
+                     * Keep these normalized player identity fields at the top level too.
+                     * This makes the service easy for PRO, profile cards and other UI
+                     * modules to consume without changing the existing API response.
+                     */
+                    uid: firstValue(
                         data.uid,
+                        data.basicInfo?.accountId,
                         uid
                     ),
+
                     nickname: firstValue(
-                        data.basicInfo?.nickname,
                         data.nickname,
-                        data.name
+                        data.name,
+                        data.basicInfo?.nickname
                     ),
+
                     level: firstValue(
-                        data.basicInfo?.level,
-                        data.level
+                        data.level,
+                        data.basicInfo?.level
                     ),
+
                     rank: firstValue(
-                        data.basicInfo?.rank,
+                        data.rank,
                         data.rankName,
-                        data.rank
+                        data.basicInfo?.rank
                     ),
+
                     region: firstValue(
-                        data.basicInfo?.region,
                         data.region,
+                        data.basicInfo?.region,
                         region || "IND"
-                    )
-                },
+                    ),
 
-                stats: {
-                    ...(data.stats || {}),
-                    matches: firstValue(
-                        data.stats?.matches,
-                        data.matches
-                    ),
-                    wins: firstValue(
-                        data.stats?.wins,
-                        data.wins
-                    ),
-                    kills: firstValue(
-                        data.stats?.kills,
-                        data.kills
-                    ),
-                    deaths: firstValue(
-                        data.stats?.deaths,
-                        data.deaths
-                    ),
-                    kd: firstValue(
-                        data.stats?.kd,
-                        data.kd
-                    ),
-                    headshot: firstValue(
-                        data.stats?.headshot,
-                        data.stats?.headshotRate,
-                        data.headshot,
-                        data.headshotRate
-                    ),
-                    headshotKills: firstValue(
-                        data.stats?.headshotKills,
-                        data.headshotKills
-                    ),
-                    headshots: firstValue(
-                        data.stats?.headshots,
-                        data.headshots
-                    ),
-                    booyahRate: firstValue(
-                        data.stats?.booyahRate,
-                        data.booyahRate
-                    )
-                },
-
-                clanBasicInfo: liveGuild
-                    ? {
-                        ...(data.clanBasicInfo || {}),
-                        clanName: liveGuild,
-                        clanId: firstValue(
-                            data.guildId,
-                            data.clanBasicInfo?.clanId,
-                            data.rawProfile?.clanBasicInfo?.clanId,
-                            data.rawProfile?.clan?.clanId
+                    basicInfo: {
+                        ...(data.basicInfo || {}),
+                        accountId: firstValue(
+                            data.basicInfo?.accountId,
+                            data.uid,
+                            uid
+                        ),
+                        nickname: firstValue(
+                            data.basicInfo?.nickname,
+                            data.nickname,
+                            data.name
+                        ),
+                        level: firstValue(
+                            data.basicInfo?.level,
+                            data.level
+                        ),
+                        rank: firstValue(
+                            data.basicInfo?.rank,
+                            data.rankName,
+                            data.rank
+                        ),
+                        region: firstValue(
+                            data.basicInfo?.region,
+                            data.region,
+                            region || "IND"
                         )
-                    }
-                    : (
-                        data.clanBasicInfo ||
-                        data.clan_basic_info ||
-                        null
-                    )
-            };
+                    },
 
-            console.info(
-                "[4FU] Free Fire data received:",
-                result
-            );
+                    stats: {
+                        ...(data.stats || {}),
+                        matches: firstValue(
+                            data.stats?.matches,
+                            data.matches
+                        ),
+                        wins: firstValue(
+                            data.stats?.wins,
+                            data.wins
+                        ),
+                        kills: firstValue(
+                            data.stats?.kills,
+                            data.kills
+                        ),
+                        deaths: firstValue(
+                            data.stats?.deaths,
+                            data.deaths
+                        ),
+                        kd: firstValue(
+                            data.stats?.kd,
+                            data.kd
+                        ),
+                        headshot: firstValue(
+                            data.stats?.headshot,
+                            data.stats?.headshotRate,
+                            data.headshot,
+                            data.headshotRate
+                        ),
+                        headshotKills: firstValue(
+                            data.stats?.headshotKills,
+                            data.headshotKills
+                        ),
+                        headshots: firstValue(
+                            data.stats?.headshots,
+                            data.headshots
+                        ),
+                        booyahRate: firstValue(
+                            data.stats?.booyahRate,
+                            data.booyahRate
+                        )
+                    },
 
-            return result;
+                    clanBasicInfo: liveGuild
+                        ? {
+                            ...(data.clanBasicInfo || {}),
+                            clanName: liveGuild,
+                            clanId: firstValue(
+                                data.guildId,
+                                data.clanBasicInfo?.clanId,
+                                data.rawProfile?.clanBasicInfo?.clanId,
+                                data.rawProfile?.clan?.clanId
+                            )
+                        }
+                        : (
+                            data.clanBasicInfo ||
+                            data.clan_basic_info ||
+                            null
+                        )
+                };
 
-        } finally {
-            clearTimeout(timeout);
+                /*
+                 * Convenience aliases for UI modules.
+                 * Existing result.basicInfo and result.stats remain unchanged.
+                 */
+                result.playerId = result.basicInfo.accountId;
+                result.playerName = result.basicInfo.nickname;
+                result.playerLevel = result.basicInfo.level;
+                result.playerRank = result.basicInfo.rank;
+                result.playerRegion = result.basicInfo.region;
+                result.guild = liveGuild || firstValue(
+                    result.clanBasicInfo?.clanName,
+                    result.clanBasicInfo?.name
+                );
+
+                console.info(
+                    "[4FU] Free Fire data received:",
+                    result
+                );
+
+                return result;
+
+            } finally {
+                clearTimeout(timeout);
+            }
         }
-    }
 
-    window.getFreeFirePlayer = getFreeFirePlayer;
+        window.getFreeFirePlayer = getFreeFirePlayer;
 
-})();
+    })();

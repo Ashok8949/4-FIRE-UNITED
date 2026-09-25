@@ -15,121 +15,381 @@
 <link rel="stylesheet" href="CSS/tournaments_BROADCAST_RESULTS_FIXED.css?v=3">
     
     <style id="mobile-navbar-fix">
-
-    .mobile-player-login {
-        display: none;
-    }
-
-    @media (max-width: 1050px) {
-
-        header {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            z-index: 999999 !important;
-        }
-
-        .navbar {
-            min-height: 72px !important;
-            height: 72px !important;
-            padding: 0 18px !important;
-        }
-
-        .navbar .logo {
-            width: 105px !important;
-            min-width: 105px !important;
-        }
-
-        .navbar .logo img {
-            width: 88px !important;
-            max-width: 88px !important;
-            max-height: 62px !important;
-        }
-
-        .menu-btn {
-            width: 46px !important;
-            height: 46px !important;
-            min-width: 46px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-
-        .menu-btn i {
-            font-size: 22px !important;
-        }
-
-        .nav-links {
-            gap: 0 !important;
-            padding: 92px 0 24px !important;
-        }
-
-        .nav-links li {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .nav-links li a {
-            font-size: 14px !important;
-            line-height: 1.2 !important;
-            padding: 9px 20px !important;
-            margin: 0 !important;
-        }
-
-        /* PLAYER LOGIN - MOBILE / APP MENU */
         .mobile-player-login {
-            display: block !important;
-            margin-top: 3px !important;
+            display: none;
         }
 
-        .mobile-player-login a {
-            font-size: 14px !important;
-            font-weight: 600 !important;
+        @media (max-width: 1050px) {
+            header {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                z-index: 999999 !important;
+            }
+
+            .navbar {
+                min-height: 72px !important;
+                height: 72px !important;
+                padding: 0 18px !important;
+            }
+
+            .navbar .logo {
+                width: 105px !important;
+                min-width: 105px !important;
+            }
+
+            .navbar .logo img {
+                width: 88px !important;
+                max-width: 88px !important;
+                max-height: 62px !important;
+            }
+
+            .menu-btn {
+                width: 46px !important;
+                height: 46px !important;
+                min-width: 46px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .menu-btn i {
+                font-size: 22px !important;
+            }
+
+            .nav-links {
+                gap: 0 !important;
+                padding: 92px 0 24px !important;
+            }
+
+            .nav-links li {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .nav-links li a {
+                font-size: 14px !important;
+                line-height: 1.2 !important;
+                padding: 9px 20px !important;
+                margin: 0 !important;
+            }
+
+            .mobile-player-login {
+                display: block !important;
+                margin-top: 3px !important;
+            }
+
+            .mobile-player-login a {
+                font-size: 14px !important;
+                font-weight: 600 !important;
+            }
         }
+
+        @media (max-width: 600px) {
+            .navbar {
+                min-height: 68px !important;
+                height: 68px !important;
+                padding: 0 14px !important;
+            }
+
+            .navbar .logo {
+                width: 92px !important;
+                min-width: 92px !important;
+            }
+
+            .navbar .logo img {
+                width: 78px !important;
+                max-width: 78px !important;
+                max-height: 56px !important;
+            }
+
+            .menu-btn {
+                width: 42px !important;
+                height: 42px !important;
+                min-width: 42px !important;
+            }
+
+            .menu-btn i {
+                font-size: 20px !important;
+            }
+
+            .nav-links {
+                padding-top: 82px !important;
+                padding-bottom: 18px !important;
+            }
+
+            .nav-links li a,
+            .mobile-player-login a {
+                font-size: 13px !important;
+                padding: 7px 18px !important;
+            }
+        }
+
+        /* 4FU APP DOWNLOAD BUTTON */
+        #download4fuBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #download4fuBtn i {
+            font-size: 15px;
+        }
+
+        @media (max-width: 600px) {
+            #download4fuBtn {
+                width: 100%;
+            }
+        }
+    </style>
+
+
+    <style>
+        /* ===== 4FU NAVBAR — CLEAN FINAL FIT =====
+           Keep the original 4FU navbar proportions.
+           Only make PRO compact enough to fit beside Login + Join.
+        */
+        @media (min-width: 1051px) {
+            .navbar {
+                width: 100% !important;
+                box-sizing: border-box;
+                gap: 14px !important;
+            }
+
+            .navbar .logo {
+                flex: 0 0 118px !important;
+                width: 118px !important;
+                min-width: 118px !important;
+            }
+
+            .navbar .logo img {
+                width: 96px !important;
+                max-width: 96px !important;
+                max-height: 70px !important;
+            }
+
+            .nav-links {
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+                width: auto !important;
+                gap: 17px !important;
+                justify-content: flex-end !important;
+                overflow: visible !important;
+            }
+
+            .nav-links li {
+                flex: 0 0 auto !important;
+            }
+
+            .nav-links li a {
+                padding: 0 !important;
+                font-size: 15px !important;
+                white-space: nowrap !important;
+                letter-spacing: 0 !important;
+            }
+
+            /* Compact PRO button — same visual weight as the navbar. */
+            .pro-nav-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 5px !important;
+                width: 70px !important;
+                min-width: 70px !important;
+                height: 40px !important;
+                padding: 0 10px !important;
+                box-sizing: border-box !important;
+                border: 1px solid rgba(255, 190, 40, .72) !important;
+                border-radius: 22px !important;
+                color: #ffd76a !important;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 166, 0, .15),
+                    rgba(111, 48, 150, .20)
+                ) !important;
+                box-shadow:
+                    0 0 12px rgba(255, 170, 0, .16),
+                    inset 0 0 8px rgba(255,255,255,.03) !important;
+                font-size: 12px !important;
+                font-weight: 800 !important;
+                line-height: 1 !important;
+                white-space: nowrap !important;
+                flex-shrink: 0 !important;
+            }
+
+            .pro-nav-btn i {
+                font-size: 10px !important;
+                color: #ffd044 !important;
+                flex-shrink: 0 !important;
+            }
+
+            .pro-nav-btn:hover {
+                color: #fff !important;
+                border-color: #ffc107 !important;
+                transform: translateY(-2px);
+                box-shadow:
+                    0 0 18px rgba(255,180,30,.35),
+                    0 0 28px rgba(125,60,180,.12) !important;
+            }
+
+            /* Short Login / Join buttons without making them tiny. */
+            .navbar > .join-btn {
+                flex: 0 0 auto !important;
+                width: 108px !important;
+                min-width: 108px !important;
+                padding: 13px 16px !important;
+                box-sizing: border-box !important;
+                text-align: center !important;
+                white-space: nowrap !important;
+                font-size: 14px !important;
+            }
+
+            .navbar > .join-btn + .join-btn {
+                width: 108px !important;
+                min-width: 108px !important;
+            }
+        }
+
+        @media (max-width: 1350px) and (min-width: 1051px) {
+            .navbar {
+                gap: 10px !important;
+            }
+
+            .navbar .logo {
+                flex-basis: 105px !important;
+                width: 105px !important;
+                min-width: 105px !important;
+            }
+
+            .navbar .logo img {
+                width: 88px !important;
+                max-width: 88px !important;
+            }
+
+            .nav-links {
+                gap: 12px !important;
+            }
+
+            .nav-links li a {
+                font-size: 13px !important;
+            }
+
+            .pro-nav-btn {
+                width: 64px !important;
+                min-width: 64px !important;
+                height: 38px !important;
+                padding: 0 7px !important;
+                font-size: 11px !important;
+            }
+
+            .navbar > .join-btn,
+            .navbar > .join-btn + .join-btn {
+                width: 92px !important;
+                min-width: 92px !important;
+                padding: 12px 10px !important;
+                font-size: 13px !important;
+            }
+        }
+    </style>
+
+
+<style>
+/* ===== PRO NAV HOVER UNDERLINE — BOTTOM ===== */
+@media (min-width: 1051px) {
+    .nav-links li a.pro-nav-btn {
+        position: relative !important;
+        overflow: visible !important;
     }
 
-    @media (max-width: 600px) {
-
-        .navbar {
-            min-height: 68px !important;
-            height: 68px !important;
-            padding: 0 14px !important;
-        }
-
-        .navbar .logo {
-            width: 92px !important;
-            min-width: 92px !important;
-        }
-
-        .navbar .logo img {
-            width: 78px !important;
-            max-width: 78px !important;
-            max-height: 56px !important;
-        }
-
-        .menu-btn {
-            width: 42px !important;
-            height: 42px !important;
-            min-width: 42px !important;
-        }
-
-        .menu-btn i {
-            font-size: 20px !important;
-        }
-
-        .nav-links {
-            padding-top: 82px !important;
-            padding-bottom: 18px !important;
-        }
-
-        .nav-links li a,
-        .mobile-player-login a {
-            font-size: 13px !important;
-            padding: 7px 18px !important;
-        }
+    .nav-links li a.pro-nav-btn::after {
+        content: "" !important;
+        position: absolute !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: -11px !important;
+        top: auto !important;
+        width: 0 !important;
+        height: 3px !important;
+        border-radius: 999px !important;
+        background: #ff6a00 !important;
+        box-shadow: 0 0 8px rgba(255,106,0,.45) !important;
+        transform: translateX(-50%) !important;
+        opacity: 0 !important;
+        transition: width .25s ease, opacity .2s ease !important;
     }
 
+    .nav-links li a.pro-nav-btn:hover::after,
+    .nav-links li a.pro-nav-btn:focus-visible::after {
+        width: 34px !important;
+        opacity: 1 !important;
+    }
+
+    /* Never let the PRO pill itself inherit the active-link underline. */
+    .nav-links li a.pro-nav-btn.active::after {
+        width: 34px !important;
+        opacity: 1 !important;
+    }
+}
+</style>
+
+<style>
+/* ===== MOBILE MENU — 4FU PRO ===== */
+.mobile-pro-item .pro-mobile-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    color: #ffd76a !important;
+    font-weight: 800 !important;
+}
+
+.mobile-pro-item .pro-mobile-link i {
+    color: #ffd044 !important;
+    font-size: 13px !important;
+}
+
+.mobile-pro-item .pro-mobile-link:hover,
+.mobile-pro-item .pro-mobile-link:focus-visible {
+    color: #fff !important;
+}
+
+@media (max-width: 1050px) {
+    /* Show PRO inside the hamburger menu */
+    .nav-links li.mobile-pro-item {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .nav-links li.mobile-pro-item .pro-mobile-link {
+        display: inline-flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        z-index: 5 !important;
+        color: #ffd76a !important;
+    }
+
+    /* Desktop PRO pill is replaced by the dedicated mobile menu item */
+    .nav-links li:has(> a.pro-nav-btn) {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1051px) {
+    .mobile-pro-item {
+        display: none !important;
+    }
+}
 </style>
 
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -139,6 +399,359 @@
 
     <link rel="icon" href="images/logo/logo.png">
 
+
+<!-- 4FU INDEX-EXACT NAVBAR OVERRIDES -->
+<style>
+        /* ===== 4FU NAVBAR — CLEAN FINAL FIT =====
+           Keep the original 4FU navbar proportions.
+           Only make PRO compact enough to fit beside Login + Join.
+        */
+        @media (min-width: 1051px) {
+            .navbar {
+                width: 100% !important;
+                box-sizing: border-box;
+                gap: 14px !important;
+            }
+
+            .navbar .logo {
+                flex: 0 0 118px !important;
+                width: 118px !important;
+                min-width: 118px !important;
+            }
+
+            .navbar .logo img {
+                width: 96px !important;
+                max-width: 96px !important;
+                max-height: 70px !important;
+            }
+
+            .nav-links {
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+                width: auto !important;
+                gap: 17px !important;
+                justify-content: flex-end !important;
+                overflow: visible !important;
+            }
+
+            .nav-links li {
+                flex: 0 0 auto !important;
+            }
+
+            .nav-links li a {
+                padding: 0 !important;
+                font-size: 15px !important;
+                white-space: nowrap !important;
+                letter-spacing: 0 !important;
+            }
+
+            /* Compact PRO button — same visual weight as the navbar. */
+            .pro-nav-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 5px !important;
+                width: 70px !important;
+                min-width: 70px !important;
+                height: 40px !important;
+                padding: 0 10px !important;
+                box-sizing: border-box !important;
+                border: 1px solid rgba(255, 190, 40, .72) !important;
+                border-radius: 22px !important;
+                color: #ffd76a !important;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 166, 0, .15),
+                    rgba(111, 48, 150, .20)
+                ) !important;
+                box-shadow:
+                    0 0 12px rgba(255, 170, 0, .16),
+                    inset 0 0 8px rgba(255,255,255,.03) !important;
+                font-size: 12px !important;
+                font-weight: 800 !important;
+                line-height: 1 !important;
+                white-space: nowrap !important;
+                flex-shrink: 0 !important;
+            }
+
+            .pro-nav-btn i {
+                font-size: 10px !important;
+                color: #ffd044 !important;
+                flex-shrink: 0 !important;
+            }
+
+            .pro-nav-btn:hover {
+                color: #fff !important;
+                border-color: #ffc107 !important;
+                transform: translateY(-2px);
+                box-shadow:
+                    0 0 18px rgba(255,180,30,.35),
+                    0 0 28px rgba(125,60,180,.12) !important;
+            }
+
+            /* Short Login / Join buttons without making them tiny. */
+            .navbar > .join-btn {
+                flex: 0 0 auto !important;
+                width: 108px !important;
+                min-width: 108px !important;
+                padding: 13px 16px !important;
+                box-sizing: border-box !important;
+                text-align: center !important;
+                white-space: nowrap !important;
+                font-size: 14px !important;
+            }
+
+            .navbar > .join-btn + .join-btn {
+                width: 108px !important;
+                min-width: 108px !important;
+            }
+        }
+
+        @media (max-width: 1350px) and (min-width: 1051px) {
+            .navbar {
+                gap: 10px !important;
+            }
+
+            .navbar .logo {
+                flex-basis: 105px !important;
+                width: 105px !important;
+                min-width: 105px !important;
+            }
+
+            .navbar .logo img {
+                width: 88px !important;
+                max-width: 88px !important;
+            }
+
+            .nav-links {
+                gap: 12px !important;
+            }
+
+            .nav-links li a {
+                font-size: 13px !important;
+            }
+
+            .pro-nav-btn {
+                width: 64px !important;
+                min-width: 64px !important;
+                height: 38px !important;
+                padding: 0 7px !important;
+                font-size: 11px !important;
+            }
+
+            .navbar > .join-btn,
+            .navbar > .join-btn + .join-btn {
+                width: 92px !important;
+                min-width: 92px !important;
+                padding: 12px 10px !important;
+                font-size: 13px !important;
+            }
+        }
+    </style>
+
+<style>
+/* ===== PRO NAV HOVER UNDERLINE — BOTTOM ===== */
+@media (min-width: 1051px) {
+    .nav-links li a.pro-nav-btn {
+        position: relative !important;
+        overflow: visible !important;
+    }
+
+    .nav-links li a.pro-nav-btn::after {
+        content: "" !important;
+        position: absolute !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: -11px !important;
+        top: auto !important;
+        width: 0 !important;
+        height: 3px !important;
+        border-radius: 999px !important;
+        background: #ff6a00 !important;
+        box-shadow: 0 0 8px rgba(255,106,0,.45) !important;
+        transform: translateX(-50%) !important;
+        opacity: 0 !important;
+        transition: width .25s ease, opacity .2s ease !important;
+    }
+
+    .nav-links li a.pro-nav-btn:hover::after,
+    .nav-links li a.pro-nav-btn:focus-visible::after {
+        width: 34px !important;
+        opacity: 1 !important;
+    }
+
+    /* Never let the PRO pill itself inherit the active-link underline. */
+    .nav-links li a.pro-nav-btn.active::after {
+        width: 34px !important;
+        opacity: 1 !important;
+    }
+}
+</style>
+
+<style>
+/* ===== MOBILE MENU — 4FU PRO ===== */
+.mobile-pro-item .pro-mobile-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    color: #ffd76a !important;
+    font-weight: 800 !important;
+}
+
+.mobile-pro-item .pro-mobile-link i {
+    color: #ffd044 !important;
+    font-size: 13px !important;
+}
+
+.mobile-pro-item .pro-mobile-link:hover,
+.mobile-pro-item .pro-mobile-link:focus-visible {
+    color: #fff !important;
+}
+
+@media (max-width: 1050px) {
+    /* Show PRO inside the hamburger menu */
+    .nav-links li.mobile-pro-item {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .nav-links li.mobile-pro-item .pro-mobile-link {
+        display: inline-flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        z-index: 5 !important;
+        color: #ffd76a !important;
+    }
+
+    /* Desktop PRO pill is replaced by the dedicated mobile menu item */
+    .nav-links li:has(> a.pro-nav-btn) {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1051px) {
+    .mobile-pro-item {
+        display: none !important;
+    }
+}
+</style>
+
+<style>
+/* ===== MOBILE PRO VISIBILITY FIX ===== */
+@media (max-width: 1050px) {
+    .mobile-pro-item {
+        display: block !important;
+    }
+
+    .mobile-pro-item .pro-mobile-link {
+        width: auto !important;
+        min-width: 0 !important;
+        text-decoration: none !important;
+    }
+}
+</style>
+
+<style>
+/* ===== MOBILE MENU FINAL CLEANUP ===== */
+@media (max-width: 1050px) {
+
+    /* Hide desktop Login + Join buttons from the mobile header */
+    .nav-buttons {
+        display: none !important;
+    }
+
+    /* Hide the desktop PRO pill if it exists inside the nav list */
+    .nav-links a.pro-nav-btn,
+    .nav-links li:has(a.pro-nav-btn) {
+        display: none !important;
+    }
+
+    /* Keep ONLY the dedicated mobile 4FU PRO menu item */
+    .nav-links li.mobile-pro-item {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .nav-links li.mobile-pro-item .pro-mobile-link {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        color: #ffd76a !important;
+        font-weight: 800 !important;
+        text-decoration: none !important;
+    }
+}
+
+@media (min-width: 1051px) {
+    .mobile-pro-item {
+        display: none !important;
+    }
+}
+</style>
+
+<style>
+/* ===== MOBILE HEADER: HIDE LOGIN + JOIN BUTTONS ===== */
+@media (max-width: 1050px) {
+    header .nav-buttons,
+    .navbar .nav-buttons,
+    .navbar > .nav-buttons {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+    }
+}
+</style>
+
+<style>
+/* ===== FINAL MOBILE HEADER CLEANUP ===== */
+@media (max-width: 1050px) {
+    /* The current HTML has Login/Join directly inside .navbar,
+       not inside .nav-buttons. Hide those two direct buttons. */
+    .navbar > a.join-btn,
+    .navbar > a.join-btn[href="player-login.html"],
+    .navbar > a.join-btn[href="join.html"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        position: absolute !important;
+        left: -99999px !important;
+    }
+
+    /* Keep only the hamburger menu control visible in the header. */
+    .navbar > .menu-btn {
+        display: flex !important;
+        visibility: visible !important;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -189,22 +802,37 @@
                 <li><a href="check-status.html">Check Status</a></li>
 
                 <li><a href="contact.html">Contact</a></li>
+                <li class="mobile-pro-item">
+                    <a href="pro-info.html" class="pro-mobile-link">
+                        <i class="fa-solid fa-crown"></i>
+                        4FU PRO
+                    </a>
+                </li>
+
+                <li>
+                    <a href="pro-info.html" class="pro-nav-btn">
+                        <i class="fa-solid fa-crown"></i>
+                        PRO
+                    </a>
+                </li>
 
                 <li class="mobile-player-login">
                     <a href="player-login.html">Player Login</a>
                 </li>
 
+                
+
             </ul>
 
-            <div class="nav-buttons">
-                <a href="player-login.html" class="join-btn">
+
+
+            <a href="player-login.html" class="join-btn">
                     Player Login
                 </a>
 
-                <a href="join.html" class="join-btn">
+            <a href="join.html" class="join-btn">
                     Join Team
                 </a>
-            </div>
 
             <div class="menu-btn">
 

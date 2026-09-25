@@ -23,6 +23,13 @@ module.exports = {
       },
       rules: {},
     },
+    {
+      files: ["proPayments.js"],
+      rules: {
+        "max-len": "off",
+        "require-jsdoc": "off",
+      },
+    },
   ],
   globals: {},
 };

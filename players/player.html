@@ -1277,6 +1277,381 @@
 
 </style>
 
+
+
+
+
+<style id="fourfu-pro-profile-status-style">
+/* =========================================================
+   4FU PRO — PREMIUM KING BADGE
+   Gold / orange gaming plaque with glow + shine + fall-in.
+========================================================= */
+
+.fourfu-pro-profile-badge{
+    --pro-gold:#ffe58a;
+    --pro-orange:#ff7a00;
+    --pro-purple:#9b5cff;
+    --pro-cyan:#55d9ff;
+    --pro-deep:#090611;
+
+    position:relative;
+    isolation:isolate;
+    display:inline-flex;
+    align-items:center;
+    gap:11px;
+    width:max-content;
+    min-height:54px;
+    margin:0 0 16px 0;
+    padding:7px 19px 7px 8px;
+    border:1px solid rgba(255,218,112,.75);
+    border-radius:17px;
+    background:
+        linear-gradient(115deg,
+            rgba(255,106,0,.30) 0%,
+            rgba(150,74,255,.34) 42%,
+            rgba(15,10,31,.96) 72%,
+            rgba(255,106,0,.24) 100%);
+    background-size:220% 220%;
+    box-shadow:
+        0 0 0 1px rgba(155,92,255,.10),
+        0 0 16px rgba(255,154,40,.34),
+        0 0 38px rgba(155,92,255,.22),
+        inset 0 1px 0 rgba(255,255,255,.24),
+        inset 0 -12px 25px rgba(0,0,0,.30);
+    color:#fff;
+    font-family:Poppins,Arial,sans-serif;
+    overflow:hidden;
+    transform-origin:left center;
+    animation:
+        fourfuProFall .72s cubic-bezier(.16,1,.3,1) both,
+        fourfuProFloat 3.2s ease-in-out .75s infinite,
+        fourfuProGradient 5s ease-in-out 1s infinite;
+}
+
+.fourfu-pro-profile-badge::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    z-index:-2;
+    border-radius:19px;
+    background:conic-gradient(from 0deg,
+        transparent 0deg,
+        #ffd34e 28deg,
+        #ff7200 65deg,
+        transparent 105deg,
+        transparent 180deg,
+        #9b5cff 230deg,
+        #55d9ff 275deg,
+        transparent 325deg);
+    filter:blur(5px);
+    opacity:.88;
+    animation:fourfuProRotate 4s linear infinite;
+}
+
+.fourfu-pro-profile-badge::after{
+    content:"";
+    position:absolute;
+    top:-40%;
+    left:-55%;
+    width:30%;
+    height:180%;
+    background:linear-gradient(90deg,
+        transparent,
+        rgba(255,255,255,.10),
+        rgba(255,255,255,.95),
+        rgba(255,255,255,.10),
+        transparent);
+    transform:skewX(-20deg);
+    filter:blur(1px);
+    opacity:0;
+    animation:fourfuProShine 2.4s ease-in-out 1s infinite;
+    pointer-events:none;
+}
+
+.fourfu-pro-badge-orbit{
+    position:absolute;
+    inset:5px;
+    z-index:-1;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.10);
+    box-shadow:
+        inset 0 0 18px rgba(255,120,0,.12),
+        inset 0 0 24px rgba(155,92,255,.10);
+    pointer-events:none;
+}
+
+.fourfu-pro-badge-crown{
+    position:relative;
+    width:40px;
+    height:40px;
+    flex:0 0 40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    color:#160b25;
+    background:linear-gradient(145deg,
+        #fff4ad 0%,
+        #ffd34e 30%,
+        #ff8a00 65%,
+        #9b5cff 100%);
+    box-shadow:
+        0 0 12px rgba(255,210,70,.68),
+        0 0 28px rgba(155,92,255,.35),
+        inset 0 1px 0 rgba(255,255,255,.88);
+    animation:fourfuProCrown 1.8s ease-in-out .8s infinite;
+}
+
+.fourfu-pro-badge-crown i{
+    font-size:19px;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));
+}
+
+.fourfu-pro-badge-copy{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    min-width:112px;
+    line-height:1;
+    position:relative;
+    z-index:2;
+}
+
+.fourfu-pro-badge-copy strong{
+    display:block;
+    color:#ffffff;
+    font-size:15px;
+    font-weight:950;
+    letter-spacing:1.35px;
+    text-shadow:
+        0 1px 0 rgba(0,0,0,.55),
+        0 0 8px rgba(255,255,255,.18),
+        0 0 18px rgba(255,176,48,.42);
+}
+
+.fourfu-pro-badge-copy strong::after{
+    content:" • PRO";
+    color:#ffe27a;
+    text-shadow:0 0 10px rgba(255,196,65,.70);
+}
+
+.fourfu-pro-badge-copy small{
+    display:block;
+    margin-top:6px;
+    color:#fff4d2;
+    font-size:7.5px;
+    font-weight:900;
+    letter-spacing:1.8px;
+    opacity:1;
+    text-shadow:0 1px 5px rgba(0,0,0,.8),0 0 8px rgba(255,184,60,.30);
+}
+
+.fourfu-pro-badge-spark{
+    position:absolute;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:#fff7bd;
+    box-shadow:0 0 5px #fff,0 0 12px #ffd000,0 0 22px #9b5cff;
+    pointer-events:none;
+    animation:fourfuProSpark 1.8s ease-in-out infinite;
+}
+
+.spark-1{right:18%;top:8%;animation-delay:.1s}
+.spark-2{right:7%;bottom:17%;width:3px;height:3px;animation-delay:.55s}
+.spark-3{left:4%;top:22%;width:3px;height:3px;animation-delay:1s}
+.spark-4{left:31%;bottom:7%;width:2px;height:2px;animation-delay:1.35s}
+
+@keyframes fourfuProGradient{
+    0%,100%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+}
+
+@keyframes fourfuProFall{
+    0%{opacity:0;transform:translateY(-42px) translateX(-8px) scale(.72) rotate(-5deg);filter:blur(5px)}
+    65%{opacity:1;transform:translateY(5px) translateX(0) scale(1.04) rotate(1deg);filter:blur(0)}
+    100%{opacity:1;transform:translateY(0) translateX(0) scale(1) rotate(0);filter:blur(0)}
+}
+
+@keyframes fourfuProFloat{
+    0%,100%{translate:0 0}
+    50%{translate:0 -3px}
+}
+
+@keyframes fourfuProRotate{to{transform:rotate(360deg)}}
+
+@keyframes fourfuProShine{
+    0%,18%{left:-55%;opacity:0}
+    30%{opacity:.95}
+    55%{left:130%;opacity:0}
+    100%{left:130%;opacity:0}
+}
+
+@keyframes fourfuProCrown{
+    0%,100%{transform:translateY(0) rotate(0) scale(1)}
+    50%{transform:translateY(-2px) rotate(-3deg) scale(1.07)}
+}
+
+@keyframes fourfuProSpark{
+    0%,100%{opacity:0;transform:scale(.4) translateY(3px)}
+    45%{opacity:1;transform:scale(1.2) translateY(-2px)}
+    70%{opacity:.3;transform:scale(.6) translateY(-6px)}
+}
+
+#player-name{position:relative}
+
+@media(max-width:600px){
+    .fourfu-pro-profile-badge{
+        min-height:46px;
+        margin-bottom:12px;
+        padding:5px 13px 5px 6px;
+        gap:8px;
+        border-radius:14px;
+    }
+    .fourfu-pro-badge-crown{width:34px;height:34px;flex-basis:34px;border-radius:10px}
+    .fourfu-pro-badge-crown i{font-size:15px}
+    .fourfu-pro-badge-copy{min-width:90px}
+    .fourfu-pro-badge-copy strong{font-size:11.5px;letter-spacing:1px}
+    .fourfu-pro-badge-copy small{margin-top:4px;font-size:6.2px;letter-spacing:1.35px}
+}
+
+@media(prefers-reduced-motion:reduce){
+    .fourfu-pro-profile-badge,.fourfu-pro-profile-badge::before,.fourfu-pro-profile-badge::after,
+    .fourfu-pro-badge-crown,.fourfu-pro-badge-spark{animation:none !important}
+}
+</style>
+
+
+<style id="fourfu-index-navbar-exact">
+.mobile-player-login,.mobile-pro-item{display:none}
+
+@media (min-width:1051px){
+.navbar{
+width:100%!important;box-sizing:border-box!important;gap:14px!important;
+}
+.navbar .logo{
+flex:0 0 118px!important;width:118px!important;min-width:118px!important;
+}
+.navbar .logo img{
+width:96px!important;max-width:96px!important;max-height:70px!important;
+}
+.nav-links{
+flex:1 1 auto!important;min-width:0!important;width:auto!important;
+gap:17px!important;justify-content:flex-end!important;overflow:visible!important;
+}
+.nav-links li{flex:0 0 auto!important}
+.nav-links li a{
+padding:0!important;font-size:15px!important;white-space:nowrap!important;letter-spacing:0!important;
+}
+.pro-nav-btn{
+display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;
+width:70px!important;min-width:70px!important;height:40px!important;padding:0 10px!important;
+box-sizing:border-box!important;border:1px solid rgba(255,190,40,.72)!important;border-radius:22px!important;
+color:#ffd76a!important;
+background:linear-gradient(135deg,rgba(255,166,0,.15),rgba(111,48,150,.20))!important;
+box-shadow:0 0 12px rgba(255,170,0,.16),inset 0 0 8px rgba(255,255,255,.03)!important;
+font-size:12px!important;font-weight:800!important;line-height:1!important;
+white-space:nowrap!important;flex-shrink:0!important;text-decoration:none!important;
+}
+.pro-nav-btn i{font-size:10px!important;color:#ffd044!important}
+.pro-nav-btn:hover{
+color:#fff!important;border-color:#ffc107!important;transform:translateY(-2px);
+box-shadow:0 0 18px rgba(255,180,30,.35),0 0 28px rgba(125,60,180,.12)!important;
+}
+.navbar>.join-btn{
+flex:0 0 auto!important;width:108px!important;min-width:108px!important;
+padding:13px 16px!important;box-sizing:border-box!important;text-align:center!important;
+white-space:nowrap!important;font-size:14px!important;
+}
+.navbar>.join-btn+.join-btn{width:108px!important;min-width:108px!important}
+}
+
+@media (max-width:1350px) and (min-width:1051px){
+.navbar{gap:10px!important}
+.navbar .logo{flex-basis:105px!important;width:105px!important;min-width:105px!important}
+.navbar .logo img{width:88px!important;max-width:88px!important}
+.nav-links{gap:12px!important}
+.nav-links li a{font-size:13px!important}
+.pro-nav-btn{
+width:64px!important;min-width:64px!important;height:38px!important;
+padding:0 7px!important;font-size:11px!important;
+}
+.navbar>.join-btn,.navbar>.join-btn+.join-btn{
+width:92px!important;min-width:92px!important;padding:12px 10px!important;font-size:13px!important;
+}
+}
+
+@media (max-width:1050px){
+header{
+position:fixed!important;top:0!important;left:0!important;width:100%!important;z-index:999999!important;
+}
+.navbar{
+min-height:72px!important;height:72px!important;padding:0 18px!important;
+}
+.navbar .logo{width:105px!important;min-width:105px!important}
+.navbar .logo img{width:88px!important;max-width:88px!important;max-height:62px!important}
+.menu-btn{
+width:46px!important;height:46px!important;min-width:46px!important;
+display:flex!important;align-items:center!important;justify-content:center!important;
+}
+.menu-btn i{font-size:22px!important}
+.nav-links{gap:0!important;padding:92px 0 24px!important}
+.nav-links li{margin:0!important;padding:0!important}
+.nav-links li a{
+font-size:14px!important;line-height:1.2!important;padding:9px 20px!important;margin:0!important;
+}
+.nav-links li:has(>a.pro-nav-btn){display:none!important}
+.nav-links li.mobile-pro-item{
+display:block!important;visibility:visible!important;opacity:1!important;height:auto!important;
+}
+.nav-links li.mobile-pro-item a{
+display:inline-flex!important;align-items:center!important;justify-content:center!important;
+gap:8px!important;color:#ffd76a!important;font-weight:800!important;text-decoration:none!important;
+}
+.nav-links li.mobile-pro-item i{color:#ffd044!important}
+.mobile-player-login{display:block!important;margin-top:3px!important}
+.mobile-player-login a{font-size:14px!important;font-weight:600!important}
+.nav-buttons{display:none!important}
+}
+
+@media (max-width:600px){
+.navbar{min-height:68px!important;height:68px!important;padding:0 14px!important}
+.navbar .logo{width:92px!important;min-width:92px!important}
+.navbar .logo img{width:78px!important;max-width:78px!important;max-height:56px!important}
+.menu-btn{width:42px!important;height:42px!important;min-width:42px!important}
+.menu-btn i{font-size:20px!important}
+.nav-links{padding-top:82px!important;padding-bottom:18px!important}
+.nav-links li a,.mobile-player-login a{font-size:13px!important;padding:7px 18px!important}
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+<style id="4fu-pro-new-themes-working">
+body.fourfu-pro-customized.pro-theme-royal{--pro-accent:#f5cf67;--pro-glow:rgba(245,207,103,.30)}
+body.fourfu-pro-customized.pro-theme-crimson{--pro-accent:#ff536d;--pro-glow:rgba(255,60,85,.30)}
+body.fourfu-pro-customized.pro-theme-ice{--pro-accent:#70ddff;--pro-glow:rgba(82,205,255,.30)}
+body.fourfu-pro-customized.pro-theme-galaxy{--pro-accent:#b58cff;--pro-glow:rgba(133,91,255,.30)}
+body.fourfu-pro-customized.pro-theme-toxic{--pro-accent:#9cff4a;--pro-glow:rgba(101,255,84,.30)}
+body.fourfu-pro-customized.pro-theme-ember{--pro-accent:#ff8a3d;--pro-glow:rgba(255,92,32,.30)}
+body.fourfu-pro-customized.pro-frame-gold .player-top,body.fourfu-pro-customized.pro-frame-gold .ffx-banner-box{box-shadow:0 0 0 1px color-mix(in srgb,var(--pro-accent) 55%,transparent),0 0 28px var(--pro-glow),0 18px 55px rgba(0,0,0,.25)}
+body.fourfu-pro-customized.pro-frame-animated .player-top{animation:fourfuFramePulse 3s ease-in-out infinite}
+body.fourfu-pro-customized.pro-frame-shine .player-top::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.16) 48%,transparent 65%);transform:translateX(-120%);animation:fourfuShine 4.5s infinite;pointer-events:none}
+body.fourfu-pro-customized.pro-frame-corners .player-top::before{content:"✦";position:absolute;right:14px;top:10px;color:var(--pro-accent);text-shadow:0 0 14px var(--pro-glow);z-index:5}
+body.fourfu-pro-customized.pro-xp-animated .xp-track i{animation:fourfuXpPulse 2s ease-in-out infinite}
+body.fourfu-pro-customized.pro-stat-number-glow .stat-card b,body.fourfu-pro-customized.pro-stat-number-glow .ffx-new-stat b{color:var(--pro-accent);text-shadow:0 0 16px var(--pro-glow)}
+body.fourfu-pro-customized.pro-level-pulse .player-level{animation:fourfuPulse 2s ease-in-out infinite}
+body.fourfu-pro-customized.pro-section-lines section::before{content:"";position:absolute;left:8%;right:8%;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--pro-accent),transparent);opacity:.45}
+@keyframes fourfuFramePulse{50%{box-shadow:0 0 0 2px color-mix(in srgb,var(--pro-accent) 55%,transparent),0 0 38px var(--pro-glow)}}
+@keyframes fourfuXpPulse{50%{filter:brightness(1.25);box-shadow:0 0 24px var(--pro-glow)}}
+</style>
 </head>
 
 
@@ -1291,84 +1666,49 @@
 
 
 <header>
-
 <nav class="navbar">
 
 <div class="logo">
-
 <a href="../index.html">
-
-<img
-    src="../images/logo/logo.png"
-    alt="Logo"
->
-
+<img src="../images/logo/logo.png" alt="Logo">
 </a>
-
 </div>
-
 
 <ul class="nav-links">
+<li><a href="../index.html">Home</a></li>
+<li><a href="../team.html" class="active">Team</a></li>
+<li><a href="../tournaments.html">Tournaments</a></li>
+<li><a href="../gallery.html">Gallery</a></li>
+<li><a href="../area-map.html">World Explorer</a></li>
+<li><a href="../clips.html">Clips</a></li>
+<li><a href="../challenges.html">Challenges</a></li>
+<li><a href="../join.html">Join Us</a></li>
+<li><a href="../check-status.html">Check Status</a></li>
+<li><a href="../contact.html">Contact</a></li>
 
-<li>
-<a href="../index.html">
-Home
+<li class="mobile-pro-item">
+<a href="../pro-info.html" class="pro-mobile-link">
+<i class="fa-solid fa-crown"></i> 4FU PRO
 </a>
 </li>
 
-<li>
-<a href="../team.html" class="active">
-Team
-</a>
+<li class="mobile-player-login">
+<a href="../player-login.html">Player Login</a>
 </li>
-
-<li>
-<a href="../tournaments.html">
-Tournaments
-</a>
-</li>
-
-<li>
-<a href="../gallery.html">
-Gallery
-</a>
-</li>
-
-<li>
-<a href="../join.html">
-Join Us
-</a>
-</li>
-
-<li>
-<a href="../contact.html">
-Contact
-</a>
-</li>
-
 </ul>
 
-
-<div class="nav-buttons">
-
-<a
-    href="../join.html"
-    class="join-btn"
->
-Join Team
+<a href="../pro-info.html" class="pro-nav-btn">
+<i class="fa-solid fa-crown"></i> PRO
 </a>
 
-</div>
-
+<a href="../player-login.html" class="join-btn">Player Login</a>
+<a href="../join.html" class="join-btn">Join Team</a>
 
 <div class="menu-btn">
-
 <i class="fa-solid fa-bars"></i>
-
 </div>
 
 </nav>
-
 </header>
 
 
@@ -2359,6 +2699,87 @@ Contact
 
 
 
+
+
+<style id="fourfu-pro-studio-style">
+body.fourfu-pro-customized{--pro-accent:#f3c86a;--pro-glow:rgba(243,200,106,.25)}
+body.fourfu-pro-customized.pro-theme-aurora{--pro-accent:#73e7ff;--pro-glow:rgba(115,231,255,.28)}
+body.fourfu-pro-customized.pro-theme-inferno{--pro-accent:#ff642e;--pro-glow:rgba(255,85,35,.32)}
+body.fourfu-pro-customized.pro-theme-cyber{--pro-accent:#62f5ff;--pro-glow:rgba(98,245,255,.3)}
+body.fourfu-pro-customized.pro-theme-void{--pro-accent:#a47bff;--pro-glow:rgba(164,123,255,.28)}
+body.fourfu-pro-customized .player-container,body.fourfu-pro-customized section,body.fourfu-pro-customized footer{position:relative;z-index:1}
+body.fourfu-pro-customized .player-top,body.fourfu-pro-customized .ffx-banner-box{border-color:color-mix(in srgb,var(--pro-accent) 45%,transparent)!important}
+body.fourfu-pro-customized .ffx-banner-box{box-shadow:0 0 0 1px color-mix(in srgb,var(--pro-accent) 22%,transparent),0 18px 55px var(--pro-glow)}
+body.fourfu-pro-customized .player-top{box-shadow:0 0 0 1px color-mix(in srgb,var(--pro-accent) 35%,transparent),0 18px 55px var(--pro-glow);overflow:hidden}
+body.fourfu-pro-customized.pro-main-snake .player-top,body.fourfu-pro-customized.pro-main-snake .player-top::before{border-color:transparent}
+body.fourfu-pro-customized.pro-main-snake .player-top::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:2px;background:conic-gradient(from 0deg,transparent 0 72%,var(--pro-accent) 78%,#fff 81%,var(--pro-accent) 84%,transparent 90%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:2}
+body.fourfu-pro-customized.pro-main-snake .player-top>*{position:relative;z-index:3}
+body.fourfu-pro-customized.pro-main-glow .player-top{box-shadow:0 0 28px var(--pro-glow),0 22px 60px rgba(0,0,0,.3)}
+@keyframes fourfuShine{55%,100%{transform:translateX(120%)}}
+body.fourfu-pro-customized.pro-main-tilt .player-top{transition:transform .25s ease,box-shadow .25s ease}body.fourfu-pro-customized.pro-main-tilt .player-top:hover{transform:translateY(-5px) perspective(900px) rotateX(1deg) rotateY(-1deg)}
+body.fourfu-pro-customized.pro-banner-animation .ffx-banner-box img{animation:fourfuBanner 12s ease-in-out infinite alternate;transform-origin:center} @keyframes fourfuBanner{from{transform:scale(1.01)}to{transform:scale(1.075) translateX(1.2%)}}
+body.fourfu-pro-customized.pro-banner-glow .ffx-banner-box{box-shadow:0 0 28px var(--pro-glow)}
+body.fourfu-pro-customized.pro-banner-shine .ffx-banner-box::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.2) 48%,transparent 65%);transform:translateX(-120%);animation:fourfuShine 5s infinite;pointer-events:none}
+body.fourfu-pro-customized .ffx-banner-box{position:relative;overflow:hidden}
+body.fourfu-pro-customized.pro-banner-snake .ffx-banner-box{box-shadow:0 0 0 2px var(--pro-accent),0 0 28px var(--pro-glow)}
+body.fourfu-pro-customized.pro-avatar-ring .player-ring{animation:fourfuSpin 5s linear infinite;box-shadow:0 0 22px var(--pro-glow)} @keyframes fourfuSpin{to{transform:rotate(360deg)}}
+body.fourfu-pro-customized.pro-avatar-glow .player-image-box{filter:drop-shadow(0 0 18px var(--pro-glow))}
+body.fourfu-pro-customized.pro-avatar-pulse .player-image-box{animation:fourfuPulse 2.2s ease-in-out infinite}@keyframes fourfuPulse{50%{transform:scale(1.035)}}
+body.fourfu-pro-customized.pro-stats-glow .stat-card,body.fourfu-pro-customized.pro-stats-glow .ffx-new-stat{box-shadow:0 0 22px var(--pro-glow),inset 0 0 22px rgba(255,255,255,.025)}
+body.fourfu-pro-customized.pro-stats-fire .stat-card,body.fourfu-pro-customized.pro-stats-fire .ffx-new-stat{border-color:rgba(255,95,35,.45);box-shadow:0 0 24px rgba(255,80,25,.2)}
+body.fourfu-pro-customized.pro-stats-hover .stat-card,body.fourfu-pro-customized.pro-stats-hover .ffx-new-stat{transition:transform .25s ease,box-shadow .25s ease}body.fourfu-pro-customized.pro-stats-hover .stat-card:hover,body.fourfu-pro-customized.pro-stats-hover .ffx-new-stat:hover{transform:translateY(-5px)}
+body.fourfu-pro-customized.pro-stats-shine .stat-card::after,body.fourfu-pro-customized.pro-showcase-shine .ffx-visual-card::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.13) 48%,transparent 65%);transform:translateX(-120%);animation:fourfuShine 4.8s infinite;pointer-events:none;border-radius:inherit}
+body.fourfu-pro-customized .stat-card,body.fourfu-pro-customized .ffx-new-stat,body.fourfu-pro-customized .career-card,body.fourfu-pro-customized .weapon-card,body.fourfu-pro-customized .ffx-visual-card,body.fourfu-pro-customized .game-card,body.fourfu-pro-customized .ffx-live-mode-card-new{position:relative;overflow:hidden}
+body.fourfu-pro-customized.pro-weapon-glow .weapon-card{box-shadow:0 0 28px var(--pro-glow)}
+body.fourfu-pro-customized.pro-weapon-float .weapon-image img{animation:fourfuFloat 3.2s ease-in-out infinite}@keyframes fourfuFloat{50%{transform:translateY(-7px)}}
+body.fourfu-pro-customized.pro-weapon-shine .weapon-card::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.16) 48%,transparent 65%);transform:translateX(-120%);animation:fourfuShine 4s infinite;pointer-events:none}
+body.fourfu-pro-customized.pro-weapon-snake .weapon-card{box-shadow:0 0 0 1px var(--pro-accent),0 0 30px var(--pro-glow)}
+body.fourfu-pro-customized.pro-game-glow .game-card{box-shadow:0 0 22px var(--pro-glow)}body.fourfu-pro-customized.pro-game-float .game-card:hover{transform:translateY(-6px)}body.fourfu-pro-customized.pro-game-border .game-card{border-color:var(--pro-accent)}
+body.fourfu-pro-customized.pro-showcase-frame .ffx-visual-card,body.fourfu-pro-customized.pro-showcase-frame .career-card{box-shadow:0 0 0 1px color-mix(in srgb,var(--pro-accent) 35%,transparent),0 0 20px var(--pro-glow)}
+body.fourfu-pro-customized.pro-showcase-glow .ffx-visual-card{box-shadow:0 0 25px var(--pro-glow)}body.fourfu-pro-customized.pro-showcase-zoom .ffx-visual-card:hover{transform:translateY(-5px) scale(1.012)}
+body.fourfu-pro-customized.pro-achievement-glow .achievement-card{box-shadow:0 0 20px var(--pro-glow)}body.fourfu-pro-customized.pro-achievement-hover .achievement-card:hover{transform:translateY(-4px)}
+body.fourfu-pro-customized.pro-particles::after{content:"✦  •  ✧   ·   ✦   ·   ✧";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.12;font-size:28px;letter-spacing:28px;line-height:3;animation:fourfuParticles 18s linear infinite;white-space:pre-wrap} @keyframes fourfuParticles{to{transform:translateY(-80px)}}
+body.fourfu-pro-customized.pro-ambient-glow .section-title h2,body.fourfu-pro-customized.pro-ambient-glow .ffx-kicker,body.fourfu-pro-customized.pro-ambient-glow .game-center-title h2{color:var(--pro-accent);text-shadow:0 0 18px var(--pro-glow)}
+body.fourfu-pro-customized.pro-scroll-reveal section{animation:fourfuReveal .65s ease both} @keyframes fourfuReveal{from{opacity:.72;transform:translateY(10px)}to{opacity:1;transform:none}}
+body.fourfu-pro-customized.pro-cursor-glow{cursor:crosshair}
+.fourfu-pro-edition{display:inline-flex;align-items:center;gap:6px;margin-left:8px;padding:5px 9px;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.08em;color:var(--pro-accent);border:1px solid color-mix(in srgb,var(--pro-accent) 45%,transparent);background:rgba(0,0,0,.3);box-shadow:0 0 15px var(--pro-glow);vertical-align:middle}
+</style>
+<script>
+(()=>{
+const API='https://4fu-freefire-backend.4fu-freefire-backend.workers.dev';
+const $=(s)=>document.querySelector(s);
+const effectsMap={mainSnake:'pro-main-snake',mainGlow:'pro-main-glow',mainShine:'pro-main-shine',mainTilt:'pro-main-tilt',bannerAnimation:'pro-banner-animation',bannerGlow:'pro-banner-glow',bannerShine:'pro-banner-shine',bannerSnake:'pro-banner-snake',avatarRing:'pro-avatar-ring',avatarGlow:'pro-avatar-glow',avatarPulse:'pro-avatar-pulse',weaponGlow:'pro-weapon-glow',weaponFloat:'pro-weapon-float',weaponShine:'pro-weapon-shine',weaponSnake:'pro-weapon-snake',statsGlow:'pro-stats-glow',statsFire:'pro-stats-fire',statsShine:'pro-stats-shine',statsHover:'pro-stats-hover',gameGlow:'pro-game-glow',gameFloat:'pro-game-float',gameBorder:'pro-game-border',showcaseFrame:'pro-showcase-frame',showcaseGlow:'pro-showcase-glow',showcaseZoom:'pro-showcase-zoom',showcaseShine:'pro-showcase-shine',achievementGlow:'pro-achievement-glow',achievementHover:'pro-achievement-hover',particles:'pro-particles',ambientGlow:'pro-ambient-glow',scrollReveal:'pro-scroll-reveal',cursorGlow:'pro-cursor-glow',frameGold:'pro-frame-gold',frameAnimated:'pro-frame-animated',frameShine:'pro-frame-shine',frameCorners:'pro-frame-corners',xpAnimated:'pro-xp-animated',statNumberGlow:'pro-stat-number-glow',levelPulse:'pro-level-pulse',sectionLines:'pro-section-lines'};
+function apply(c){
+ if(!c)return;
+ document.body.classList.add('fourfu-pro-customized');
+ document.body.classList.forEach?.(()=>{});
+ ['aurora','inferno','cyber','void','obsidian','royal','crimson','ice','galaxy','toxic','ember'].forEach(x=>document.body.classList.remove('pro-theme-'+x));
+ ['inferno-live','aurora-live','cyber-live','royal-live','void-live','crimson-live','ice-live','galaxy-live','toxic-live','ember-live'].forEach(x=>document.body.classList.remove('live-theme-'+x));
+ document.body.classList.add('pro-theme-'+(c.theme||'obsidian'));
+ /* Live theme is intentionally NOT applied to the page background. */
+ delete document.body.dataset.liveTheme;
+ Object.values(effectsMap).forEach(x=>document.body.classList.remove(x));
+ const n=c||{};const e={...(n.effects||{})};
+ if(!n.effects){
+  Object.assign(e,{
+   mainSnake:n.mainCard?.snake,mainGlow:n.mainCard?.glow,mainShine:n.mainCard?.shine,mainTilt:n.mainCard?.tilt,
+   bannerAnimation:n.banner?.animation,bannerGlow:n.banner?.glow,bannerShine:n.banner?.shine,bannerSnake:n.banner?.border==='snake',
+   avatarRing:n.avatar?.ring!=='none',avatarGlow:n.avatar?.glow,avatarPulse:n.avatar?.pulse,
+   weaponGlow:n.weapon?.glow,weaponFloat:n.weapon?.float,weaponShine:n.weapon?.shine,weaponSnake:n.weapon?.snake,weaponParallax:n.weapon?.parallax,
+   statsGlow:n.stats?.glow,statsFire:n.stats?.fire,statsShine:n.stats?.shine,statsHover:n.stats?.hover,
+   achievementGlow:n.achievements?.glow,achievementShine:n.achievements?.shine,achievementHover:n.achievements?.hover,
+   gameGlow:n.gameCenter?.glow,gameFloat:n.gameCenter?.hover,gameBorder:n.gameCenter?.shine,
+   showcaseFrame:n.clips?.premiumFrame||n.gallery?.premiumFrame,showcaseGlow:n.clips?.glow||n.gallery?.glow,showcaseZoom:n.gallery?.zoom,showcaseShine:n.clips?.shine||n.gallery?.shine,
+   particles:n.atmosphere?.particles,ambientGlow:n.atmosphere?.ambientGlow,scrollReveal:n.atmosphere?.scrollReveal,cursorGlow:n.atmosphere?.cursorGlow
+  });
+ }
+ for(const [k,cls] of Object.entries(effectsMap))if(e[k]===true)document.body.classList.add(cls);
+ const name=$('#player-name');if(name&&!$('#fourfuProEdition')){const b=document.createElement('span');b.id='fourfuProEdition';b.className='fourfu-pro-edition';b.innerHTML='✨ '+String(c.theme||'PRO').toUpperCase()+' EDITION';name.appendChild(b)}else if($('#fourfuProEdition'))$('#fourfuProEdition').innerHTML='✨ '+String(c.theme||'PRO').toUpperCase()+' EDITION';
+}
+async function load(){try{const id=new URLSearchParams(location.search).get('id');if(!id)return;const r=await fetch(API+'/pro/public-customization?playerId='+encodeURIComponent(id),{cache:'no-store'});const d=await r.json();if(d?.success&&d.proActive&&d.customization)apply(d.customization)}catch(e){console.debug('[4FU PRO Studio]',e)}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
+})();
+</script>
 
 </body>
 

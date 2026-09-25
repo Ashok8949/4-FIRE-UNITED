@@ -1,24 +1,383 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Team | 4 FIRE UNITED</title>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="CSS/style.css?v=1783829699314">
+<link rel="stylesheet" href="CSS/responsive.css?v=1783829699314">
+<link rel="stylesheet" href="CSS/animations.css?v=1783829699314">
+<link rel="stylesheet" href="CSS/fire-border.css?v=1783829699314">
 
-    <title>Our Team | 4 FIRE UNITED</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
+<link rel="icon" href="images/logo/logo.png">
 
-    <link rel="stylesheet" href="CSS/style.css?v=1783829699314">
-    <link rel="stylesheet" href="CSS/responsive.css?v=1783829699314">
-    <link rel="stylesheet" href="CSS/animations.css?v=1783829699314">
-    <link rel="stylesheet" href="CSS/fire-border.css?v=1783829699314">
-    <style id="mobile-navbar-fix">
+<style>
+/* =========================================================
+   4FU TEAM — ELITE PLAYER CARD UPGRADE
+   Existing layout/data preserved. Only card presentation enhanced.
+   ========================================================= */
+
+.team-grid{
+    perspective:1400px;
+    transform-style:preserve-3d;
+}
+
+/* Main card */
+.team-card{
+    position:relative;
+    isolation:isolate;
+    overflow:hidden;
+    transform-style:preserve-3d;
+    will-change:transform;
+    background:
+        radial-gradient(circle at 50% -10%, rgba(255,106,0,.18), transparent 38%),
+        linear-gradient(145deg, rgba(255,255,255,.075), rgba(10,10,10,.96) 62%);
+    border:1px solid rgba(255,106,0,.18);
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.45),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+    transition:
+        transform .16s cubic-bezier(.2,.8,.2,1),
+        border-color .35s ease,
+        box-shadow .35s ease;
+}
+
+/* Holographic sweep */
+.team-card::before{
+    content:"";
+    position:absolute;
+    inset:-60%;
+    z-index:5;
+    pointer-events:none;
+    background:linear-gradient(
+        115deg,
+        transparent 38%,
+        rgba(255,255,255,.04) 46%,
+        rgba(255,125,30,.20) 50%,
+        rgba(255,255,255,.07) 54%,
+        transparent 62%
+    );
+    transform:translateX(-45%) rotate(12deg);
+    transition:transform .8s ease;
+    mix-blend-mode:screen;
+}
+
+.team-card:hover::before{
+    transform:translateX(45%) rotate(12deg);
+}
+
+/* Premium inner frame */
+.team-card::after{
+    content:"";
+    position:absolute;
+    inset:9px;
+    z-index:6;
+    pointer-events:none;
+    border:1px solid rgba(255,106,0,.10);
+    border-radius:inherit;
+}
+
+/* Image depth + visibility fix */
+.team-card .player-image{
+    position:relative;
+    width:100%;
+    height:380px;
+    min-height:380px;
+    overflow:hidden;
+    transform:translateZ(32px);
+    z-index:7;
+    background:
+        radial-gradient(circle at 50% 35%, rgba(255,106,0,.12), transparent 52%),
+        #070707;
+}
+
+.team-card .player-image img{
+    display:block !important;
+    position:relative;
+    z-index:2;
+    width:100% !important;
+    height:100% !important;
+    min-height:380px;
+    object-fit:cover !important;
+    object-position:center;
+    opacity:1 !important;
+    visibility:visible !important;
+}
+
+.team-card .player-image::after{
+    content:"";
+    position:absolute;
+    left:8%;
+    right:8%;
+    bottom:0;
+    height:2px;
+    background:linear-gradient(90deg,transparent,#ff6a00,transparent);
+    box-shadow:0 0 18px rgba(255,106,0,.9);
+    opacity:.8;
+    z-index:4;
+}
+
+.team-card .player-image img{
+    transform:scale(1.01);
+    transition:transform .65s cubic-bezier(.2,.8,.2,1), filter .65s ease;
+    will-change:transform;
+}
+
+.team-card:hover .player-image img{
+    transform:scale(1.075);
+    filter:saturate(1.12) contrast(1.04);
+}
+
+/* Animated scan */
+.team-card .pc-scan{
+    position:absolute;
+    left:0;
+    right:0;
+    top:-8%;
+    height:2px;
+    z-index:8;
+    pointer-events:none;
+    background:linear-gradient(90deg,transparent,#ff6a00,#ffd09a,#ff6a00,transparent);
+    box-shadow:0 0 14px rgba(255,106,0,.9);
+    opacity:.65;
+    animation:teamCardScan 3.2s linear infinite;
+}
+
+@keyframes teamCardScan{
+    0%{transform:translateY(0);opacity:0}
+    12%{opacity:.7}
+    70%{opacity:.7}
+    100%{transform:translateY(620px);opacity:0}
+}
+
+/* Card HUD top */
+.team-card .pc-hud{
+    position:absolute;
+    top:17px;
+    left:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    pointer-events:none;
+    transform:translateZ(50px);
+}
+
+.team-card .pc-brand{
+    font:600 10px/1 Poppins,sans-serif;
+    letter-spacing:2px;
+    color:rgba(255,255,255,.72);
+    text-transform:uppercase;
+    text-shadow:0 0 12px rgba(255,106,0,.45);
+}
+
+.team-card .pc-rarity{
+    padding:5px 9px;
+    border:1px solid rgba(255,106,0,.42);
+    border-radius:999px;
+    background:rgba(4,4,4,.72);
+    color:#ff862d;
+    font:700 9px/1 Poppins,sans-serif;
+    letter-spacing:1.2px;
+    backdrop-filter:blur(8px);
+}
+
+.team-card .pc-particles{
+    position:absolute;
+    inset:0;
+    z-index:4;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.team-card .pc-particles i{
+    position:absolute;
+    bottom:-8px;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:#ff7a00;
+    box-shadow:0 0 10px rgba(255,106,0,.9);
+    opacity:0;
+    animation:teamEmber 3.5s linear infinite;
+}
+
+.team-card .pc-particles i:nth-child(1){left:18%;animation-delay:.1s}
+.team-card .pc-particles i:nth-child(2){left:39%;animation-delay:1.1s}
+.team-card .pc-particles i:nth-child(3){left:61%;animation-delay:1.8s}
+.team-card .pc-particles i:nth-child(4){left:78%;animation-delay:.7s}
+.team-card .pc-particles i:nth-child(5){left:90%;animation-delay:2.3s}
+
+@keyframes teamEmber{
+    0%{transform:translate3d(0,0,0) scale(.5);opacity:0}
+    15%{opacity:.85}
+    100%{transform:translate3d(-12px,-230px,0) scale(1.5);opacity:0}
+}
+
+/* Info depth */
+.team-card .team-info{
+    position:relative;
+    z-index:9;
+    transform:translateZ(28px);
+}
+
+/* Owner treatment */
+.team-card.owner-card{
+    border-color:rgba(255,191,67,.58);
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.55),
+        0 0 35px rgba(255,166,0,.14),
+        inset 0 0 28px rgba(255,166,0,.045);
+}
+
+.team-card.owner-card::before{
+    background:linear-gradient(
+        115deg,
+        transparent 38%,
+        rgba(255,216,120,.05) 46%,
+        rgba(255,188,55,.28) 50%,
+        rgba(255,255,255,.09) 54%,
+        transparent 62%
+    );
+}
+
+.team-card.owner-card .pc-rarity{
+    color:#ffd36a;
+    border-color:rgba(255,196,67,.58);
+}
+
+/* CTA */
+.team-card .btn1{
+    position:relative;
+    overflow:hidden;
+    transform:translateZ(38px);
+    box-shadow:0 8px 24px rgba(255,106,0,.14);
+}
+
+.team-card .btn1::after{
+    content:"→";
+    margin-left:8px;
+    transition:transform .25s ease;
+}
+
+.team-card:hover .btn1::after{
+    transform:translateX(5px);
+}
+
+/* Entrance */
+.team-card{
+    animation:teamCardIn .7s cubic-bezier(.2,.75,.2,1) both;
+}
+
+.team-card:nth-child(2){animation-delay:.08s}
+.team-card:nth-child(3){animation-delay:.16s}
+.team-card:nth-child(4){animation-delay:.24s}
+.team-card:nth-child(5){animation-delay:.32s}
+.team-card:nth-child(6){animation-delay:.40s}
+
+@keyframes teamCardIn{
+    from{opacity:0;transform:translateY(35px) scale(.96)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* Owner/name alignment fix */
+.team-card .team-info{
+    min-height:250px;
+    box-sizing:border-box;
+}
+
+.team-card .owner-name{
+    position:relative;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.team-card .owner-name .owner-tag{
+    position:static !important;
+    transform:none !important;
+    margin:0 !important;
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    width:max-content;
+    max-width:100%;
+}
+
+.team-card .owner-name h2{
+    margin:0 !important;
+}
+
+.team-card.owner-card .owner-tag{
+    box-shadow:0 0 18px rgba(255,190,40,.38);
+}
+
+/* Mobile */
+@media (max-width:900px){
+    .team-grid{
+        perspective:none;
+    }
+
+    .team-card{
+        transform:none !important;
+        animation:teamCardIn .55s ease both;
+    }
+
+    .team-card .pc-hud{
+        top:13px;
+        left:14px;
+        right:14px;
+    }
+
+    .team-card .pc-brand{
+        font-size:8px;
+    }
+
+    .team-card .pc-rarity{
+        font-size:8px;
+        padding:5px 8px;
+    }
+}
+
+@media (max-width:600px){
+    .team-card .player-image{
+        height:300px;
+        min-height:300px;
+    }
+
+    .team-card .player-image img{
+        height:300px !important;
+        min-height:300px;
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .team-card,
+    .team-card::before,
+    .team-card .pc-scan,
+    .team-card .pc-particles i{
+        animation:none !important;
+        transition:none !important;
+    }
+}
+</style>
+
+
+<!-- INDEX-EXACT NAVBAR OVERRIDES -->
+<style id="mobile-navbar-fix">
         .mobile-player-login {
             display: none;
         }
 
         @media (max-width: 1050px) {
-
             header {
                 position: fixed !important;
                 top: 0 !important;
@@ -74,7 +433,6 @@
                 margin: 0 !important;
             }
 
-            /* PLAYER LOGIN - MOBILE / APP MENU */
             .mobile-player-login {
                 display: block !important;
                 margin-top: 3px !important;
@@ -87,7 +445,6 @@
         }
 
         @media (max-width: 600px) {
-
             .navbar {
                 min-height: 68px !important;
                 height: 68px !important;
@@ -126,21 +483,534 @@
                 padding: 7px 18px !important;
             }
         }
+
+        /* 4FU APP DOWNLOAD BUTTON */
+        #download4fuBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #download4fuBtn i {
+            font-size: 15px;
+        }
+
+        @media (max-width: 600px) {
+            #download4fuBtn {
+                width: 100%;
+            }
+        }
     </style>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+<style>
+        /* ===== 4FU NAVBAR — CLEAN FINAL FIT =====
+           Keep the original 4FU navbar proportions.
+           Only make PRO compact enough to fit beside Login + Join.
+        */
+        @media (min-width: 1051px) {
+            .navbar {
+                width: 100% !important;
+                box-sizing: border-box;
+                gap: 14px !important;
+            }
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=1783829699314">
-    <link rel="icon" href="images/logo/logo.png">
+            .navbar .logo {
+                flex: 0 0 118px !important;
+                width: 118px !important;
+                min-width: 118px !important;
+            }
 
+            .navbar .logo img {
+                width: 96px !important;
+                max-width: 96px !important;
+                max-height: 70px !important;
+            }
+
+            .nav-links {
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+                width: auto !important;
+                gap: 17px !important;
+                justify-content: flex-end !important;
+                overflow: visible !important;
+            }
+
+            .nav-links li {
+                flex: 0 0 auto !important;
+            }
+
+            .nav-links li a {
+                padding: 0 !important;
+                font-size: 15px !important;
+                white-space: nowrap !important;
+                letter-spacing: 0 !important;
+            }
+
+            /* Compact PRO button — same visual weight as the navbar. */
+            .pro-nav-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 5px !important;
+                width: 70px !important;
+                min-width: 70px !important;
+                height: 40px !important;
+                padding: 0 10px !important;
+                box-sizing: border-box !important;
+                border: 1px solid rgba(255, 190, 40, .72) !important;
+                border-radius: 22px !important;
+                color: #ffd76a !important;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 166, 0, .15),
+                    rgba(111, 48, 150, .20)
+                ) !important;
+                box-shadow:
+                    0 0 12px rgba(255, 170, 0, .16),
+                    inset 0 0 8px rgba(255,255,255,.03) !important;
+                font-size: 12px !important;
+                font-weight: 800 !important;
+                line-height: 1 !important;
+                white-space: nowrap !important;
+                flex-shrink: 0 !important;
+            }
+
+            .pro-nav-btn i {
+                font-size: 10px !important;
+                color: #ffd044 !important;
+                flex-shrink: 0 !important;
+            }
+
+            .pro-nav-btn:hover {
+                color: #fff !important;
+                border-color: #ffc107 !important;
+                transform: translateY(-2px);
+                box-shadow:
+                    0 0 18px rgba(255,180,30,.35),
+                    0 0 28px rgba(125,60,180,.12) !important;
+            }
+
+            /* Short Login / Join buttons without making them tiny. */
+            .navbar > .join-btn {
+                flex: 0 0 auto !important;
+                width: 108px !important;
+                min-width: 108px !important;
+                padding: 13px 16px !important;
+                box-sizing: border-box !important;
+                text-align: center !important;
+                white-space: nowrap !important;
+                font-size: 14px !important;
+            }
+
+            .navbar > .join-btn + .join-btn {
+                width: 108px !important;
+                min-width: 108px !important;
+            }
+        }
+
+        @media (max-width: 1350px) and (min-width: 1051px) {
+            .navbar {
+                gap: 10px !important;
+            }
+
+            .navbar .logo {
+                flex-basis: 105px !important;
+                width: 105px !important;
+                min-width: 105px !important;
+            }
+
+            .navbar .logo img {
+                width: 88px !important;
+                max-width: 88px !important;
+            }
+
+            .nav-links {
+                gap: 12px !important;
+            }
+
+            .nav-links li a {
+                font-size: 13px !important;
+            }
+
+            .pro-nav-btn {
+                width: 64px !important;
+                min-width: 64px !important;
+                height: 38px !important;
+                padding: 0 7px !important;
+                font-size: 11px !important;
+            }
+
+            .navbar > .join-btn,
+            .navbar > .join-btn + .join-btn {
+                width: 92px !important;
+                min-width: 92px !important;
+                padding: 12px 10px !important;
+                font-size: 13px !important;
+            }
+        }
+    </style>
+
+<style>
+/* ===== PRO NAV HOVER UNDERLINE — BOTTOM ===== */
+@media (min-width: 1051px) {
+    .nav-links li a.pro-nav-btn {
+        position: relative !important;
+        overflow: visible !important;
+    }
+
+    .nav-links li a.pro-nav-btn::after {
+        content: "" !important;
+        position: absolute !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: -11px !important;
+        top: auto !important;
+        width: 0 !important;
+        height: 3px !important;
+        border-radius: 999px !important;
+        background: #ff6a00 !important;
+        box-shadow: 0 0 8px rgba(255,106,0,.45) !important;
+        transform: translateX(-50%) !important;
+        opacity: 0 !important;
+        transition: width .25s ease, opacity .2s ease !important;
+    }
+
+    .nav-links li a.pro-nav-btn:hover::after,
+    .nav-links li a.pro-nav-btn:focus-visible::after {
+        width: 34px !important;
+        opacity: 1 !important;
+    }
+
+    /* Never let the PRO pill itself inherit the active-link underline. */
+    .nav-links li a.pro-nav-btn.active::after {
+        width: 34px !important;
+        opacity: 1 !important;
+    }
+}
+</style>
+
+<style>
+/* ===== MOBILE MENU — 4FU PRO ===== */
+.mobile-pro-item .pro-mobile-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    color: #ffd76a !important;
+    font-weight: 800 !important;
+}
+
+.mobile-pro-item .pro-mobile-link i {
+    color: #ffd044 !important;
+    font-size: 13px !important;
+}
+
+.mobile-pro-item .pro-mobile-link:hover,
+.mobile-pro-item .pro-mobile-link:focus-visible {
+    color: #fff !important;
+}
+
+@media (max-width: 1050px) {
+    /* Show PRO inside the hamburger menu */
+    .nav-links li.mobile-pro-item {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .nav-links li.mobile-pro-item .pro-mobile-link {
+        display: inline-flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        z-index: 5 !important;
+        color: #ffd76a !important;
+    }
+
+    /* Desktop PRO pill is replaced by the dedicated mobile menu item */
+    .nav-links li:has(> a.pro-nav-btn) {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1051px) {
+    .mobile-pro-item {
+        display: none !important;
+    }
+}
+</style>
+
+<style>
+/* ===== MOBILE PRO VISIBILITY FIX ===== */
+@media (max-width: 1050px) {
+    .mobile-pro-item {
+        display: block !important;
+    }
+
+    .mobile-pro-item .pro-mobile-link {
+        width: auto !important;
+        min-width: 0 !important;
+        text-decoration: none !important;
+    }
+}
+</style>
+
+<style>
+/* ===== MOBILE MENU FINAL CLEANUP ===== */
+@media (max-width: 1050px) {
+
+    /* Hide desktop Login + Join buttons from the mobile header */
+    .nav-buttons {
+        display: none !important;
+    }
+
+    /* Hide the desktop PRO pill if it exists inside the nav list */
+    .nav-links a.pro-nav-btn,
+    .nav-links li:has(a.pro-nav-btn) {
+        display: none !important;
+    }
+
+    /* Keep ONLY the dedicated mobile 4FU PRO menu item */
+    .nav-links li.mobile-pro-item {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .nav-links li.mobile-pro-item .pro-mobile-link {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        color: #ffd76a !important;
+        font-weight: 800 !important;
+        text-decoration: none !important;
+    }
+}
+
+@media (min-width: 1051px) {
+    .mobile-pro-item {
+        display: none !important;
+    }
+}
+</style>
+
+<style>
+/* ===== MOBILE HEADER: HIDE LOGIN + JOIN BUTTONS ===== */
+@media (max-width: 1050px) {
+    header .nav-buttons,
+    .navbar .nav-buttons,
+    .navbar > .nav-buttons {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+    }
+}
+</style>
+
+<style>
+/* ===== FINAL MOBILE HEADER CLEANUP ===== */
+@media (max-width: 1050px) {
+    /* The current HTML has Login/Join directly inside .navbar,
+       not inside .nav-buttons. Hide those two direct buttons. */
+    .navbar > a.join-btn,
+    .navbar > a.join-btn[href="player-login.html"],
+    .navbar > a.join-btn[href="join.html"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        position: absolute !important;
+        left: -99999px !important;
+    }
+
+    /* Keep only the hamburger menu control visible in the header. */
+    .navbar > .menu-btn {
+        display: flex !important;
+        visibility: visible !important;
+    }
+}
+</style>
+
+<style>
+/* ===== DESKTOP NAVBAR — REDUCE GAP AFTER LOGO ===== */
+@media (min-width: 1051px) {
+    .navbar {
+        justify-content: flex-start !important;
+        gap: 0 !important;
+    }
+
+    .navbar .logo {
+        flex: 0 0 118px !important;
+        width: 118px !important;
+        min-width: 118px !important;
+        margin-right: 24px !important;
+    }
+
+    .navbar .nav-links {
+        margin-left: 0 !important;
+        margin-right: 12px !important;
+        justify-content: flex-start !important;
+        gap: 18px !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+    }
+
+    .navbar .nav-links li a {
+        white-space: nowrap !important;
+    }
+}
+
+/* Slightly tighter on smaller desktop widths */
+@media (max-width: 1350px) and (min-width: 1051px) {
+    .navbar .logo {
+        flex-basis: 105px !important;
+        width: 105px !important;
+        min-width: 105px !important;
+        margin-right: 18px !important;
+    }
+
+    .navbar .nav-links {
+        gap: 13px !important;
+        margin-right: 8px !important;
+    }
+}
+</style>
+
+<style>
+/* ===== FINAL DESKTOP NAVBAR — EVEN SPACING ===== */
+@media (min-width: 1051px) {
+    .navbar {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0 !important;
+    }
+
+    .navbar .logo {
+        flex: 0 0 118px !important;
+        width: 118px !important;
+        min-width: 118px !important;
+        margin: 0 !important;
+    }
+
+    .navbar .nav-links {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        margin: 0 22px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 12px !important;
+    }
+
+    .navbar .nav-links li {
+        flex: 0 1 auto !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .navbar .nav-links li a {
+        padding: 0 !important;
+        white-space: nowrap !important;
+        font-size: 14px !important;
+    }
+
+    /* Desktop PRO remains compact but participates in the same spacing. */
+    .navbar .nav-links .pro-nav-btn {
+        width: 72px !important;
+        min-width: 72px !important;
+        height: 40px !important;
+        padding: 0 10px !important;
+        box-sizing: border-box !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+    }
+
+    .navbar .nav-buttons {
+        flex: 0 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        margin: 0 !important;
+    }
+
+    .navbar .nav-buttons .join-btn {
+        flex: 0 0 auto !important;
+        min-width: 138px !important;
+        padding: 13px 18px !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+    }
+}
+
+/* Keep the compact layout on smaller desktop widths. */
+@media (max-width: 1350px) and (min-width: 1051px) {
+    .navbar .logo {
+        flex-basis: 105px !important;
+        width: 105px !important;
+        min-width: 105px !important;
+    }
+
+    .navbar .nav-links {
+        margin-left: 14px !important;
+        margin-right: 14px !important;
+        gap: 8px !important;
+    }
+
+    .navbar .nav-links li a {
+        font-size: 12.5px !important;
+    }
+
+    .navbar .nav-links .pro-nav-btn {
+        width: 66px !important;
+        min-width: 66px !important;
+    }
+
+    .navbar .nav-buttons .join-btn {
+        min-width: 108px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        font-size: 13px !important;
+    }
+}
+</style>
 </head>
 
 <body>
 
-    <header>
+<header>
+
         <nav class="navbar">
 
             <div class="logo">
@@ -151,9 +1021,9 @@
 
             <ul class="nav-links">
 
-                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="index.html">Home</a></li>
 
-                <li><a href="team.html">Team</a></li>
+                <li><a href="team.html" class="active">Team</a></li>
 
                 <li><a href="tournaments.html">Tournaments</a></li>
 
@@ -174,22 +1044,37 @@
                 <li><a href="check-status.html">Check Status</a></li>
 
                 <li><a href="contact.html">Contact</a></li>
+                <li class="mobile-pro-item">
+                    <a href="pro-info.html" class="pro-mobile-link">
+                        <i class="fa-solid fa-crown"></i>
+                        4FU PRO
+                    </a>
+                </li>
+
+                <li>
+                    <a href="pro-info.html" class="pro-nav-btn">
+                        <i class="fa-solid fa-crown"></i>
+                        PRO
+                    </a>
+                </li>
 
                 <li class="mobile-player-login">
                     <a href="player-login.html">Player Login</a>
                 </li>
 
+                
+
             </ul>
 
-            <div class="nav-buttons">
-                <a href="player-login.html" class="join-btn">
+
+
+            <a href="player-login.html" class="join-btn">
                     Player Login
                 </a>
 
-                <a href="join.html" class="join-btn">
+            <a href="join.html" class="join-btn">
                     Join Team
                 </a>
-            </div>
 
             <div class="menu-btn">
 
@@ -198,67 +1083,227 @@
             </div>
 
         </nav>
+
     </header>
 
-    <header class="team-header">
-        <h1>OUR TEAM</h1>
-        <p>Meet The Warriors Of 4 FIRE UNITED</p>
-    </header>
+<header class="team-header">
+    <h1>OUR TEAM</h1>
+    <p>Meet The Warriors Of 4 FIRE UNITED</p>
+</header>
 
-    <section class="team-grid" id="team-grid">
-        <!-- Players Load Here -->
-    </section>
+<section class="team-grid" id="team-grid">
+    <!-- Players Load Here -->
+</section>
 
-    <footer>
-        <h2>4 FIRE UNITED</h2>
-        <p>Forged In Fire. United In Victory.</p>
-        <div class="footer-social">
-            <a id="instagramLink" href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-            <a id="youtubeLink" href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-            <a id="discordLink" href="#" target="_blank"><i class="fa-brands fa-discord"></i></a>
-            <a id="facebookLink" href="#" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+<footer>
+    <h2>4 FIRE UNITED</h2>
+    <p>Forged In Fire. United In Victory.</p>
+
+    <div class="footer-social">
+        <a id="instagramLink" href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+        <a id="youtubeLink" href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+        <a id="discordLink" href="#" target="_blank"><i class="fa-brands fa-discord"></i></a>
+        <a id="facebookLink" href="#" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+    </div>
+
+    <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="team.html">Team</a>
+        <a href="tournaments.html">Tournament</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="clips.html">Clips</a>
+        <a href="join.html">Join Us</a>
+        <a href="check-status.html">Check Status</a>
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <p class="copyright">© <span id="year"></span> 4 FIRE UNITED. All Rights Reserved.</p>
+</footer>
+
+<script src="js/main.js?v=1783829699314"></script>
+<script src="js/animation.js?v=1783829699314"></script>
+<script src="js/particles.js?v=1783829699314"></script>
+<script src="js/fire-border.js?v=1783829699314"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
+
+<script src="js/firebase.js?v=1783829699314"></script>
+<script src="js/settings-loader.js?v=1783829699314"></script>
+
+<script>
+/* =========================================================
+   4FU TEAM DATA + ELITE CARD EFFECTS
+   Firebase structure/order preserved.
+   ========================================================= */
+
+db.collection("players")
+.get()
+.then((snapshot) => {
+
+    const team = document.getElementById("team-grid");
+
+    if (!team) return;
+
+    team.innerHTML = "";
+
+    const allPlayers = [];
+
+    snapshot.forEach((doc) => {
+        allPlayers.push({
+            id: doc.id,
+            ...doc.data()
+        });
+    });
+
+    allPlayers.sort((a, b) => {
+
+        if (a.owner === true) return -1;
+        if (b.owner === true) return 1;
+
+        const orderA = Number(a.displayOrder || 9999);
+        const orderB = Number(b.displayOrder || 9999);
+
+        if (orderA !== orderB) {
+            return orderA - orderB;
+        }
+
+        const createA = a.createdAt?.toMillis
+            ? a.createdAt.toMillis()
+            : new Date(a.createdAt || 0).getTime();
+
+        const createB = b.createdAt?.toMillis
+            ? b.createdAt.toMillis()
+            : new Date(b.createdAt || 0).getTime();
+
+        return createA - createB;
+    });
+
+    allPlayers.forEach((p, index) => {
+
+        const rarity = p.owner
+            ? "LEGENDARY • OWNER"
+            : (Number(p.level || 0) >= 70 ? "ELITE" : "EPIC");
+
+        team.innerHTML += `
+
+        <div class="team-card ${p.owner ? 'owner-card' : ''}"
+             data-player-id="${p.id}"
+             data-index="${index + 1}">
+
+            <div class="pc-scan"></div>
+
+            <div class="pc-hud">
+                <span class="pc-brand">4 FIRE UNITED</span>
+                <span class="pc-rarity">${rarity}</span>
+            </div>
+
+            <div class="pc-particles">
+                <i></i><i></i><i></i><i></i><i></i>
+            </div>
+
+            <div class="player-image">
+
+                <img src="${p.image || 'images/logo/logo.png'}"
+                     alt="${p.ign || p.name || '4FU Player'}"
+                     loading="lazy"
+                     onerror="this.onerror=null;this.src='images/logo/logo.png';">
+
+                ${p.owner ? `
+                    <div class="owner-crown">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                ` : ""}
+
+            </div>
+
+            <div class="team-info">
+
+                <div class="owner-name">
+
+                    ${p.owner ? `
+                        <span class="owner-tag">
+                            <i class="fa-solid fa-crown"></i>
+                            TEAM OWNER
+                        </span>
+                    ` : ""}
+
+                    <h2>${p.ign || p.name || "4FU PLAYER"}</h2>
+
+                </div>
+
+                <span>${p.role || "PLAYER"}</span>
+
+                <div class="mini-stats">
+                    <p>❤️ Level ${p.level || "-"}</p>
+                    <p>🎯 HS ${p.headshot || "-"}</p>
+                    <p>⚔️ KD ${p.kd || "-"}</p>
+                </div>
+
+                <a href="players/player.html?id=${p.id}" class="btn1">
+                    View Profile
+                </a>
+
+            </div>
+
         </div>
-        <div class="footer-links">
-            <a href="index.html">Home</a>
-            <a href="team.html">Team</a>
-            <a href="tournaments.html">Tournament</a>
-            <a href="gallery.html">Gallery</a>
-            <a href="clips.html">Clips</a>
-            <a href="join.html">Join Us</a>
-            <a href="check-status.html">Check Status</a>
-            <a href="contact.html">Contact</a>
-        </div>
-        <p class="copyright">© <span id="year"></span> 4 FIRE UNITED. All Rights Reserved.</p>
-    </footer>
+        `;
+    });
 
-    <script src="js/main.js?v=1783829699314"></script>
-    <script src="js/animation.js?v=1783829699314"></script>
-    <script src="js/particles.js?v=1783829699314"></script>
-    <script src="js/fire-border.js?v=1783829699314"></script>
+    /* High-level desktop 3D tilt */
+    const cards = team.querySelectorAll(".team-card");
 
-    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js?v=1783829699314"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js?v=1783829699314"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js?v=1783829699314"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js?v=1783829699314"></script>
+    cards.forEach((card) => {
 
-    <script src="js/firebase.js?v=1783829699314"></script>
-    <script src="js/settings-loader.js?v=1783829699314"></script>
+        card.addEventListener("pointermove", (event) => {
 
-    <!-- IMPORTANT: API service must load BEFORE team.js -->
-    <script src="js/freeFireService.js?v=1783829699314"></script>
-    <script src="js/team.js?v=1783829699314"></script>
-    <script>
-        (() => {
-            const is4FUAndroidApp =
-                /Android/i.test(navigator.userAgent) &&
-                /;\s*wv\)/i.test(navigator.userAgent);
+            if (window.innerWidth <= 900) return;
+            if (event.pointerType === "touch") return;
 
-            if (is4FUAndroidApp) {
-                document.body.classList.add("is-4fu-app");
-            }
-        })();
-    </script>
+            const rect = card.getBoundingClientRect();
+
+            const x = (event.clientX - rect.left) / rect.width;
+            const y = (event.clientY - rect.top) / rect.height;
+
+            const rotateX = (0.5 - y) * 9;
+            const rotateY = (x - 0.5) * 11;
+
+            card.style.transform =
+                `perspective(1400px)
+                 rotateX(${rotateX}deg)
+                 rotateY(${rotateY}deg)
+                 translateY(-10px)
+                 scale(1.018)`;
+
+            card.style.borderColor = card.classList.contains("owner-card")
+                ? "rgba(255,196,67,.9)"
+                : "rgba(255,106,0,.75)";
+
+            card.style.boxShadow = card.classList.contains("owner-card")
+                ? "0 28px 70px rgba(0,0,0,.65), 0 0 42px rgba(255,174,38,.22)"
+                : "0 28px 70px rgba(0,0,0,.65), 0 0 42px rgba(255,106,0,.22)";
+        });
+
+        card.addEventListener("pointerleave", () => {
+
+            card.style.transform =
+                "perspective(1400px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)";
+
+            card.style.borderColor = card.classList.contains("owner-card")
+                ? "rgba(255,191,67,.58)"
+                : "rgba(255,106,0,.18)";
+
+            card.style.boxShadow = "";
+        });
+    });
+
+})
+.catch((error) => {
+    console.error("Firestore Error:", error);
+});
+</script>
 
 </body>
-
 </html>

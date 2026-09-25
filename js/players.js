@@ -3246,3 +3246,111 @@ if (
 
 
 })();
+
+
+/* =========================================================
+   4FU PRO — PREMIUM PUBLIC PROFILE BADGE
+   ADDITION ONLY — existing profile/game-center logic untouched.
+========================================================= */
+(function(){
+    "use strict";
+
+    const FOURFU_PRO_API =
+        "https://4fu-freefire-backend.4fu-freefire-backend.workers.dev";
+
+    function getPublicPlayerId(){
+        try{
+            const params = new URLSearchParams(window.location.search);
+            return String(params.get("id") || "").trim();
+        }catch{
+            return "";
+        }
+    }
+
+    function addBadge(){
+        const nameEl = document.getElementById("player-name");
+        if(!nameEl) return;
+
+        if(document.getElementById("fourfuProProfileBadge")) return;
+
+        const badge = document.createElement("div");
+        badge.id = "fourfuProProfileBadge";
+        badge.className = "fourfu-pro-profile-badge";
+        badge.setAttribute("role","status");
+        badge.setAttribute("aria-label","4FU PRO Active");
+        badge.title = "4FU PRO ACTIVE";
+
+        badge.innerHTML = `
+            <span class="fourfu-pro-badge-orbit"></span>
+            <span class="fourfu-pro-badge-crown">
+                <i class="fa-solid fa-crown"></i>
+            </span>
+            <span class="fourfu-pro-badge-copy">
+                <strong>4FU PRO</strong>
+                <small>PREMIUM MEMBER</small>
+            </span>
+            <span class="fourfu-pro-badge-spark spark-1"></span>
+            <span class="fourfu-pro-badge-spark spark-2"></span>
+            <span class="fourfu-pro-badge-spark spark-3"></span>
+            <span class="fourfu-pro-badge-spark spark-4"></span>
+        `;
+
+        /* Put the badge ABOVE the player name.
+           It is outside #player-name, so live name updates cannot remove it. */
+        nameEl.parentNode.insertBefore(badge, nameEl);
+    }
+
+    async function checkPro(){
+        const playerId = getPublicPlayerId();
+        if(!playerId) return;
+
+        try{
+            const response = await fetch(
+                FOURFU_PRO_API +
+                "/pro/public-status?playerId=" +
+                encodeURIComponent(playerId) +
+                "&_=" + Date.now(),
+                {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    },
+                    cache: "no-store"
+                }
+            );
+
+            const data = await response.json().catch(() => null);
+
+            if(
+                response.ok &&
+                data &&
+                data.success === true &&
+                data.proActive === true
+            ){
+                addBadge();
+            }
+        }catch(error){
+            console.warn(
+                "[4FU PRO] Public profile badge check failed:",
+                error
+            );
+        }
+    }
+
+    function start(){
+        checkPro();
+
+        /* Profile/live data can replace DOM content after first load,
+           so retry without requiring visitor login. */
+        setTimeout(checkPro, 800);
+        setTimeout(checkPro, 1800);
+        setTimeout(checkPro, 3500);
+    }
+
+    if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", start, { once:true });
+    }else{
+        start();
+    }
+})();
+

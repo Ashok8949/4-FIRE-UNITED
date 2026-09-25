@@ -1101,6 +1101,230 @@ footer::before{
 }
 </style>
 
+
+<style id="fourfu-index-exact-navbar">
+/* =========================================================
+   4FU NAVBAR — MATCH INDEX / TEAM EXACTLY
+   This override is intentionally scoped to the navbar only.
+   Existing Clips/Firebase/content code is untouched.
+========================================================= */
+
+.nav-pro-link,
+.pro-mobile-link,
+.pro-nav-btn {
+    text-decoration:none !important;
+}
+
+/* Desktop PRO pill */
+@media (min-width:1051px) {
+    .navbar {
+        display:flex !important;
+        align-items:center !important;
+        width:100% !important;
+        padding-left:70px !important;
+        padding-right:70px !important;
+        gap:0 !important;
+    }
+
+    .navbar .logo {
+        flex:0 0 190px !important;
+        width:190px !important;
+        min-width:190px !important;
+        margin:0 !important;
+    }
+
+    .navbar .nav-links {
+        flex:1 1 auto !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:flex-start !important;
+        gap:11px !important;
+        margin:0 !important;
+        padding:0 !important;
+        min-width:0 !important;
+    }
+
+    .navbar .nav-links li {
+        flex:0 0 auto !important;
+        margin:0 !important;
+        padding:0 !important;
+    }
+
+    .navbar .nav-links li a {
+        white-space:nowrap !important;
+        font-size:14px !important;
+        line-height:1 !important;
+        padding-left:0 !important;
+        padding-right:0 !important;
+    }
+
+    .navbar .pro-nav-btn {
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:6px !important;
+        height:38px !important;
+        min-width:72px !important;
+        padding:0 13px !important;
+        border:1px solid rgba(255,193,7,.72) !important;
+        border-radius:999px !important;
+        color:#ffd34e !important;
+        background:linear-gradient(135deg,rgba(255,174,0,.12),rgba(92,42,118,.24)) !important;
+        box-shadow:0 0 14px rgba(255,174,0,.10),inset 0 0 12px rgba(255,255,255,.025) !important;
+        font-weight:800 !important;
+        white-space:nowrap !important;
+        flex:0 0 auto !important;
+    }
+
+    .navbar .pro-nav-btn i {
+        font-size:11px !important;
+        color:#ffd34e !important;
+    }
+
+    .navbar .pro-nav-btn:hover {
+        transform:translateY(-2px) !important;
+        box-shadow:0 0 22px rgba(255,174,0,.24) !important;
+        border-color:#ffd34e !important;
+    }
+
+    .navbar .pro-nav-btn {
+        position:relative !important;
+        overflow:visible !important;
+    }
+
+    .navbar .pro-nav-btn::after {
+        content:"" !important;
+        position:absolute !important;
+        left:50% !important;
+        bottom:-11px !important;
+        width:0 !important;
+        height:3px !important;
+        border-radius:999px !important;
+        background:#ff6a00 !important;
+        box-shadow:0 0 8px rgba(255,106,0,.45) !important;
+        transform:translateX(-50%) !important;
+        opacity:0 !important;
+        transition:width .25s ease,opacity .2s ease !important;
+    }
+
+    .navbar .pro-nav-btn:hover::after,
+    .navbar .pro-nav-btn:focus-visible::after,
+    .navbar .pro-nav-btn.active::after {
+        width:34px !important;
+        opacity:1 !important;
+    }
+
+    .navbar .nav-buttons {
+        flex:0 0 auto !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:flex-end !important;
+        gap:10px !important;
+        margin-left:16px !important;
+    }
+
+    .navbar .nav-buttons .join-btn {
+        white-space:nowrap !important;
+        padding-left:20px !important;
+        padding-right:20px !important;
+    }
+
+    .navbar .mobile-pro-item {
+        display:none !important;
+    }
+}
+
+/* Same compact compression as the working index/team navbar. */
+@media (min-width:1051px) and (max-width:1500px) {
+    .navbar {
+        padding-left:45px !important;
+        padding-right:45px !important;
+    }
+
+    .navbar .logo {
+        flex-basis:165px !important;
+        width:165px !important;
+        min-width:165px !important;
+    }
+
+    .navbar .nav-links {
+        gap:8px !important;
+    }
+
+    .navbar .nav-links li a {
+        font-size:12.5px !important;
+    }
+
+    .navbar .nav-buttons {
+        gap:7px !important;
+        margin-left:10px !important;
+    }
+
+    .navbar .nav-buttons .join-btn {
+        padding-left:15px !important;
+        padding-right:15px !important;
+    }
+
+    .navbar .pro-nav-btn {
+        min-width:66px !important;
+        padding-left:10px !important;
+        padding-right:10px !important;
+    }
+}
+
+/* Mobile = hamburger + 4FU PRO + Player Login inside menu, exactly like index/team. */
+@media (max-width:1050px) {
+    .navbar .nav-buttons {
+        display:none !important;
+    }
+
+    .navbar .pro-nav-btn,
+    .navbar .nav-links li:has(> a.pro-nav-btn) {
+        display:none !important;
+    }
+
+    .navbar .mobile-pro-item {
+        display:block !important;
+        visibility:visible !important;
+        opacity:1 !important;
+        height:auto !important;
+        max-height:none !important;
+        overflow:visible !important;
+        margin-top:3px !important;
+    }
+
+    .navbar .mobile-pro-item .pro-mobile-link {
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:8px !important;
+        color:#ffd76a !important;
+        font-weight:800 !important;
+        text-decoration:none !important;
+    }
+
+    .navbar .mobile-pro-item .pro-mobile-link i {
+        color:#ffd044 !important;
+        font-size:13px !important;
+    }
+
+    .navbar .mobile-player-login {
+        display:block !important;
+    }
+
+    .navbar .menu-btn {
+        display:flex !important;
+        visibility:visible !important;
+    }
+}
+
+@media (max-width:600px) {
+    .navbar .nav-buttons {
+        display:none !important;
+    }
+}
+</style>
+
 </head>
 
 <body>
@@ -1140,6 +1364,20 @@ footer::before{
                 <li><a href="check-status.html">Check Status</a></li>
 
                 <li><a href="contact.html">Contact</a></li>
+
+                <li class="mobile-pro-item">
+                    <a href="pro-info.html" class="pro-mobile-link">
+                        <i class="fa-solid fa-crown"></i>
+                        4FU PRO
+                    </a>
+                </li>
+
+                <li>
+                    <a href="pro-info.html" class="pro-nav-btn">
+                        <i class="fa-solid fa-crown"></i>
+                        PRO
+                    </a>
+                </li>
 
                 <li class="mobile-player-login">
                     <a href="player-login.html">Player Login</a>

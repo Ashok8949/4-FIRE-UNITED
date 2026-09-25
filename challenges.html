@@ -864,6 +864,207 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 </style>
 
+
+<style>
+/* ===== 4FU NAVBAR — SAME AS INDEX ===== */
+@media (min-width: 1051px) {
+    .navbar {
+        width: 100% !important;
+        box-sizing: border-box;
+        gap: 14px !important;
+    }
+
+    .navbar .logo {
+        flex: 0 0 118px !important;
+        width: 118px !important;
+        min-width: 118px !important;
+    }
+
+    .navbar .logo img {
+        width: 96px !important;
+        max-width: 96px !important;
+        max-height: 70px !important;
+    }
+
+    .nav-links {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        width: auto !important;
+        gap: 17px !important;
+        justify-content: flex-end !important;
+        overflow: visible !important;
+    }
+
+    .nav-links li { flex: 0 0 auto !important; }
+
+    .nav-links li a {
+        padding: 0 !important;
+        font-size: 15px !important;
+        white-space: nowrap !important;
+        letter-spacing: 0 !important;
+    }
+
+    .pro-nav-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        width: 70px !important;
+        min-width: 70px !important;
+        height: 40px !important;
+        padding: 0 10px !important;
+        box-sizing: border-box !important;
+        border: 1px solid rgba(255, 190, 40, .72) !important;
+        border-radius: 22px !important;
+        color: #ffd76a !important;
+        background: linear-gradient(135deg, rgba(255,166,0,.15), rgba(111,48,150,.20)) !important;
+        box-shadow: 0 0 12px rgba(255,170,0,.16), inset 0 0 8px rgba(255,255,255,.03) !important;
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        line-height: 1 !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        position: relative !important;
+        text-decoration: none !important;
+    }
+
+    .pro-nav-btn i {
+        font-size: 10px !important;
+        color: #ffd044 !important;
+        flex-shrink: 0 !important;
+    }
+
+    .pro-nav-btn:hover {
+        color: #fff !important;
+        border-color: #ffc107 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 0 18px rgba(255,180,30,.35), 0 0 28px rgba(125,60,180,.12) !important;
+    }
+
+    /* PRO hover/focus underline must appear UNDER the pill. */
+    .nav-links li a.pro-nav-btn::after {
+        content: "" !important;
+        position: absolute !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: -11px !important;
+        top: auto !important;
+        width: 0 !important;
+        height: 3px !important;
+        border-radius: 999px !important;
+        background: #ff6a00 !important;
+        box-shadow: 0 0 8px rgba(255,106,0,.45) !important;
+        transform: translateX(-50%) !important;
+        opacity: 0 !important;
+        transition: width .25s ease, opacity .2s ease !important;
+    }
+
+    .nav-links li a.pro-nav-btn:hover::after,
+    .nav-links li a.pro-nav-btn:focus-visible::after {
+        width: 34px !important;
+        opacity: 1 !important;
+    }
+
+    .navbar > .join-btn {
+        flex: 0 0 auto !important;
+        width: 108px !important;
+        min-width: 108px !important;
+        padding: 13px 16px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        font-size: 14px !important;
+    }
+
+    .navbar > .join-btn + .join-btn {
+        width: 108px !important;
+        min-width: 108px !important;
+    }
+
+    .mobile-pro-item { display: none !important; }
+}
+
+@media (max-width: 1350px) and (min-width: 1051px) {
+    .navbar { gap: 10px !important; }
+
+    .navbar .logo {
+        flex-basis: 105px !important;
+        width: 105px !important;
+        min-width: 105px !important;
+    }
+
+    .navbar .logo img {
+        width: 88px !important;
+        max-width: 88px !important;
+    }
+
+    .nav-links { gap: 12px !important; }
+    .nav-links li a { font-size: 13px !important; }
+
+    .pro-nav-btn {
+        width: 64px !important;
+        min-width: 64px !important;
+        height: 38px !important;
+        padding: 0 7px !important;
+        font-size: 11px !important;
+    }
+
+    .navbar > .join-btn,
+    .navbar > .join-btn + .join-btn {
+        width: 92px !important;
+        min-width: 92px !important;
+        padding: 12px 10px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* ===== MOBILE MENU — SAME AS INDEX ===== */
+.mobile-pro-item .pro-mobile-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    color: #ffd76a !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+}
+
+.mobile-pro-item .pro-mobile-link i {
+    color: #ffd044 !important;
+    font-size: 13px !important;
+}
+
+@media (max-width: 1050px) {
+    .nav-links li.mobile-pro-item {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .nav-links li:has(> a.pro-nav-btn) {
+        display: none !important;
+    }
+
+    .navbar > .join-btn {
+        display: none !important;
+    }
+
+    .nav-links a.pro-nav-btn,
+    .nav-links li:has(a.pro-nav-btn) {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1051px) {
+    .mobile-pro-item { display: none !important; }
+}
+</style>
+
 </head>
 
 
@@ -881,7 +1082,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <header>
 
-         <nav class="navbar">
+        <nav class="navbar">
 
             <div class="logo">
                 <a href="index.html">
@@ -891,12 +1092,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
             <ul class="nav-links">
 
-                <li><a href="index.html" class="active">Home</a></li>
-
+                <li><a href="index.html">Home</a></li>
                 <li><a href="team.html">Team</a></li>
-
                 <li><a href="tournaments.html">Tournaments</a></li>
-
                 <li><a href="gallery.html">Gallery</a></li>
 
                 <li>
@@ -906,14 +1104,24 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                 </li>
 
                 <li><a href="clips.html">Clips</a></li>
-
-                <li><a href="challenges.html">Challenges</a></li>
-
+                <li><a href="challenges.html" class="active">Challenges</a></li>
                 <li><a href="join.html">Join Us</a></li>
-
                 <li><a href="check-status.html">Check Status</a></li>
-
                 <li><a href="contact.html">Contact</a></li>
+
+                <li class="mobile-pro-item">
+                    <a href="pro-info.html" class="pro-mobile-link">
+                        <i class="fa-solid fa-crown"></i>
+                        4FU PRO
+                    </a>
+                </li>
+
+                <li>
+                    <a href="pro-info.html" class="pro-nav-btn">
+                        <i class="fa-solid fa-crown"></i>
+                        PRO
+                    </a>
+                </li>
 
                 <li class="mobile-player-login">
                     <a href="player-login.html">Player Login</a>
@@ -921,20 +1129,16 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
             </ul>
 
-            <div class="nav-buttons">
-                <a href="player-login.html" class="join-btn">
-                    Player Login
-                </a>
+            <a href="player-login.html" class="join-btn">
+                Login
+            </a>
 
-                <a href="join.html" class="join-btn">
-                    Join Team
-                </a>
-            </div>
+            <a href="join.html" class="join-btn">
+                Join
+            </a>
 
             <div class="menu-btn">
-
                 <i class="fa-solid fa-bars"></i>
-
             </div>
 
         </nav>

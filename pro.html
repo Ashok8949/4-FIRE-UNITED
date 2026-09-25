@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4FU PRO • Premium Player Hub</title>
+<link rel="stylesheet" href="./CSS/pro.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style id="4fu-pro-new-theme-working">
+body[data-theme="royal"]{--accent:#f5cf67;--accent2:#fff1a6;--gold:#f5cf67}
+body[data-theme="crimson"]{--accent:#ff536d;--accent2:#b40f32;--gold:#ff9b9b}
+body[data-theme="ice"]{--accent:#70ddff;--accent2:#3562ff;--gold:#dffcff}
+body[data-theme="galaxy"]{--accent:#b58cff;--accent2:#6f55ff;--gold:#f39cff}
+body[data-theme="toxic"]{--accent:#9cff4a;--accent2:#20d879;--gold:#e7ff8c}
+body[data-theme="ember"]{--accent:#ff8a3d;--accent2:#ff4d2e;--gold:#ffe0a1}
+body[data-motion="aggressive"] .glass{transition:transform .18s ease,box-shadow .18s ease}
+body[data-motion="aggressive"] .glass:hover{transform:translateY(-4px)}
+body[data-motion="smooth"] .glass{transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease}
+body[data-motion="minimal"] .glass{transition:none}
+</style>
+</head>
+<body>
+<div class="ambient"><i></i><i></i><i></i><i></i></div>
+<header class="topbar">
+  <a class="brand" href="./player-dashboard.html"><span class="brand-mark">4</span><span><b>FIRE UNITED</b><small>PRO PLAYER HUB</small></span></a>
+  <div class="top-actions">
+  <a href="./player-dashboard.html" class="ghost-btn"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
+  <button id="getProBtn" class="primary-btn" type="button"><i class="fa-solid fa-crown"></i> Get PRO ₹49</button>
+  <button id="sharePro" class="primary-btn" style="display:none"><i class="fa-solid fa-share-nodes"></i> Share PRO</button>
+</div>
+</header>
+
+<div id="proPaywall" class="pro-paywall" hidden>
+  <div class="pro-paywall-card">
+    <div class="pro-paywall-badge"><i class="fa-solid fa-crown"></i></div>
+    <span class="overline">4FU PREMIUM</span>
+    <h1>Unlock 4FU PRO</h1>
+    <p>King Profile, premium themes, analytics, achievements, PRO card + QR and all PRO features.</p>
+    <div class="pro-price"><b>₹49</b><span>/ month</span></div>
+    <div class="pro-benefits">
+      <span>👑 PRO Profile</span><span>📊 Advanced Stats</span><span>🎴 Premium Share Card</span><span>🏆 PRO Achievements</span>
+    </div>
+    <button id="payProBtn" class="primary-btn pro-pay-btn" type="button">
+      <i class="fa-solid fa-lock-open"></i> Start PRO — ₹49/month
+    </button>
+    <small id="proPayStatus">Secure payment via Razorpay</small>
+  </div>
+</div>
+<style>
+  .pro-paywall[hidden]{display:none!important}
+  .pro-paywall{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:rgba(5,7,12,.88);backdrop-filter:blur(18px)}
+  .pro-paywall-card{width:min(560px,100%);padding:34px;border:1px solid rgba(255,255,255,.14);border-radius:28px;background:linear-gradient(145deg,rgba(25,28,38,.98),rgba(9,11,17,.98));box-shadow:0 30px 100px rgba(0,0,0,.55);text-align:center}
+  .pro-paywall-badge{width:76px;height:76px;margin:0 auto 16px;display:grid;place-items:center;border-radius:50%;font-size:30px;background:rgba(255,255,255,.08)}
+  .pro-paywall-card h1{margin:8px 0;font-size:clamp(30px,6vw,48px)}
+  .pro-paywall-card p{margin:10px auto 20px;max-width:470px;opacity:.75;line-height:1.6}
+  .pro-price{display:flex;justify-content:center;align-items:baseline;gap:8px;margin:18px 0}
+  .pro-price b{font-size:42px}.pro-price span{opacity:.65}
+  .pro-benefits{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px 0 24px}
+  .pro-benefits span{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);font-size:13px}
+  .pro-pay-btn{min-width:250px}.pro-paywall-card small{display:block;margin-top:12px;opacity:.55}
+  body.pro-locked>main{filter:blur(7px);pointer-events:none;user-select:none}
+</style>
+
+<main class="shell">
+  <section class="hero glass">
+    <div class="hero-copy"><div class="avatar"><div class="aura"></div><img id="proAvatar" src="./images/logo/logo.png" alt="Player"><span class="pro-mark"><i class="fa-solid fa-gem"></i> PRO</span></div>
+      <div class="identity"><span class="overline"><b class="pulse"></b> 4FU PRO MEMBER</span><h1 id="proName">PLAYER</h1><p id="proRole">PLAYER</p><div class="live-meta"><span id="proUid">UID —</span><span id="proRank">RANK —</span><span id="proLevelReal">LV —</span></div><div class="chips"><span id="proTitle" class="chip accent">PRO</span><span class="chip">PRO MEMBER</span><span id="proLevelChip" class="chip">LEVEL 1</span></div></div>
+    </div>
+    <div class="hero-right"><div class="membership"><span>MEMBERSHIP</span><b>4FU PRO</b><small id="proDays">Active</small></div><div class="xp-head"><span><b id="xpValue">0</b> XP</span><span>LEVEL <b id="levelValue">1</b></span></div><div class="xp-track"><i id="xpBar"></i></div><div class="xp-foot"><span id="xpCurrent">0 / 1000 XP</span><span>Next level</span></div></div>
+  </section>
+
+  <section class="quick-grid"><article class="quick glass"><span class="q-icon"><i class="fa-solid fa-crosshairs"></i></span><div><small>LIVE K/D</small><b id="quickKd">—</b></div></article><article class="quick glass"><span class="q-icon"><i class="fa-solid fa-bullseye"></i></span><div><small>HEADSHOT</small><b id="quickHs">—</b></div></article><article class="quick glass"><span class="q-icon"><i class="fa-solid fa-trophy"></i></span><div><small>BOOYAH</small><b id="quickWins">—</b></div></article><article class="quick glass"><span class="q-icon"><i class="fa-solid fa-gamepad"></i></span><div><small>MATCHES</small><b id="quickMatches">—</b></div></article></section><section class="quick-grid secondary-quick">
+    <article class="quick glass"><span class="q-icon"><i class="fa-solid fa-trophy"></i></span><div><small>ACHIEVEMENTS</small><b id="achievements">0</b></div></article>
+    <article class="quick glass"><span class="q-icon"><i class="fa-solid fa-eye"></i></span><div><small>PROFILE VIEWS</small><b id="views">0</b></div></article>
+    <article class="quick glass"><span class="q-icon"><i class="fa-solid fa-swords"></i></span><div><small>BATTLES</small><b id="battles">0</b></div></article>
+    <article class="quick glass"><span class="q-icon"><i class="fa-solid fa-fire"></i></span><div><small>STREAK</small><b id="streak">0 DAYS</b></div></article>
+  </section>
+
+  <section class="surprise glass">
+    <div class="section-title"><div><span class="overline">PRO DROP SYSTEM</span><h2>Something special is waiting.</h2><p>PRO members can unlock rotating surprises, limited rewards and milestone drops.</p></div><span class="drop-icon"><i class="fa-solid fa-gift"></i></span></div>
+    <div class="drop-grid">
+      <div class="drop-card featured"><span class="drop-label">TODAY'S DROP</span><h3 id="dropTitle">Mystery PRO Drop</h3><p id="dropText">Open your daily surprise.</p><button id="openDrop" class="primary-btn"><i class="fa-solid fa-unlock"></i> Open Drop</button></div>
+      <div class="drop-card"><span class="drop-label">PRO STREAK</span><h3 id="streakLabel">7 DAY TRACK</h3><div class="days" id="streakDays"></div><small id="streakReward">Reach your next milestone for a surprise.</small></div>
+      <div class="drop-card"><span class="drop-label">SECRET MISSION</span><h3 id="secretTitle">???</h3><p id="secretText">A hidden mission can appear here.</p><button id="secretBtn" class="ghost-btn small-btn">Reveal</button></div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <article class="panel glass"><div class="section-title"><div><span class="overline">PLAYER INTELLIGENCE</span><h2>Performance Lab</h2></div><i class="fa-solid fa-chart-line section-icon"></i></div><div class="performance">
+      <div class="perf-row"><span>K/D</span><b id="kd">—</b><div class="mini-track"><i id="kdBar"></i></div></div>
+      <div class="perf-row"><span>Headshot</span><b id="headshot">—</b><div class="mini-track"><i id="hsBar"></i></div></div>
+      <div class="perf-row"><span>Booyah</span><b id="booyah">—</b><div class="mini-track"><i id="booyahBar"></i></div></div>
+      <div class="perf-row"><span>Matches</span><b id="matches">—</b><div class="mini-track"><i id="matchesBar"></i></div></div></div><div class="insight-strip"><div><small>FORM</small><b id="formScore">—</b></div><div><small>CONSISTENCY</small><b id="consistency">—</b></div><div><small>XP PROGRESS</small><b id="visitorXp">0%</b></div></div></article>
+    <article class="panel glass"><div class="section-title"><div><span class="overline">PRO COLLECTION</span><h2>Achievements</h2></div><i class="fa-solid fa-medal section-icon"></i></div><div id="achievementGrid" class="achievement-grid"></div></article>
+  </section>
+
+  <section class="panel glass themes">
+  <div class="section-title">
+    <div>
+      <span class="overline">IDENTITY LAB • THEME LIBRARY</span>
+      <h2>Signature Themes</h2>
+      <p>Theme sirf PRO cards, stats aur data surfaces ko style karegi — public profile ka original banner/background same rahega.</p>
+    </div>
+    <i class="fa-solid fa-palette section-icon"></i>
+  </div>
+  <div class="theme-filter" role="tablist" aria-label="Theme categories">
+    <button type="button" class="theme-filter-btn active" data-theme-filter="all">ALL</button>
+    <button type="button" class="theme-filter-btn" data-theme-filter="dark">DARK</button>
+    <button type="button" class="theme-filter-btn" data-theme-filter="neon">NEON</button>
+    <button type="button" class="theme-filter-btn" data-theme-filter="royal">ROYAL</button>
+    <button type="button" class="theme-filter-btn" data-theme-filter="element">ELEMENT</button>
+  </div>
+  <div class="theme-grid pro-theme-library">
+    <button class="theme active" data-theme="obsidian" data-theme-cat="dark"><span class="swatch obsidian"></span><b>Obsidian</b><small>Stealth / premium</small></button>
+    <button class="theme" data-theme="void" data-theme-cat="dark"><span class="swatch void"></span><b>Void</b><small>Dark elite</small></button>
+    <button class="theme" data-theme="aurora" data-theme-cat="neon"><span class="swatch aurora"></span><b>Aurora</b><small>Luxury glow</small></button>
+    <button class="theme" data-theme="cyber" data-theme-cat="neon"><span class="swatch cyber"></span><b>Cyber Pulse</b><small>Neon esports</small></button>
+    <button class="theme" data-theme="inferno" data-theme-cat="element"><span class="swatch inferno"></span><b>Inferno</b><small>Fire energy</small></button>
+    <button class="theme" data-theme="royal" data-theme-cat="royal"><span class="swatch royal"></span><b>Royal Gold</b><small>King / champion</small></button>
+    <button class="theme" data-theme="crimson" data-theme-cat="element"><span class="swatch crimson"></span><b>Crimson</b><small>Blood-red esports</small></button>
+    <button class="theme" data-theme="ice" data-theme-cat="element"><span class="swatch ice"></span><b>Ice Frost</b><small>Cold precision</small></button>
+    <button class="theme" data-theme="galaxy" data-theme-cat="neon"><span class="swatch galaxy"></span><b>Galaxy</b><small>Cosmic elite</small></button>
+    <button class="theme" data-theme="toxic" data-theme-cat="neon"><span class="swatch toxic"></span><b>Toxic Neon</b><small>High-voltage green</small></button>
+    <button class="theme" data-theme="ember" data-theme-cat="element"><span class="swatch ember"></span><b>Ember</b><small>Hot core</small></button>
+  </div>
+</section>
+
+
+<section class="panel glass pro-studio-panel">
+  <div class="section-title">
+    <div>
+      <span class="overline">PUBLIC PROFILE STUDIO</span>
+      <h2>PRO Effects Control Center</h2>
+      <p>Har effect public profile par save hoga. Theme sirf premium cards, stats, showcase aur data surfaces par apply hogi; original banner/background unchanged rahega.</p>
+    </div>
+    <i class="fa-solid fa-wand-magic-sparkles section-icon"></i>
+  </div>
+
+  <div class="studio-status" id="studioStatus"><span></span><b>Ready</b><small>Changes are saved to your PRO profile.</small></div>
+
+  <div class="studio-presets">
+    <button type="button" class="studio-preset active" data-preset="custom">CUSTOM</button>
+    <button type="button" class="studio-preset" data-preset="inferno">🔥 INFERNO</button>
+    <button type="button" class="studio-preset" data-preset="cyber">⚡ CYBER</button>
+    <button type="button" class="studio-preset" data-preset="royal">👑 ROYAL</button>
+    <button type="button" class="studio-preset" data-preset="aurora">🌌 AURORA</button>
+  </div>
+
+  <div class="studio-grid">
+    <div class="studio-group">
+      <div class="studio-group-head"><b>🪪 MAIN PROFILE CARD</b><small>Hero card effects</small></div>
+      <label class="studio-toggle"><span>Snake Border</span><input type="checkbox" data-effect="mainSnake" checked><i></i></label>
+      <label class="studio-toggle"><span>Card Glow</span><input type="checkbox" data-effect="mainGlow" checked><i></i></label>
+      <label class="studio-toggle"><span>Shine Sweep</span><input type="checkbox" data-effect="mainShine" checked><i></i></label>
+      <label class="studio-toggle"><span>3D Hover / Tilt</span><input type="checkbox" data-effect="mainTilt" checked><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>🖼️ BANNER</b><small>Make the banner alive</small></div>
+      <label class="studio-toggle"><span>Animation</span><input type="checkbox" data-effect="bannerAnimation" checked><i></i></label>
+      <label class="studio-toggle"><span>Premium Glow</span><input type="checkbox" data-effect="bannerGlow" checked><i></i></label>
+      <label class="studio-toggle"><span>Light Sweep</span><input type="checkbox" data-effect="bannerShine" checked><i></i></label>
+      <label class="studio-toggle"><span>Snake Border</span><input type="checkbox" data-effect="bannerSnake"><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>👤 AVATAR</b><small>Premium player identity</small></div>
+      <label class="studio-toggle"><span>Animated Ring</span><input type="checkbox" data-effect="avatarRing" checked><i></i></label>
+      <label class="studio-toggle"><span>Avatar Glow</span><input type="checkbox" data-effect="avatarGlow" checked><i></i></label>
+      <label class="studio-toggle"><span>Pulse</span><input type="checkbox" data-effect="avatarPulse"><i></i></label>
+      <label class="studio-toggle"><span>PRO Crown</span><input type="checkbox" data-effect="proCrown" checked><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>🔫 WEAPON CARD</b><small>Favorite gun effects</small></div>
+      <label class="studio-toggle"><span>Weapon Glow</span><input type="checkbox" data-effect="weaponGlow" checked><i></i></label>
+      <label class="studio-toggle"><span>Weapon Float</span><input type="checkbox" data-effect="weaponFloat" checked><i></i></label>
+      <label class="studio-toggle"><span>Weapon Shine</span><input type="checkbox" data-effect="weaponShine" checked><i></i></label>
+      <label class="studio-toggle"><span>Weapon Snake Border</span><input type="checkbox" data-effect="weaponSnake"><i></i></label>
+      <label class="studio-toggle"><span>Weapon Parallax</span><input type="checkbox" data-effect="weaponParallax" checked><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>📊 STATS & DATA</b><small>Performance cards</small></div>
+      <label class="studio-toggle"><span>Card Glow</span><input type="checkbox" data-effect="statsGlow" checked><i></i></label>
+      <label class="studio-toggle"><span>Fire Effect</span><input type="checkbox" data-effect="statsFire"><i></i></label>
+      <label class="studio-toggle"><span>Shine</span><input type="checkbox" data-effect="statsShine" checked><i></i></label>
+      <label class="studio-toggle"><span>Hover Lift</span><input type="checkbox" data-effect="statsHover" checked><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>🏆 ACHIEVEMENTS</b><small>Rare badge presentation</small></div>
+      <label class="studio-toggle"><span>Badge Glow</span><input type="checkbox" data-effect="achievementGlow" checked><i></i></label>
+      <label class="studio-toggle"><span>Shine Sweep</span><input type="checkbox" data-effect="achievementShine" checked><i></i></label>
+      <label class="studio-toggle"><span>Hover Lift</span><input type="checkbox" data-effect="achievementHover" checked><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>🎮 GAME CENTER</b><small>Game cards</small></div>
+      <label class="studio-toggle"><span>Game Glow</span><input type="checkbox" data-effect="gameGlow" checked><i></i></label>
+      <label class="studio-toggle"><span>Icon Float</span><input type="checkbox" data-effect="gameFloat" checked><i></i></label>
+      <label class="studio-toggle"><span>Neon Border</span><input type="checkbox" data-effect="gameBorder"><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>🎬 CLIPS + 🖼️ GALLERY</b><small>Showcase effects</small></div>
+      <label class="studio-toggle"><span>Premium Frame</span><input type="checkbox" data-effect="showcaseFrame" checked><i></i></label>
+      <label class="studio-toggle"><span>Glow</span><input type="checkbox" data-effect="showcaseGlow" checked><i></i></label>
+      <label class="studio-toggle"><span>Hover Zoom</span><input type="checkbox" data-effect="showcaseZoom" checked><i></i></label>
+      <label class="studio-toggle"><span>Featured Shine</span><input type="checkbox" data-effect="showcaseShine" checked><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>🛡️ PREMIUM FRAME</b><small>Player identity frame</small></div>
+      <label class="studio-toggle"><span>Gold Frame</span><input type="checkbox" data-effect="frameGold" checked><i></i></label>
+      <label class="studio-toggle"><span>Animated Frame</span><input type="checkbox" data-effect="frameAnimated" checked><i></i></label>
+      <label class="studio-toggle"><span>Rare Edge Shine</span><input type="checkbox" data-effect="frameShine" checked><i></i></label>
+      <label class="studio-toggle"><span>Diamond Corners</span><input type="checkbox" data-effect="frameCorners"><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>✨ PROFILE DETAILS</b><small>Premium data presentation</small></div>
+      <label class="studio-toggle"><span>Animated XP Bar</span><input type="checkbox" data-effect="xpAnimated" checked><i></i></label>
+      <label class="studio-toggle"><span>Stat Number Glow</span><input type="checkbox" data-effect="statNumberGlow" checked><i></i></label>
+      <label class="studio-toggle"><span>Level Badge Pulse</span><input type="checkbox" data-effect="levelPulse" checked><i></i></label>
+      <label class="studio-toggle"><span>Premium Section Lines</span><input type="checkbox" data-effect="sectionLines" checked><i></i></label>
+    </div>
+
+    <div class="studio-group">
+      <div class="studio-group-head"><b>🎞️ MOTION PACK</b><small>Choose your animation level</small></div>
+      <div class="motion-pills">
+        <button type="button" class="motion-pill active" data-motion="cinematic">CINEMATIC</button>
+        <button type="button" class="motion-pill" data-motion="smooth">SMOOTH</button>
+        <button type="button" class="motion-pill" data-motion="aggressive">AGGRESSIVE</button>
+        <button type="button" class="motion-pill" data-motion="minimal">MINIMAL</button>
+      </div>
+      <small class="studio-helper">Animation public profile ke cards/effects tak limited rahegi.</small>
+    </div>
+
+    <div class="studio-group studio-group-wide">
+      <div class="studio-group-head"><b>⚡ QUICK FX PRESETS</b><small>One-click premium combinations</small></div>
+      <div class="fx-presets">
+        <button type="button" class="fx-preset" data-fx-preset="king">👑 KING MODE</button>
+        <button type="button" class="fx-preset" data-fx-preset="esports">⚡ ESPORTS</button>
+        <button type="button" class="fx-preset" data-fx-preset="cinematic">🎬 CINEMATIC</button>
+        <button type="button" class="fx-preset" data-fx-preset="minimal">◈ CLEAN PRO</button>
+      </div>
+    </div>
+
+    <div class="studio-group studio-group-wide">
+      <div class="studio-group-head"><b>🌌 PROFILE ATMOSPHERE</b><small>Effects layer only — not the page background</small></div>
+      <div class="studio-inline">
+        <label class="studio-toggle"><span>Particles</span><input type="checkbox" data-effect="particles" checked><i></i></label>
+        <label class="studio-toggle"><span>Ambient Glow</span><input type="checkbox" data-effect="ambientGlow" checked><i></i></label>
+        <label class="studio-toggle"><span>Scroll Reveal</span><input type="checkbox" data-effect="scrollReveal" checked><i></i></label>
+        <label class="studio-toggle"><span>Cursor Glow</span><input type="checkbox" data-effect="cursorGlow"><i></i></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="studio-actions">
+    <button type="button" id="studioPreview" class="ghost-btn"><i class="fa-solid fa-eye"></i> Preview Effects</button>
+    <button type="button" id="studioReset" class="ghost-btn"><i class="fa-solid fa-rotate-left"></i> Reset Effects</button>
+    <button type="button" id="studioSave" class="primary-btn"><i class="fa-solid fa-cloud-arrow-up"></i> SAVE TO PUBLIC PROFILE</button>
+  </div>
+  <p class="studio-note"><i class="fa-solid fa-circle-info"></i> Save karne ke baad public profile ko refresh karte hi selected theme/effects visible honge. Existing FREE profile functionality unchanged rahegi.</p>
+</section>
+
+  <section class="share-panel glass"><div><span class="overline">DIGITAL PLAYER CARD</span><h2>Your PRO identity, ready to share.</h2><p>QR opens your live 4FU PRO profile. Share it anywhere.</p><div class="share-actions"><button id="copyProLink" class="primary-btn"><i class="fa-solid fa-link"></i> Copy Profile Link</button><button id="shareCard" class="ghost-btn"><i class="fa-solid fa-id-card"></i> Share Card</button></div></div><div class="player-card"><div class="card-glow"></div><div class="card-top"><span>4FU</span><b>PRO</b></div><div class="card-body"><img id="cardAvatar" src="./images/logo/logo.png"><div><b id="shareName">PLAYER</b><small id="shareMeta">4FU PRO</small></div></div><div class="card-bottom"><span>LIVE PLAYER PROFILE</span><div id="qrMini" class="qr"></div></div></div></section>
+
+  <section class="grid-2">
+    <article class="panel glass"><div class="section-title"><div><span class="overline">BATTLE CENTER</span><h2>Player Comparison</h2></div><i class="fa-solid fa-crosshairs section-icon"></i></div><div class="battle-form"><input id="battlePlayerId" placeholder="Enter player document ID"><button id="comparePlayer" class="primary-btn"><i class="fa-solid fa-scale-balanced"></i> Compare</button></div><div id="battleResult" class="battle-result"><span>Enter another player ID to build a live comparison.</span></div></article>
+    <article class="panel glass"><div class="section-title"><div><span class="overline">PRO IDENTITY</span><h2>Badge, Title & Aura</h2></div><i class="fa-solid fa-fingerprint section-icon"></i></div><div class="identity-tools"><div class="tool-card"><span class="pro-emblem"><i class="fa-solid fa-gem"></i></span><b>4FU PRO</b><small>Premium member badge</small></div><div class="tool-card"><div class="title-pills"><button data-title="ELITE">ELITE</button><button data-title="LEGEND">LEGEND</button><button data-title="VETERAN">VETERAN</button></div><small>Select your public PRO title.</small></div><div class="tool-card"><label class="switch-row"><span>Animated Aura</span><input id="auraToggle" type="checkbox" checked><i></i></label><small>Live profile atmosphere.</small></div></div></article>
+  </section>
+
+  <section class="panel glass"><div class="section-title"><div><span class="overline">PRO MISSIONS</span><h2>Progress that actually unlocks things</h2><p>Complete missions to build XP and unlock your next drop.</p></div><i class="fa-solid fa-bolt section-icon"></i></div><div id="missionList" class="mission-list"></div></section>
+
+  <section class="panel glass"><div class="section-title"><div><span class="overline">SHOWCASE CENTER</span><h2>Your best content, front and center.</h2></div><i class="fa-solid fa-layer-group section-icon"></i></div><div class="showcase-grid">
+    <div class="showcase-card"><i class="fa-solid fa-gamepad"></i><b>Advanced Game Center</b><small id="gameSummary">Selected games will appear here.</small><a href="./player-profile.html" class="mini-link">Open Profile</a></div>
+    <div class="showcase-card"><i class="fa-solid fa-clapperboard"></i><b>Premium Clip Showcase</b><small id="clipSummary">Pin your best moments.</small><a href="./clips.html" class="mini-link">View Clips</a></div>
+    <div class="showcase-card"><i class="fa-solid fa-images"></i><b>Premium Gallery</b><small id="gallerySummary">Feature your best visual content.</small><a href="./gallery.html" class="mini-link">Open Gallery</a></div>
+    <div class="showcase-card"><i class="fa-solid fa-thumbtack"></i><b>Featured Content</b><small id="pinState">Choose your signature content.</small><button id="pinContent" class="mini-btn">Pin Feature</button></div>
+  </div></section>
+
+  <section class="panel glass"><div class="section-title"><div><span class="overline">PRO INSIGHTS</span><h2>Membership & Activity</h2></div><i class="fa-solid fa-chart-simple section-icon"></i></div><div class="insight-grid"><div><small>PROFILE VIEWS</small><b id="visitorTotal">0</b></div><div><small>PRO DAYS</small><b id="membershipDays">—</b></div><div><small>BATTLE COUNT</small><b id="visitorBattle">0</b></div><div><small>REWARD DROPS</small><b id="rewardCount">0</b></div></div></section>
+</main>
+
+<div id="rewardModal" class="modal"><div class="modal-card"><button id="closeModal" class="modal-close"><i class="fa-solid fa-xmark"></i></button><div class="reward-orb"><i class="fa-solid fa-gift"></i></div><span class="overline">4FU PRO DROP</span><h2 id="rewardTitle">Unlocked!</h2><p id="rewardDescription">You found a premium surprise.</p><div class="reward-value" id="rewardValue">+100 XP</div><button id="modalDone" class="primary-btn">Awesome</button></div></div>
+<div id="toast" class="toast"></div>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="./js/firebase.js"></script>
+<script src="./js/pro.js"></script>
+
+<style id="4fu-pro-theme-library-v2">
+/* PRO THEME LIBRARY — additive only. It never changes the public profile banner/body background. */
+.theme-filter{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.theme-filter-btn,.motion-pill,.fx-preset{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.045);color:inherit;border-radius:999px;padding:9px 13px;font-size:11px;font-weight:800;letter-spacing:.06em;cursor:pointer;transition:.2s}
+.theme-filter-btn:hover,.theme-filter-btn.active,.motion-pill:hover,.motion-pill.active,.fx-preset:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);transform:translateY(-1px)}
+.pro-theme-library .theme{min-height:118px;position:relative;overflow:hidden}
+.pro-theme-library .theme[hidden]{display:none!important}
+.swatch{display:block;width:42px;height:42px;border-radius:13px;margin-bottom:10px;border:1px solid rgba(255,255,255,.16);box-shadow:0 8px 28px rgba(0,0,0,.25)}
+.swatch.royal{background:linear-gradient(135deg,#fff0a6,#d39b20 45%,#fff3ad)}
+.swatch.crimson{background:linear-gradient(135deg,#ff9b9b,#b40f32 50%,#35020b)}
+.swatch.ice{background:linear-gradient(135deg,#eaffff,#57cfff 48%,#3562ff)}
+.swatch.galaxy{background:linear-gradient(135deg,#f39cff,#6f55ff 45%,#101b6b)}
+.swatch.toxic{background:linear-gradient(135deg,#e7ff8c,#62ff67 48%,#093f2a)}
+.swatch.ember{background:linear-gradient(135deg,#ffe0a1,#ff6a2a 48%,#4d0900)}
+.motion-pills,.fx-presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.studio-helper{display:block;opacity:.55;margin-top:10px;line-height:1.45}
+body[data-theme="royal"]{--pro-accent:#f5cf67;--pro-glow:rgba(245,207,103,.3)}
+body[data-theme="crimson"]{--pro-accent:#ff536d;--pro-glow:rgba(255,60,85,.3)}
+body[data-theme="ice"]{--pro-accent:#70ddff;--pro-glow:rgba(82,205,255,.3)}
+body[data-theme="galaxy"]{--pro-accent:#b58cff;--pro-glow:rgba(133,91,255,.3)}
+body[data-theme="toxic"]{--pro-accent:#9cff4a;--pro-glow:rgba(101,255,84,.3)}
+body[data-theme="ember"]{--pro-accent:#ff8a3d;--pro-glow:rgba(255,92,32,.3)}
+body[data-motion="cinematic"] .glass{--motion-scale:1}
+body[data-motion="smooth"] .glass{--motion-scale:.72}
+body[data-motion="aggressive"] .glass{--motion-scale:1.25}
+body[data-motion="minimal"] .glass{--motion-scale:.35}
+.fx-preset{font-size:12px;padding:11px 15px}
+.pro-studio-panel{scroll-margin-top:20px}
+@media(max-width:700px){
+  .theme-filter{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+  .theme-filter-btn{flex:0 0 auto}
+  .pro-theme-library{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+</style>
+
+<script>
+/* 4FU PRO Studio UX layer. Works alongside existing pro.js; it does not replace Firebase/payment logic. */
+(()=>{
+  const qs=(s,r=document)=>r.querySelector(s);
+  const qsa=(s,r=document)=>[...r.querySelectorAll(s)];
+
+  // Theme filters
+  qsa('.theme-filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      qsa('.theme-filter-btn').forEach(x=>x.classList.toggle('active',x===btn));
+      const cat=btn.dataset.themeFilter;
+      qsa('.pro-theme-library .theme').forEach(card=>{
+        card.hidden=cat!=='all' && card.dataset.themeCat!==cat;
+      });
+    });
+  });
+
+  // Additional themes are handled by the same existing .theme mechanism used by pro.js.
+  // This bridge guarantees they still work even if the original handler is not present.
+  const setTheme=t=>{
+    document.body.dataset.theme=t;
+    localStorage.setItem('4fuProTheme',t);
+    qsa('.theme').forEach(b=>b.classList.toggle('active',b.dataset.theme===t));
+  };
+  qsa('.theme').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      setTheme(btn.dataset.theme);
+    },{capture:false});
+  });
+
+  // Motion profile is a visual-only dashboard preference; it never touches body background.
+  const savedMotion=localStorage.getItem('4fuProMotion')||'cinematic';
+  document.body.dataset.motion=savedMotion;
+  qsa('.motion-pill').forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.motion===savedMotion);
+    btn.addEventListener('click',()=>{
+      const v=btn.dataset.motion;
+      document.body.dataset.motion=v;
+      localStorage.setItem('4fuProMotion',v);
+      qsa('.motion-pill').forEach(x=>x.classList.toggle('active',x===btn));
+    });
+  });
+
+  // Quick presets use the existing studio checkboxes, so existing save/preview logic can consume them.
+  const presetMap={
+    king:{theme:'royal',effects:{mainSnake:true,mainGlow:true,mainShine:true,mainTilt:true,bannerAnimation:true,bannerGlow:true,avatarRing:true,avatarGlow:true,proCrown:true,weaponGlow:true,weaponFloat:true,weaponShine:true,statsGlow:true,statsShine:true,achievementGlow:true,achievementShine:true,gameGlow:true,gameFloat:true,showcaseFrame:true,showcaseGlow:true,showcaseZoom:true,showcaseShine:true,particles:true,ambientGlow:true}},
+    esports:{theme:'cyber',effects:{mainSnake:true,mainGlow:true,mainShine:true,mainTilt:true,bannerAnimation:true,bannerGlow:true,bannerShine:true,avatarRing:true,weaponGlow:true,weaponFloat:true,weaponShine:true,weaponParallax:true,statsGlow:true,statsShine:true,statsHover:true,achievementGlow:true,achievementShine:true,gameGlow:true,gameBorder:true,showcaseFrame:true,showcaseGlow:true,showcaseZoom:true,showcaseShine:true,particles:true,cursorGlow:true}},
+    cinematic:{theme:'galaxy',effects:{mainGlow:true,mainShine:true,mainTilt:true,bannerAnimation:true,bannerGlow:true,bannerShine:true,avatarRing:true,avatarGlow:true,weaponGlow:true,weaponFloat:true,weaponShine:true,statsGlow:true,statsShine:true,achievementGlow:true,achievementShine:true,showcaseFrame:true,showcaseGlow:true,showcaseZoom:true,showcaseShine:true,particles:true,ambientGlow:true,scrollReveal:true}},
+    minimal:{theme:'obsidian',effects:{mainGlow:true,mainTilt:true,avatarRing:true,weaponGlow:true,statsGlow:true,statsHover:true,achievementGlow:true,gameGlow:true,showcaseFrame:true,showcaseGlow:true}}
+  };
+  qsa('.fx-preset').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const p=presetMap[btn.dataset.fxPreset]; if(!p)return;
+      const themeBtn=qs('.theme[data-theme="'+p.theme+'"]');
+      if(themeBtn) themeBtn.click();
+      qsa('[data-effect]').forEach(input=>{
+        const want=!!p.effects[input.dataset.effect];
+        if(input.checked!==want) input.click();
+      });
+      const motion=p.theme==='galaxy'?'cinematic':p.theme==='obsidian'?'minimal':'aggressive';
+      const m=qs('.motion-pill[data-motion="'+motion+'"]'); if(m)m.click();
+      const status=qs('#studioStatus');
+      if(status){
+        const b=status.querySelector('b'),sm=status.querySelector('small');
+        if(b)b.textContent='Preset Ready';
+        if(sm)sm.textContent='Preset applied. Preview or Save to Public Profile.';
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
