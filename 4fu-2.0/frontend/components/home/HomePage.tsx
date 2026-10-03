@@ -198,7 +198,7 @@ export default function HomePage() {
           {players.map((player) => {
             const image = player.photo ?? player.image;
             return (
-              <article className="playerCard" key={player.id}>
+              <a className="playerCard" href={`/players/${encodeURIComponent(player.id)}`} key={player.id}>
                 {image ? <img src={image} alt={player.ign ?? player.name ?? "4FU Player"} /> : <div className="playerPlaceholder">4FU</div>}
                 <div className="playerOverlay">
                   <span>{player.role ?? "PLAYER"}</span>
