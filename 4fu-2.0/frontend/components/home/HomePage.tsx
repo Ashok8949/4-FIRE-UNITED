@@ -147,7 +147,7 @@ export default function HomePage() {
           <a href="#players">Players</a>
           <a href="#clips">Clips</a>
           <a href="#tournament">Tournament</a>
-          <a href="/player-login.html">Player Login</a>
+          <a href="/player-login">Player Login</a>
         </div>
       </nav>
 
