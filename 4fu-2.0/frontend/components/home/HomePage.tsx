@@ -192,7 +192,7 @@ export default function HomePage() {
       <section id="players" className="section">
         <div className="sectionHead">
           <div><p className="kicker">THE ROSTER</p><h2>Featured Players</h2></div>
-          <a href="/team.html">View full team →</a>
+          <a href="/players">View full team →</a>
         </div>
         <div className="playerGrid">
           {players.map((player) => {
