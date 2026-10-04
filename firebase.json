@@ -52,6 +52,12 @@
           }
         ]
       }
+    ],
+    "rewrites": [
+      {
+        "source": "/4fu-2.0/**",
+        "destination": "/4fu-2.0/index.html"
+      }
     ]
   },
   "functions": [
