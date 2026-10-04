@@ -27,7 +27,7 @@ const normalize = <T>(snap: any): T[] =>
   snap.docs.map((d: any) => ({ id: d.id, ...d.data() })) as T[];
 
 const byNewest = (a: any, b: any) => {
-  const value = (x: any) => x?.createdAt?.toMillis?.() ?? new Date(x?.createdAt || 0).getTime() || 0;
+  const value = (x: any) => (x?.createdAt?.toMillis?.() ?? new Date(x?.createdAt || 0).getTime() ?? 0);
   return value(b) - value(a);
 };
 
