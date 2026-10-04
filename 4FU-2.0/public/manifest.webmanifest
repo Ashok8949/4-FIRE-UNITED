@@ -1,0 +1,14 @@
+{
+  "name":"4 FIRE UNITED 2.0",
+  "short_name":"4FU",
+  "description":"The digital home of 4 FIRE UNITED.",
+  "start_url":"/4fu-2.0/",
+  "scope":"/4fu-2.0/",
+  "display":"standalone",
+  "background_color":"#070707",
+  "theme_color":"#070707",
+  "icons":[
+    {"src":"/images/logo/logo.png","sizes":"192x192","type":"image/png"},
+    {"src":"/images/logo/logo.png","sizes":"512x512","type":"image/png"}
+  ]
+}
