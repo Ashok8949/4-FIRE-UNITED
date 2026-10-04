@@ -83,3 +83,31 @@ export function watchCollection<T = any>(name: string, cb: (rows: T[]) => void, 
   return onSnapshot(query(collection(db, name), limit(count)),
     (s) => cb(normalize<T>(s)), () => cb([]));
 }
+
+
+export type ChatMessage = {
+  id: string; text?: string; playerId?: string; playerName?: string; playerImage?: string;
+  playerEmail?: string; createdAt?: any; [key: string]: any;
+};
+
+export type AppNotification = {
+  id: string; title?: string; message?: string; body?: string; type?: string;
+  isRead?: boolean; createdAt?: any; link?: string; priority?: string; [key: string]: any;
+};
+
+export function watchChat(cb: (rows: ChatMessage[]) => void): Unsubscribe {
+  return onSnapshot(query(collection(db, "chat"), limit(100)), (s) => {
+    const rows = normalize<ChatMessage>(s).sort((a,b) => {
+      const at=a.createdAt?.toMillis?.() ?? 0, bt=b.createdAt?.toMillis?.() ?? 0;
+      return at-bt;
+    });
+    cb(rows);
+  }, (e) => { console.error("[4FU] chat:", e); cb([]); });
+}
+
+export function watchNotifications(cb: (rows: AppNotification[]) => void): Unsubscribe {
+  return onSnapshot(query(collection(db, "notifications"), limit(50)), (s) => {
+    const rows = normalize<AppNotification>(s).sort(byNewest);
+    cb(rows);
+  }, (e) => { console.error("[4FU] notifications:", e); cb([]); });
+}
