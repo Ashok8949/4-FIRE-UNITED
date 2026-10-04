@@ -19,3 +19,4 @@ jobs:
           cache-dependency-path: 4FU-2.0/package.json
       - run: npm install
       - run: npm run build
+      - run: npm run qa
