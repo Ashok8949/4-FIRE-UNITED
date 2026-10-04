@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Activity, Bell, Database, FileVideo, GalleryHorizontal, LayoutDashboard, Megaphone, MessageSquare, Search, Settings, ShieldCheck, Trophy, Users, ExternalLink } from "lucide-react";
-import { watchCollection } from "../services/data";
+import { watchCollection } from "../services/data"; import { auth } from "../services/firebase/client"; import { signOut } from "firebase/auth";
 
 type AdminCollection = Record<string, any>;
 const modules = [
@@ -51,7 +51,7 @@ export function Admin() {
         <div className="admin-search"><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search modules…"/><kbd>⌘K</kbd></div>
       </header>
 
-      <div className="admin-status">
+      <div className="admin-security-strip"><ShieldCheck/><span><b>AUTHORIZED ADMIN SESSION</b>{auth.currentUser?.email}</span><button onClick={()=>signOut(auth)}>SIGN OUT</button></div><div className="admin-status">
         <div><Activity/><span>SYSTEM HEALTH<b>OPERATIONAL</b></span></div>
         <div><Database/><span>FIRESTORE<b>LIVE DATA</b></span></div>
         <div><Bell/><span>FCM<b>LEGACY PUSH CORE</b></span></div>
