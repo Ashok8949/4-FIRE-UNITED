@@ -8,9 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    defaults:
-      run:
-        working-directory: 4FU-2.0
+    env:
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     steps:
       - uses: actions/checkout@v4
 
@@ -21,17 +20,18 @@ jobs:
           cache-dependency-path: 4FU-2.0/package.json
 
       - name: Install dependencies
+        working-directory: 4FU-2.0
         run: npm install
 
       - name: Typecheck and build staging bundle
+        working-directory: 4FU-2.0
         run: npx tsc -b && npx vite build --base /
 
+      - name: Authenticate Firebase CLI
+        run: |
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+
       - name: Deploy isolated Firebase Hosting preview
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: fire-united
-          channelId: 4fu-2-0-staging
-          entryPoint: .
-          target: staging
+        run: |
+          npx --yes firebase-tools hosting:channel:deploy 4fu-2-0-staging             --project fire-united             --config firebase.staging.json
