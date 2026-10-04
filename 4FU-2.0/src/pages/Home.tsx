@@ -24,6 +24,6 @@ export function Home(){
    <div className="pillar-grid">{cards.map(([title,sub,to,Icon])=><Link className="pillar" to={to as string} key={title as string}><Icon size={22}/><span>{title}</span><strong>{sub}</strong><ArrowUpRight/></Link>)}</div>
   </section>
   <section className="feature-band"><div><span className="kicker">PLAYER OS</span><h2>Your squad.<br/><em>Your command.</em></h2><p>Profile, stats, content, Game Center, notifications, chat and PRO — designed like an app, built for 4FU.</p><Link className="primary" to="/player-os">OPEN PLAYER OS <ArrowUpRight size={16}/></Link></div><div className="system-card"><div className="system-top"><span><Radio size={14}/> LIVE CORE</span><span>02.0</span></div><div className="system-main"><Crosshair size={48}/><b>4FU COMMAND</b><span>REALTIME DATA NETWORK</span></div><div className="system-metrics"><div><b>24/7</b><span>STATUS</span></div><div><b>FCM</b><span>ALERTS</span></div><div><b>PRO</b><span>READY</span></div></div></div></section>
-  <section className="world-strip"><Globe2/><div><span className="kicker">GLOBAL COMMAND</span><h3>4FU WORLD EXPLORER</h3><p>Players, tournaments and community — connected beyond one screen.</p></div><Link to="/media">EXPLORE <ArrowUpRight size={16}/></Link></section>
+  <section className="world-strip"><Globe2/><div><span className="kicker">GLOBAL COMMAND</span><h3>4FU WORLD EXPLORER</h3><p>Players, tournaments and community — connected beyond one screen.</p></div><Link to="/world">EXPLORE <ArrowUpRight size={16}/></Link></section>
  </div>
 }
