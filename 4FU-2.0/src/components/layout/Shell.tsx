@@ -1,19 +1,3 @@
-import type { ReactNode } from "react";
-import { NavLink } from "react-router-dom";
-import { Bell, Flame, Menu, Search, UserRound } from "lucide-react";
-import { useState } from "react";
-
+import type { ReactNode } from "react"; import { NavLink } from "react-router-dom"; import { Bell, Flame, Menu, Search, UserRound } from "lucide-react"; import { useState } from "react";
 const nav=[["/","HOME"],["/team","ROSTER"],["/tournaments","TOURNAMENTS"],["/media","MEDIA"],["/comms","COMMS"]];
-export function Shell({children}:{children:ReactNode}){
- const [open,setOpen]=useState(false);
- return <div className="app-shell">
-  <header className="topbar">
-   <NavLink className="brand" to="/"><span className="brand-mark"><Flame size={18}/></span><span>4<span className="fire-text">FU</span></span></NavLink>
-   <nav className="topnav">{nav.map(([to,label])=><NavLink key={to} to={to} className={({isActive})=>isActive?"active":""}>{label}</NavLink>)}</nav>
-   <div className="top-actions"><button className="icon-btn"><Search size={17}/></button><NavLink className="icon-btn" to="/comms"><Bell size={17}/><i/></NavLink><NavLink className="player-btn" to="/player-os"><UserRound size={15}/> PLAYER OS</NavLink><button className="menu-btn icon-btn" onClick={()=>setOpen(!open)}><Menu size={18}/></button></div>
-  </header>
-  {open&&<div className="mobile-nav">{nav.map(([to,label])=><NavLink key={to} to={to} onClick={()=>setOpen(false)}>{label}</NavLink>)}<NavLink to="/player-os">PLAYER OS</NavLink></div>}
-  <main>{children}</main>
-  <footer><div><b>4<span className="fire-text">FU</span></b><span>THE DIGITAL HOME OF 4 FIRE UNITED</span></div><span>4FU 2.0 • COMMAND ONLINE</span></footer>
- </div>;
-}
+export function Shell({children}:{children:ReactNode}){const [open,setOpen]=useState(false);return <div className="app-shell"><header className="topbar"><NavLink className="brand" to="/"><span className="brand-mark"><Flame size={18}/></span><span>4<span className="fire-text">FU</span></span></NavLink><nav className="topnav">{nav.map(([to,label])=><NavLink key={to} to={to} className={({isActive})=>isActive?"active":""}>{label}</NavLink>)}</nav><div className="top-actions"><button className="icon-btn"><Search size={17}/></button><NavLink className="icon-btn" to="/comms"><Bell size={17}/><i/></NavLink><NavLink className="player-btn" to="/player-os"><UserRound size={15}/> PLAYER OS</NavLink><button className="menu-btn icon-btn" onClick={()=>setOpen(!open)}><Menu size={18}/></button></div></header>{open&&<div className="mobile-nav">{nav.map(([to,label])=><NavLink key={to} to={to} onClick={()=>setOpen(false)}>{label}</NavLink>)}<NavLink to="/player-os">PLAYER OS</NavLink></div>}<main>{children}</main><footer><div><b>4<span className="fire-text">FU</span></b><span>THE DIGITAL HOME OF 4 FIRE UNITED</span></div><span>4FU 2.0 • COMMAND ONLINE</span></footer></div>}
