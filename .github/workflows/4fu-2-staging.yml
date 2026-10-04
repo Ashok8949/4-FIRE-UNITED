@@ -1,6 +1,6 @@
 name: 4FU 2.0 Staging Preview
 
-on:
+"on":
   push:
     branches:
       - 4fu-2.0-rebuild
@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-service-account.json
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
@@ -29,17 +29,26 @@ jobs:
         working-directory: 4FU-2.0
         run: npm install
 
-      - name: Typecheck and build staging bundle
+      - name: Typecheck
         working-directory: 4FU-2.0
-        run: npx tsc -b && npx vite build --base /
+        run: npx tsc -b
 
-      - name: Configure Firebase service account
+      - name: Build staging bundle
+        working-directory: 4FU-2.0
+        run: npx vite build --base /
+
+      - name: Write Firebase credentials
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          test -n "$FIREBASE_SERVICE_ACCOUNT"
-          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$GOOGLE_APPLICATION_CREDENTIALS"
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT secret is missing"
+            exit 1
+          fi
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
 
-      - name: Deploy isolated Firebase Hosting preview
+      - name: Deploy Firebase preview
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-service-account.json
         run: |
-          npx --yes firebase-tools hosting:channel:deploy 4fu-2-0-staging             --project fire-united             --config firebase.staging.json             --expires 7d
+          npx --yes firebase-tools hosting:channel:deploy 4fu-2-0-staging --project fire-united --config firebase.staging.json --expires 7d
