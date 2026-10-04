@@ -1,0 +1,37 @@
+name: 4FU 2.0 Staging Preview
+
+on:
+  workflow_dispatch:
+
+jobs:
+  staging:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: 4FU-2.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: 4FU-2.0/package.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Typecheck and build staging bundle
+        run: npx tsc -b && npx vite build --base /
+
+      - name: Deploy isolated Firebase Hosting preview
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: fire-united
+          channelId: 4fu-2-0-staging
+          entryPoint: .
+          target: staging
