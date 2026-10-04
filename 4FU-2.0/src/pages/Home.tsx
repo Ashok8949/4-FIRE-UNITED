@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, ChevronRight, Crosshair, Gamepad2, Globe2, MessageSquare, Radio, Trophy, Users } from "lucide-react";
+import { ArrowUpRight, ChevronRight, Crosshair, Gamepad2, Globe2, MessageSquare, Radio, Trophy, Users, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { ComponentType } from "react";
 
-const cards:[string,string,string,ComponentType<any>][]=[["ROSTER","6 ACTIVE PLAYERS","/team",Users],["TOURNAMENTS","15+ EVENTS","/tournaments",Trophy],["COMMS","REALTIME CHANNEL","/comms",MessageSquare]];
+const cards:[string,string,string,ComponentType<any>][]=[["ROSTER","6 ACTIVE PLAYERS","/team",Users],["TOURNAMENTS","15+ EVENTS","/tournaments",Trophy],["COMMS","REALTIME CHANNEL","/comms",MessageSquare],["ANALYTICS","LIVE PERFORMANCE","/analytics",BarChart3]];
 export function Home(){
  return <div className="home">
   <section className="hero">
