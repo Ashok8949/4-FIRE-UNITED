@@ -1,6 +1,6 @@
 import { getToken, onMessage, type MessagePayload } from "firebase/messaging";
 import { getMessaging, isSupported } from "firebase/messaging";
-import { auth, app } from "./client";
+import { auth, firebaseApp } from "./client";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "./client";
 
@@ -9,7 +9,7 @@ const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY || "BKo62PUl4wx45hd5L1
 async function messagingInstance(){
   if(typeof window==="undefined") return null;
   if(!(await isSupported())) return null;
-  return getMessaging(app);
+  return getMessaging(firebaseApp);
 }
 
 export async function request4FUPushPermission(){
