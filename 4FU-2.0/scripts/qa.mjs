@@ -14,7 +14,9 @@ const routes=["/","/team","/players/:id","/tournaments","/media","/clips","/gall
 const absent=routes.filter(r=>!app.includes(r));
 if(absent.length){console.error("Missing expected routes:",absent);process.exit(1);}
 const main=readFileSync("src/main.tsx","utf8");
-if(!main.includes('basename="/4fu-2.0"')){console.error("Router basename missing.");process.exit(1);}
+const hasLegacyBase=main.includes('basename="/4fu-2.0"');
+const hasDynamicBase=main.includes("basename={import.meta.env.BASE_URL");
+if(!hasLegacyBase&&!hasDynamicBase){console.error("Router basename wiring missing.");process.exit(1);}
 const messaging=readFileSync("src/services/firebase/messaging.ts","utf8");
 if(!messaging.includes("getToken")||!messaging.includes("fcmTokens")){console.error("FCM token registration wiring missing.");process.exit(1);}
 console.log("4FU 2.0 smoke QA passed:",required.length,"critical files,",routes.length,"routes, Firebase/FCM wiring present.");
