@@ -52,7 +52,6 @@ async function undo(id){
   if(row.operation==='create')await ref.delete();
   else if(row.before)await ref.set(row.before);
   else throw Error('Previous snapshot missing; safe undo is not possible.');
-  await db.collection('adminAuditLogs').add({schemaVersion:1,collection:row.collection,documentId:row.documentId,documentPath:row.documentPath,operation:'undo',label:'Undo · '+row.label,title:'Undo: '+row.title,before:row.after||null,after:row.before||null,actor:auth.currentUser.email,actorUid:auth.currentUser.uid,page:'dashboard.html',createdAt:firebase.firestore.FieldValue.serverTimestamp(),clientAt:new Date().toISOString(),undoOf:id});
   alert('Undo completed. Previous state restored.');await load();
  }catch(e){alert('Undo failed: '+e.message)}
 }
