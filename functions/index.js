@@ -2,6 +2,10 @@ const { onRequest } = require("firebase-functions/v2/https");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const admin = require("firebase-admin");
 const crypto = require("node:crypto");
+const { defineSecret } = require("firebase-functions/params");
+const { isAuthorizedAdminToken } = require("./security-guards");
+
+const visitorIpHashSecret = defineSecret("VISITOR_IP_HASH_SECRET");
 
 admin.initializeApp();
 
@@ -503,12 +507,23 @@ exports.lookupJoinApplicationStatus = onRequest(
 const { createVisitorCounterHandler } = require("./visitor-counter");
 
 exports.countVisitor = onRequest(
-    { region: "asia-south1", cors: true, maxInstances: 10 },
+    {
+        region: "asia-south1",
+        cors: true,
+        maxInstances: 10,
+        secrets: [visitorIpHashSecret]
+    },
     createVisitorCounterHandler({
         db,
         Timestamp: admin.firestore.Timestamp,
         FieldValue: admin.firestore.FieldValue,
-        hashIp: (ip) => crypto.createHash("sha256").update(ip).digest("hex")
+        hashIp: (ip) => {
+            const secret = visitorIpHashSecret.value();
+            if (typeof secret !== "string" || secret.length < 32) {
+                throw new Error("VISITOR_IP_HASH_SECRET is not configured with sufficient entropy.");
+            }
+            return crypto.createHmac("sha256", secret).update(ip).digest("hex");
+        }
     })
 );
 
