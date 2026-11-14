@@ -1,0 +1,20 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null &&
+        request.auth.token.email == "aks303603@gmail.com" &&
+        request.auth.token.email_verified == true;
+    }
+
+    // Publicly readable site artwork; only the verified site admin can manage it.
+    match /website-assets/{uid}/{fileName} {
+      allow read: if true;
+      allow create, update: if isAdmin() &&
+        request.auth.uid == uid &&
+        request.resource.size <= 8 * 1024 * 1024 &&
+        request.resource.contentType.matches('image/(png|jpeg|webp|gif|svg\\+xml)');
+      allow delete: if isAdmin() && request.auth.uid == uid;
+    }
+  }
+}
