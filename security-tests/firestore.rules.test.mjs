@@ -128,6 +128,20 @@ test("players can edit profile fields but cannot change account identity or admi
   await assertFails(updateDoc(profileRef, { role: "Administrator" }));
   await assertFails(updateDoc(profileRef, { displayOrder: 999 }));
   await assertFails(updateDoc(profileRef, { loginEmail: "victim@example.com" }));
+
+  const unverifiedPlayer = testEnv.authenticatedContext("unverified-player", {
+    email: "unverified-player@example.com",
+    email_verified: false
+  }).firestore();
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), "players", "unverified-profile"), {
+      loginEmail: "unverified-player@example.com", authUid: "unverified-player",
+      role: "Player", name: "Before"
+    });
+  });
+  await assertSucceeds(updateDoc(doc(unverifiedPlayer, "players", "unverified-profile"), {
+    name: "After", loginEmail: "unverified-player@example.com", authUid: "unverified-player", role: "Player"
+  }));
 });
 
 

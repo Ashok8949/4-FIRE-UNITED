@@ -853,6 +853,10 @@ document.getElementById("saveBtn").addEventListener(
 
                 await currentUser.updateEmail(newEmail);
 
+                // Refresh claims so Firestore Rules see the updated email
+                // before the profile document's loginEmail is changed.
+                await currentUser.getIdToken(true);
+
             }
 
             // ==========================================

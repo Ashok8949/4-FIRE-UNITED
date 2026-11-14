@@ -14,7 +14,6 @@ service cloud.firestore {
       // Players may edit profile fields only. Identity, role and admin-managed
       // fields remain immutable, and loginEmail must match the signed-in token.
       allow update: if request.auth != null &&
-        request.auth.token.email_verified == true &&
         resource.data.loginEmail == request.auth.token.email &&
         request.resource.data.loginEmail == request.auth.token.email &&
         request.resource.data.authUid == resource.data.authUid &&
