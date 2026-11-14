@@ -35,7 +35,7 @@
   }
   function removeExperience(){
     Array.from(document.documentElement.classList).forEach(name=>{if(name.startsWith("fu-festival-"))document.documentElement.classList.remove(name);});
-    ["fourfu-festival-layer","fourfu-festival-art","fourfu-festival-toast","fourfu-festival-diya-left","fourfu-festival-diya-right","fourfu-festival-rangoli","fourfu-festival-moon","fourfu-festival-intro"].forEach(id=>document.getElementById(id)?.remove());
+    ["fourfu-festival-layer","fourfu-festival-art","fourfu-festival-toast","fourfu-festival-intro"].forEach(id=>document.getElementById(id)?.remove());
     document.documentElement.style.removeProperty("--fu-accent");document.documentElement.style.removeProperty("--fu-wash");
     Array.from(document.documentElement.classList).forEach(name=>{if(name.startsWith("fu-style-"))document.documentElement.classList.remove(name);});activeKey=null;
   }
