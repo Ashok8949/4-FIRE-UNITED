@@ -26,6 +26,19 @@ db.collection("settings")
     document.querySelectorAll(".container,.page-container,.main-content").forEach(n=>{n.style.maxWidth="var(--4fu-content-width)"});
 
 
+    // P5 motion and loader presentation settings (strict allowlists; no injected markup).
+    const experience=s.experience||{}, animation=experience.animation||{}, loaderConfig=experience.loader||{};
+    const motionEffects=["none","sparkle","snow","confetti","fireflies","petals"];
+    const motionRoot=document.documentElement;
+    if(animation.enabled===true&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+      const effect=motionEffects.includes(animation.effect)?animation.effect:"none";
+      const mobile=window.matchMedia("(max-width: 700px)").matches;
+      const density=animation.intensity==="high"?(mobile?8:22):animation.intensity==="medium"?(mobile?5:14):(mobile?3:8);
+      if(effect!=="none"&&!document.getElementById("4fu-ambient-motion")){const layer=document.createElement("div");layer.id="4fu-ambient-motion";layer.className="fu-ambient fu-ambient-"+effect;layer.setAttribute("aria-hidden","true");for(let i=0;i<density;i++){const p=document.createElement("i");p.style.setProperty("--x",(Math.random()*100)+"vw");p.style.setProperty("--delay",(-Math.random()*18)+"s");p.style.setProperty("--duration",((animation.speed==="fast"?8:animation.speed==="slow"?22:14)+Math.random()*7)+"s");p.style.setProperty("--alpha",String(Math.max(.1,Math.min(.7,Number(animation.opacity||35)/100))));layer.appendChild(p)}document.body.appendChild(layer)}
+    }
+    const loaderNode=document.getElementById("loader");
+    if(loaderNode){if(loaderConfig.enabled===false)loaderNode.remove();else{const safeColor=hex(loaderConfig.background);if(safeColor)loaderNode.style.setProperty("--4fu-loader-bg",safeColor);const title=loaderNode.querySelector(".loader-content h1"),sub=loaderNode.querySelector(".loader-content p"),logo=loaderNode.querySelector(".loader-logo");if(title&&typeof loaderConfig.title==="string"&&loaderConfig.title.trim())title.textContent=loaderConfig.title.slice(0,50);if(sub&&typeof loaderConfig.subtitle==="string")sub.textContent=loaderConfig.subtitle.slice(0,90);if(logo&&typeof loaderConfig.logo==="string"&&loaderConfig.logo.trim()){const u=safeAsset(loaderConfig.logo);if(u)logo.src=u}if(["bullet","minimal","glow"].includes(loaderConfig.preset))loaderNode.setAttribute("data-4fu-loader",loaderConfig.preset)}}
+
     // Centralized public brand identity. Text is assigned via textContent;
     // admin-provided values are never interpreted as markup or executable code.
     const safeAsset = (value) => {
@@ -200,3 +213,5 @@ db.collection("settings")
     console.error("Settings Loader Error:", err);
 
 });
+/* P5: controlled ambient motion; never overrides OS reduced-motion preference. */
+(()=>{const s=window.__4FU_SETTINGS__||null;})();
