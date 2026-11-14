@@ -18,7 +18,7 @@ db.collection("settings")
     const hex=v=>typeof v==="string"&&/^#[0-9a-f]{6}$/i.test(v)?v:"";
     [["--4fu-accent",design.accent],["--4fu-secondary",design.secondary],["--4fu-page-bg",design.background],["--4fu-surface",design.surface],["--4fu-text",design.text]].forEach(([k,v])=>{const safe=hex(v);if(safe)root.style.setProperty(k,safe)});
     const enums={headerStyle:["glass","solid","minimal"],footerStyle:["surface","minimal","gradient"],cardStyle:["elevated","glass","flat","outlined"],buttonStyle:["solid","gradient","outline","glass"],fontFamily:["modern","classic","editorial"],shadowStyle:["soft","strong","none"],borderStyle:["subtle","defined","none"],motionLevel:["reduced","balanced","expressive"]};
-    Object.entries(enums).forEach(([k,allowed])=>{const v=allowed.includes(design[k])?design[k]:"";if(v)root.dataset["4fu"+k[0].toUpperCase()+k.slice(1)]=v});
+    Object.entries(enums).forEach(([k,allowed])=>{const v=allowed.includes(design[k])?design[k]:"";if(v)root.setAttribute("data-4fu"+k.toLowerCase(),v)});
     root.style.setProperty("--4fu-radius",design.radius==="sharp"?"5px":design.radius==="round"?"22px":"10px");
     root.style.setProperty("--4fu-content-width",design.contentWidth==="compact"?"1120px":design.contentWidth==="wide"?"1440px":"1280px");
     root.style.setProperty("--4fu-section-gap",design.sectionSpacing==="compact"?"32px":design.sectionSpacing==="spacious"?"88px":"56px");
