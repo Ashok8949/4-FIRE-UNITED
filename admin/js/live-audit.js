@@ -43,17 +43,36 @@ async function loadLegacy(){
  try{const s=await db.collection('adminStudioVersions').orderBy('createdAt','desc').limit(100).get();s.forEach(doc=>{const d=doc.data()||{};allRows.push({legacy:true,collection:'adminStudioVersions',label:'Experience Studio version',title:(d.status==='published'?'Published':'Saved')+' Experience Studio · '+(d.design?.preset||'custom'),documentPath:'adminStudioVersions/'+doc.id,operation:d.status||'saved',createdAt:d.createdAt,actor:d.updatedBy||'',url:null})})}catch(e){}
  allRows.sort((a,b)=>(dateOf(b.createdAt||b.clientAt)?.getTime()||0)-(dateOf(a.createdAt||a.clientAt)?.getTime()||0));
 }
+function stable(value){
+ if(value&&typeof value.toDate==='function')return value.toDate().toISOString();
+ if(value instanceof Date)return value.toISOString();
+ if(Array.isArray(value))return value.map(stable);
+ if(value&&typeof value==='object'){const out={};Object.keys(value).sort().forEach(k=>out[k]=stable(value[k]));return out}
+ return value;
+}
 async function undo(id){
  const row=allRows.find(x=>x.id===id);if(!row)return;
  if(row.legacy){alert('Ye historical entry reconstructed hai. Iske exact previous state ka snapshot available nahi hai, isliye automatic Undo safe nahi hoga.');return}
- if(!row.documentPath||['contactMessages','joinApplications','challengeRegistrations','notifications'].includes(row.collection)){alert('This activity is not eligible for automatic Undo.');return}
+ if(row.snapshotOmitted||!row.documentPath||['contactMessages','joinApplications','challengeRegistrations','notifications','chat','fcmTokens','friendRequests','friends'].includes(row.collection)){alert('Privacy/safety ke liye is activity ka automatic Undo disabled hai.');return}
+ if(!['create','update','delete'].includes(row.operation)){alert('This operation is not supported for automatic Undo.');return}
  const action=row.operation==='create'?'created record delete hoga':row.operation==='delete'?'deleted record restore hoga':'record previous version par restore hoga';
- if(!confirm('Undo this action? '+action+'. A new audit entry will be created.'))return;
+ if(!confirm('Undo this action? '+action+'. Current record verify karne ke baad hi change hoga.'))return;
  try{
-  const ref=db.doc(row.documentPath);
-  if(row.operation==='create')await ref.delete();
-  else if(row.before)await ref.set(row.before);
-  else throw Error('Previous snapshot missing; safe undo is not possible.');
+  const ref=db.doc(row.documentPath),snap=await ref.get();
+  if(row.operation==='create'){
+   if(!snap.exists)throw Error('Record already missing; no change needed.');
+   if(!row.after||JSON.stringify(stable(snap.data()))!==JSON.stringify(stable(row.after)))throw Error('Record audit event ke baad change hua hai. Newer changes protect karne ke liye Undo roka gaya.');
+   await ref.delete();
+  }else if(row.operation==='update'){
+   if(!snap.exists)throw Error('Record ab exist nahi karta. Restore manually review karein.');
+   if(!row.before||!row.after)throw Error('Before/after snapshot missing; safe Undo unavailable.');
+   if(JSON.stringify(stable(snap.data()))!==JSON.stringify(stable(row.after)))throw Error('Record audit event ke baad change hua hai. Newer changes protect karne ke liye Undo roka gaya.');
+   await ref.set(row.before);
+  }else if(row.operation==='delete'){
+   if(snap.exists)throw Error('Is document ID par ab ek record maujood hai. Overwrite se bachne ke liye restore roka gaya.');
+   if(!row.before)throw Error('Deleted record ka previous snapshot missing.');
+   await ref.set(row.before);
+  }
   alert('Undo completed. Previous state restored.');await load();
  }catch(e){alert('Undo failed: '+e.message)}
 }
