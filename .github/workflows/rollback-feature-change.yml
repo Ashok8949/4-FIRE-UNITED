@@ -1,0 +1,61 @@
+name: Roll back a feature branch change
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_commit:
+        description: Full commit SHA to undo (copied from Admin Dashboard)
+        required: true
+        type: string
+      confirm_rollback:
+        description: Type ROLLBACK to confirm
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: feature-branch-rollback
+  cancel-in-progress: false
+
+jobs:
+  revert:
+    if: github.ref == 'refs/heads/feature/festive-universe'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/festive-universe
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate and revert selected commit
+        env:
+          TARGET_COMMIT: ${{ inputs.target_commit }}
+          CONFIRM: ${{ inputs.confirm_rollback }}
+        run: |
+          set -euo pipefail
+          if [[ "$CONFIRM" != "ROLLBACK" ]]; then
+            echo "::error::Confirmation must be exactly ROLLBACK."
+            exit 1
+          fi
+          if [[ ! "$TARGET_COMMIT" =~ ^[0-9a-fA-F]{40}$ ]]; then
+            echo "::error::A full 40-character commit SHA is required."
+            exit 1
+          fi
+          git fetch origin feature/festive-universe
+          git checkout feature/festive-universe
+          git pull --ff-only origin feature/festive-universe
+          if ! git merge-base --is-ancestor "$TARGET_COMMIT" HEAD; then
+            echo "::error::Selected commit is not an ancestor of feature/festive-universe."
+            exit 1
+          fi
+          PARENTS="$(git rev-list --parents -n 1 "$TARGET_COMMIT" | wc -w)"
+          if [[ "$PARENTS" -ne 2 ]]; then
+            echo "::error::Merge/root commits cannot be rolled back with this tool."
+            exit 1
+          fi
+          git revert --no-edit "$TARGET_COMMIT"
+          git push origin HEAD:feature/festive-universe
