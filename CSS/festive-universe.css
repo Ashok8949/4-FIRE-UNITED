@@ -1,0 +1,30 @@
+/* 4FU FESTIVE UNIVERSE — lightweight, opt-in visual layer */
+#fourfu-festival-layer{position:fixed;inset:0;z-index:900;pointer-events:none;overflow:hidden;contain:strict}
+.fu-festival-particle{position:absolute;left:var(--x);top:-12vh;opacity:0;will-change:transform,opacity;animation:fu-fall var(--duration) linear var(--delay) infinite}
+@keyframes fu-fall{0%{transform:translate3d(0,-8vh,0) rotate(0);opacity:0}10%{opacity:var(--alpha,.7)}90%{opacity:var(--alpha,.7)}100%{transform:translate3d(var(--drift),112vh,0) rotate(360deg);opacity:0}}
+.fu-diya{position:fixed;bottom:12px;left:14px;z-index:901;font-size:28px;filter:drop-shadow(0 0 9px rgba(255,167,38,.9));animation:fu-flicker 2.8s ease-in-out infinite;pointer-events:none}
+.fu-diya-right{left:auto;right:14px;animation-delay:.8s}
+@keyframes fu-flicker{0%,100%{filter:drop-shadow(0 0 5px rgba(255,167,38,.6));transform:rotate(-2deg)}50%{filter:drop-shadow(0 0 15px rgba(255,190,60,1));transform:rotate(2deg)}}
+.fu-rangoli{position:fixed;left:50%;bottom:-94px;width:210px;height:210px;transform:translateX(-50%);z-index:899;opacity:.28;pointer-events:none}
+.fu-rangoli svg{width:100%;height:100%;animation:fu-rangoli-in 1.8s ease-out both}
+@keyframes fu-rangoli-in{from{transform:scale(.55) rotate(-35deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.fu-festival-toast{position:fixed;top:90px;right:20px;z-index:1002;max-width:min(360px,calc(100vw - 32px));padding:12px 16px;border:1px solid var(--fu-accent);border-radius:13px;background:rgba(15,15,18,.88);color:#fff;font:600 13px/1.5 Poppins, sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.28);backdrop-filter:blur(12px);animation:fu-toast-in .5s ease both}
+@keyframes fu-toast-in{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+html.fu-festival-diwali{--fu-accent:#ffb52e}
+html.fu-festival-holi{--fu-accent:#ff5c9a}
+html.fu-festival-christmas{--fu-accent:#4fd6a0}
+html.fu-festival-newyear{--fu-accent:#80c7ff}
+html.fu-festival-eid{--fu-accent:#70d8bd}
+html.fu-festival-independence{--fu-accent:#ff9a45}
+html.fu-festival-halloween{--fu-accent:#b477ff}
+html[class*="fu-festival-"] .navbar{transition:box-shadow .35s ease}
+html.fu-festival-diwali .navbar{box-shadow:0 3px 24px rgba(255,166,35,.12)}
+html.fu-festival-holi .navbar{box-shadow:0 3px 24px rgba(255,75,145,.12)}
+html.fu-festival-christmas .navbar{box-shadow:0 3px 24px rgba(50,210,145,.12)}
+.fu-holi-splash{position:absolute;width:90px;height:90px;border-radius:50% 45% 60% 40%;filter:blur(1px);opacity:.13;transform:rotate(var(--rot))}
+.fu-holi-splash:nth-child(3n){border-radius:40% 60% 35% 65%}
+.fu-confetti{width:7px;height:13px;border-radius:2px}
+.fu-snow{width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 7px rgba(255,255,255,.8)}
+.fu-spark{width:4px;height:4px;border-radius:50%;background:#ffd36b;box-shadow:0 0 10px #ffb52e}
+@media(max-width:600px){.fu-festival-toast{top:76px;right:12px;font-size:12px}.fu-rangoli{width:150px;height:150px;bottom:-70px}.fu-diya{font-size:23px;bottom:8px}}
+@media(prefers-reduced-motion:reduce){.fu-festival-particle,.fu-diya,.fu-rangoli svg,.fu-festival-toast{animation:none!important;transition:none!important}.fu-festival-particle{display:none}}
