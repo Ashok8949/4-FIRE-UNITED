@@ -104,6 +104,7 @@ quickAction("manageMessages", "messages.html");
 quickAction("manageApplications", "applications.html");
 quickAction("manageChallenges", "challenge-registrations.html");
 quickAction("manageSettings", "settings.html");
+quickAction("manageExperienceStudio", "experience-studio.html");
 
 
 // =====================================
