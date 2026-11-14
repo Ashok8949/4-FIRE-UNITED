@@ -34,6 +34,7 @@
     return config.festival;
   }
   function removeExperience(){
+    const previousArt=document.getElementById("fourfu-festival-art");if(previousArt&&previousArt._resize)window.removeEventListener("resize",previousArt._resize);
     Array.from(document.documentElement.classList).forEach(name=>{if(name.startsWith("fu-festival-"))document.documentElement.classList.remove(name);});
     ["fourfu-festival-layer","fourfu-festival-art","fourfu-festival-toast","fourfu-festival-intro"].forEach(id=>document.getElementById(id)?.remove());
     document.documentElement.style.removeProperty("--fu-accent");document.documentElement.style.removeProperty("--fu-wash");
