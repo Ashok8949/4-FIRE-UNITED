@@ -585,7 +585,9 @@ body{
                     <div class="input-group"><label><i class="fa-solid fa-calendar-plus"></i> Start Date & Time (India local time)</label><input type="datetime-local" id="festivalStart"></div>
                     <div class="input-group"><label><i class="fa-solid fa-calendar-xmark"></i> End Date & Time (India local time)</label><input type="datetime-local" id="festivalEnd"></div>
                 </div>
-                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px"><button type="button" id="previewFestival" class="save-btn" style="background:linear-gradient(135deg,#333,#171717);box-shadow:none;border:1px solid #444"><i class="fa-solid fa-eye"></i> Preview Theme</button><span style="align-self:center;color:#777;font-size:11px">Preview opens a temporary demo; it does not publish your selection.</span></div>
+                <p id="festivalScheduleError" role="alert" aria-live="polite" style="color:#ff8a80;font-size:12px;min-height:18px;margin:12px 0 0"></p>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px"><button type="button" id="previewFestival" class="save-btn" style="background:linear-gradient(135deg,#333,#171717);box-shadow:none;border:1px solid #444"><i class="fa-solid fa-eye"></i> Preview Theme</button><span id="festivalPreviewStatus" role="status" aria-live="polite" style="align-self:center;color:#aaa;font-size:11px"></span><a id="festivalPreviewFallback" hidden target="_blank" rel="noopener noreferrer" style="align-self:center;color:#ffad66;font-size:12px">Open preview</a></div>
+                <p style="color:#777;font-size:11px;line-height:1.5;margin:8px 0 0">Preview is a public read-only demo link. It never saves or publishes your selection.</p>
             </div>
 
         </div>
