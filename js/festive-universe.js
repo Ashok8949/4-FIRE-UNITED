@@ -19,10 +19,14 @@
   const valid = key => Object.prototype.hasOwnProperty.call(FESTIVALS,key);
   const activeForDate = cfg => {
     if (!cfg || cfg.enabled !== true || !valid(cfg.festival)) return null;
-    if (cfg.mode === "scheduled") {
-      const now = Date.now(), start = Date.parse(cfg.startAt || ""), end = Date.parse(cfg.endAt || "");
-      if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start || now < start || now > end) return null;
-    }
+    if (cfg.mode === "manual") return cfg.festival;
+    if (cfg.mode !== "scheduled") return null;
+
+    const now = Date.now();
+    const start = Date.parse(cfg.startAt || "");
+    const end = Date.parse(cfg.endAt || "");
+    // The end instant is exclusive: the festival stops exactly at endAt.
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start || now < start || now >= end) return null;
     return cfg.festival;
   };
   function addRangoli(root){
@@ -55,13 +59,21 @@
       left.setAttribute("aria-hidden","true");right.setAttribute("aria-hidden","true");document.body.append(left,right);addRangoli(document.body);
     }
     if(key==="eid"&&!reduced){const moon=document.createElement("span");moon.className="fu-diya";moon.textContent="🌙";moon.setAttribute("aria-hidden","true");document.body.appendChild(moon);}
-    if(!sessionStorage.getItem("fu-festival-welcomed")){
+    let welcomed = false;
+    try { welcomed = sessionStorage.getItem("fu-festival-welcomed") === "1"; } catch (_) {}
+    if(!welcomed){
       const toast=document.createElement("div");toast.className="fu-festival-toast";toast.setAttribute("role","status");toast.textContent=theme.emoji+" "+theme.message;document.body.appendChild(toast);
-      sessionStorage.setItem("fu-festival-welcomed","1");setTimeout(()=>toast.remove(),6500);
+      try { sessionStorage.setItem("fu-festival-welcomed","1"); } catch (_) {}
+      setTimeout(()=>toast.remove(),6500);
     }
   }
   function start(){
-    if(preview && valid(preview)){build(preview);return;}
+    if (params.has("festivalPreview")) {
+      if (valid(preview)) build(preview);
+      // An invalid preview request must not silently fall through to the live
+      // website configuration and display a different festival.
+      return;
+    }
     if(typeof db === "undefined" || !db.collection)return;
     db.collection("settings").doc("website").get().then(doc=>{
       if(!doc.exists)return;
