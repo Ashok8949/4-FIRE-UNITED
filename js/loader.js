@@ -1,88 +1,27 @@
-/*=========================================
-      4 FIRE UNITED
-      BULLET LOADER V2
-=========================================*/
-
+/* 4FU configurable opening loader. Timing remains bounded and respects the
+   published minimum display duration; the original cinematic sequence is retained. */
 document.addEventListener("DOMContentLoaded", () => {
-
-    const loader = document.getElementById("loader");
-
-    if (!loader) return;
-
-    loader.style.display = "flex";
-
+    const node = document.getElementById("loader");
+    if (!node) return;
+    const requested = Number.parseInt(node.dataset.minDuration || "4600", 10);
+    const duration = Math.max(1800, Math.min(8000, Number.isFinite(requested) ? requested : 4600));
+    const at = (ratio) => Math.round(duration * ratio);
+    const exitAt = Math.max(at(.72), duration - 600);
+    node.style.display = "flex";
     document.body.style.overflow = "hidden";
-
-    /*==============================
-        BULLETS FIRE
-==============================*/
-
-setTimeout(() => {
-
-    loader.classList.add("loader-start");
-
-},150);
-
-/*==============================
-        IMPACT
-==============================*/
-
-setTimeout(() => {
-
-    loader.classList.add("loader-impact");
-
-},1450);
-
-/*==============================
-        BULLETS REMOVE
-==============================*/
-
-const bullets=document.querySelectorAll(".bullet");
-
-setTimeout(()=>{
-
-bullets.forEach(b=>{
-
-b.style.transition=".18s";
-
-b.style.opacity="0";
-
-b.style.transform+=" scale(.65)";
-
-});
-
-},900);
-
-/*==============================
-        LOGO
-==============================*/
-
-setTimeout(()=>{
-
-loader.classList.add("loader-show");
-
-},1700);
-
-/*==============================
-        EXIT
-==============================*/
-
-setTimeout(()=>{
-
-loader.classList.add("loader-hide");
-
-document.body.style.overflow="auto";
-
-},4000);
-
-/*==============================
-        REMOVE
-==============================*/
-
-setTimeout(()=>{
-
-loader.remove();
-
-},4600);
-
+    window.setTimeout(() => node.classList.add("loader-start"), at(.033));
+    window.setTimeout(() => node.classList.add("loader-impact"), at(.315));
+    window.setTimeout(() => {
+        node.querySelectorAll(".bullet").forEach((bullet) => {
+            bullet.style.transition = ".18s";
+            bullet.style.opacity = "0";
+            bullet.style.transform += " scale(.65)";
+        });
+    }, at(.196));
+    window.setTimeout(() => node.classList.add("loader-show"), at(.37));
+    window.setTimeout(() => {
+        node.classList.add("loader-hide");
+        document.body.style.overflow = "";
+    }, exitAt);
+    window.setTimeout(() => node.remove(), duration);
 });
