@@ -10,7 +10,19 @@
  const allowedOrigin=location.origin;
  const safeHex=v=>typeof v==="string"&&/^#[0-9a-f]{6}$/i.test(v)?v:"";
  const safeUrl=v=>{if(typeof v!=="string"||!v.trim())return"";try{const u=new URL(v,location.origin);return u.protocol==="https:"||u.origin===location.origin?u.href:""}catch(_){return""}};
- function apply(p){
+ const loaderTemplate=document.getElementById("loader")?.cloneNode(true);let loaderPreviewTimer=null;
+ function showStudioLoaderPreview(config){
+  document.getElementById("fourfu-studio-loader-preview")?.remove();if(loaderPreviewTimer)clearTimeout(loaderPreviewTimer);
+  if(!config||config.enabled===false||!loaderTemplate)return;
+  const node=loaderTemplate.cloneNode(true);node.id="fourfu-studio-loader-preview";node.style.display="flex";node.style.position="fixed";node.style.inset="0";node.style.zIndex="2147483000";node.style.pointerEvents="none";
+  const h=node.querySelector(".loader-content h1"),sub=node.querySelector(".loader-content p"),img=node.querySelector(".loader-logo");
+  if(h&&typeof config.title==="string")h.textContent=config.title.slice(0,50);if(sub&&typeof config.subtitle==="string")sub.textContent=config.subtitle.slice(0,90);
+  const logo=safeUrl(config.logo);if(img&&logo)img.src=logo;if(safeHex(config.background)){node.style.backgroundColor=config.background;const bg=node.querySelector(".loader-bg");if(bg)bg.style.backgroundColor=config.background}
+  if(["bullet","minimal","glow"].includes(config.preset))node.dataset["4fuLoader"]=config.preset;
+  const festivalClass=Array.from(document.documentElement.classList).find(x=>x.startsWith("fu-festival-"));if(festivalClass){const key=festivalClass.replace("fu-festival-","");node.classList.add("fu-themed-loader","fu-loader-"+key)}
+  document.body.appendChild(node);loaderPreviewTimer=setTimeout(()=>node.remove(),2600);
+ }
+ function apply(p,previous){
   if(!p||p.type!=="4FU_STUDIO_PREVIEW")return;
   const d=p.design||{},b=p.brand||{},c=p.content||{},root=document.documentElement;
   [["--4fu-accent",d.accent],["--4fu-secondary",d.secondary],["--4fu-page-bg",d.background],["--4fu-surface",d.surface],["--4fu-text",d.text]].forEach(([k,v])=>{const x=safeHex(v);if(x)root.style.setProperty(k,x)});
@@ -37,10 +49,10 @@
   const motion=p.animation||{};document.getElementById("4fu-ambient-motion")?.remove();
   if(motion.enabled===true&&motion.effect&&motion.effect!=="none"&&!matchMedia("(prefers-reduced-motion: reduce)").matches){const layer=document.createElement("div");layer.id="4fu-ambient-motion";layer.className="fu-ambient fu-ambient-"+motion.effect;layer.setAttribute("aria-hidden","true");const count=motion.intensity==="high"?22:motion.intensity==="medium"?14:8;for(let i=0;i<count;i++){const dot=document.createElement("i");dot.style.setProperty("--x",Math.random()*100+"vw");dot.style.setProperty("--delay",-Math.random()*16+"s");dot.style.setProperty("--duration",(motion.speed==="fast"?9:motion.speed==="slow"?22:14)+"s");layer.append(dot)}document.body.append(layer)}
   const loader=document.getElementById("loader"),l=p.loader||{};if(loader){if(l.enabled===false)loader.remove();else{const h=loader.querySelector(".loader-content h1"),sub=loader.querySelector(".loader-content p");if(h&&l.title)h.textContent=l.title;if(sub&&typeof l.subtitle==="string")sub.textContent=l.subtitle;if(safeHex(l.background))loader.style.setProperty("--4fu-loader-bg",l.background);if(["bullet","minimal","glow"].includes(l.preset))loader.dataset["4fuLoader"]=l.preset}}
-  window.dispatchEvent(new CustomEvent("4fu:studio-preview",{detail:{festivalLibrary:p.festivalLibrary||[],selectedFestival:p.selectedFestival}}));
+  window.dispatchEvent(new CustomEvent("4fu:studio-preview",{detail:{festivalLibrary:p.festivalLibrary||[],selectedFestival:p.selectedFestival}}));\n  if(!previous||JSON.stringify(previous.loader||{})!==JSON.stringify(p.loader||{}))showStudioLoaderPreview(p.loader||{});
  }
  window.__4FU_STUDIO_PREVIEW_APPLY__=apply;
- window.addEventListener("message",e=>{if(e.origin!==allowedOrigin||e.source!==window.parent)return;window.__4FU_STUDIO_PREVIEW_LAST__=e.data;apply(e.data)});
+ window.addEventListener("message",e=>{if(e.origin!==allowedOrigin||e.source!==window.parent)return;const previous=window.__4FU_STUDIO_PREVIEW_LAST__;window.__4FU_STUDIO_PREVIEW_LAST__=e.data;apply(e.data,previous)});
 })();
 
 db.collection("settings")
