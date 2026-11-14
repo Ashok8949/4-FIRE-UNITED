@@ -26,33 +26,57 @@ npx --yes firebase-tools emulators:exec --project demo-4fu-firestore-rules --onl
   document was already deleted.
 - Public join applications are restricted to the expected pending schema;
   only the configured admin can read, update, or delete them.
-- The public status-check page now sends UID + application email to the
-  `lookupJoinApplicationStatus` Cloud Function and receives only status-facing
-  fields, rather than querying the private collection directly.
+- The public status-check page calls the `lookupJoinApplicationStatus` Cloud
+  Function and receives only status-facing fields, rather than querying the
+  private collection directly.
+- Visitor counter handler tests cover first count, cooldown boundaries, daily
+  cap, UTC rollover, missing IP/method rejection, hashed-IP-only storage,
+  malformed counter values, and database failures.
+- Admin account provisioning tests verify that only the configured,
+  email-verified administrator token is accepted.
 
-The status lookup function is source code only until explicitly deployed.
-Before production deployment, add and configure Firebase App Check enforcement
-and abuse/rate limiting for this public endpoint. No function or rules deploy
-is performed by this test workflow.
+## Required production configuration (not performed by CI)
 
-Public contact, join, and challenge submissions now generate admin alerts via
-trusted Firestore create triggers in the default Cloud Functions codebase.
-Browser clients no longer write notifications; the collection is admin-only.
-Deploy the rules and default `functions` codebase together to preserve alerts.
+### Visitor IP HMAC secret
 
-The visitor counter now calls the `countVisitor` Cloud Function instead of
-writing Firestore from the browser. Its isolated handler logic has automated
-Node tests for first count, cooldown boundaries, daily cap, UTC rollover,
-missing IP/method rejection, hashed-IP-only storage, and database failures. The function applies a transactional
-per-IP cooldown (one count per 30 minutes), a 20-count UTC-day cap, and stores
-only a SHA-256 digest of the source IP in the private `_visitorRateLimits`
-collection. The public `stats` collection is read-only under Firestore rules;
-the Admin SDK function is the only intended writer.
+The visitor counter uses HMAC-SHA-256 so stored rate-limit keys cannot be
+tested against guessed IP addresses without the server-side secret. Before
+deploying the default Cloud Functions codebase, generate a random secret of at
+least 32 characters and set it in the Firebase project:
 
-The rate-limit documents include an `expiresAt` field. Configure Firestore
-TTL for `_visitorRateLimits.expiresAt` in the Firebase console to remove
-expired records automatically. IP-based limits can affect visitors sharing
-a public network and are not a substitute for Firebase App Check. App Check
-enforcement should be added before relying on this endpoint for high-risk
-traffic. Deploy the updated rules and default Cloud Functions codebase
-together; no deployment is performed by this PR.
+```sh
+openssl rand -hex 32
+firebase functions:secrets:set VISITOR_IP_HASH_SECRET
+```
+
+Paste the generated value only into the interactive Firebase CLI prompt.
+Do not commit it, put it in frontend code, or send it in chat. The
+`countVisitor` function is intentionally fail-closed if the secret is absent.
+
+### Firestore TTL
+
+Rate-limit documents include an `expiresAt` timestamp, but that field alone
+does not activate automatic deletion. Enable Firestore TTL for collection
+group `_visitorRateLimits`, field `expiresAt`, in the Firebase / Google Cloud
+console (Firestore > Time-to-live). TTL deletion is asynchronous and is not
+part of the request-time rate-limit enforcement.
+
+### Firebase App Check
+
+App Check is not yet enforced on the public HTTP endpoints. Enabling it
+requires registering the actual 4FU web app with an appropriate provider,
+configuring the resulting site key in the website, initializing the App Check
+client, sending App Check tokens to the relevant HTTP functions, and then
+verifying those tokens server-side. Do not enable server enforcement until
+the real site key and client integration are configured and verified; a
+placeholder key would break legitimate traffic. Public status lookup also
+needs abuse/rate limiting before production reliance.
+
+## Deployment order and scope
+
+The visitor counter now uses a private HMAC secret. Set that secret before
+deploying the default Cloud Functions codebase. Deploy the updated Firestore
+rules and default Cloud Functions codebase together so public clients cannot
+write visitor stats while the new endpoint is available. Configure TTL
+separately as above. No function, rules, hosting, or production data deploy is
+performed by this test workflow.

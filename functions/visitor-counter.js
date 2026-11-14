@@ -21,16 +21,22 @@ function createVisitorCounterHandler({ db, Timestamp, FieldValue, hashIp, now = 
 
         const currentTime = now();
         const dayKey = new Date(currentTime).toISOString().slice(0, 10);
-        const ipDigest = hashIp(ipAddress);
-        const rateRef = db.collection("_visitorRateLimits").doc(ipDigest);
-        const statsRef = db.collection("stats").doc("visitors");
 
         try {
+            // Hashing is inside the guarded block so missing secret configuration
+            // fails closed with a generic response instead of crashing the function.
+            const ipDigest = hashIp(ipAddress);
+            const rateRef = db.collection("_visitorRateLimits").doc(ipDigest);
+            const statsRef = db.collection("stats").doc("visitors");
+
             const counted = await db.runTransaction(async (transaction) => {
                 const snapshot = await transaction.get(rateRef);
                 const rate = snapshot.exists ? snapshot.data() : {};
                 const lastCountedAt = rate.lastCountedAt?.toMillis?.() || 0;
-                const dailyCount = rate.dayKey === dayKey ? Number(rate.dailyCount) || 0 : 0;
+                const rawDailyCount = rate.dayKey === dayKey ? Number(rate.dailyCount) : 0;
+                const dailyCount = Number.isSafeInteger(rawDailyCount) && rawDailyCount > 0
+                    ? rawDailyCount
+                    : 0;
 
                 if ((lastCountedAt > 0 && currentTime - lastCountedAt < COOLDOWN_MS) || dailyCount >= DAILY_LIMIT) {
                     return false;

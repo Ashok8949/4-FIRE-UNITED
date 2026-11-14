@@ -49,31 +49,25 @@ exports.createPlayerAccount = onRequest(async (req, res) => {
 
         const decodedToken = await auth.verifyIdToken(idToken);
 
-        if (!decodedToken.uid) {
+        if (!isAuthorizedAdminToken(decodedToken)) {
             return res.status(403).json({
                 success: false,
-                message: "Unauthorized"
+                message: "Administrator access required"
             });
         }
 
-        const {
-            email,
-            password,
-            playerId
-        } = req.body;
+        const body = req.body && typeof req.body === "object" ? req.body : {};
+        const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+        const password = typeof body.password === "string" ? body.password : "";
+        const playerId = typeof body.playerId === "string" ? body.playerId.trim() : "";
 
-        // Validate data
-        if (!email || !password || !playerId) {
+        // Validate all user-controlled values before using them in Auth or Firestore.
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 ||
+            password.length < 6 || password.length > 128 ||
+            !playerId || playerId.length > 128 || playerId.includes("/")) {
             return res.status(400).json({
                 success: false,
-                message: "Email, password and playerId are required"
-            });
-        }
-
-        if (password.length < 6) {
-            return res.status(400).json({
-                success: false,
-                message: "Password must be at least 6 characters"
+                message: "Valid email, password (6-128 characters), and playerId are required"
             });
         }
 

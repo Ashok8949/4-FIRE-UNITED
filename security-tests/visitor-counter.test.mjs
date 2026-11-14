@@ -9,7 +9,7 @@ const increment = Symbol("increment");
 const serverTimestamp = Symbol("serverTimestamp");
 const Timestamp = { fromMillis: (value) => ({ toMillis: () => value, value }) };
 
-function makeHarness({ time = Date.UTC(2026, 10, 14, 10), ip = "203.0.113.10", fail = false } = {}) {
+function makeHarness({ time = Date.UTC(2026, 10, 14, 10), ip = "203.0.113.10", fail = false, hashIp = (value) => createHash("sha256").update(value).digest("hex") } = {}) {
   const records = new Map();
   const db = {
     collection(name) {
@@ -38,7 +38,7 @@ function makeHarness({ time = Date.UTC(2026, 10, 14, 10), ip = "203.0.113.10", f
   };
   const handler = createVisitorCounterHandler({
     db, Timestamp, FieldValue: { increment: () => increment, serverTimestamp: () => serverTimestamp },
-    hashIp: (value) => createHash("sha256").update(value).digest("hex"), now: () => time
+    hashIp, now: () => time
   });
   async function call(method = "POST", requestIp = ip) {
     const response = { statusCode: 200, body: null,
@@ -112,4 +112,25 @@ test("returns a generic 500 response when Firestore fails", async () => {
   assert.equal(response.statusCode, 500);
   assert.equal(response.body.success, false);
   assert.equal(response.body.message, "Visitor count unavailable.");
+});
+
+test("fails closed with a generic response when IP hashing is unavailable", async () => {
+  const h = makeHarness({ hashIp: () => { throw new Error("secret not configured"); } });
+  const response = await h.call();
+  assert.equal(response.statusCode, 500);
+  assert.deepEqual(response.body, { success: false, message: "Visitor count unavailable." });
+  assert.equal(h.records.size, 0);
+});
+
+test("normalizes malformed stored daily counters instead of trusting them", async () => {
+  const h = makeHarness();
+  const digest = createHash("sha256").update("203.0.113.10").digest("hex");
+  h.records.set("_visitorRateLimits/" + digest, {
+    dayKey: "2026-11-14",
+    dailyCount: "not-a-number",
+    lastCountedAt: Timestamp.fromMillis(Date.UTC(2026, 10, 14, 9))
+  });
+  const response = await h.call();
+  assert.deepEqual(response.body, { success: true, counted: true });
+  assert.equal(h.records.get("_visitorRateLimits/" + digest).dailyCount, 1);
 });
