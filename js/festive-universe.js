@@ -105,7 +105,8 @@
       }
     }
     document.body.appendChild(layer);
-    addFestivalArt(key);\n    let welcomed=false;const welcomeKey="fu-festival-welcomed:"+key;
+    addFestivalArt(key);
+    let welcomed=false;const welcomeKey="fu-festival-welcomed:"+key;
     if(!isPreview){try{welcomed=sessionStorage.getItem(welcomeKey)==="1";}catch(_){}}
     if(!welcomed){
       const toast=document.createElement("div");toast.id="fourfu-festival-toast";toast.className="fu-festival-toast";toast.setAttribute("role","status");toast.textContent=theme.emoji+" "+theme.message;document.body.appendChild(toast);
