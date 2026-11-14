@@ -660,3 +660,6 @@ opacity:1;
 }
 
 }
+#loader{background:var(--4fu-loader-bg,#050505)}#loader[data-4fu-loader="minimal"] .bullet,#loader[data-4fu-loader="minimal"] .explosion{display:none}#loader[data-4fu-loader="minimal"] .loader-content{opacity:1;transform:translate(-50%,-50%) scale(1)}#loader[data-4fu-loader="glow"] .bullet{filter:saturate(.7);opacity:.65}#loader[data-4fu-loader="glow"] .loader-content img{filter:drop-shadow(0 0 22px #ff8a35) drop-shadow(0 0 48px #ff5b2b)}
+@media(prefers-reduced-motion:reduce){#loader .bullet,#loader .explosion{display:none!important}#loader .loader-content{opacity:1!important;transform:translate(-50%,-50%)!important;animation:none!important}.fu-ambient{display:none!important}}
+.fu-ambient{position:fixed;inset:0;z-index:9998;pointer-events:none;overflow:hidden}.fu-ambient i{position:absolute;left:var(--x);top:-8vh;width:4px;height:4px;border-radius:50%;opacity:var(--alpha);animation:fuAmbientFall var(--duration) linear var(--delay) infinite}.fu-ambient-sparkle i,.fu-ambient-fireflies i{background:#ffd68a;box-shadow:0 0 12px #ffb84d}.fu-ambient-snow i{background:#fff;width:5px;height:5px}.fu-ambient-confetti i{background:#ff8b37;border-radius:1px}.fu-ambient-petals i{background:#ff8db6;width:8px;height:5px;border-radius:80% 10% 80% 10%}@keyframes fuAmbientFall{to{transform:translate3d(8vw,115vh,0) rotate(540deg)}}
