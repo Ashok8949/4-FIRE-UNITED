@@ -30,6 +30,8 @@ function mountStudioWorkspace(){
  tabs.forEach(([id,label,icon])=>{const b=document.createElement("button");b.type="button";b.dataset.tab=id;b.setAttribute("aria-selected",id==="overview"?"true":"false");b.innerHTML='<i class="fa-solid '+icon+'"></i>'+label;b.addEventListener("click",()=>activate(id));nav.append(b)});
  hero.after(nav);
  const columns=root.querySelector(":scope > .columns"),panels=[...root.querySelectorAll(":scope > .panel")];
+ const livePreviewPanel=columns?.querySelector("#websitePreviewFrame")?.closest(".panel");if(livePreviewPanel){livePreviewPanel.classList.add("studio-global-preview");nav.after(livePreviewPanel)}
+ ["componentPreview","festivalPreview","motionPreview","contentPreview"].forEach(id=>{const node=$(id);if(node)node.hidden=true});
  const groups={design:columns,brand:root.querySelector(".brand-panel"),festival:root.querySelector(".festival-panel"),components:root.querySelector(".component-panel"),motion:root.querySelector(".motion-panel"),assets:root.querySelector(".asset-panel"),content:root.querySelector(".content-panel"),release:root.querySelector(".release"),history:panels.find(p=>p.querySelector("#versionList"))};
  const overview=document.createElement("section");overview.className="studio-overview";overview.id="studioOverview";
  const stats=[["08","CONTROL AREAS","One unified workspace"],["40","FESTIVAL PROFILES","Built-in and custom"],["06","DESIGN PRESETS","Ready-to-use visual systems"],["PRIVATE","DRAFT WORKFLOW","Review before publishing"]];
