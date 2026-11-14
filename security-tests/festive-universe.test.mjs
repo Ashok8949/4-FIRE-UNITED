@@ -18,7 +18,8 @@ function harness({ search = '', config = null, now = Date.parse('2026-11-14T00:0
         add: name => { this._classes ??= new Set(); this._classes.add(name); },
         remove: name => this._classes?.delete(name),
         contains: name => !!this._classes?.has(name),
-        forEach: fn => (this._classes ?? new Set()).forEach(fn)
+        forEach: fn => (this._classes ?? new Set()).forEach(fn),
+        [Symbol.iterator]: () => (this._classes ?? new Set()).values()
       };
     }
     setAttribute(k, v) { this.attributes[k] = v; }
