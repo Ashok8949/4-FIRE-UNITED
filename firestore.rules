@@ -120,5 +120,14 @@ service cloud.firestore {
       allow update: if request.auth != null && (isOwnPlayer(resource.data.playerId) || isOwnPlayer(resource.data.friendId)) && resource.data.playerId == request.resource.data.playerId && resource.data.friendId == request.resource.data.friendId;
       allow delete: if request.auth != null && (isOwnPlayer(resource.data.playerId) || isOwnPlayer(resource.data.friendId));
     }
+    // Private admin-only website experience drafts and immutable snapshots.
+    match /adminStudio/{document} {
+      allow read, write: if isAdmin();
+    }
+    match /adminStudioVersions/{document} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
+    }
+
   }
 }
