@@ -15,7 +15,7 @@ function validateChallenge(b){
  const v={challengeType:b.challengeType,leaderName:b.leaderName.trim(),leaderUID:b.leaderUID.trim(),whatsapp:b.whatsapp.trim(),email:b.email.trim().toLowerCase(),teamName:b.teamName.trim(),preferredDate:b.preferredDate,preferredTime:b.preferredTime,message:b.message.trim()};
  const dt=/^\d{4}-\d{2}-\d{2}$/.test(v.preferredDate)?new Date(v.preferredDate+"T00:00:00Z"):null;
  const validDate=v.preferredDate===""||(dt&&!Number.isNaN(dt.getTime())&&dt.toISOString().slice(0,10)===v.preferredDate);
- return ["1V1","2V2","4V4"].includes(v.challengeType)&&bounded(v.leaderName,2,80)&&UID.test(v.leaderUID)&&/^[+0-9()\s-]{7,20}$/.test(v.whatsapp)&&EMAIL.test(v.email)&&v.email.length<=254&&(v.challengeType==="1V1"||bounded(v.teamName,2,80))&&(v.challengeType!=="1V1"||v.teamName.length<=80)&&validDate&&/^([01]\d|2[0-3]):[0-5]\d$/.test(v.preferredTime)&&v.message.length<=1000?v:null;
+ return ["1V1","2V2","4V4"].includes(v.challengeType)&&bounded(v.leaderName,2,80)&&UID.test(v.leaderUID)&&/^[+0-9()\s-]{7,20}$/.test(v.whatsapp)&&EMAIL.test(v.email)&&v.email.length<=254&&(v.challengeType==="1V1"||bounded(v.teamName,2,80))&&(v.challengeType!=="1V1"||v.teamName.length<=80)&&validDate&&(v.preferredTime===""||/^([01]\d|2[0-3]):[0-5]\d$/.test(v.preferredTime))&&v.message.length<=1000?v:null;
 }
 function validateJoin(b){
  const keys=["name","ign","uid","email","level","rank","about"];
