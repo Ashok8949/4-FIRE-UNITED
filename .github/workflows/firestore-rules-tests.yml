@@ -1,0 +1,41 @@
+name: Firestore Rules Tests
+
+on:
+  pull_request:
+    paths:
+      - "firestore.rules"
+      - "firebase.json"
+      - "security-tests/**"
+      - ".github/workflows/firestore-rules-tests.yml"
+  push:
+    branches:
+      - feature/festive-universe
+    paths:
+      - "firestore.rules"
+      - "firebase.json"
+      - "security-tests/**"
+      - ".github/workflows/firestore-rules-tests.yml"
+
+jobs:
+  firestore-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Java for the Firestore Emulator
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install security test dependencies
+        run: npm install --prefix security-tests
+
+      - name: Run Firestore Emulator rules tests
+        run: npx --yes firebase-tools emulators:exec --project demo-4fu-firestore-rules --only firestore "npm test --prefix security-tests"
