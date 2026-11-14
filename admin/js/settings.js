@@ -100,11 +100,24 @@ settingsRef.get()
 document.getElementById("saveSettings").addEventListener("click", () => {
 
     const btn = document.getElementById("saveSettings");
-    const schedule = validateFestivalSchedule();
+    const festivalEnabled = document.getElementById("festivalEnabled").value === "true";
+    const festivalMode = document.getElementById("festivalMode").value;
     const festivalId = document.getElementById("festivalName").value;
+
+    // Disabling the experience must always be possible, even if an old or
+    // partially edited schedule is invalid. Clear inactive dates on save.
+    const schedule = festivalEnabled
+        ? validateFestivalSchedule()
+        : { valid: ["manual", "scheduled"].includes(festivalMode), startAt: "", endAt: "" };
+
     if (!schedule.valid || !FESTIVAL_IDS.has(festivalId)) {
         if (schedule.valid) document.getElementById("festivalScheduleError").textContent = "Select a supported festival theme.";
         return;
+    }
+    if (!festivalEnabled) {
+        document.getElementById("festivalStart").removeAttribute("aria-invalid");
+        document.getElementById("festivalEnd").removeAttribute("aria-invalid");
+        document.getElementById("festivalScheduleError").textContent = "";
     }
 
     btn.disabled = true;
@@ -149,7 +162,7 @@ document.getElementById("saveSettings").addEventListener("click", () => {
             document.getElementById("facebook").value.trim(),
 
         festival: {
-            enabled: document.getElementById("festivalEnabled").value === "true",
+            enabled: festivalEnabled,
             mode: document.getElementById("festivalMode").value,
             festival: document.getElementById("festivalName").value,
             startAt: schedule.startAt,
