@@ -3254,7 +3254,7 @@ async function proCreateSubscription(request, env) {
       proExpiresAt: null,
     });
   }
-  const claims = await proFirebaseIdToken(proAuthHeader(request), env);
+  const claims = initialClaims;
   const player = await proFindPlayer(claims, env);
 
   const existingExpires = Date.parse(player.fields?.proExpiresAt || "");
@@ -3339,15 +3339,24 @@ async function proVerifyPayment(request, env) {
   const claims = await proFirebaseIdToken(proAuthHeader(request), env);
   const body = await request.json().catch(() => null);
 
-  const paymentId = body?.razorpay_payment_id;
-  const subscriptionId = body?.razorpay_subscription_id;
-  const signature = body?.razorpay_signature;
+  const paymentId = String(body?.razorpay_payment_id || "");
+  const subscriptionId = String(body?.razorpay_subscription_id || "");
+  const signature = String(body?.razorpay_signature || "");
 
-  if (!paymentId || !subscriptionId || !signature) {
+  if (
+    !/^pay_[A-Za-z0-9]+$/.test(paymentId) ||
+    !/^sub_[A-Za-z0-9]+$/.test(subscriptionId) ||
+    !/^[a-f0-9]{64}$/i.test(signature)
+  ) {
     return proJson(
-      { success: false, error: "Incomplete Razorpay payment response" },
+      { success: false, error: "Incomplete or invalid Razorpay payment response" },
       400
     );
+  }
+
+  if (!env.RAZORPAY_KEY_SECRET) {
+    console.error("PRO payment verification unavailable: Razorpay secret is missing");
+    return proJson({ success: false, error: "Payment verification is temporarily unavailable" }, 503);
   }
 
   const valid = await proHmacVerify(
@@ -3364,42 +3373,95 @@ async function proVerifyPayment(request, env) {
   }
 
   const player = await proFindPlayer(claims, env);
-  const subscription = await proRazorpayRequest(
-    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
-    "GET",
-    undefined,
-    env
-  );
-
-  const notesUid = subscription?.notes?.firebaseUid;
-  if (notesUid && notesUid !== claims.sub) {
+  if (player.fields?.razorpaySubscriptionId !== subscriptionId) {
     return proJson(
       { success: false, error: "Subscription does not belong to this account" },
       403
     );
   }
 
-  const currentEnd = Number(subscription?.current_end || 0);
-  const expiresAt =
-    proIsoFromUnix(currentEnd) ||
-    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+  const [subscription, payment] = await Promise.all([
+    proRazorpayRequest(
+      `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+      "GET",
+      undefined,
+      env
+    ),
+    proRazorpayRequest(
+      `/payments/${encodeURIComponent(paymentId)}`,
+      "GET",
+      undefined,
+      env
+    ),
+  ]);
 
+  if (
+    subscription?.id !== subscriptionId ||
+    subscription?.notes?.firebaseUid !== claims.sub
+  ) {
+    return proJson(
+      { success: false, error: "Subscription ownership could not be verified" },
+      403
+    );
+  }
+
+  const expectedAmount = Math.round(Number(env.PRO_PRICE_INR || 49) * 100);
+  const paymentAmount = Number(payment?.amount);
+  const paymentBelongsToSubscription =
+    payment?.subscription_id === subscriptionId;
+  const paymentAuthorized =
+    payment?.status === "authorized" || payment?.status === "captured";
+
+  if (
+    payment?.id !== paymentId ||
+    !paymentBelongsToSubscription ||
+    !paymentAuthorized ||
+    payment?.currency !== "INR" ||
+    !Number.isSafeInteger(expectedAmount) ||
+    expectedAmount < 1 ||
+    paymentAmount !== expectedAmount
+  ) {
+    return proJson(
+      { success: false, error: "Razorpay payment details could not be verified" },
+      402
+    );
+  }
+
+  const currentEnd = Number(subscription?.current_end || 0);
+  const expiresAt = proIsoFromUnix(currentEnd);
+  const expiryMs = expiresAt ? Date.parse(expiresAt) : 0;
   const active =
-    subscription?.status === "active" ||
-    subscription?.status === "authenticated";
+    subscription?.status === "active" &&
+    Number.isFinite(expiryMs) &&
+    expiryMs > Date.now();
+
+  if (!["active", "authenticated"].includes(subscription?.status)) {
+    return proJson(
+      {
+        success: true,
+        proActive: false,
+        proExpiresAt: null,
+        subscriptionStatus: subscription?.status || "unknown",
+      }
+    );
+  }
 
   await proUpdatePlayer(
     player,
     {
       proActive: active,
       proPlan: "monthly",
-      proPrice: Number(env.PRO_PRICE_INR || 49),
-      proStartedAt: new Date().toISOString(),
-      proExpiresAt: expiresAt,
-      proPaymentStatus: active ? "paid" : String(subscription?.status || "pending"),
+      proPrice: expectedAmount / 100,
+      ...(active
+        ? {
+            proStartedAt: player.fields?.proStartedAt || new Date().toISOString(),
+            proExpiresAt: expiresAt,
+          }
+        : {}),
+      proPaymentStatus: active ? "paid" : "authorization_pending",
       razorpaySubscriptionId: subscriptionId,
       razorpayPaymentId: paymentId,
-      proAutoRenew: subscription?.status !== "cancelled",
+      proAutoRenew: true,
     },
     env
   );
@@ -3407,7 +3469,7 @@ async function proVerifyPayment(request, env) {
   return proJson({
     success: true,
     proActive: active,
-    proExpiresAt: expiresAt,
+    proExpiresAt: active ? expiresAt : null,
     subscriptionStatus: subscription?.status || null,
   });
 }
@@ -3787,7 +3849,9 @@ async function proRoute(request, env, url) {
     return proJson(
       {
         success: false,
-        error: message,
+        error: authError
+          ? "Please sign in again to continue."
+          : "The PRO service is temporarily unavailable. Please try again.",
       },
       authError ? 401 : 500
     );
