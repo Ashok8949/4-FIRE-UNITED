@@ -574,6 +574,20 @@ body{
 
             </div>
 
+            <!-- FESTIVE UNIVERSE -->
+            <div class="settings-card full">
+                <div class="card-title"><i class="fa-solid fa-wand-magic-sparkles"></i><h3>4FU Festive Universe</h3></div>
+                <p style="color:#999;font-size:12px;line-height:1.7;margin:-8px 0 18px">Bring festivals to life across the 4FU homepage with subtle animations, themed details and a welcome moment. Your original 4FU branding stays intact.</p>
+                <div class="settings-grid">
+                    <div class="input-group"><label><i class="fa-solid fa-toggle-on"></i> Enable Festival Experience</label><select id="festivalEnabled" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:#111;color:#fff;font-family:Poppins,sans-serif"><option value="false">Disabled</option><option value="true">Enabled</option></select></div>
+                    <div class="input-group"><label><i class="fa-solid fa-calendar-check"></i> Activation Mode</label><select id="festivalMode" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:#111;color:#fff;font-family:Poppins,sans-serif"><option value="manual">Manual — show immediately</option><option value="scheduled">Schedule — use start/end dates</option></select></div>
+                    <div class="input-group"><label><i class="fa-solid fa-champagne-glasses"></i> Festival Theme</label><select id="festivalName" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:#111;color:#fff;font-family:Poppins,sans-serif"><option value="diwali">🪔 Diwali — diyas & rangoli</option><option value="holi">🎨 Holi — colour bursts</option><option value="eid">🌙 Eid — moon & warm glow</option><option value="christmas">🎄 Christmas — snowfall</option><option value="newyear">🎆 New Year — confetti</option><option value="independence">🇮🇳 Independence Day — tricolour</option><option value="halloween">🎃 Halloween — spooky sparks</option></select></div>
+                    <div class="input-group"><label><i class="fa-solid fa-calendar-plus"></i> Start Date & Time (India local time)</label><input type="datetime-local" id="festivalStart"></div>
+                    <div class="input-group"><label><i class="fa-solid fa-calendar-xmark"></i> End Date & Time (India local time)</label><input type="datetime-local" id="festivalEnd"></div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px"><button type="button" id="previewFestival" class="save-btn" style="background:linear-gradient(135deg,#333,#171717);box-shadow:none;border:1px solid #444"><i class="fa-solid fa-eye"></i> Preview Theme</button><span style="align-self:center;color:#777;font-size:11px">Preview opens a temporary demo; it does not publish your selection.</span></div>
+            </div>
+
         </div>
 
 
