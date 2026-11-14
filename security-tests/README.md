@@ -22,7 +22,16 @@ npx --yes firebase-tools emulators:exec --project demo-4fu-firestore-rules --onl
 - Both authenticated non-admin and unauthenticated access are tested against
   existing documents, so denial assertions do not pass merely because a
   document was already deleted.
+- Public join applications are restricted to the expected pending schema;
+  only the configured admin can read, update, or delete them.
+- The public status-check page now sends UID + application email to the
+  `lookupJoinApplicationStatus` Cloud Function and receives only status-facing
+  fields, rather than querying the private collection directly.
 
-Other legacy collection permissions are not covered yet. In particular,
-`joinApplications`, `stats`, and `notifications` still need dedicated
-workflow-aware security work before their rules can be tightened safely.
+The status lookup function is source code only until explicitly deployed.
+Before production deployment, add and configure Firebase App Check enforcement
+and abuse/rate limiting for this public endpoint. No function or rules deploy
+is performed by this test workflow.
+
+Other legacy collection permissions still need dedicated workflow-aware
+security work. In particular, `stats` and `notifications` remain unchanged.
