@@ -96,20 +96,6 @@ db.collection("settings")
     }
 
     // ==========================
-    // Logo
-    // ==========================
-
-    document.querySelectorAll(".logo img").forEach((img) => {
-
-        if (s.logo) {
-
-            img.src = s.logo;
-
-        }
-
-    });
-
-    // ==========================
     // Email
     // ==========================
 
