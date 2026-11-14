@@ -94,7 +94,7 @@
     if(theme.atmosphere&&/^#[0-9a-f]{6}$/i.test(theme.atmosphere))document.documentElement.style.setProperty("--fu-wash",theme.atmosphere);
     if(theme.style)document.documentElement.classList.add("fu-style-"+theme.style);
     const layer=document.createElement("div");layer.id="fourfu-festival-layer";layer.setAttribute("aria-hidden","true");
-    if(!reducedMotion){
+    if(!reducedMotion&&key!=="holi"){
       for(let i=0;i<theme.count;i++){
         const p=document.createElement("span");p.className="fu-festival-particle "+theme.particle;
         p.style.setProperty("--x",Math.random()*100+"vw");p.style.setProperty("--duration",10+Math.random()*15+"s");p.style.setProperty("--delay",-Math.random()*20+"s");p.style.setProperty("--drift",-75+Math.random()*150+"px");p.style.setProperty("--alpha",(0.2+Math.random()*.42).toFixed(2));p.style.setProperty("--rot",Math.round(Math.random()*180)+"deg");
