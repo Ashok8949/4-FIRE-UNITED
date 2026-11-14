@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
+import { createHash } from "node:crypto";
 const require = createRequire(import.meta.url);
 const { createVisitorCounterHandler, COOLDOWN_MS, DAILY_LIMIT } = require("../functions/visitor-counter.js");
 
@@ -37,7 +38,7 @@ function makeHarness({ time = Date.UTC(2026, 10, 14, 10), ip = "203.0.113.10", f
   };
   const handler = createVisitorCounterHandler({
     db, Timestamp, FieldValue: { increment: () => increment, serverTimestamp: () => serverTimestamp },
-    hashIp: (value) => "digest:" + value, now: () => time
+    hashIp: (value) => createHash("sha256").update(value).digest("hex"), now: () => time
   });
   async function call(method = "POST", requestIp = ip) {
     const response = { statusCode: 200, body: null,
@@ -56,7 +57,7 @@ test("counts first visit and stores only hashed IP with expiry", async () => {
   assert.equal(response.statusCode, 200);
   assert.deepEqual(response.body, { success: true, counted: true });
   assert.equal(h.records.get("stats/visitors").total, 1);
-  const rate = h.records.get(" _visitorRateLimits/digest:203.0.113.10".trim());
+  const rate = h.records.get("_visitorRateLimits/" + createHash("sha256").update("203.0.113.10").digest("hex"));
   assert.equal(rate.dailyCount, 1);
   assert.equal(rate.expiresAt.toMillis() - rate.lastCountedAt.toMillis(), 48 * 60 * 60 * 1000);
   assert.equal([...h.records.keys()].some((key) => key.includes("203.0.113.10")), false);
@@ -95,7 +96,7 @@ test("resets the daily counter on UTC date rollover", async () => {
   h.setTime(Date.UTC(2026, 10, 15, 0, 1));
   assert.equal((await h.call()).body.counted, true);
   assert.equal(h.records.get("stats/visitors").total, 2);
-  assert.equal(h.records.get("_visitorRateLimits/digest:203.0.113.10").dailyCount, 1);
+  assert.equal(h.records.get("_visitorRateLimits/" + createHash("sha256").update("203.0.113.10").digest("hex")).dailyCount, 1);
 });
 
 test("rejects non-POST requests and missing IP addresses", async () => {
