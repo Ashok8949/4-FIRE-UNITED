@@ -40,9 +40,6 @@ trusted Firestore create triggers in the default Cloud Functions codebase.
 Browser clients no longer write notifications; the collection is admin-only.
 Deploy the rules and default `functions` codebase together to preserve alerts.
 
-The public visitor counter in `stats` remains unchanged until its write flow is migrated to a trusted backend.
-
-
 The visitor counter now calls the `countVisitor` Cloud Function instead of
 writing Firestore from the browser. The function applies a transactional
 per-IP cooldown (one count per 30 minutes), a 20-count UTC-day cap, and stores
