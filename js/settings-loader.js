@@ -12,15 +12,15 @@
  const safeUrl=v=>{if(typeof v!=="string"||!v.trim())return"";try{const u=new URL(v,location.origin);return u.protocol==="https:"||u.origin===location.origin?u.href:""}catch(_){return""}};
  const loaderTemplate=document.getElementById("loader")?.cloneNode(true);let loaderPreviewTimer=null;
  function showStudioLoaderPreview(config){
-  document.getElementById("fourfu-studio-loader-preview")?.remove();if(loaderPreviewTimer)clearTimeout(loaderPreviewTimer);
+  document.querySelector("#loader[data-studio-preview=\"1\"]")?.remove();if(loaderPreviewTimer)clearTimeout(loaderPreviewTimer);const original=document.getElementById("4fu-original-loader")||document.getElementById("loader");if(original&&!original.dataset.studioPreview)original.id="4fu-original-loader";
   if(!config||config.enabled===false||!loaderTemplate)return;
-  const node=loaderTemplate.cloneNode(true);node.id="fourfu-studio-loader-preview";node.style.display="flex";node.style.position="fixed";node.style.inset="0";node.style.zIndex="2147483000";node.style.pointerEvents="none";
+  const node=loaderTemplate.cloneNode(true);node.id="loader";node.dataset.studioPreview="1";node.style.display="flex";node.style.position="fixed";node.style.inset="0";node.style.zIndex="2147483000";node.style.pointerEvents="none";
   const h=node.querySelector(".loader-content h1"),sub=node.querySelector(".loader-content p"),img=node.querySelector(".loader-logo");
   if(h&&typeof config.title==="string")h.textContent=config.title.slice(0,50);if(sub&&typeof config.subtitle==="string")sub.textContent=config.subtitle.slice(0,90);
   const logo=safeUrl(config.logo);if(img&&logo)img.src=logo;if(safeHex(config.background)){node.style.backgroundColor=config.background;const bg=node.querySelector(".loader-bg");if(bg)bg.style.backgroundColor=config.background}
   if(["bullet","minimal","glow"].includes(config.preset))node.dataset["4fuLoader"]=config.preset;
   const festivalClass=Array.from(document.documentElement.classList).find(x=>x.startsWith("fu-festival-"));if(festivalClass){const key=festivalClass.replace("fu-festival-","");node.classList.add("fu-themed-loader","fu-loader-"+key)}
-  document.body.appendChild(node);loaderPreviewTimer=setTimeout(()=>node.remove(),2600);
+  document.body.appendChild(node);loaderPreviewTimer=setTimeout(()=>{node.remove();const prior=document.getElementById("4fu-original-loader");if(prior){prior.id="loader";prior.style.display=""}},2600);
  }
 
  function apply(p,previous){
