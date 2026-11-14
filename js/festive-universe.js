@@ -98,6 +98,12 @@
     if(liveConfig&&liveConfig.enabled===true&&liveConfig.mode==="scheduled"){const a=Date.parse(liveConfig.startAt||""),b=Date.parse(liveConfig.endAt||"");if(Number.isFinite(a)&&a>now)boundaries.push(a);if(Number.isFinite(b)&&b>now)boundaries.push(b);}
     if(boundaries.length){const next=Math.min(...boundaries);boundaryTimer=window.setTimeout(applyLiveConfig,Math.min(MAX_TIMER,Math.max(0,next-now+25)));}
   }
+  window.addEventListener("4fu:studio-preview",event=>{
+    if(!params.has("studioPreview"))return;
+    const detail=event.detail||{};if(Array.isArray(detail.festivalLibrary))liveLibrary=detail.festivalLibrary;
+    const chosen=liveLibrary.find(f=>f.id===detail.selectedFestival);
+    if(chosen){removeExperience();if(valid(chosen.id))build(chosen.id,true);}
+  });
   function start(){
     if(params.has("festivalPreview")){
       const raw=params.get("festivalPreviewData");
