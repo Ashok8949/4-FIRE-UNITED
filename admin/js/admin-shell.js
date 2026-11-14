@@ -47,4 +47,6 @@ for(const [section,href,label,icon] of pages){
 sidebar.append(nav);
 if(old){old.replaceWith(sidebar);}else{document.body.insertBefore(sidebar,document.body.firstChild);}
 document.body.classList.add('admin-shell-page','admin-shell-ready');
+// P13: instrument admin Firestore writes after all page scripts are loaded.
+const auditScript=document.createElement('script');auditScript.src='js/admin-audit.js?v=p13';auditScript.defer=true;document.body.appendChild(auditScript);
 })();
