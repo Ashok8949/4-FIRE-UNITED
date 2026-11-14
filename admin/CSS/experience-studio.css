@@ -88,3 +88,10 @@
 
 /* P18 · Keep one canonical real-site preview visible in every Studio workspace. */
 .studio-global-preview{position:relative;display:block!important;margin:0 0 20px!important}.studio-global-preview .website-preview-shell iframe{height:min(72vh,780px);min-height:540px}.studio-global-preview .website-preview-toolbar{position:sticky;top:58px;z-index:5}
+
+/* P19 · Field-level guidance: every control explains its real website impact. */
+.field-help{display:block;color:#8495ad;font-size:10px;line-height:1.45;font-weight:400;letter-spacing:0;margin-top:-2px}
+.studio-instructions{display:grid;gap:7px;margin:0 0 18px;padding:15px 18px;border:1px solid #35465e;border-left:3px solid #ff984b;border-radius:12px;background:linear-gradient(110deg,#172337,#101722);color:#dce6f4;font-size:12px;line-height:1.6}
+.studio-instructions>b{color:#ffb477;font-size:13px;letter-spacing:.04em}
+.studio-instructions>span{color:#aebbd0}
+.studio-instructions .studio-live-note{color:#7de0b3;font-weight:700}
