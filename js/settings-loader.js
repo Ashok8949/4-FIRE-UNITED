@@ -48,6 +48,14 @@ db.collection("settings")
             return (url.protocol === "https:" || url.origin === window.location.origin) ? url.href : "";
         } catch (_) { return ""; }
     };
+    // P6: allowlisted homepage hero copy and media. Only explicitly tagged nodes are updated.
+    const content=experience.content||{};
+    const textContentMap={eyebrow:"eyebrow",title:"title",highlight:"highlight",subtitle:"subtitle",description:"description",primaryText:"primaryText",secondaryText:"secondaryText"};
+    Object.entries(textContentMap).forEach(([key,field])=>{const value=content[key];if(typeof value==="string"&&value.trim()){document.querySelectorAll('[data-4fu-content="'+field+'"]').forEach(node=>{node.textContent=value.slice(0,320)})}});
+    const safeLink=value=>{if(typeof value!=="string"||!value.trim())return"";try{const u=new URL(value,window.location.origin);return(u.protocol==="https:"||u.origin===window.location.origin)?u.href:""}catch(_){return""}};
+    [["primaryLink","primaryLink"],["secondaryLink","secondaryLink"]].forEach(([field,key])=>{const url=safeLink(content[key]);if(url)document.querySelectorAll('[data-4fu-content-link="'+field+'"]').forEach(node=>{node.href=url})});
+    const heroBackground=safeAsset(content.heroBackground);
+    if(heroBackground){const hero=document.querySelector(".hero");if(hero)hero.style.backgroundImage='linear-gradient(90deg,rgba(5,8,14,.82),rgba(5,8,14,.3)),url("'+heroBackground.replace(/["\\]/g,"")+'")';}
     const brandName = (brand.name || s.teamName || "4 FIRE UNITED").trim();
     const brandShortName = (brand.shortName || "4FU").trim();
     document.querySelectorAll(".team-name").forEach((node) => { node.textContent = brandName; });
