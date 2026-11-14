@@ -108,9 +108,12 @@ document.getElementById("saveSettings").addEventListener("click", () => {
     // partially edited schedule is invalid. Clear inactive dates on save.
     const schedule = festivalEnabled
         ? validateFestivalSchedule()
-        : { valid: ["manual", "scheduled"].includes(festivalMode), startAt: "", endAt: "" };
+        : { valid: true, startAt: "", endAt: "" };
+    const safeFestivalId = FESTIVAL_IDS.has(festivalId) ? festivalId : (festivalEnabled ? null : "diwali");
 
-    if (!schedule.valid || !FESTIVAL_IDS.has(festivalId)) {
+    // The off switch is a recovery path: it must work even if legacy stored
+    // festival metadata is malformed. Normalize invalid metadata while off.
+    if (!schedule.valid || !safeFestivalId) {
         if (schedule.valid) document.getElementById("festivalScheduleError").textContent = "Select a supported festival theme.";
         return;
     }
@@ -163,8 +166,8 @@ document.getElementById("saveSettings").addEventListener("click", () => {
 
         festival: {
             enabled: festivalEnabled,
-            mode: document.getElementById("festivalMode").value,
-            festival: document.getElementById("festivalName").value,
+            mode: ["manual", "scheduled"].includes(festivalMode) ? festivalMode : "manual",
+            festival: safeFestivalId,
             startAt: schedule.startAt,
             endAt: schedule.endAt
         }
