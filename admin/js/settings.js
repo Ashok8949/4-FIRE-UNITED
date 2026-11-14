@@ -107,7 +107,26 @@ document.getElementById("saveSettings").addEventListener("click", () => {
     };
 
 
-    settingsRef.set(settingsData)
+    // Read and merge inside a transaction so unrelated settings (including
+    // unknown fields inside festival) survive this form save. The transaction
+    // also retries if another writer changes the document concurrently.
+    db.runTransaction((transaction) => {
+        return transaction.get(settingsRef).then((doc) => {
+            const existingSettings = doc.exists ? doc.data() : {};
+            const existingFestival = existingSettings.festival || {};
+
+            const mergedSettings = {
+                ...existingSettings,
+                ...settingsData,
+                festival: {
+                    ...existingFestival,
+                    ...settingsData.festival
+                }
+            };
+
+            transaction.set(settingsRef, mergedSettings);
+        });
+    })
 
     .then(() => {
 
