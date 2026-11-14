@@ -62,8 +62,8 @@
   }
   function start(){
     if(preview && valid(preview)){build(preview);return;}
-    if(!window.db || !window.db.collection)return;
-    window.db.collection("settings").doc("website").get().then(doc=>{
+    if(typeof db === "undefined" || !db.collection)return;
+    db.collection("settings").doc("website").get().then(doc=>{
       if(!doc.exists)return;
       const key=activeForDate(doc.data().festival);
       if(key)build(key);
