@@ -127,3 +127,67 @@ for (const collectionName of ["contactMessages", "challengeRegistrations"]) {
     await assertFails(deleteDoc(publicRef));
   });
 }
+
+
+test("public applicants can create only pending, schema-valid applications", async () => {
+  const publicDb = testEnv.unauthenticatedContext().firestore();
+  const validApplication = {
+    name: "Test Player",
+    ign: "TestIGN",
+    uid: "123456789",
+    email: "player@example.com",
+    level: "50",
+    rank: "Heroic",
+    about: "Test application",
+    status: "Pending",
+    appliedOn: "14/11/2026"
+  };
+
+  await assertSucceeds(
+    setDoc(doc(publicDb, "joinApplications", "valid-public-application"), validApplication)
+  );
+  await assertFails(
+    setDoc(doc(publicDb, "joinApplications", "invalid-public-status"), {
+      ...validApplication,
+      status: "Accepted"
+    })
+  );
+  await assertFails(
+    setDoc(doc(publicDb, "joinApplications", "invalid-public-uid"), {
+      ...validApplication,
+      uid: "not-a-uid"
+    })
+  );
+  await assertFails(
+    setDoc(doc(publicDb, "joinApplications", "extra-admin-field"), {
+      ...validApplication,
+      adminApproved: true
+    })
+  );
+});
+
+test("only admin can read, update or delete existing join applications", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), "joinApplications", "private-application"), {
+      uid: "123456789",
+      status: "Pending"
+    });
+  });
+
+  const admin = adminDb();
+  const user = userDb();
+  const adminRef = doc(admin, "joinApplications", "private-application");
+  const userRef = doc(user, "joinApplications", "private-application");
+  const publicRef = doc(testEnv.unauthenticatedContext().firestore(), "joinApplications", "private-application");
+
+  await assertFails(getDoc(userRef));
+  await assertFails(updateDoc(userRef, { status: "Accepted" }));
+  await assertFails(deleteDoc(userRef));
+  await assertFails(getDoc(publicRef));
+  await assertFails(updateDoc(publicRef, { status: "Accepted" }));
+  await assertFails(deleteDoc(publicRef));
+
+  await assertSucceeds(getDoc(adminRef));
+  await assertSucceeds(updateDoc(adminRef, { status: "Accepted" }));
+  await assertSucceeds(deleteDoc(adminRef));
+});

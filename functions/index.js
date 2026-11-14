@@ -418,3 +418,83 @@ exports.getFreeFirePlayer = onRequest(
 
     }
 );
+
+// ============================================================
+// PUBLIC: LOOK UP AN APPLICATION STATUS USING UID + EMAIL
+// Returns only status-facing fields; never exposes the full
+// application record or enables direct public Firestore reads.
+// ============================================================
+
+exports.lookupJoinApplicationStatus = onRequest(
+    {
+        region: "asia-south1",
+        cors: true,
+        timeoutSeconds: 15,
+        memory: "256MiB"
+    },
+    async (req, res) => {
+        if (req.method !== "POST") {
+            return res.status(405).json({
+                success: false,
+                message: "Method not allowed"
+            });
+        }
+
+        try {
+            const uid = String(req.body?.uid || "").trim();
+            const email = String(req.body?.email || "").trim().toLowerCase();
+
+            if (!/^\\d{5,15}$/.test(uid) ||
+                email.length > 254 ||
+                !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "A valid UID and application email are required."
+                });
+            }
+
+            // Query by UID, then compare email server-side to avoid requiring
+            // a composite Firestore index or returning unrelated applications.
+            const matches = await db.collection("joinApplications")
+                .where("uid", "==", uid)
+                .limit(20)
+                .get();
+
+            const match = matches.docs.find((item) =>
+                String(item.data().email || "").trim().toLowerCase() === email
+            );
+
+            if (!match) {
+                return res.status(404).json({
+                    success: true,
+                    found: false
+                });
+            }
+
+            const application = match.data();
+            const status = ["Pending", "Accepted", "Rejected"].includes(application.status)
+                ? application.status
+                : "Pending";
+
+            return res.status(200).json({
+                success: true,
+                found: true,
+                application: {
+                    name: String(application.name || ""),
+                    ign: String(application.ign || ""),
+                    uid,
+                    rank: String(application.rank || ""),
+                    appliedOn: String(application.appliedOn || ""),
+                    status,
+                    message: String(application.message || "").slice(0, 1000)
+                }
+            });
+        } catch (error) {
+            console.error("lookupJoinApplicationStatus error:", error);
+            return res.status(500).json({
+                success: false,
+                message: "Unable to check application status right now."
+            });
+        }
+    }
+);

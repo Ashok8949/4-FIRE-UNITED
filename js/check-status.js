@@ -1,134 +1,123 @@
-document.getElementById("checkStatusBtn").addEventListener("click", () => {
+(() => {
+    "use strict";
 
-    const uid = document.getElementById("checkUID").value.trim();
+    const button = document.getElementById("checkStatusBtn");
+    const uidInput = document.getElementById("checkUID");
+    const emailInput = document.getElementById("checkEmail");
     const result = document.getElementById("statusResult");
 
-    if (!uid) {
-        alert("Please enter your Free Fire UID.");
-        return;
+    if (!button || !uidInput || !emailInput || !result) return;
+
+    const endpoint = "https://asia-south1-fire-united.cloudfunctions.net/lookupJoinApplicationStatus";
+
+    function showMessage(title, message, color = "#8B0000") {
+        result.replaceChildren();
+        result.style.display = "block";
+        result.style.background = "#111";
+        result.style.border = `2px solid ${color}`;
+
+        const heading = document.createElement("h2");
+        heading.textContent = title;
+        const paragraph = document.createElement("p");
+        paragraph.textContent = message;
+        result.append(heading, paragraph);
     }
 
-    result.style.display = "block";
-    result.style.background = "#111";
-    result.innerHTML = "<p>🔍 Checking application...</p>";
+    function showApplication(app) {
+        const colors = {
+            Accepted: "#28a745",
+            Rejected: "#dc3545",
+            Pending: "#ffc107"
+        };
+        const color = colors[app.status] || colors.Pending;
+        const icon = app.status === "Accepted" ? "🟢" :
+            app.status === "Rejected" ? "🔴" : "🟡";
 
-    db.collection("joinApplications")
-        .where("uid", "==", uid)
-        .get()
-        .then((snapshot) => {
+        result.replaceChildren();
+        result.style.display = "block";
+        result.style.background = "#111";
+        result.style.border = `2px solid ${color}`;
+        result.style.color = "#fff";
 
-            if (snapshot.empty) {
+        const badge = document.createElement("h2");
+        badge.textContent = `${icon} ${app.status}`;
+        badge.style.color = color;
+        result.appendChild(badge);
 
-                result.style.background = "#8B0000";
+        const fields = [
+            ["👤 Full Name", app.name],
+            ["🎮 Game Name", app.ign],
+            ["🆔 UID", app.uid],
+            ["🏆 Rank", app.rank],
+            ["📅 Applied On", app.appliedOn]
+        ];
 
-                result.innerHTML = `
-                    <h2>❌ Application Not Found</h2>
-                    <p>No application found with this UID.</p>
-                `;
+        fields.forEach(([label, value]) => {
+            const row = document.createElement("p");
+            const strong = document.createElement("strong");
+            strong.textContent = `${label} : `;
+            row.append(strong, document.createTextNode(value || "-"));
+            result.appendChild(row);
+        });
 
+        if (app.status !== "Pending") {
+            const heading = document.createElement("h3");
+            heading.textContent = "💬 Message From Admin";
+            heading.style.color = color;
+            const message = document.createElement("p");
+            message.textContent = app.message || (
+                app.status === "Accepted"
+                    ? "🎉 Congratulations! Welcome to 4 FIRE UNITED."
+                    : "Unfortunately your application was not selected."
+            );
+            result.append(heading, message);
+        } else {
+            const message = document.createElement("p");
+            message.textContent = "Your application is currently under review.";
+            result.appendChild(message);
+        }
+    }
+
+    button.addEventListener("click", async () => {
+        const uid = uidInput.value.trim();
+        const email = emailInput.value.trim().toLowerCase();
+
+        if (!/^\d{5,15}$/.test(uid)) {
+            showMessage("Invalid UID", "Enter a valid 5–15 digit Free Fire UID.");
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+            showMessage("Invalid email", "Enter the email address used in your application.");
+            return;
+        }
+
+        button.disabled = true;
+        const originalText = button.textContent;
+        button.textContent = "Checking...";
+        showMessage("🔍 Checking application", "Please wait...", "#ffc107");
+
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ uid, email })
+            });
+            const data = await response.json().catch(() => ({}));
+
+            if (response.status === 404 || (response.ok && data.found === false)) {
+                showMessage("❌ Application Not Found", "No application matched that UID and email.");
                 return;
             }
-
-            const app = snapshot.docs[0].data();
-
-            let color = "#ffc107";
-            let icon = "🟡";
-
-            if (app.status === "Accepted") {
-                color = "#28a745";
-                icon = "🟢";
+            if (!response.ok || data.success !== true || !data.application) {
+                throw new Error(data.message || "Unable to check application status right now.");
             }
-
-            if (app.status === "Rejected") {
-                color = "#dc3545";
-                icon = "🔴";
-            }
-
-            let defaultMessage = "";
-
-            if (app.status === "Accepted") {
-
-                defaultMessage =
-                    "🎉 Congratulations! Welcome to 4 FIRE UNITED.";
-
-            } else if (app.status === "Rejected") {
-
-                defaultMessage =
-                    "Unfortunately your application was not selected.";
-
-            } else {
-
-                defaultMessage =
-                    "Your application is currently under review.";
-            }
-
-            result.style.background = "#111";
-            result.style.border = `2px solid ${color}`;
-            result.style.color = "#fff";
-
-            result.innerHTML = `
-
-                <div style="text-align:center;">
-
-                    <span style="
-                        background:${color};
-                        color:#fff;
-                        padding:10px 25px;
-                        border-radius:50px;
-                        font-size:18px;
-                        font-weight:bold;
-                        display:inline-block;
-                        margin-bottom:20px;
-                    ">
-                        ${icon} ${app.status}
-                    </span>
-
-                </div>
-
-                <hr>
-
-                <p><strong>👤 Full Name :</strong> ${app.name}</p>
-
-                <p><strong>🎮 Game Name :</strong> ${app.ign}</p>
-
-                <p><strong>🆔 UID :</strong> ${app.uid}</p>
-
-                <p><strong>🏆 Rank :</strong> ${app.rank}</p>
-
-                <p><strong>📅 Applied On :</strong> ${app.appliedOn}</p>
-
-                ${app.status !== "Pending" ? `
-
-                    <hr>
-
-                    <h3 style="color:${color};">
-                        💬 Message From Admin
-                    </h3>
-
-                    <p>
-                        ${app.message || defaultMessage}
-                    </p>
-
-                ` : ""}
-
-            `;
-
-        })
-
-        .catch((err) => {
-
-    console.error("Firestore Error:", err);
-
-    alert(err.message);
-
-    result.style.display = "block";
-    result.style.background = "#8B0000";
-
-    result.innerHTML = `
-        <h2>❌ Error</h2>
-        <p>${err.message}</p>
-    `;
-
-});
-
-});
+            showApplication(data.application);
+        } catch (error) {
+            console.error("Application status lookup failed:", error);
+            showMessage("❌ Unable to Check Status", "Please try again later.");
+        } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+    });
+})();

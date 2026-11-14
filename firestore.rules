@@ -62,9 +62,34 @@ service cloud.firestore {
     }
 
     match /joinApplications/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow update, delete: if request.auth != null;
+      // Public applicants may submit only the expected pending application shape.
+      allow create: if
+        request.resource.data.keys().hasAll([
+          "name", "ign", "uid", "email", "level", "rank", "about", "status", "appliedOn"
+        ]) &&
+        request.resource.data.keys().hasOnly([
+          "name", "ign", "uid", "email", "level", "rank", "about", "status", "appliedOn"
+        ]) &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() <= 100 &&
+        request.resource.data.ign is string &&
+        request.resource.data.ign.size() > 0 &&
+        request.resource.data.ign.size() <= 50 &&
+        request.resource.data.uid is string &&
+        request.resource.data.uid.matches("^[0-9]{5,15}$") &&
+        request.resource.data.email is string &&
+        request.resource.data.email.size() <= 254 &&
+        request.resource.data.level is string &&
+        request.resource.data.level.size() <= 4 &&
+        request.resource.data.rank is string &&
+        request.resource.data.rank.size() <= 30 &&
+        request.resource.data.about is string &&
+        request.resource.data.about.size() <= 2000 &&
+        request.resource.data.status == "Pending" &&
+        request.resource.data.appliedOn is string &&
+        request.resource.data.appliedOn.size() <= 40;
+      allow read, update, delete: if isAdmin();
     }
 
     match /chat/{document} {
