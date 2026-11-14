@@ -444,9 +444,9 @@ exports.lookupJoinApplicationStatus = onRequest(
             const uid = String(req.body?.uid || "").trim();
             const email = String(req.body?.email || "").trim().toLowerCase();
 
-            if (!/^\\d{5,15}$/.test(uid) ||
+            if (!/^\d{5,15}$/.test(uid) ||
                 email.length > 254 ||
-                !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 return res.status(400).json({
                     success: false,
                     message: "A valid UID and application email are required."
