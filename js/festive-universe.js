@@ -10,14 +10,23 @@
     independence:{emoji:"✦",title:"Pride in Every Tricolour",label:"HAPPY INDEPENDENCE DAY",message:"Honouring courage, freedom and the spirit of India.",particle:"fu-confetti",count:30,caption:"COURAGE • FREEDOM • UNITY"},
     halloween:{emoji:"✦",title:"Enter the Night",label:"HAPPY HALLOWEEN",message:"A little mystery. A lot of 4FU spirit.",particle:"fu-web",count:22,caption:"MYSTERY • MAGIC • MAYHEM"}
   };
+  Object.assign(FESTIVALS,{
+    navratri:{emoji:"✦",title:"Nine Nights of Radiance",label:"HAPPY NAVRATRI",message:"Nine nights. Infinite energy. One spirit.",particle:"fu-spark",count:28,caption:"DEVOTION • RHYTHM • RADIANCE"},
+    "raksha-bandhan":{emoji:"✦",title:"A Bond Beyond Battles",label:"HAPPY RAKSHA BANDHAN",message:"Celebrating the bonds that make us stronger.",particle:"fu-leaf",count:16,caption:"BOND • TRUST • TOGETHERNESS"},
+    "republic-day":{emoji:"✦",title:"A Nation. A Constitution.",label:"HAPPY REPUBLIC DAY",message:"Many voices, one united spirit.",particle:"fu-confetti",count:30,caption:"UNITY • PRIDE • DEMOCRACY"}
+  });
   const MAX_TIMER=2147483647;
   const reducedMotion=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const params=new URLSearchParams(window.location.search);
   const preview=params.get("festivalPreview");
-  const valid=key=>Object.prototype.hasOwnProperty.call(FESTIVALS,key);
+  let liveLibrary=[];
+  const valid=key=>Object.prototype.hasOwnProperty.call(FESTIVALS,key)||liveLibrary.some(f=>f.id===key&&f.custom===true);
   let activeKey=null,boundaryTimer=null,liveConfig=null;
+  const themeFor=key=>{const base=FESTIVALS[key]||{emoji:"✦",title:"A New Celebration",label:"CELEBRATION",message:"A new celebration begins.",particle:"fu-spark",count:18,caption:"CELEBRATION • UNITY • JOY"};const f=liveLibrary.find(x=>x.id===key);if(!f)return base;const p={spark:"fu-spark",splash:"fu-holi-splash",snow:"fu-snow",lantern:"fu-lantern",confetti:"fu-confetti",web:"fu-web",none:"fu-none"};const n={low:9,medium:19,high:32};return {...base,title:f.name||base.title,label:f.label||base.label,message:f.message||base.message,particle:p[f.particle]||base.particle,count:n[f.intensity]||base.count,caption:(f.name||base.title).toUpperCase()+" • 4FU UNITED",style:f.style,accent:f.accent,atmosphere:f.atmosphere};};
   const rangoliSvg='<svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g stroke="#ffd17a" stroke-width="1.35" stroke-linecap="round"><circle cx="120" cy="120" r="105"/><circle cx="120" cy="120" r="84"/><circle cx="120" cy="120" r="62"/><circle cx="120" cy="120" r="38"/><path d="M120 15V225M15 120H225M46 46L194 194M194 46L46 194M82 24Q120 55 158 24Q145 65 120 78Q95 65 82 24ZM216 82Q185 120 216 158Q175 145 162 120Q175 95 216 82ZM158 216Q120 185 82 216Q95 175 120 162Q145 175 158 216ZM24 158Q55 120 24 82Q65 95 78 120Q65 145 24 158Z"/><path d="M120 38Q151 70 120 92Q89 70 120 38ZM202 120Q170 151 148 120Q170 89 202 120ZM120 202Q89 170 120 148Q151 170 120 202ZM38 120Q70 89 92 120Q70 151 38 120Z"/></g><g fill="#fff0bf"><circle cx="120" cy="15" r="3"/><circle cx="225" cy="120" r="3"/><circle cx="120" cy="225" r="3"/><circle cx="15" cy="120" r="3"/><circle cx="120" cy="120" r="4"/></g></svg>';
   function activeForDate(config,now=Date.now()){
+    const scheduled=liveLibrary.filter(f=>f&&f.enabled===true&&valid(f.id)).filter(f=>f.mode==="manual"||(f.mode==="scheduled"&&Number.isFinite(Date.parse(f.startAt||""))&&Number.isFinite(Date.parse(f.endAt||""))&&Date.parse(f.endAt)>Date.parse(f.startAt)&&now>=Date.parse(f.startAt)&&now<Date.parse(f.endAt))).sort((a,b)=>(Number(b.priority)||0)-(Number(a.priority)||0));
+    if(scheduled.length)return scheduled[0].id;
     if(!config||config.enabled!==true||!valid(config.festival))return null;
     if(config.mode==="manual")return config.festival;
     if(config.mode!=="scheduled")return null;
@@ -28,12 +37,13 @@
   function removeExperience(){
     Array.from(document.documentElement.classList).forEach(name=>{if(name.startsWith("fu-festival-"))document.documentElement.classList.remove(name);});
     ["fourfu-festival-layer","fourfu-festival-toast","fourfu-festival-diya-left","fourfu-festival-diya-right","fourfu-festival-rangoli","fourfu-festival-moon","fourfu-festival-intro"].forEach(id=>document.getElementById(id)?.remove());
-    activeKey=null;
+    document.documentElement.style.removeProperty("--fu-accent");document.documentElement.style.removeProperty("--fu-wash");
+    Array.from(document.documentElement.classList).forEach(name=>{if(name.startsWith("fu-style-"))document.documentElement.classList.remove(name);});activeKey=null;
   }
   function addIntro(key){
-    const theme=FESTIVALS[key],intro=document.createElement("section");
+    const theme=themeFor(key),intro=document.createElement("section"),content=document.createElement("div"),art=document.createElement("div"),kicker=document.createElement("p"),title=document.createElement("h1"),caption=document.createElement("p"),skipButton=document.createElement("button");
     intro.id="fourfu-festival-intro";intro.setAttribute("role","dialog");intro.setAttribute("aria-label",theme.label);
-    intro.innerHTML='<div class="fu-intro-content"><div class="fu-intro-art">'+rangoliSvg+'</div><p class="fu-intro-kicker">4 FIRE UNITED PRESENTS</p><h1 class="fu-intro-title">'+theme.title+'</h1><p class="fu-intro-caption">'+theme.caption+'</p></div><button class="fu-intro-skip" type="button">Skip intro</button>';
+    content.className="fu-intro-content";art.className="fu-intro-art";art.innerHTML=rangoliSvg;kicker.className="fu-intro-kicker";kicker.textContent="4 FIRE UNITED PRESENTS";title.className="fu-intro-title";title.textContent=theme.title;caption.className="fu-intro-caption";caption.textContent=theme.caption;skipButton.className="fu-intro-skip";skipButton.type="button";skipButton.textContent="Skip intro";content.append(art,kicker,title,caption);intro.append(content,skipButton);
     document.body.appendChild(intro);
     const close=()=>{intro.classList.add("is-leaving");window.setTimeout(()=>intro.remove(),800);};
     const skip=intro.querySelector?.("button");if(skip)skip.addEventListener("click",close,{once:true});
@@ -45,7 +55,10 @@
   function build(key,isPreview=false){
     if(!valid(key)||activeKey===key)return;
     removeExperience();
-    const theme=FESTIVALS[key];activeKey=key;document.documentElement.classList.add("fu-festival-"+key);
+    const theme=themeFor(key);activeKey=key;document.documentElement.classList.add("fu-festival-"+key);
+    if(theme.accent&&/^#[0-9a-f]{6}$/i.test(theme.accent))document.documentElement.style.setProperty("--fu-accent",theme.accent);
+    if(theme.atmosphere&&/^#[0-9a-f]{6}$/i.test(theme.atmosphere))document.documentElement.style.setProperty("--fu-wash",theme.atmosphere);
+    if(theme.style)document.documentElement.classList.add("fu-style-"+theme.style);
     const layer=document.createElement("div");layer.id="fourfu-festival-layer";layer.setAttribute("aria-hidden","true");
     if(!reducedMotion){
       for(let i=0;i<theme.count;i++){
@@ -81,7 +94,7 @@
     if(boundaryTimer!==null)window.clearTimeout(boundaryTimer);boundaryTimer=null;
     const now=Date.now(),nextKey=activeForDate(liveConfig,now);
     if(nextKey)build(nextKey);else if(activeKey)removeExperience();
-    if(liveConfig.enabled===true&&liveConfig.mode==="scheduled"&&valid(liveConfig.festival)){
+    if(liveConfig&&liveConfig.enabled===true&&liveConfig.mode==="scheduled"&&valid(liveConfig.festival)){
       const start=Date.parse(liveConfig.startAt||""),end=Date.parse(liveConfig.endAt||"");
       if(Number.isFinite(start)&&Number.isFinite(end)&&end>start){const boundary=now<start?start:(now<end?end:null);if(boundary!==null)boundaryTimer=window.setTimeout(applyLiveConfig,Math.min(MAX_TIMER,Math.max(0,boundary-now+20)));}
     }
@@ -89,7 +102,7 @@
   function start(){
     if(params.has("festivalPreview")){if(valid(preview))build(preview,true);return;}
     if(typeof db==="undefined"||!db.collection)return;
-    db.collection("settings").doc("website").get().then(doc=>{if(!doc.exists)return;liveConfig=doc.data().festival||null;applyLiveConfig();}).catch(err=>console.warn("[4FU Festive Universe] Could not load festival settings:",err));
+    db.collection("settings").doc("website").get().then(doc=>{if(!doc.exists)return;liveConfig=doc.data().festival||null;liveLibrary=Array.isArray(doc.data().experience?.festivalLibrary)?doc.data().experience.festivalLibrary:[];applyLiveConfig();}).catch(err=>console.warn("[4FU Festive Universe] Could not load festival settings:",err));
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")applyLiveConfig();});
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
