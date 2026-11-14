@@ -3642,7 +3642,21 @@ async function proWebhook(request, env) {
 
   const firebaseUid = subscription?.notes?.firebaseUid;
   if (!firebaseUid) {
+    console.warn("PRO webhook ignored: signed subscription event has no Firebase UID");
     return new Response("Webhook received without Firebase UID", { status: 200 });
+  }
+
+  const eventId = String(payload?.id || "");
+  const eventKey = eventId ? `pro-webhook-event:${eventId}` : "";
+  if (eventKey && env.PROFILE_CACHE) {
+    try {
+      if (await env.PROFILE_CACHE.get(eventKey)) {
+        return new Response("Duplicate webhook ignored", { status: 200 });
+      }
+    } catch (error) {
+      console.warn("PRO webhook deduplication lookup failed:", error?.message || error);
+      return new Response("Webhook temporarily unavailable", { status: 500 });
+    }
   }
 
   let player;
@@ -3724,6 +3738,18 @@ async function proWebhook(request, env) {
       },
       env
     );
+  }
+
+  if (eventKey && env.PROFILE_CACHE) {
+    try {
+      await env.PROFILE_CACHE.put(eventKey, "processed", {
+        expirationTtl: 60 * 60 * 24 * 30,
+      });
+    } catch (error) {
+      // The entitlement update has succeeded. A later duplicate event is safe:
+      // these webhook handlers write the same authoritative subscription state.
+      console.warn("PRO webhook deduplication write failed:", error?.message || error);
+    }
   }
 
   return new Response("OK", { status: 200 });
