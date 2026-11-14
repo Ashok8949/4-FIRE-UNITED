@@ -3828,6 +3828,16 @@ async function proWebhook(request, env) {
   const hasFutureBillingPeriod =
     Number.isFinite(expiryMs) && expiryMs > Date.now();
 
+  if (subscription.status === "active" && !hasFutureBillingPeriod) {
+    console.error("PRO webhook active subscription has no valid future billing end", {
+      event,
+      subscriptionId,
+    });
+    return new Response("Subscription billing period is not yet verifiable", {
+      status: 500,
+    });
+  }
+
   let patch = null;
 
   // Entitlement follows the latest state returned by Razorpay, not the
