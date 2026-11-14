@@ -36,7 +36,7 @@
   }
   function removeExperience(){
     Array.from(document.documentElement.classList).forEach(name=>{if(name.startsWith("fu-festival-"))document.documentElement.classList.remove(name);});
-    ["fourfu-festival-layer","fourfu-festival-toast","fourfu-festival-diya-left","fourfu-festival-diya-right","fourfu-festival-rangoli","fourfu-festival-moon","fourfu-festival-intro"].forEach(id=>document.getElementById(id)?.remove());
+    ["fourfu-festival-layer","fourfu-festival-art","fourfu-festival-toast","fourfu-festival-diya-left","fourfu-festival-diya-right","fourfu-festival-rangoli","fourfu-festival-moon","fourfu-festival-intro"].forEach(id=>document.getElementById(id)?.remove());
     document.documentElement.style.removeProperty("--fu-accent");document.documentElement.style.removeProperty("--fu-wash");
     Array.from(document.documentElement.classList).forEach(name=>{if(name.startsWith("fu-style-"))document.documentElement.classList.remove(name);});activeKey=null;
   }
@@ -48,6 +48,40 @@
     const close=()=>{intro.classList.add("is-leaving");window.setTimeout(()=>intro.remove(),800);};
     const skip=intro.querySelector?.("button");if(skip)skip.addEventListener("click",close,{once:true});
     window.setTimeout(close,3200);
+  }
+  function addFestivalArt(key){
+    if(reducedMotion)return;
+    if(!document.getElementById("fu-festival-art-style")){
+      const style=document.createElement("style");style.id="fu-festival-art-style";
+      style.textContent=`
+      #fourfu-festival-art{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+      #fourfu-festival-art canvas{width:100%;height:100%;display:block}
+      .fu-powder-cloud{position:absolute;width:38vw;height:34vw;max-width:520px;max-height:460px;border-radius:50%;filter:blur(34px);opacity:.2;mix-blend-mode:screen;animation:fuPowderDrift 13s ease-in-out infinite alternate}
+      .fu-powder-cloud:nth-child(1){left:-10%;top:12%;background:radial-gradient(circle,#ff3b8d 0 13%,#ff3b8d00 70%)}
+      .fu-powder-cloud:nth-child(2){right:-12%;top:8%;background:radial-gradient(circle,#24d9c4 0 14%,#24d9c400 70%);animation-delay:-4s}
+      .fu-powder-cloud:nth-child(3){left:25%;bottom:-22%;background:radial-gradient(circle,#ffc247 0 16%,#ffc24700 70%);animation-delay:-7s}
+      .fu-powder-cloud:nth-child(4){right:18%;bottom:-18%;background:radial-gradient(circle,#9b70ff 0 14%,#9b70ff00 70%);animation-delay:-2s}
+      .fu-powder-cloud:nth-child(5){left:-15%;bottom:18%;background:radial-gradient(circle,#ff784b 0 15%,#ff784b00 70%);animation-delay:-9s}
+      .fu-art-eid:after{content:"☾";position:absolute;right:12%;top:13%;font:200px/1 Georgia,serif;color:#d8f4e9;opacity:.22;text-shadow:0 0 45px #9df5db}
+      .fu-art-navratri:before{content:"";position:absolute;width:min(52vw,560px);aspect-ratio:1;left:50%;bottom:-44%;transform:translateX(-50%);border:1px solid #f3a4d766;border-radius:50%;box-shadow:0 0 0 22px #f3a4d711,0 0 0 48px #f3a4d70b,0 0 80px #f3a4d733}
+      .fu-art-raksha-bandhan:before{content:"";position:absolute;left:-8%;right:-8%;top:18%;height:2px;background:linear-gradient(90deg,transparent,#e7a4c8aa,#ffd9a5aa,#e7a4c8aa,transparent);box-shadow:0 0 24px #e7a4c8}
+      .fu-art-independence:before,.fu-art-republic-day:before{content:"";position:absolute;inset:0;background:linear-gradient(165deg,transparent 22%,#ff993311 30%,transparent 42%,transparent 54%,#fff2 61%,transparent 70%,transparent 78%,#13880811 86%,transparent 94%);transform:skewY(-8deg)}
+      .fu-art-christmas:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% -20%,#b8f6e522,transparent 55%),radial-gradient(ellipse at 0 100%,#75d8ae18,transparent 45%)}
+      .fu-art-halloween:before{content:"";position:absolute;right:12%;top:12%;width:140px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 38% 35%,#d7c5ff55,#9c6cff11 65%,transparent 70%);box-shadow:0 0 70px #9b6cff33}
+      @keyframes fuPowderDrift{from{transform:translate3d(-2vw,2vh,0) scale(.86)}to{transform:translate3d(5vw,-4vh,0) scale(1.16)}}
+      @media(max-width:700px){.fu-powder-cloud{width:65vw;height:65vw;filter:blur(26px);opacity:.15}}
+      @media(prefers-reduced-motion:reduce){#fourfu-festival-art{display:none!important}}
+      `;document.head.appendChild(style);
+    }
+    const art=document.createElement("div");art.id="fourfu-festival-art";art.className="fu-art fu-art-"+key;art.setAttribute("aria-hidden","true");document.body.appendChild(art);
+    if(key==="holi"){for(let i=0;i<5;i++){const cloud=document.createElement("span");cloud.className="fu-powder-cloud";art.appendChild(cloud)}return}
+    if(key==="diwali"||key==="newyear"){
+      const canvas=document.createElement("canvas"),ctx=canvas.getContext("2d");art.appendChild(canvas);
+      const resize=()=>{const dpr=Math.min(1.5,window.devicePixelRatio||1);canvas.width=Math.floor(innerWidth*dpr);canvas.height=Math.floor(innerHeight*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)};resize();window.addEventListener("resize",resize,{passive:true});
+      const bursts=[];let last=0;const palette=key==="diwali"?["#ffd47b","#fff0c2","#ff9d45","#f6b6ff"]:["#ffcf6e","#8edcff","#ff83b7","#c6a3ff"];
+      const frame=now=>{if(!art.isConnected)return;const w=innerWidth,h=innerHeight;if(now-last>1050&&bursts.length<5){last=now;const x=w*(.14+Math.random()*.72),y=h*(.1+Math.random()*.42),color=palette[Math.floor(Math.random()*palette.length)];for(let i=0;i<48;i++){const a=Math.PI*2*i/48+Math.random()*.08,s=1.1+Math.random()*3.2;bursts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,decay:.008+Math.random()*.012,color,r:1+Math.random()*1.6})}}
+        ctx.clearRect(0,0,w,h);for(let i=bursts.length-1;i>=0;i--){const p=bursts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.018;p.vx*=.992;p.life-=p.decay;if(p.life<=0){bursts.splice(i,1);continue}ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.shadowBlur=12;ctx.shadowColor=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;ctx.shadowBlur=0;requestAnimationFrame(frame)};requestAnimationFrame(frame);
+    }
   }
   function addRangoli(){
     const wrap=document.createElement("div");wrap.id="fourfu-festival-rangoli";wrap.className="fu-rangoli";wrap.setAttribute("aria-hidden","true");wrap.innerHTML=rangoliSvg;document.body.appendChild(wrap);
@@ -71,13 +105,7 @@
       }
     }
     document.body.appendChild(layer);
-    if(key==="diwali"){
-      const left=document.createElement("span"),right=document.createElement("span");
-      left.id="fourfu-festival-diya-left";left.className="fu-diya";left.textContent="🪔";right.id="fourfu-festival-diya-right";right.className="fu-diya fu-diya-right";right.textContent="🪔";
-      left.setAttribute("aria-hidden","true");right.setAttribute("aria-hidden","true");document.body.append(left,right);addRangoli();
-    }
-    if(key==="eid"&&!reducedMotion){const moon=document.createElement("span");moon.id="fourfu-festival-moon";moon.className="fu-diya";moon.textContent="☾";moon.setAttribute("aria-hidden","true");document.body.appendChild(moon);}
-    let welcomed=false;const welcomeKey="fu-festival-welcomed:"+key;
+    addFestivalArt(key);\n    let welcomed=false;const welcomeKey="fu-festival-welcomed:"+key;
     if(!isPreview){try{welcomed=sessionStorage.getItem(welcomeKey)==="1";}catch(_){}}
     if(!welcomed){
       const toast=document.createElement("div");toast.id="fourfu-festival-toast";toast.className="fu-festival-toast";toast.setAttribute("role","status");toast.textContent=theme.emoji+" "+theme.message;document.body.appendChild(toast);
