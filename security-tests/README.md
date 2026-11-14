@@ -13,8 +13,16 @@ npm install --prefix security-tests
 npx --yes firebase-tools emulators:exec --project demo-4fu-firestore-rules --only firestore "npm test --prefix security-tests"
 ```
 
-The initial suite protects the website-settings authorization boundary:
-public reads remain available, while writes require the configured admin
-email. Additional collection rules should receive explicit authorization tests
-before their permissions are tightened; broad legacy permissions elsewhere in
-`firestore.rules` are intentionally not changed by this test-only addition.
+## Current coverage
+
+- Website settings remain publicly readable; only the configured admin email
+  can write them.
+- Contact messages and challenge registrations remain publicly submittable.
+- Only the configured admin can read, update, or delete those submissions.
+- Both authenticated non-admin and unauthenticated access are tested against
+  existing documents, so denial assertions do not pass merely because a
+  document was already deleted.
+
+Other legacy collection permissions are not covered yet. In particular,
+`joinApplications`, `stats`, and `notifications` still need dedicated
+workflow-aware security work before their rules can be tightened safely.

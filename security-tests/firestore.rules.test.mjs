@@ -90,7 +90,7 @@ for (const collectionName of ["contactMessages", "challengeRegistrations"]) {
     );
   });
 
-  test(`only admin can read, update or delete ${collectionName} records`, async () => {
+  test(`only admin can read, update or delete existing ${collectionName} records`, async () => {
     await testEnv.withSecurityRulesDisabled(async (context) => {
       await setDoc(doc(context.firestore(), collectionName, "private-record"), {
         submitted: true
@@ -99,18 +99,18 @@ for (const collectionName of ["contactMessages", "challengeRegistrations"]) {
 
     const admin = adminDb();
     const user = userDb();
+    const adminRef = doc(admin, collectionName, "private-record");
+    const userRef = doc(user, collectionName, "private-record");
 
-    await assertSucceeds(getDoc(doc(admin, collectionName, "private-record")));
-    await assertSucceeds(updateDoc(doc(admin, collectionName, "private-record"), {
-      reviewed: true
-    }));
-    await assertSucceeds(deleteDoc(doc(admin, collectionName, "private-record")));
+    // Verify non-admin denial while the document still exists.
+    await assertFails(getDoc(userRef));
+    await assertFails(updateDoc(userRef, { reviewed: true }));
+    await assertFails(deleteDoc(userRef));
 
-    await assertFails(getDoc(doc(user, collectionName, "private-record")));
-    await assertFails(updateDoc(doc(user, collectionName, "private-record"), {
-      reviewed: true
-    }));
-    await assertFails(deleteDoc(doc(user, collectionName, "private-record")));
+    // Verify the same operations are permitted for the configured admin.
+    await assertSucceeds(getDoc(adminRef));
+    await assertSucceeds(updateDoc(adminRef, { reviewed: true }));
+    await assertSucceeds(deleteDoc(adminRef));
   });
 
   test(`unauthenticated users cannot read, update or delete ${collectionName} records`, async () => {
@@ -121,10 +121,9 @@ for (const collectionName of ["contactMessages", "challengeRegistrations"]) {
     });
 
     const publicDb = testEnv.unauthenticatedContext().firestore();
-    await assertFails(getDoc(doc(publicDb, collectionName, "anonymous-private-record")));
-    await assertFails(updateDoc(doc(publicDb, collectionName, "anonymous-private-record"), {
-      reviewed: true
-    }));
-    await assertFails(deleteDoc(doc(publicDb, collectionName, "anonymous-private-record")));
+    const publicRef = doc(publicDb, collectionName, "anonymous-private-record");
+    await assertFails(getDoc(publicRef));
+    await assertFails(updateDoc(publicRef, { reviewed: true }));
+    await assertFails(deleteDoc(publicRef));
   });
 }
