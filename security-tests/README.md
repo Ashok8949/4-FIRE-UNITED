@@ -34,6 +34,9 @@ npx --yes firebase-tools emulators:exec --project demo-4fu-firestore-rules --onl
   malformed counter values, and database failures.
 - Admin account provisioning tests verify that only the configured,
   email-verified administrator token is accepted.
+- Public Free Fire profile lookup and application-status endpoints use
+  transactional per-IP/per-endpoint limits (15 and 5 requests per minute).
+  The IP key is HMAC-SHA-256 hashed with the server-only secret.
 
 ## Required production configuration (not performed by CI)
 
@@ -57,7 +60,7 @@ Do not commit it, put it in frontend code, or send it in chat. The
 
 Rate-limit documents include an `expiresAt` timestamp, but that field alone
 does not activate automatic deletion. Enable Firestore TTL for collection
-group `_visitorRateLimits`, field `expiresAt`, in the Firebase / Google Cloud
+groups `_visitorRateLimits` and `publicApiRateLimits`, field `expiresAt`, in the Firebase / Google Cloud
 console (Firestore > Time-to-live). TTL deletion is asynchronous and is not
 part of the request-time rate-limit enforcement.
 
@@ -69,13 +72,14 @@ configuring the resulting site key in the website, initializing the App Check
 client, sending App Check tokens to the relevant HTTP functions, and then
 verifying those tokens server-side. Do not enable server enforcement until
 the real site key and client integration are configured and verified; a
-placeholder key would break legitimate traffic. Public status lookup also
-needs abuse/rate limiting before production reliance.
+placeholder key would break legitimate traffic. Public status lookup and Free Fire profile lookup now have transactional
+per-IP/per-endpoint rate limits. App Check remains recommended as an
+additional abuse-control layer before production reliance.
 
 ## Deployment order and scope
 
-The visitor counter now uses a private HMAC secret. Set that secret before
-deploying the default Cloud Functions codebase. Deploy the updated Firestore
+The visitor counter and public API rate limits use the same private HMAC
+secret. Set that secret before deploying the default Cloud Functions codebase. Deploy the updated Firestore
 rules and default Cloud Functions codebase together so public clients cannot
 write visitor stats while the new endpoint is available. Configure TTL
 separately as above. No function, rules, hosting, or production data deploy is

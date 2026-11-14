@@ -45,6 +45,7 @@ jobs:
           node --check functions/index.js
           node --check functions/security-guards.js
           node --check functions/visitor-counter.js
+          node --check functions/public-rate-limit.js
 
       - name: Run Firestore Emulator rules tests
         run: npx --yes firebase-tools emulators:exec --project demo-4fu-firestore-rules --only firestore "npm test --prefix security-tests"
