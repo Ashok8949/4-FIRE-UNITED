@@ -102,6 +102,34 @@ test("unauthenticated users cannot write website settings", async () => {
     })
   );
 });
+test("an unverified account using the admin email cannot write website settings", async () => {
+  const unverifiedAdmin = testEnv.authenticatedContext("unverified-admin", {
+    email: "aks303603@gmail.com",
+    email_verified: false
+  }).firestore();
+  await assertFails(setDoc(doc(unverifiedAdmin, "settings/website"), {
+    festival: { enabled: false }
+  }));
+});
+
+test("players can edit profile fields but cannot change account identity or admin fields", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), "players", "player-profile"), {
+      loginEmail: "player@example.com", authUid: "player-uid", role: "Player",
+      displayOrder: 4, since: "2024", featured: false, name: "Old Name", ign: "OldIGN"
+    });
+  });
+  const profileRef = doc(userDb(), "players", "player-profile");
+  await assertSucceeds(updateDoc(profileRef, {
+    name: "New Name", ign: "NewIGN", loginEmail: "player@example.com",
+    authUid: "player-uid", role: "Player", displayOrder: 4, since: "2024", featured: false
+  }));
+  await assertFails(updateDoc(profileRef, { authUid: "attacker-uid" }));
+  await assertFails(updateDoc(profileRef, { role: "Administrator" }));
+  await assertFails(updateDoc(profileRef, { displayOrder: 999 }));
+  await assertFails(updateDoc(profileRef, { loginEmail: "victim@example.com" }));
+});
+
 
 for (const collectionName of ["contactMessages", "challengeRegistrations"]) {
   test(`public users can submit ${collectionName} records`, async () => {

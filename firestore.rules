@@ -4,18 +4,30 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function isAdmin() {
       return request.auth != null &&
-        request.auth.token.email == "aks303603@gmail.com";
+        request.auth.token.email == "aks303603@gmail.com" &&
+        request.auth.token.email_verified == true;
     }
 
     match /players/{document} {
       allow read: if true;
       allow create, update, delete: if isAdmin();
+      // Players may edit profile fields only. Identity, role and admin-managed
+      // fields remain immutable, and loginEmail must match the signed-in token.
       allow update: if request.auth != null &&
-        request.auth.token.email != "aks303603@gmail.com" &&
+        request.auth.token.email_verified == true &&
         resource.data.loginEmail == request.auth.token.email &&
+        request.resource.data.loginEmail == request.auth.token.email &&
+        request.resource.data.authUid == resource.data.authUid &&
+        request.resource.data.role == resource.data.role &&
         request.resource.data.displayOrder == resource.data.displayOrder &&
         request.resource.data.since == resource.data.since &&
-        request.resource.data.featured == resource.data.featured;
+        request.resource.data.featured == resource.data.featured &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "name", "ign", "uid", "guild", "language", "country", "level",
+          "rank", "kd", "headshot", "matches", "booyah", "weaponName",
+          "weaponType", "weaponQuote", "weaponImage", "instagram", "youtube",
+          "discord", "facebook", "image", "loginEmail"
+        ]);
     }
 
     match /tournaments/{document} {

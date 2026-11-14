@@ -15,6 +15,7 @@ on:
       - "firestore.rules"
       - "firebase.json"
       - "security-tests/**"
+      - "functions/**"
       - ".github/workflows/firestore-rules-tests.yml"
 
 jobs:
