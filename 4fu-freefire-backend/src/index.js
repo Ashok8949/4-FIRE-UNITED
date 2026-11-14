@@ -3337,7 +3337,7 @@ async function proVerifyPayment(request, env) {
       proExpiresAt: null,
     });
   }
-  const claims = await proFirebaseIdToken(proAuthHeader(request), env);
+  const claims = initialClaims;
   const body = await request.json().catch(() => null);
 
   const paymentId = String(body?.razorpay_payment_id || "");
