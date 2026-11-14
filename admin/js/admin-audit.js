@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-const ADMIN='aks303603@gmail.com',SKIP=new Set(['adminAuditLogs','adminStudioVersions']);
+const ADMIN='aks303603@gmail.com',SKIP=new Set(['adminAuditLogs','adminStudioVersions']),SENSITIVE=new Set(['contactMessages','joinApplications','challengeRegistrations','notifications','chat','fcmTokens','friendRequests','friends']);
 function currentAdmin(){const u=window.auth&&auth.currentUser;return u&&u.email===ADMIN?u:null}
 function safeClone(v){if(v==null||typeof v!=='object')return v;if(Array.isArray(v))return v.map(safeClone);const out={};Object.keys(v).forEach(k=>{if(k==='__proto__'||k==='constructor')return;const x=v[k];if(x&&typeof x.toDate==='function')out[k]=x;else if(x&&typeof x==='object'&&typeof x.path==='string'&&typeof x.get==='function')out[k]='[DocumentReference: '+x.path+']';else out[k]=safeClone(x)});return out}
 function refInfo(ref){const path=ref&&ref.path||'';const parts=path.split('/');const isDoc=parts.length%2===0;return{path,collection:isDoc?parts[parts.length-2]:path,id:isDoc?parts[parts.length-1]:''}}
@@ -8,7 +8,7 @@ function labelFor(c){return({players:'Player',tournaments:'Tournament',gallery:'
 function titleFor(c,d,id){return d&&(d.name||d.title||d.username||d.ign||d.subject||d.brandName)||labelFor(c)+' · '+id}
 async function writeLog(ref,operation,before,after,extra){
  const u=currentAdmin();if(!u)return;const info=refInfo(ref);if(!info.path||SKIP.has(info.collection)||info.collection==='adminAuditLogs')return;
- try{await window.db.collection('adminAuditLogs').add({schemaVersion:1,collection:info.collection,documentId:info.id,documentPath:info.path,operation,label:labelFor(info.collection),title:titleFor(info.collection,after||before,info.id),before:before===undefined?null:safeClone(before),after:after===undefined?null:safeClone(after),actor:u.email,actorUid:u.uid,page:(location.pathname.split('/').pop()||'admin'),createdAt:firebase.firestore.FieldValue.serverTimestamp(),clientAt:new Date().toISOString(),...(extra||{})})}
+ const metadataOnly=SENSITIVE.has(info.collection);try{await window.db.collection('adminAuditLogs').add({schemaVersion:1,collection:info.collection,documentId:info.id,documentPath:info.path,operation,label:labelFor(info.collection),title:titleFor(info.collection,metadataOnly?null:(after||before),info.id),before:metadataOnly?null:(before===undefined?null:safeClone(before)),after:metadataOnly?null:(after===undefined?null:safeClone(after)),snapshotOmitted:metadataOnly,actor:u.email,actorUid:u.uid,page:(location.pathname.split('/').pop()||'admin'),createdAt:firebase.firestore.FieldValue.serverTimestamp(),clientAt:new Date().toISOString(),...(extra||{})})}
  catch(e){console.warn('[4FU audit] Action succeeded but audit record failed:',e)}
 }
 function patch(proto,name,kind){
