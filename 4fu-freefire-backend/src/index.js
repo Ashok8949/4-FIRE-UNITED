@@ -3858,8 +3858,12 @@ async function proWebhook(request, env) {
       proAutoRenew: !cancelAtCycleEnd,
     };
   } else if (subscription.status === "cancelled") {
+    const storedExpiry = Date.parse(player.fields?.proExpiresAt || "");
+    const storedPeriodStillValid =
+      Number.isFinite(storedExpiry) && storedExpiry > Date.now();
+    const keepPaidAccess = hasFutureBillingPeriod || storedPeriodStillValid;
     patch = {
-      proActive: hasFutureBillingPeriod,
+      proActive: keepPaidAccess,
       proExpiresAt: expiresAt || player.fields?.proExpiresAt || null,
       proPaymentStatus: "cancelled",
       razorpaySubscriptionId: subscriptionId,
