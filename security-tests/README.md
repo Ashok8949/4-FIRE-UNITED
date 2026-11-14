@@ -84,3 +84,21 @@ rules and default Cloud Functions codebase together so public clients cannot
 write visitor stats while the new endpoint is available. Configure TTL
 separately as above. No function, rules, hosting, or production data deploy is
 performed by this test workflow.
+
+
+## Public form submission security
+
+Contact, challenge and join forms use HTTPS Cloud Functions
+`submitContactMessage`, `submitChallengeRegistration` and
+`submitJoinApplication`. Endpoints enforce strict field allowlists, length
+and format validation, an 8 KiB request body ceiling, three submissions per
+10 minutes per IP and endpoint, and idempotency keys for request retries.
+Firestore client-side creates for these collections are denied; Admin SDK
+writes continue to activate the existing trusted admin notification triggers.
+
+Before deployment, set `VISITOR_IP_HASH_SECRET` in Firebase Functions Secret
+Manager (at least 32 random bytes); never commit or share the secret. Enable
+Firestore TTL on `publicApiRateLimits.expiresAt` and
+`publicSubmissionKeys.expiresAt`. TTL cleanup is asynchronous and not part
+of request-time enforcement. Deploy updated Functions and Firestore rules
+together so new endpoints are active as direct client writes are disabled.
