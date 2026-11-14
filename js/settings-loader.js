@@ -39,6 +39,9 @@
   const name=(b.name||"4 FIRE UNITED").trim(),short=(b.shortName||"4FU").trim();
   document.querySelectorAll(".team-name").forEach(n=>n.textContent=name);document.querySelectorAll(".team-short-name").forEach(n=>n.textContent=short);document.querySelectorAll(".brand-tagline").forEach(n=>n.textContent=b.tagline||"");
   if(b.title)document.title=b.title;
+  const meta=(selector,attr,value,content)=>{if(!content)return;let node=document.head.querySelector(selector);if(!node){node=document.createElement("meta");node.setAttribute(attr,value);document.head.appendChild(node)}node.setAttribute("content",content)};
+  meta('meta[name="description"]',"name","description",b.description);meta('meta[property="og:title"]',"property","og:title",b.title||name);meta('meta[property="og:description"]',"property","og:description",b.description);const og=safeUrl(b.ogImage);if(og)meta('meta[property="og:image"]',"property","og:image",og);
+  document.querySelectorAll("footer h2,.sidebar-logo span").forEach(n=>n.textContent=name);const footerTagline=document.querySelector("footer>p:not(.copyright)");if(footerTagline&&b.tagline)footerTagline.textContent=b.tagline;
   const logo=safeUrl(b.logo),compact=safeUrl(b.compactLogo)||logo;
   document.querySelectorAll(".logo img").forEach(img=>{const chosen=img.closest(".compact-brand,.mobile-brand")?compact:logo;if(chosen)img.src=chosen;img.alt=name});
   const hero=document.querySelector(".hero");if(hero){const bg=safeUrl(c.heroBackground);hero.style.backgroundImage=bg?'linear-gradient(90deg,rgba(5,8,14,.82),rgba(5,8,14,.3)),url("'+bg.replace(/["\\\\]/g,"")+'")':""}
