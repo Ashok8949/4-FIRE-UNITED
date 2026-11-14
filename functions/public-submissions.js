@@ -14,14 +14,14 @@ function validateChallenge(b){
  if(!plain(b)||Object.keys(b).some(k=>!keys.includes(k))||!["leaderName","leaderUID","whatsapp","email","teamName","preferredDate","preferredTime","message"].every(k=>typeof b[k]==="string"))return null;
  const v={challengeType:b.challengeType,leaderName:b.leaderName.trim(),leaderUID:b.leaderUID.trim(),whatsapp:b.whatsapp.trim(),email:b.email.trim().toLowerCase(),teamName:b.teamName.trim(),preferredDate:b.preferredDate,preferredTime:b.preferredTime,message:b.message.trim()};
  const dt=/^\d{4}-\d{2}-\d{2}$/.test(v.preferredDate)?new Date(v.preferredDate+"T00:00:00Z"):null;
- const validDate=dt&&!Number.isNaN(dt.getTime())&&dt.toISOString().slice(0,10)===v.preferredDate;
+ const validDate=v.preferredDate===""||(dt&&!Number.isNaN(dt.getTime())&&dt.toISOString().slice(0,10)===v.preferredDate);
  return ["1V1","2V2","4V4"].includes(v.challengeType)&&bounded(v.leaderName,2,80)&&UID.test(v.leaderUID)&&/^[+0-9()\s-]{7,20}$/.test(v.whatsapp)&&EMAIL.test(v.email)&&v.email.length<=254&&(v.challengeType==="1V1"||bounded(v.teamName,2,80))&&(v.challengeType!=="1V1"||v.teamName.length<=80)&&validDate&&/^([01]\d|2[0-3]):[0-5]\d$/.test(v.preferredTime)&&v.message.length<=1000?v:null;
 }
 function validateJoin(b){
  const keys=["name","ign","uid","email","level","rank","about"];
  if(!plain(b)||Object.keys(b).some(k=>!keys.includes(k))||!keys.every(k=>typeof b[k]==="string"))return null;
  const v={name:b.name.trim(),ign:b.ign.trim(),uid:b.uid.trim(),email:b.email.trim().toLowerCase(),level:b.level.trim(),rank:b.rank.trim(),about:b.about.trim()};
- return bounded(v.name,2,100)&&bounded(v.ign,1,50)&&UID.test(v.uid)&&EMAIL.test(v.email)&&v.email.length<=254&&/^[0-9]{1,3}$/.test(v.level)&&bounded(v.rank,1,30)&&v.about.length<=2000?v:null;
+ return bounded(v.name,2,100)&&bounded(v.ign,1,50)&&UID.test(v.uid)&&EMAIL.test(v.email)&&v.email.length<=254&&/^[0-9]{1,3}$/.test(v.level)&&["Bronze","Silver","Gold","Platinum","Diamond","Heroic","Grandmaster"].includes(v.rank)&&v.about.length<=2000?v:null;
 }
 function createPublicSubmissionHandlers({db,FieldValue,Timestamp,rateLimiter,hashKey,now=Date.now,randomBytes=crypto.randomBytes}){
  if(!db||!FieldValue||!Timestamp||!rateLimiter||typeof hashKey!=="function")throw new TypeError("Public submission dependencies are required.");
