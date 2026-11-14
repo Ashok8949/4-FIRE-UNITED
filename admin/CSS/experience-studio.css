@@ -82,3 +82,6 @@
  .studio .asset-card img{height:120px}
 }
 @media(prefers-reduced-motion:reduce){.studio-tabs button,.studio .fields input,.studio .fields select{transition:none}}
+
+/* P18 · Full, same-origin website preview */
+.website-preview-shell{border:1px solid #35445b;border-radius:14px;overflow:hidden;background:#080c13}.website-preview-toolbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:11px 14px;background:#111a28;border-bottom:1px solid #344156;color:#dbe5f2;font-size:10px}.website-preview-toolbar b{letter-spacing:1px;color:#ffad65}.website-preview-toolbar b i{font-size:8px;color:#55d69b;margin-right:6px}.website-preview-toolbar span{color:#93a2b7;margin-right:auto}.website-preview-toolbar button{border:1px solid #465771;background:#1c2a3d;color:#fff;border-radius:7px;padding:7px 10px;font-size:10px;cursor:pointer}.website-preview-shell iframe{display:block;width:100%;height:min(76vh,820px);min-height:560px;border:0;background:#090b12}@media(max-width:700px){.website-preview-shell iframe{height:72vh;min-height:500px}}
