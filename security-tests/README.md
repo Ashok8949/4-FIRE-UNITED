@@ -17,6 +17,8 @@ npx --yes firebase-tools emulators:exec --project demo-4fu-firestore-rules --onl
 
 - Website settings remain publicly readable; only the configured admin email
   can write them.
+- Tournaments and announcements remain publicly readable; only the configured
+  admin can create, update, or delete them.
 - Contact messages and challenge registrations remain publicly submittable.
 - Only the configured admin can read, update, or delete those submissions.
 - Both authenticated non-admin and unauthenticated access are tested against

@@ -224,3 +224,34 @@ test("notifications are private and writable only by the configured admin", asyn
   await assertSucceeds(deleteDoc(adminRef));
   await assertSucceeds(setDoc(doc(admin, "notifications", "admin-create"), { title: "Admin alert" }));
 });
+
+
+for (const collectionName of ["tournaments", "announcements"]) {
+  test(`${collectionName} remain publicly readable but writes are admin-only`, async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      await setDoc(doc(context.firestore(), collectionName, "existing-public-item"), {
+        title: "Public item"
+      });
+    });
+
+    const publicDb = testEnv.unauthenticatedContext().firestore();
+    const user = userDb();
+    const admin = adminDb();
+    const publicRef = doc(publicDb, collectionName, "existing-public-item");
+    const userRef = doc(user, collectionName, "existing-public-item");
+    const adminRef = doc(admin, collectionName, "existing-public-item");
+
+    await assertSucceeds(getDoc(publicRef));
+    await assertSucceeds(getDoc(userRef));
+    await assertFails(setDoc(doc(publicDb, collectionName, "anonymous-create"), { title: "No" }));
+    await assertFails(setDoc(doc(user, collectionName, "user-create"), { title: "No" }));
+    await assertFails(updateDoc(userRef, { title: "Tampered" }));
+    await assertFails(deleteDoc(userRef));
+    await assertFails(updateDoc(publicRef, { title: "Tampered" }));
+    await assertFails(deleteDoc(publicRef));
+
+    await assertSucceeds(setDoc(doc(admin, collectionName, "admin-create"), { title: "Admin" }));
+    await assertSucceeds(updateDoc(adminRef, { title: "Admin update" }));
+    await assertSucceeds(deleteDoc(adminRef));
+  });
+}
