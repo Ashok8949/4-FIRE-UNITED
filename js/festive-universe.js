@@ -43,7 +43,7 @@
   function addIntro(key){
     const theme=themeFor(key),intro=document.createElement("section"),content=document.createElement("div"),art=document.createElement("div"),kicker=document.createElement("p"),title=document.createElement("h1"),caption=document.createElement("p"),skipButton=document.createElement("button");
     intro.id="fourfu-festival-intro";intro.setAttribute("role","dialog");intro.setAttribute("aria-label",theme.label);
-    content.className="fu-intro-content";art.className="fu-intro-art";art.innerHTML=rangoliSvg;kicker.className="fu-intro-kicker";kicker.textContent="4 FIRE UNITED PRESENTS";title.className="fu-intro-title";title.textContent=theme.title;caption.className="fu-intro-caption";caption.textContent=theme.caption;skipButton.className="fu-intro-skip";skipButton.type="button";skipButton.textContent="Skip intro";content.append(art,kicker,title,caption);intro.append(content,skipButton);
+    content.className="fu-intro-content";art.className="fu-intro-art fu-intro-art-"+key;art.dataset.festival=key;kicker.className="fu-intro-kicker";kicker.textContent="4 FIRE UNITED PRESENTS";title.className="fu-intro-title";title.textContent=theme.title;caption.className="fu-intro-caption";caption.textContent=theme.caption;skipButton.className="fu-intro-skip";skipButton.type="button";skipButton.textContent="Skip intro";content.append(art,kicker,title,caption);intro.append(content,skipButton);
     document.body.appendChild(intro);
     const close=()=>{intro.classList.add("is-leaving");window.setTimeout(()=>intro.remove(),800);};
     const skip=intro.querySelector?.("button");if(skip)skip.addEventListener("click",close,{once:true});
