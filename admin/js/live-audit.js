@@ -35,7 +35,7 @@ async function load(){
  }catch(e){root.innerHTML='<div class="audit-empty">Activity history unavailable: '+esc(e.message)+'</div>'}
 }
 async function loadLegacy(){
- const specs=[['players','Player'],['tournaments','Tournament'],['gallery','Gallery item'],['clips','Clip'],['announcements','Announcement'],['contactMessages','Contact message'],['joinApplications','Application'],['challengeRegistrations','Challenge registration']];
+ const specs=[['players','Player'],['tournaments','Tournament'],['gallery','Gallery item'],['clips','Clip'],['announcements','Announcement'],['settings','Website settings'],['notifications','Notification'],['adminStudio','Experience Studio draft'],['contactMessages','Contact message'],['joinApplications','Application'],['challengeRegistrations','Challenge registration']];
  const seen=new Set(allRows.map(r=>r.documentPath));
  for(const [collection,label] of specs){
   try{const snap=await db.collection(collection).get();snap.forEach(doc=>{const d=doc.data()||{},stamp=d.updatedAt||d.createdAt||d.timestamp;if(!stamp)return;const path=collection+'/'+doc.id;if(seen.has(path))return;allRows.push({legacy:true,collection,label,title:label+' · '+val(d),documentPath:path,operation:d.updatedAt?'updated':'created',createdAt:stamp,actor:d.updatedBy||d.createdBy||'',before:null,after:d})})}catch(e){console.warn('Legacy activity read skipped',collection,e)}
