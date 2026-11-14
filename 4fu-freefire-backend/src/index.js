@@ -3485,9 +3485,14 @@ async function proVerifyPayment(request, env) {
     ),
   ]);
 
+  const expectedPlanId =
+    env.RAZORPAY_PRO_PLAN_ID ||
+    "plan_TfxiwIYuTxQILZ";
+
   if (
     subscription?.id !== subscriptionId ||
-    subscription?.notes?.firebaseUid !== claims.sub
+    subscription?.notes?.firebaseUid !== claims.sub ||
+    subscription?.plan_id !== expectedPlanId
   ) {
     return proJson(
       { success: false, error: "Subscription ownership could not be verified" },
@@ -3730,9 +3735,13 @@ async function proWebhook(request, env) {
   }
 
   const firebaseUid = subscription?.notes?.firebaseUid;
-  if (!firebaseUid) {
-    console.warn("PRO webhook ignored: signed subscription event has no Firebase UID");
-    return new Response("Webhook received without Firebase UID", { status: 200 });
+  const expectedPlanId =
+    env.RAZORPAY_PRO_PLAN_ID ||
+    "plan_TfxiwIYuTxQILZ";
+
+  if (!firebaseUid || subscription.plan_id !== expectedPlanId) {
+    console.warn("PRO webhook ignored: subscription owner or plan could not be verified");
+    return new Response("Webhook subscription could not be verified", { status: 400 });
   }
 
   const eventId = String(payload?.id || "");
@@ -3775,6 +3784,10 @@ async function proWebhook(request, env) {
     subscription.status === "cancelled";
 
   if (activateEvents.has(event)) {
+    if (subscription.status !== "active") {
+      return new Response("Subscription is not active", { status: 500 });
+    }
+
     const expiryMs = expiresAt ? Date.parse(expiresAt) : 0;
     if (!Number.isFinite(expiryMs) || expiryMs <= Date.now()) {
       console.error("PRO activation webhook has no valid future billing end", {
