@@ -1,0 +1,112 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null &&
+        request.auth.token.email == "aks303603@gmail.com";
+    }
+
+    match /players/{document} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+      allow update: if request.auth != null &&
+        request.auth.token.email != "aks303603@gmail.com" &&
+        resource.data.loginEmail == request.auth.token.email &&
+        request.resource.data.displayOrder == resource.data.displayOrder &&
+        request.resource.data.since == resource.data.since &&
+        request.resource.data.featured == resource.data.featured;
+    }
+
+    match /tournaments/{document} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /gallery/{document} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+      allow create: if request.auth != null && request.resource.data.playerUid == request.auth.uid && request.resource.data.uploadedByPlayer == true;
+      allow delete: if request.auth != null && resource.data.playerUid == request.auth.uid && resource.data.uploadedByPlayer == true;
+    }
+
+    match /clips/{document} {
+      allow read: if true;
+      allow create: if request.auth != null && request.resource.data.playerUid == request.auth.uid && request.resource.data.uploadedByPlayer == true;
+      allow delete: if request.auth != null && resource.data.playerUid == request.auth.uid && resource.data.uploadedByPlayer == true;
+      allow update: if false;
+    }
+
+    match /announcements/{document} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /stats/{document} {
+      allow read, write: if true;
+    }
+
+    match /contactMessages/{document} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    match /challengeRegistrations/{document} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    match /joinApplications/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if request.auth != null;
+    }
+
+    match /chat/{document} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.resource.data.playerEmail == request.auth.token.email;
+      allow delete: if request.auth != null && resource.data.playerEmail == request.auth.token.email;
+      allow update: if false;
+    }
+
+    match /notifications/{document} {
+      allow read: if request.auth != null;
+      allow create: if true;
+      allow update, delete: if request.auth != null;
+    }
+
+    match /fcmTokens/{token} {
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow update: if request.auth != null && resource.data.uid == request.auth.uid && request.resource.data.uid == request.auth.uid;
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
+
+    function isOwnPlayer(playerId) {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/players/$(playerId)) &&
+        get(/databases/$(database)/documents/players/$(playerId)).data.loginEmail == request.auth.token.email;
+    }
+
+    match /friendRequests/{document} {
+      allow read: if request.auth != null &&
+        (!exists(/databases/$(database)/documents/friendRequests/$(document)) || isOwnPlayer(resource.data.fromId) || isOwnPlayer(resource.data.toId));
+      allow create: if request.auth != null && isOwnPlayer(request.resource.data.fromId) && request.resource.data.toId != request.resource.data.fromId && request.resource.data.status == "pending";
+      allow update: if request.auth != null && isOwnPlayer(resource.data.toId) && request.resource.data.toId == resource.data.toId && (request.resource.data.status == "accepted" || request.resource.data.status == "declined");
+      allow delete: if request.auth != null && (isOwnPlayer(resource.data.fromId) || isOwnPlayer(resource.data.toId));
+    }
+
+    match /friends/{document} {
+      allow read: if request.auth != null &&
+        (!exists(/databases/$(database)/documents/friends/$(document)) || isOwnPlayer(resource.data.playerId));
+      allow create: if request.auth != null && request.resource.data.status == "accepted" && request.resource.data.playerId != request.resource.data.friendId && (isOwnPlayer(request.resource.data.playerId) || isOwnPlayer(request.resource.data.friendId));
+      allow update: if request.auth != null && (isOwnPlayer(resource.data.playerId) || isOwnPlayer(resource.data.friendId)) && resource.data.playerId == request.resource.data.playerId && resource.data.friendId == request.resource.data.friendId;
+      allow delete: if request.auth != null && (isOwnPlayer(resource.data.playerId) || isOwnPlayer(resource.data.friendId));
+    }
+  }
+}
