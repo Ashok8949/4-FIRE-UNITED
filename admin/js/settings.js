@@ -92,7 +92,17 @@ document.getElementById("saveSettings").addEventListener("click", () => {
             document.getElementById("discord").value.trim(),
 
         facebook:
-            document.getElementById("facebook").value.trim()
+            document.getElementById("facebook").value.trim(),
+
+        festival: {
+            enabled: document.getElementById("festivalEnabled").value === "true",
+            mode: document.getElementById("festivalMode").value,
+            festival: document.getElementById("festivalName").value,
+            startAt: document.getElementById("festivalStart").value
+                ? new Date(document.getElementById("festivalStart").value + ":00+05:30").toISOString() : "",
+            endAt: document.getElementById("festivalEnd").value
+                ? new Date(document.getElementById("festivalEnd").value + ":00+05:30").toISOString() : ""
+        }
 
     };
 
