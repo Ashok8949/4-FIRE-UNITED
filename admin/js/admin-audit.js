@@ -27,7 +27,7 @@ function patch(proto,name,kind){
    const result=await original.apply(ref,args);
    let after=null,afterExists=false;
    try{const snap=await ref.get();afterExists=snap.exists;after=afterExists?snap.data():null}catch(e){}
-   const op=kind==='add'?'create':kind==='delete'?'delete':(!exists?'create':kind);
+   const op=kind==='add'?'create':kind==='delete'?'delete':kind==='set'?(!exists?'create':'update'):(!exists?'create':kind);
    await writeLog(ref,op,exists?before:null,afterExists?after:null);
    return result;
   };
