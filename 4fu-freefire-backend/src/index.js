@@ -3723,28 +3723,44 @@ async function proWebhook(request, env) {
     return new Response("Invalid webhook signature", { status: 400 });
   }
 
-  const payload = JSON.parse(rawBody);
-  const event = payload?.event || "";
-  const subscription =
+  let payload;
+  try {
+    payload = JSON.parse(rawBody);
+  } catch {
+    return new Response("Invalid webhook payload", { status: 400 });
+  }
+
+  const event = String(payload?.event || "");
+  const eventId = String(payload?.id || "");
+  const webhookSubscription =
     payload?.payload?.subscription?.entity ||
     payload?.payload?.subscription ||
     null;
 
-  if (!subscription?.id) {
+  if (!webhookSubscription?.id) {
+    // Some Razorpay events (for example, standalone payment events) do not
+    // contain a subscription entity and cannot change PRO entitlement.
     return new Response("Webhook received", { status: 200 });
   }
 
-  const firebaseUid = subscription?.notes?.firebaseUid;
+  const subscriptionId = String(webhookSubscription.id);
+  if (!/^sub_[A-Za-z0-9]+$/.test(subscriptionId)) {
+    return new Response("Invalid subscription reference", { status: 400 });
+  }
+
+  const firebaseUid = webhookSubscription?.notes?.firebaseUid;
   const expectedPlanId =
     env.RAZORPAY_PRO_PLAN_ID ||
     "plan_TfxiwIYuTxQILZ";
 
-  if (!firebaseUid || subscription.plan_id !== expectedPlanId) {
+  if (
+    !firebaseUid ||
+    webhookSubscription.plan_id !== expectedPlanId
+  ) {
     console.warn("PRO webhook ignored: subscription owner or plan could not be verified");
     return new Response("Webhook subscription could not be verified", { status: 400 });
   }
 
-  const eventId = String(payload?.id || "");
   const eventKey = eventId ? `pro-webhook-event:${eventId}` : "";
   if (eventKey && env.PROFILE_CACHE) {
     try {
@@ -3762,84 +3778,102 @@ async function proWebhook(request, env) {
     player = await proFindPlayer({ sub: firebaseUid }, env);
   } catch (error) {
     console.warn("PRO webhook player lookup failed:", error?.message || error);
-    return new Response("Webhook received; player not found", { status: 200 });
+    // Do not acknowledge a transient lookup failure; Razorpay should retry.
+    return new Response("Webhook temporarily unavailable", { status: 500 });
+  }
+
+  // A late event from a previous subscription must never overwrite the
+  // currently selected subscription on this player profile.
+  if (player.fields?.razorpaySubscriptionId !== subscriptionId) {
+    if (eventKey && env.PROFILE_CACHE) {
+      try {
+        await env.PROFILE_CACHE.put(eventKey, "ignored-stale-subscription", {
+          expirationTtl: 60 * 60 * 24 * 30,
+        });
+      } catch (error) {
+        console.warn("PRO webhook deduplication write failed:", error?.message || error);
+      }
+    }
+    return new Response("Stale subscription event ignored", { status: 200 });
+  }
+
+  let subscription;
+  try {
+    // Webhook delivery order is not guaranteed. Read the current Razorpay
+    // subscription so an old activation/cancellation payload cannot restore
+    // or revoke access based on an outdated status.
+    subscription = await proRazorpayRequest(
+      `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+      "GET",
+      undefined,
+      env
+    );
+  } catch (error) {
+    console.warn("PRO webhook subscription refresh failed:", error?.message || error);
+    return new Response("Subscription state temporarily unavailable", { status: 500 });
+  }
+
+  if (
+    subscription?.id !== subscriptionId ||
+    subscription?.notes?.firebaseUid !== firebaseUid ||
+    subscription?.plan_id !== expectedPlanId
+  ) {
+    console.warn("PRO webhook ignored: live subscription ownership or plan mismatch");
+    return new Response("Live subscription could not be verified", { status: 400 });
   }
 
   const currentEnd = Number(subscription.current_end || 0);
   const expiresAt = proIsoFromUnix(currentEnd);
+  const expiryMs = expiresAt ? Date.parse(expiresAt) : 0;
+  const hasFutureBillingPeriod =
+    Number.isFinite(expiryMs) && expiryMs > Date.now();
 
-  const activateEvents = new Set([
-    "subscription.activated",
-    "subscription.charged",
-    "subscription.resumed",
-  ]);
+  let patch = null;
 
-  const hardOffEvents = new Set([
-    "subscription.halted",
-    "subscription.completed",
-  ]);
+  // Entitlement follows the latest state returned by Razorpay, not the
+  // possibly stale event body. Cancellation keeps paid access through the
+  // already-paid billing period; halted/completed/expired do not.
+  if (subscription.status === "active" && hasFutureBillingPeriod) {
+    patch = {
+      proActive: true,
+      proPlan: "monthly",
+      proPrice: Number(env.PRO_PRICE_INR || 49),
+      proStartedAt: player.fields?.proStartedAt || new Date().toISOString(),
+      proExpiresAt: expiresAt,
+      proPaymentStatus: "paid",
+      razorpaySubscriptionId: subscriptionId,
+      proAutoRenew: true,
+    };
+  } else if (subscription.status === "cancelled") {
+    patch = {
+      proActive: hasFutureBillingPeriod,
+      proExpiresAt: expiresAt || player.fields?.proExpiresAt || null,
+      proPaymentStatus: "cancelled",
+      razorpaySubscriptionId: subscriptionId,
+      proAutoRenew: false,
+    };
+  } else if (
+    subscription.status === "halted" ||
+    subscription.status === "completed" ||
+    subscription.status === "expired"
+  ) {
+    patch = {
+      proActive: false,
+      proPaymentStatus: subscription.status,
+      proAutoRenew: false,
+    };
+    if (expiresAt) patch.proExpiresAt = expiresAt;
+  }
+  // created/authenticated/pending (and unknown future states) intentionally
+  // do not revoke an existing paid entitlement.
 
-  const cancelled =
-    event === "subscription.cancelled" ||
-    subscription.status === "cancelled";
-
-  if (activateEvents.has(event)) {
-    if (subscription.status !== "active") {
-      return new Response("Subscription is not active", { status: 500 });
+  if (patch) {
+    try {
+      await proUpdatePlayer(player, patch, env);
+    } catch (error) {
+      console.error("PRO webhook entitlement update failed:", error?.message || error);
+      return new Response("Entitlement update temporarily unavailable", { status: 500 });
     }
-
-    const expiryMs = expiresAt ? Date.parse(expiresAt) : 0;
-    if (!Number.isFinite(expiryMs) || expiryMs <= Date.now()) {
-      console.error("PRO activation webhook has no valid future billing end", {
-        event,
-        subscriptionId: subscription.id,
-      });
-      return new Response("Subscription billing period is not yet verifiable", {
-        status: 500,
-      });
-    }
-
-    await proUpdatePlayer(
-      player,
-      {
-        proActive: true,
-        proPlan: "monthly",
-        proPrice: Number(env.PRO_PRICE_INR || 49),
-        proStartedAt: player.fields?.proStartedAt || new Date().toISOString(),
-        proExpiresAt: expiresAt,
-        proPaymentStatus: "paid",
-        razorpaySubscriptionId: subscription.id,
-        proAutoRenew: true,
-      },
-      env
-    );
-  } else if (hardOffEvents.has(event)) {
-    await proUpdatePlayer(
-      player,
-      {
-        proActive: false,
-        proPaymentStatus: event === "subscription.completed"
-          ? "completed"
-          : "halted",
-        proAutoRenew: false,
-      },
-      env
-    );
-  } else if (cancelled) {
-    const keepUntil =
-      expiresAt && Date.parse(expiresAt) > Date.now();
-
-    await proUpdatePlayer(
-      player,
-      {
-        proActive: keepUntil,
-        proExpiresAt: expiresAt || player.fields?.proExpiresAt || null,
-        proPaymentStatus: "cancelled",
-        razorpaySubscriptionId: subscription.id,
-        proAutoRenew: false,
-      },
-      env
-    );
   }
 
   if (eventKey && env.PROFILE_CACHE) {
@@ -3848,8 +3882,8 @@ async function proWebhook(request, env) {
         expirationTtl: 60 * 60 * 24 * 30,
       });
     } catch (error) {
-      // The entitlement update has succeeded. A later duplicate event is safe:
-      // these webhook handlers write the same authoritative subscription state.
+      // KV is eventually consistent, so this is best-effort deduplication,
+      // not an exactly-once guarantee. The entitlement patch is idempotent.
       console.warn("PRO webhook deduplication write failed:", error?.message || error);
     }
   }
