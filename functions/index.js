@@ -4,6 +4,7 @@ const admin = require("firebase-admin");
 const crypto = require("node:crypto");
 const { defineSecret } = require("firebase-functions/params");
 const { isAuthorizedAdminToken } = require("./security-guards");
+const { createPublicRateLimiter } = require("./public-rate-limit");
 
 const visitorIpHashSecret = defineSecret("VISITOR_IP_HASH_SECRET");
 
@@ -11,6 +12,18 @@ admin.initializeApp();
 
 const db = admin.firestore();
 const auth = admin.auth();
+
+const publicRateLimiter = createPublicRateLimiter({
+    db,
+    Timestamp: admin.firestore.Timestamp,
+    hashIp: (ip) => {
+        const secret = visitorIpHashSecret.value();
+        if (typeof secret !== "string" || secret.length < 32) {
+            throw new Error("VISITOR_IP_HASH_SECRET is not configured with sufficient entropy.");
+        }
+        return crypto.createHmac("sha256", secret).update(ip).digest("hex");
+    }
+});
 
 
 // ============================================================
@@ -158,7 +171,8 @@ exports.getFreeFirePlayer = onRequest(
     {
         region: "asia-south1",
         timeoutSeconds: 30,
-        memory: "256MiB"
+        memory: "256MiB",
+        secrets: [visitorIpHashSecret]
     },
     async (req, res) => {
 
@@ -192,6 +206,13 @@ exports.getFreeFirePlayer = onRequest(
         }
 
         try {
+
+            if (!await publicRateLimiter.allow(req, "freefire-lookup", 15, 60_000)) {
+                return res.status(429).json({
+                    success: false,
+                    message: "Too many requests. Please try again in a minute."
+                });
+            }
 
             // ------------------------------------------------
             // GET UID + REGION
@@ -430,7 +451,8 @@ exports.lookupJoinApplicationStatus = onRequest(
         region: "asia-south1",
         cors: true,
         timeoutSeconds: 15,
-        memory: "256MiB"
+        memory: "256MiB",
+        secrets: [visitorIpHashSecret]
     },
     async (req, res) => {
         if (req.method !== "POST") {
@@ -441,6 +463,13 @@ exports.lookupJoinApplicationStatus = onRequest(
         }
 
         try {
+            if (!await publicRateLimiter.allow(req, "application-status", 5, 60_000)) {
+                return res.status(429).json({
+                    success: false,
+                    message: "Too many requests. Please try again in a minute."
+                });
+            }
+
             const uid = String(req.body?.uid || "").trim();
             const email = String(req.body?.email || "").trim().toLowerCase();
 
