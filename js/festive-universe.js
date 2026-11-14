@@ -94,10 +94,9 @@
     if(boundaryTimer!==null)window.clearTimeout(boundaryTimer);boundaryTimer=null;
     const now=Date.now(),nextKey=activeForDate(liveConfig,now);
     if(nextKey)build(nextKey);else if(activeKey)removeExperience();
-    if(liveConfig&&liveConfig.enabled===true&&liveConfig.mode==="scheduled"&&valid(liveConfig.festival)){
-      const start=Date.parse(liveConfig.startAt||""),end=Date.parse(liveConfig.endAt||"");
-      if(Number.isFinite(start)&&Number.isFinite(end)&&end>start){const boundary=now<start?start:(now<end?end:null);if(boundary!==null)boundaryTimer=window.setTimeout(applyLiveConfig,Math.min(MAX_TIMER,Math.max(0,boundary-now+20)));}
-    }
+    const boundaries=[];(liveLibrary||[]).forEach(f=>{if(f.enabled&&f.mode==="scheduled"){const a=Date.parse(f.startAt||""),b=Date.parse(f.endAt||"");if(Number.isFinite(a)&&a>now)boundaries.push(a);if(Number.isFinite(b)&&b>now)boundaries.push(b);}});
+    if(liveConfig&&liveConfig.enabled===true&&liveConfig.mode==="scheduled"){const a=Date.parse(liveConfig.startAt||""),b=Date.parse(liveConfig.endAt||"");if(Number.isFinite(a)&&a>now)boundaries.push(a);if(Number.isFinite(b)&&b>now)boundaries.push(b);}
+    if(boundaries.length){const next=Math.min(...boundaries);boundaryTimer=window.setTimeout(applyLiveConfig,Math.min(MAX_TIMER,Math.max(0,next-now+25)));}
   }
   function start(){
     if(params.has("festivalPreview")){if(valid(preview))build(preview,true);return;}
