@@ -67,7 +67,7 @@ db.collection("settings")
 
     document.querySelectorAll(".team-name").forEach((e) => {
 
-        e.textContent = s.teamName || "4 FIRE UNITED";
+        e.textContent = brandName;
 
     });
 
