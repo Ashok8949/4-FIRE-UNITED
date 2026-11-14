@@ -41,7 +41,9 @@ Browser clients no longer write notifications; the collection is admin-only.
 Deploy the rules and default `functions` codebase together to preserve alerts.
 
 The visitor counter now calls the `countVisitor` Cloud Function instead of
-writing Firestore from the browser. The function applies a transactional
+writing Firestore from the browser. Its isolated handler logic has automated
+Node tests for first count, cooldown boundaries, daily cap, UTC rollover,
+missing IP/method rejection, hashed-IP-only storage, and database failures. The function applies a transactional
 per-IP cooldown (one count per 30 minutes), a 20-count UTC-day cap, and stores
 only a SHA-256 digest of the source IP in the private `_visitorRateLimits`
 collection. The public `stats` collection is read-only under Firestore rules;
