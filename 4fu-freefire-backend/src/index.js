@@ -3553,10 +3553,12 @@ async function proVerifyPayment(request, env) {
             proExpiresAt: expiresAt,
           }
         : {}),
-      proPaymentStatus: active ? "paid" : "authorization_pending",
+      proPaymentStatus: active
+        ? (subscription.cancel_at_cycle_end === true ? "cancelled" : "paid")
+        : "authorization_pending",
       razorpaySubscriptionId: subscriptionId,
       razorpayPaymentId: paymentId,
-      proAutoRenew: true,
+      proAutoRenew: active && subscription.cancel_at_cycle_end !== true,
     },
     env
   );
@@ -3844,15 +3846,16 @@ async function proWebhook(request, env) {
   // possibly stale event body. Cancellation keeps paid access through the
   // already-paid billing period; halted/completed/expired do not.
   if (subscription.status === "active" && hasFutureBillingPeriod) {
+    const cancelAtCycleEnd = subscription.cancel_at_cycle_end === true;
     patch = {
       proActive: true,
       proPlan: "monthly",
       proPrice: Number(env.PRO_PRICE_INR || 49),
       proStartedAt: player.fields?.proStartedAt || new Date().toISOString(),
       proExpiresAt: expiresAt,
-      proPaymentStatus: "paid",
+      proPaymentStatus: cancelAtCycleEnd ? "cancelled" : "paid",
       razorpaySubscriptionId: subscriptionId,
-      proAutoRenew: true,
+      proAutoRenew: !cancelAtCycleEnd,
     };
   } else if (subscription.status === "cancelled") {
     patch = {
