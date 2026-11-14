@@ -53,12 +53,12 @@ service cloud.firestore {
 
     match /contactMessages/{document} {
       allow create: if true;
-      allow read, update, delete: if request.auth != null;
+      allow read, update, delete: if isAdmin();
     }
 
     match /challengeRegistrations/{document} {
       allow create: if true;
-      allow read, update, delete: if request.auth != null;
+      allow read, update, delete: if isAdmin();
     }
 
     match /joinApplications/{document} {
