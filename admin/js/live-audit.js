@@ -25,11 +25,13 @@ async function load(){
  const root=$('liveAuditList');if(!root)return;root.innerHTML='<div class="audit-empty"><i class="fa-solid fa-spinner fa-spin"></i> Loading complete activity history…</div>';
  try{
   const u=auth.currentUser;if(!u||u.email!==ADMIN)throw Error('Admin sign-in required.');
-  const snap=await dbRef().orderBy('createdAt','desc').limit(500).get();
-  allRows=snap.docs.map(d=>({id:d.id,...d.data()}));
+  let auditError='';
+  try{const snap=await dbRef().orderBy('createdAt','desc').limit(500).get();allRows=snap.docs.map(d=>({id:d.id,...d.data()}));}
+  catch(e){auditError=e.message;allRows=[];}
   await loadLegacy();
   render();
-  $('auditCount').textContent=allRows.length+' entries';
+  $('auditCount').textContent=allRows.length+' entries'+(auditError?' · live capture awaiting rules':'');
+  if(auditError){const note=document.createElement('div');note.className='audit-note';note.textContent='Historical records are shown below. New reversible audit capture will start after the adminAuditLogs Firestore rule is deployed. Current rules blocked the audit log read: '+auditError;root.prepend(note);}
  }catch(e){root.innerHTML='<div class="audit-empty">Activity history unavailable: '+esc(e.message)+'</div>'}
 }
 async function loadLegacy(){
