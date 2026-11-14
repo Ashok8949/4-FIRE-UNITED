@@ -90,7 +90,7 @@
     }
   }
   function applyLiveConfig(){
-    if(!liveConfig)return;
+    if(!liveConfig&&(!liveLibrary||!liveLibrary.length))return;
     if(boundaryTimer!==null)window.clearTimeout(boundaryTimer);boundaryTimer=null;
     const now=Date.now(),nextKey=activeForDate(liveConfig,now);
     if(nextKey)build(nextKey);else if(activeKey)removeExperience();
