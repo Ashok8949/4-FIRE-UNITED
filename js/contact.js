@@ -81,27 +81,6 @@ document.getElementById("contactForm").addEventListener("submit", async (e) => {
 
 
         // ===============================
-        // CREATE NOTIFICATION
-        // ===============================
-
-        await db.collection("notifications").add({
-
-            title: "New Contact Message",
-
-            message: `${name} sent a new contact message`,
-
-            type: "contact",
-
-            link: "messages.html",
-
-            isRead: false,
-
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-
-        });
-
-
-        // ===============================
         // SUCCESS
         // ===============================
 

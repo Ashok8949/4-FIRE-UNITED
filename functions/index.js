@@ -1,4 +1,5 @@
 const { onRequest } = require("firebase-functions/v2/https");
+const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const admin = require("firebase-admin");
 
 admin.initializeApp();
@@ -496,5 +497,56 @@ exports.lookupJoinApplicationStatus = onRequest(
                 message: "Unable to check application status right now."
             });
         }
+    }
+);
+
+
+// Server-side admin alerts for public form submissions.
+async function createAdminAlert(event, notification) {
+    if (!event.data) return;
+    const eventId = event.id || event.data.id;
+    await db.collection("notifications").doc(eventId).set({
+        ...notification,
+        isRead: false,
+        createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+}
+
+exports.notifyOnContactMessage = onDocumentCreated(
+    { document: "contactMessages/{messageId}", region: "asia-south1" },
+    async (event) => {
+        const data = event.data?.data() || {};
+        await createAdminAlert(event, {
+            title: "New Contact Message",
+            message: `${String(data.name || "A visitor").slice(0, 100)} sent a new contact message`,
+            type: "contact",
+            link: "messages.html"
+        });
+    }
+);
+
+exports.notifyOnJoinApplication = onDocumentCreated(
+    { document: "joinApplications/{applicationId}", region: "asia-south1" },
+    async (event) => {
+        const data = event.data?.data() || {};
+        await createAdminAlert(event, {
+            title: "New Team Application",
+            message: `${String(data.ign || data.name || "A player").slice(0, 100)} applied to join the team`,
+            type: "application",
+            link: "applications.html"
+        });
+    }
+);
+
+exports.notifyOnChallengeRegistration = onDocumentCreated(
+    { document: "challengeRegistrations/{registrationId}", region: "asia-south1" },
+    async (event) => {
+        const data = event.data?.data() || {};
+        await createAdminAlert(event, {
+            title: "🔥 New Challenge Registration",
+            message: `${String(data.leaderName || data.teamName || "A player").slice(0, 100)} registered for ${String(data.selectedChallenge || data.challengeName || "a")} Challenge`,
+            type: "challenge",
+            link: "challenge-registrations.html"
+        });
     }
 );

@@ -191,3 +191,36 @@ test("only admin can read, update or delete existing join applications", async (
   await assertSucceeds(updateDoc(adminRef, { status: "Accepted" }));
   await assertSucceeds(deleteDoc(adminRef));
 });
+
+
+test("notifications are private and writable only by the configured admin", async () => {
+  const publicDb = testEnv.unauthenticatedContext().firestore();
+  const user = userDb();
+  const admin = adminDb();
+
+  await assertFails(setDoc(doc(publicDb, "notifications", "anonymous-create"), { title: "Fake alert" }));
+  await assertFails(setDoc(doc(user, "notifications", "user-create"), { title: "Fake alert" }));
+
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), "notifications", "private-alert"), {
+      title: "Trusted alert",
+      isRead: false
+    });
+  });
+
+  const publicRef = doc(publicDb, "notifications", "private-alert");
+  const userRef = doc(user, "notifications", "private-alert");
+  const adminRef = doc(admin, "notifications", "private-alert");
+
+  await assertFails(getDoc(publicRef));
+  await assertFails(getDoc(userRef));
+  await assertFails(updateDoc(userRef, { isRead: true }));
+  await assertFails(deleteDoc(userRef));
+  await assertFails(updateDoc(publicRef, { isRead: true }));
+  await assertFails(deleteDoc(publicRef));
+
+  await assertSucceeds(getDoc(adminRef));
+  await assertSucceeds(updateDoc(adminRef, { isRead: true }));
+  await assertSucceeds(deleteDoc(adminRef));
+  await assertSucceeds(setDoc(doc(admin, "notifications", "admin-create"), { title: "Admin alert" }));
+});

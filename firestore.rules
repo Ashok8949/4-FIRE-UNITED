@@ -100,9 +100,8 @@ service cloud.firestore {
     }
 
     match /notifications/{document} {
-      allow read: if request.auth != null;
-      allow create: if true;
-      allow update, delete: if request.auth != null;
+      // Private admin dashboard data; trusted Cloud Functions create public-form alerts.
+      allow read, create, update, delete: if isAdmin();
     }
 
     match /fcmTokens/{token} {
