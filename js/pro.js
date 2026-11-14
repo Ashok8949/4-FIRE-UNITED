@@ -99,7 +99,7 @@
                 razorpay_signature:payment.razorpay_signature
               }
             });
-            if(verify?.active===false) throw new Error("Payment verified, but PRO is not active yet. Webhook may still be processing.");
+            if(verify?.proActive !== true) throw new Error("Payment authorization received. PRO will activate after Razorpay confirms the subscription.");
             toast("🎉 4FU PRO activated!");
             setProLocked(false);
             const D=getDb();
