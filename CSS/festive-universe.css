@@ -53,3 +53,15 @@ html[class*="fu-festival-"] .navbar{box-shadow:0 5px 28px var(--fu-festival-glow
 @keyframes fu-intro-rise{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
 @media(max-width:600px){.fu-festival-toast{top:82px;right:12px;padding:11px 13px;font-size:12px}.fu-rangoli{width:190px;height:190px;bottom:-76px}.fu-diya{font-size:25px;bottom:9px;left:10px}.fu-diya-right{left:auto;right:10px}#fourfu-festival-intro .fu-intro-art{width:min(78vw,290px)}#fourfu-festival-intro .fu-intro-kicker{font-size:9px;letter-spacing:.24em}}
 @media(prefers-reduced-motion:reduce){.fu-festival-particle,.fu-diya,.fu-rangoli path,.fu-rangoli circle,#fourfu-festival-intro .fu-intro-art path,#fourfu-festival-intro .fu-intro-art circle{animation:none!important;stroke-dashoffset:0!important}.fu-festival-particle{display:none}#fourfu-festival-intro{transition:none}}
+
+/* Distinct art-direction systems for the expanded festival library. */
+html.fu-style-diwali body{background-image:radial-gradient(ellipse at 50% 0,rgba(255,168,57,.2),transparent 48%),repeating-radial-gradient(circle at 50% 120%,rgba(255,194,91,.045) 0 2px,transparent 2px 26px),linear-gradient(180deg,#160e0a,#08090d)}
+html.fu-style-holi body{background-image:radial-gradient(ellipse at 12% 15%,rgba(255,60,145,.22),transparent 35%),radial-gradient(ellipse at 88% 70%,rgba(46,215,195,.2),transparent 38%),radial-gradient(ellipse at 50% 50%,rgba(255,194,71,.09),transparent 60%),linear-gradient(135deg,#140b1c,#080b14)}
+html.fu-style-winter body{background-image:linear-gradient(145deg,rgba(28,88,72,.28),transparent 44%),radial-gradient(ellipse at 50% 0,rgba(207,239,255,.16),transparent 50%),linear-gradient(180deg,#071c1b,#080d16)}
+html.fu-style-celestial body{background-image:radial-gradient(ellipse at 50% -5%,rgba(65,205,169,.2),transparent 44%),repeating-linear-gradient(45deg,transparent 0 34px,rgba(125,228,197,.035) 35px 36px),linear-gradient(180deg,#071a1a,#080b13)}
+html.fu-style-tricolour body{background-image:linear-gradient(180deg,rgba(255,153,51,.17),transparent 33%,transparent 66%,rgba(19,136,8,.14)),radial-gradient(ellipse at 50% 0,rgba(255,255,255,.09),transparent 55%),#080c12}
+html.fu-style-midnight body{background-image:radial-gradient(ellipse at 50% 0,rgba(153,75,255,.23),transparent 48%),repeating-linear-gradient(135deg,transparent 0 42px,rgba(198,154,255,.035) 43px 44px),linear-gradient(180deg,#10091b,#07070d)}
+html.fu-style-fireworks body{background-image:radial-gradient(circle at 20% 12%,rgba(255,126,181,.16),transparent 20%),radial-gradient(circle at 80% 20%,rgba(143,195,255,.18),transparent 24%),radial-gradient(ellipse at 50% 0,rgba(255,202,85,.12),transparent 55%),#080a13}
+html.fu-style-custom body{background-image:radial-gradient(ellipse at 50% 0,var(--fu-wash),transparent 55%),linear-gradient(180deg,#090b12,#07080d)}
+.fu-none{display:none}
+html[class*="fu-festival-"] .navbar{border-bottom:1px solid var(--fu-line,rgba(255,255,255,.08))}
