@@ -23,6 +23,46 @@
         }
     </style>
 
+
+    <style id="4fu-dashboard-studio-redesign">
+      /* 4FU dashboard: visual language aligned with Experience Studio */
+      body{background:#080808!important;color:#f6f7fb!important}
+      .sidebar{position:relative!important;left:auto!important;top:auto!important;width:100%!important;height:auto!important;min-height:0!important;padding:22px 4.5% 18px!important;background:#101010!important;border-bottom:1px solid rgba(255,123,0,.25)!important;box-shadow:none!important;z-index:20!important}
+      .sidebar .logo{display:flex!important;align-items:center!important;justify-content:center!important;gap:18px!important;padding:8px 0 20px!important;margin:0 0 18px!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
+      .sidebar .logo img{width:76px!important;height:76px!important;object-fit:contain!important}
+      .sidebar .logo h2{font-size:clamp(18px,3vw,30px)!important;letter-spacing:4px!important;color:#fff!important}
+      .sidebar ul{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:9px!important;margin:0!important;padding:0!important;list-style:none!important}
+      .sidebar ul li{margin:0!important;flex:0 0 auto!important}
+      .sidebar ul li a{display:flex!important;align-items:center!important;gap:9px!important;padding:12px 16px!important;border:1px solid transparent!important;border-radius:15px!important;background:#151515!important;color:#c8ccd5!important;font-size:14px!important;font-weight:600!important;white-space:nowrap!important;transition:background .2s,border-color .2s,color .2s,transform .2s!important}
+      .sidebar ul li a:hover,.sidebar ul li.active a{background:linear-gradient(120deg,rgba(255,123,0,.2),rgba(255,123,0,.07))!important;border-color:rgba(255,123,0,.38)!important;color:#ff8a24!important;transform:translateY(-1px)}
+      .sidebar ul li a i{color:#ff8a24!important}
+      .main{margin-left:0!important;width:100%!important;max-width:none!important;padding:0 4.5% 44px!important}
+      .topbar{background:#080808!important;border-bottom:1px solid rgba(255,255,255,.08)!important;padding:22px 0!important}
+      .topbar h1{letter-spacing:2px!important}
+      .dashboard-section,.cc-panel,.cc-stat-card,.action-card{border-radius:20px!important}
+      .cc-panel,.cc-stat-card{background:linear-gradient(145deg,#171c27,#10141d)!important;border:1px solid rgba(125,155,200,.2)!important}
+      .cc-stat-card{box-shadow:0 12px 28px rgba(0,0,0,.22)!important}
+      .cc-heading-row h2{font-size:clamp(22px,3vw,32px)!important;letter-spacing:1px!important}
+      .cc-subtitle{color:#9aa8bd!important}
+      .cc-search-box{background:#111722!important;border:1px solid rgba(125,155,200,.22)!important;border-radius:16px!important}
+      .cc-panel-head h3{color:#f5f7fb!important}
+      .cc-panel-head p{color:#94a3b8!important}
+      .action-card{background:#151515!important;border:1px solid rgba(255,255,255,.08)!important;transition:transform .2s,border-color .2s!important}
+      .action-card:hover{transform:translateY(-3px)!important;border-color:rgba(255,123,0,.4)!important}
+      @media(max-width:760px){
+        .sidebar{padding:18px 14px 14px!important}
+        .sidebar .logo{gap:12px!important;padding-bottom:15px!important}
+        .sidebar .logo img{width:62px!important;height:62px!important}
+        .sidebar .logo h2{font-size:18px!important;letter-spacing:2px!important}
+        .sidebar ul{justify-content:flex-start!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;padding:2px 0 8px!important;scrollbar-width:thin!important}
+        .sidebar ul li a{padding:11px 14px!important;font-size:13px!important}
+        .main{padding:0 16px 32px!important}
+        .topbar{gap:12px!important;align-items:flex-start!important}
+        .cc-grid{grid-template-columns:1fr!important}
+        .cc-heading-row{align-items:flex-start!important}
+      }
+    </style>
+
 </head>
 
 <body>
@@ -108,6 +148,9 @@
                     Experience Studio
                 </a>
             </li>
+            <li><a href="challenge-registrations.html"><i class="fa-solid fa-bolt"></i> Challenges</a></li>
+            <li><a href="notifications.html"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+            <li><a href="importPlayers.html"><i class="fa-solid fa-file-import"></i> Import Players</a></li>
 
         </ul>
 
