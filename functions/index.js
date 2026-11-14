@@ -5,6 +5,7 @@ const crypto = require("node:crypto");
 const { defineSecret } = require("firebase-functions/params");
 const { isAuthorizedAdminToken } = require("./security-guards");
 const { createPublicRateLimiter } = require("./public-rate-limit");
+const { createPublicSubmissionHandlers } = require("./public-submissions");
 
 const visitorIpHashSecret = defineSecret("VISITOR_IP_HASH_SECRET");
 
@@ -573,6 +574,21 @@ exports.countVisitor = onRequest(
     })
 );
 
+
+const submissionHandlers = createPublicSubmissionHandlers({
+    db, FieldValue: admin.firestore.FieldValue, Timestamp: admin.firestore.Timestamp,
+    rateLimiter: publicRateLimiter,
+    hashKey: (value) => {
+        const secret = visitorIpHashSecret.value();
+        if (typeof secret !== "string" || secret.length < 32) throw new Error("VISITOR_IP_HASH_SECRET is not configured with sufficient entropy.");
+        return crypto.createHmac("sha256", secret).update(value).digest("hex");
+    }
+});
+const publicSubmissionOptions = { region: "asia-south1", cors: true, timeoutSeconds: 15, memory: "256MiB", maxInstances: 10, secrets: [visitorIpHashSecret] };
+exports.submitContactMessage = onRequest(publicSubmissionOptions, submissionHandlers.contact);
+exports.submitChallengeRegistration = onRequest(publicSubmissionOptions, submissionHandlers.challenge);
+exports.submitJoinApplication = onRequest(publicSubmissionOptions, submissionHandlers.join);
+
 // Server-side admin alerts for public form submissions.
 async function createAdminAlert(event, notification) {
     if (!event.data) return;
@@ -616,7 +632,7 @@ exports.notifyOnChallengeRegistration = onDocumentCreated(
         const data = event.data?.data() || {};
         await createAdminAlert(event, {
             title: "🔥 New Challenge Registration",
-            message: `${String(data.leaderName || data.teamName || "A player").slice(0, 100)} registered for ${String(data.selectedChallenge || data.challengeName || "a")} Challenge`,
+            message: `${String(data.leaderName || data.teamName || "A player").slice(0, 100)} registered for ${String(data.selectedChallenge || data.challengeType || data.challengeName || "a")} Challenge`,
             type: "challenge",
             link: "challenge-registrations.html"
         });
