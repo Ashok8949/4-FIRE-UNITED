@@ -102,6 +102,13 @@
                 </a>
             </li>
 
+            <li>
+                <a href="experience-studio.html">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    Experience Studio
+                </a>
+            </li>
+
         </ul>
 
     </div>
@@ -279,6 +286,13 @@
             .cc-refresh-btn:hover{border-color:#ff7b00;color:#ff8a1c;}
             .admin-activity-item .activity-time{font-size:10px;color:#666;white-space:nowrap;}
             .search-empty{padding:18px;text-align:center;color:#777;font-size:13px;}
+            .experience-studio-action{position:relative;overflow:hidden;border-color:rgba(255,123,0,.28);background:linear-gradient(135deg,rgba(255,123,0,.13),#151515 58%);text-align:left;}
+            .experience-studio-action:before{content:"";position:absolute;inset:auto -35px -65px auto;width:150px;height:150px;border-radius:50%;background:rgba(255,123,0,.12);filter:blur(2px);pointer-events:none;}
+            .experience-studio-action i{position:relative;z-index:1;}
+            .experience-studio-action h3,.experience-studio-action p{position:relative;z-index:1;}
+            .studio-action-badge{display:inline-flex;position:relative;z-index:1;margin-top:14px;padding:5px 9px;border-radius:999px;background:rgba(255,123,0,.14);border:1px solid rgba(255,123,0,.25);color:#ff9a42;font-size:9px;font-weight:700;letter-spacing:.8px;}
+            @media(max-width:650px){.experience-studio-action{text-align:center;}.studio-action-badge{justify-content:center;}}
+
             @media(max-width:1000px){.cc-grid{grid-template-columns:1fr;}.cards{grid-template-columns:repeat(2,1fr);}.action-grid{grid-template-columns:repeat(2,1fr);}}
             @media(max-width:650px){.main{padding:20px;}.cc-heading-row{align-items:flex-start;flex-direction:column;}.cc-search-box kbd{display:none;}.cards{grid-template-columns:1fr;}.action-grid{grid-template-columns:1fr;}.cc-panel{padding:16px;}.cc-action-item,.health-item,.admin-activity-item{align-items:flex-start;}.cc-action-btn{margin-left:auto;}}
         </style>
@@ -412,6 +426,13 @@
                     <i class="fa-solid fa-gear"></i>
                     <h3>Settings</h3>
                     <p>Website Settings</p>
+                </div>
+
+                <div class="action-card experience-studio-action" id="manageExperienceStudio">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <h3>Experience Studio</h3>
+                    <p>Control website design, festivals, animation & content</p>
+                    <span class="studio-action-badge">NEW · MASTER CONTROL</span>
                 </div>
 
                 <div class="action-card" id="sendNotification">
