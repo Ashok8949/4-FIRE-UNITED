@@ -82,9 +82,6 @@
         ctx.clearRect(0,0,w,h);for(let i=bursts.length-1;i>=0;i--){const p=bursts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.018;p.vx*=.992;p.life-=p.decay;if(p.life<=0){bursts.splice(i,1);continue}ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.shadowBlur=12;ctx.shadowColor=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;ctx.shadowBlur=0;requestAnimationFrame(frame)};requestAnimationFrame(frame);
     }
   }
-  function addRangoli(){
-    const wrap=document.createElement("div");wrap.id="fourfu-festival-rangoli";wrap.className="fu-rangoli";wrap.setAttribute("aria-hidden","true");wrap.innerHTML=rangoliSvg;document.body.appendChild(wrap);
-  }
   function build(key,isPreview=false){
     if(!valid(key)||activeKey===key)return;
     removeExperience();
