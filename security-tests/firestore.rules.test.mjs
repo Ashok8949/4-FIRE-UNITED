@@ -136,7 +136,8 @@ test("players can edit profile fields but cannot change account identity or admi
   await testEnv.withSecurityRulesDisabled(async (context) => {
     await setDoc(doc(context.firestore(), "players", "unverified-profile"), {
       loginEmail: "unverified-player@example.com", authUid: "unverified-player",
-      role: "Player", name: "Before"
+      role: "Player", displayOrder: 0, since: "2024", featured: false,
+      name: "Before", ign: "BeforeIGN"
     });
   });
   await assertSucceeds(updateDoc(doc(unverifiedPlayer, "players", "unverified-profile"), {
