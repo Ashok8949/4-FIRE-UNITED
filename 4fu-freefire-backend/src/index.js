@@ -3227,6 +3227,7 @@ async function proRazorpayRequest(path, method, body, env) {
       "Content-Type": "application/json",
     },
     body: body === undefined ? undefined : JSON.stringify(body),
+    signal: AbortSignal.timeout(12000),
   });
 
   const data = await response.json().catch(() => null);
@@ -3671,15 +3672,25 @@ async function proWebhook(request, env) {
     subscription.status === "cancelled";
 
   if (activateEvents.has(event)) {
+    const expiryMs = expiresAt ? Date.parse(expiresAt) : 0;
+    if (!Number.isFinite(expiryMs) || expiryMs <= Date.now()) {
+      console.error("PRO activation webhook has no valid future billing end", {
+        event,
+        subscriptionId: subscription.id,
+      });
+      return new Response("Subscription billing period is not yet verifiable", {
+        status: 500,
+      });
+    }
+
     await proUpdatePlayer(
       player,
       {
         proActive: true,
         proPlan: "monthly",
         proPrice: Number(env.PRO_PRICE_INR || 49),
-        proExpiresAt: expiresAt || new Date(
-          Date.now() + 30 * 24 * 60 * 60 * 1000
-        ).toISOString(),
+        proStartedAt: player.fields?.proStartedAt || new Date().toISOString(),
+        proExpiresAt: expiresAt,
         proPaymentStatus: "paid",
         razorpaySubscriptionId: subscription.id,
         proAutoRenew: true,
