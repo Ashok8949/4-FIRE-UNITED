@@ -37,5 +37,10 @@ jobs:
       - name: Install security test dependencies
         run: npm install --prefix security-tests
 
+      - name: Check JavaScript syntax
+        run: |
+          node --check js/main.js
+          node --check functions/index.js
+
       - name: Run Firestore Emulator rules tests
         run: npx --yes firebase-tools emulators:exec --project demo-4fu-firestore-rules --only firestore "npm test --prefix security-tests"

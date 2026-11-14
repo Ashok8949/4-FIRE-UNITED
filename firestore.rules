@@ -46,7 +46,9 @@ service cloud.firestore {
     }
 
     match /stats/{document} {
-      allow read, write: if true;
+      // Public visitor totals are readable; only trusted Admin SDK code writes them.
+      allow read: if true;
+      allow write: if false;
     }
 
     match /contactMessages/{document} {

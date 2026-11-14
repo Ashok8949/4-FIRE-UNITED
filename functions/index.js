@@ -1,6 +1,7 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const admin = require("firebase-admin");
+const crypto = require("node:crypto");
 
 admin.initializeApp();
 
@@ -500,6 +501,63 @@ exports.lookupJoinApplicationStatus = onRequest(
     }
 );
 
+
+
+
+// Public visitor counter endpoint. The client cannot submit arbitrary increments:
+// each source IP is limited to one count per 30 minutes and 20 counts per UTC day.
+// Only a SHA-256 IP digest is stored; raw IP addresses are never persisted.
+exports.countVisitor = onRequest(
+    { region: "asia-south1", cors: true, maxInstances: 10 },
+    async (req, res) => {
+        if (req.method !== "POST") {
+            return res.status(405).json({ success: false, message: "Method not allowed." });
+        }
+
+        const ipAddress = req.ip;
+        if (!ipAddress || typeof ipAddress !== "string") {
+            return res.status(400).json({ success: false, message: "Unable to process this visit." });
+        }
+
+        const now = Date.now();
+        const dayKey = new Date(now).toISOString().slice(0, 10);
+        const ipDigest = crypto.createHash("sha256").update(ipAddress).digest("hex");
+        const rateRef = db.collection("_visitorRateLimits").doc(ipDigest);
+        const statsRef = db.collection("stats").doc("visitors");
+
+        try {
+            const counted = await db.runTransaction(async (transaction) => {
+                const rateSnapshot = await transaction.get(rateRef);
+                const rate = rateSnapshot.exists ? rateSnapshot.data() : {};
+                const lastCountedAt = rate.lastCountedAt?.toMillis?.() || 0;
+                const dailyCount = rate.dayKey === dayKey ? Number(rate.dailyCount) || 0 : 0;
+
+                if (now - lastCountedAt < 30 * 60 * 1000 || dailyCount >= 20) {
+                    return false;
+                }
+
+                transaction.set(rateRef, {
+                    lastCountedAt: admin.firestore.Timestamp.fromMillis(now),
+                    dayKey,
+                    dailyCount: dailyCount + 1,
+                    expiresAt: admin.firestore.Timestamp.fromMillis(now + 48 * 60 * 60 * 1000)
+                }, { merge: true });
+
+                transaction.set(statsRef, {
+                    total: admin.firestore.FieldValue.increment(1),
+                    lastVisit: admin.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                return true;
+            });
+
+            return res.status(200).json({ success: true, counted });
+        } catch (error) {
+            console.error("countVisitor error:", error);
+            return res.status(500).json({ success: false, message: "Visitor count unavailable." });
+        }
+    }
+);
 
 // Server-side admin alerts for public form submissions.
 async function createAdminAlert(event, notification) {

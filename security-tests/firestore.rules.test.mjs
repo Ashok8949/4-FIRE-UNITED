@@ -44,6 +44,28 @@ const userDb = () => testEnv.authenticatedContext("player-uid", {
   email_verified: true
 }).firestore();
 
+test("visitor statistics are publicly readable but cannot be client-written", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), "stats/visitors"), { total: 12 });
+  });
+
+  const publicDb = testEnv.unauthenticatedContext().firestore();
+  const user = userDb();
+  const admin = adminDb();
+  const publicRef = doc(publicDb, "stats/visitors");
+  const userRef = doc(user, "stats/visitors");
+  const adminRef = doc(admin, "stats/visitors");
+
+  await assertSucceeds(getDoc(publicRef));
+  await assertSucceeds(getDoc(userRef));
+  await assertSucceeds(getDoc(adminRef));
+
+  await assertFails(setDoc(doc(publicDb, "stats/anonymous-write"), { total: 999 }));
+  await assertFails(updateDoc(publicRef, { total: 999 }));
+  await assertFails(updateDoc(userRef, { total: 999 }));
+  await assertFails(updateDoc(adminRef, { total: 999 }));
+});
+
 test("website settings are publicly readable", async () => {
   await testEnv.withSecurityRulesDisabled(async (context) => {
     await setDoc(doc(context.firestore(), "settings/website"), {

@@ -527,73 +527,37 @@ document.addEventListener(
 =========================================*/
 
 (function () {
+    const KEY = "4fu-last-visit";
+    const COOLDOWN_MS = 30 * 60 * 1000;
+    const endpoint = "https://asia-south1-fire-united.cloudfunctions.net/countVisitor";
 
-    const KEY =
-        "4fu-last-visit";
-
-    const now =
-        Date.now();
-
-    const lastVisit =
-        Number(
-            localStorage.getItem(KEY)
-        ) || 0;
-
-    /*-------------------------------------
-        COUNT ONLY ONCE EVERY 30 MINUTES
-    -------------------------------------*/
-
-    if (
-        now - lastVisit <
-        30 * 60 * 1000
-    ) {
-
-        return;
-
+    let lastVisit = 0;
+    try {
+        lastVisit = Number(localStorage.getItem(KEY)) || 0;
+    } catch (_) {
+        // Private browsing/storage restrictions must not break page rendering.
     }
 
-    localStorage.setItem(
-        KEY,
-        now
-    );
+    if (Date.now() - lastVisit < COOLDOWN_MS) return;
 
-    if (
-        typeof db === "undefined"
-    ) {
-
-        return;
-
-    }
-
-    db.collection("stats")
-        .doc("visitors")
-        .set(
-            {
-
-                total:
-                    firebase.firestore
-                        .FieldValue
-                        .increment(1),
-
-                lastVisit:
-                    firebase.firestore
-                        .FieldValue
-                        .serverTimestamp()
-
-            },
-            {
-                merge: true
+    // The backend performs the authoritative IP-based cooldown and daily cap.
+    // No client-provided count or identity is trusted.
+    fetch(endpoint, { method: "POST" })
+        .then((response) => {
+            if (!response.ok) throw new Error("Visitor counter request failed");
+            return response.json();
+        })
+        .then((result) => {
+            if (!result || result.success !== true) return;
+            try {
+                localStorage.setItem(KEY, String(Date.now()));
+            } catch (_) {
+                // The server-side rate limit remains effective without storage.
             }
-        )
-        .catch((err) => {
-
-            console.error(
-                "Visitor Error:",
-                err
-            );
-
+        })
+        .catch((error) => {
+            console.warn("Visitor counter unavailable:", error.message);
         });
-
 })();
 
 /*=========================================

@@ -41,3 +41,19 @@ Browser clients no longer write notifications; the collection is admin-only.
 Deploy the rules and default `functions` codebase together to preserve alerts.
 
 The public visitor counter in `stats` remains unchanged until its write flow is migrated to a trusted backend.
+
+
+The visitor counter now calls the `countVisitor` Cloud Function instead of
+writing Firestore from the browser. The function applies a transactional
+per-IP cooldown (one count per 30 minutes), a 20-count UTC-day cap, and stores
+only a SHA-256 digest of the source IP in the private `_visitorRateLimits`
+collection. The public `stats` collection is read-only under Firestore rules;
+the Admin SDK function is the only intended writer.
+
+The rate-limit documents include an `expiresAt` field. Configure Firestore
+TTL for `_visitorRateLimits.expiresAt` in the Firebase console to remove
+expired records automatically. IP-based limits can affect visitors sharing
+a public network and are not a substitute for Firebase App Check. App Check
+enforcement should be added before relying on this endpoint for high-risk
+traffic. Deploy the updated rules and default Cloud Functions codebase
+together; no deployment is performed by this PR.
