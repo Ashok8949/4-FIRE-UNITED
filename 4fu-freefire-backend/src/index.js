@@ -3275,6 +3275,98 @@ async function proCreateSubscription(request, env) {
   const planId =
     env.RAZORPAY_PRO_PLAN_ID ||
     "plan_TfxiwIYuTxQILZ";
+  const priceInr = Number(env.PRO_PRICE_INR || 49);
+  if (!Number.isFinite(priceInr) || priceInr <= 0) {
+    return proJson(
+      { success: false, error: "PRO pricing is not configured correctly" },
+      503
+    );
+  }
+
+  const checkoutResponse = (subscriptionId) => proJson({
+    success: true,
+    subscriptionId,
+    razorpayKeyId: env.RAZORPAY_KEY_ID,
+    planId,
+    amount: Math.round(priceInr * 100),
+    currency: "INR",
+    prefill: {
+      name:
+        player.fields?.displayName ||
+        player.fields?.name ||
+        claims.name ||
+        "",
+      email: claims.email || player.fields?.loginEmail || "",
+    },
+  });
+
+  // Reuse an existing non-terminal subscription instead of creating a new
+  // Razorpay subscription every time the user retries checkout.
+  const existingSubscriptionId = String(
+    player.fields?.razorpaySubscriptionId || ""
+  );
+  if (/^sub_[A-Za-z0-9]+$/.test(existingSubscriptionId)) {
+    const existing = await proRazorpayRequest(
+      `/subscriptions/${encodeURIComponent(existingSubscriptionId)}`,
+      "GET",
+      undefined,
+      env
+    );
+
+    const existingBelongsToPlayer =
+      existing?.id === existingSubscriptionId &&
+      existing?.notes?.firebaseUid === claims.sub &&
+      existing?.plan_id === planId;
+
+    if (!existingBelongsToPlayer) {
+      console.error("Stored PRO subscription ownership/plan mismatch", {
+        playerId: player.id,
+        subscriptionId: existingSubscriptionId,
+      });
+      return proJson(
+        { success: false, error: "Existing subscription could not be verified" },
+        409
+      );
+    }
+
+    const reusableStatuses = new Set([
+      "created",
+      "authenticated",
+      "active",
+      "pending",
+    ]);
+    if (reusableStatuses.has(existing.status)) {
+      const existingEnd = proIsoFromUnix(Number(existing.current_end || 0));
+      const existingExpiry = existingEnd ? Date.parse(existingEnd) : 0;
+
+      if (
+        existing.status === "active" &&
+        Number.isFinite(existingExpiry) &&
+        existingExpiry > Date.now()
+      ) {
+        await proUpdatePlayer(
+          player,
+          {
+            proActive: true,
+            proPlan: "monthly",
+            proPrice: priceInr,
+            proExpiresAt: existingEnd,
+            proPaymentStatus: "paid",
+            proAutoRenew: true,
+          },
+          env
+        );
+        return proJson({
+          success: true,
+          alreadyActive: true,
+          proActive: true,
+          proExpiresAt: existingEnd,
+        });
+      }
+
+      return checkoutResponse(existingSubscriptionId);
+    }
+  }
 
   const subscription = await proRazorpayRequest(
     "/subscriptions",
@@ -3289,40 +3381,37 @@ async function proCreateSubscription(request, env) {
         playerDocId: player.id,
         playerEmail: claims.email || "",
         plan: "4FU PRO Monthly",
-        price: "49",
+        price: String(priceInr),
       },
     },
     env
   );
+
+  if (
+    !/^sub_[A-Za-z0-9]+$/.test(String(subscription?.id || "")) ||
+    subscription?.plan_id !== planId ||
+    subscription?.notes?.firebaseUid !== claims.sub
+  ) {
+    console.error("Razorpay returned an unexpected PRO subscription response");
+    return proJson(
+      { success: false, error: "Unable to verify the new subscription" },
+      502
+    );
+  }
 
   await proUpdatePlayer(
     player,
     {
       proPaymentStatus: "created",
       proPlan: "monthly",
-      proPrice: Number(env.PRO_PRICE_INR || 49),
+      proPrice: priceInr,
       razorpaySubscriptionId: subscription.id,
       proAutoRenew: true,
     },
     env
   );
 
-  return proJson({
-    success: true,
-    subscriptionId: subscription.id,
-    razorpayKeyId: env.RAZORPAY_KEY_ID,
-    planId,
-    amount: Number(env.PRO_PRICE_INR || 49) * 100,
-    currency: "INR",
-    prefill: {
-      name:
-        player.fields?.displayName ||
-        player.fields?.name ||
-        claims.name ||
-        "",
-      email: claims.email || player.fields?.loginEmail || "",
-    },
-  });
+  return checkoutResponse(subscription.id);
 }
 
 async function proVerifyPayment(request, env) {
