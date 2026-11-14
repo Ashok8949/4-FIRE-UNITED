@@ -33,7 +33,8 @@
   const loader=document.getElementById("loader"),l=p.loader||{};if(loader){if(l.enabled===false)loader.remove();else{const h=loader.querySelector(".loader-content h1"),sub=loader.querySelector(".loader-content p");if(h&&l.title)h.textContent=l.title;if(sub&&typeof l.subtitle==="string")sub.textContent=l.subtitle;if(safeHex(l.background))loader.style.setProperty("--4fu-loader-bg",l.background);if(["bullet","minimal","glow"].includes(l.preset))loader.dataset["4fuLoader"]=l.preset}}
   window.dispatchEvent(new CustomEvent("4fu:studio-preview",{detail:{festivalLibrary:p.festivalLibrary||[],selectedFestival:p.selectedFestival}}));
  }
- window.addEventListener("message",e=>{if(e.origin!==allowedOrigin||e.source!==window.parent)return;apply(e.data)});
+ window.__4FU_STUDIO_PREVIEW_APPLY__=apply;
+ window.addEventListener("message",e=>{if(e.origin!==allowedOrigin||e.source!==window.parent)return;window.__4FU_STUDIO_PREVIEW_LAST__=e.data;apply(e.data)});
 })();
 
 db.collection("settings")
@@ -249,7 +250,7 @@ db.collection("settings")
     });
 
 })
-
+.then(() => { if(window.__4FU_STUDIO_PREVIEW_LAST__&&window.__4FU_STUDIO_PREVIEW_APPLY__)window.__4FU_STUDIO_PREVIEW_APPLY__(window.__4FU_STUDIO_PREVIEW_LAST__); })
 .catch((err) => {
 
     console.error("Settings Loader Error:", err);
