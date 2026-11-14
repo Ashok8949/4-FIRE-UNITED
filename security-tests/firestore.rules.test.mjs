@@ -147,8 +147,8 @@ test("players can edit profile fields but cannot change account identity or admi
 
 
 for (const collectionName of ["contactMessages", "challengeRegistrations"]) {
-  test(`public users can submit ${collectionName} records`, async () => {
-    await assertSucceeds(
+  test(`public users cannot bypass Cloud Functions to submit ${collectionName} records`, async () => {
+    await assertFails(
       setDoc(doc(testEnv.unauthenticatedContext().firestore(), collectionName, "public-submit"), {
         submitted: true
       })
@@ -194,7 +194,7 @@ for (const collectionName of ["contactMessages", "challengeRegistrations"]) {
 }
 
 
-test("public applicants can create only pending, schema-valid applications", async () => {
+test("public applicants cannot bypass Cloud Functions to create join applications", async () => {
   const publicDb = testEnv.unauthenticatedContext().firestore();
   const validApplication = {
     name: "Test Player",
@@ -208,7 +208,7 @@ test("public applicants can create only pending, schema-valid applications", asy
     appliedOn: "14/11/2026"
   };
 
-  await assertSucceeds(
+  await assertFails(
     setDoc(doc(publicDb, "joinApplications", "valid-public-application"), validApplication)
   );
   await assertFails(
