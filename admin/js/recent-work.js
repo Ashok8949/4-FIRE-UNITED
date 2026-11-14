@@ -34,9 +34,9 @@ function mount(){
  panel.addEventListener('click',async e=>{
   const btn=e.target.closest('.recent-work-undo');if(!btn)return;
   const sha=btn.dataset.sha;
-  try{await navigator.clipboard.writeText(sha);alert('Commit ID copied: '+sha+'\nGitHub rollback workflow khulega. Wahan Target commit field mein paste karke Run workflow karo.');}
-  catch(_){prompt('Copy this commit ID, then open rollback workflow:',sha);}
-  window.open(btn.dataset.undo,'_blank','noopener');
+  const command='$ErrorActionPreference = "Stop"\nSet-Location "C:\\Projects\\4FU-festive"\nif ((git status --porcelain).Length -gt 0) { throw "Working tree dirty hai. Pehle changes commit/stash karo." }\ngit fetch origin feature/festive-universe\nif ($LASTEXITCODE -ne 0) { throw "Fetch failed" }\ngit checkout feature/festive-universe\nif ($LASTEXITCODE -ne 0) { throw "Checkout failed" }\ngit pull --ff-only origin feature/festive-universe\nif ($LASTEXITCODE -ne 0) { throw "Pull failed" }\ngit merge-base --is-ancestor '+sha+' HEAD\nif ($LASTEXITCODE -ne 0) { throw "Selected change is not on this branch" }\ngit revert --no-edit '+sha+'\nif ($LASTEXITCODE -ne 0) { throw "Revert stopped. Resolve or run git revert --abort." }\ngit push origin HEAD:feature/festive-universe\nif ($LASTEXITCODE -ne 0) { throw "Push failed" }';
+  try{await navigator.clipboard.writeText(command);alert('Safe Undo PowerShell script copied.\\n\\nPaste it into PowerShell and run. This creates a new revert commit on feature/festive-universe; it does not delete history or change production.');}
+  catch(_){prompt('Copy this safe Undo PowerShell script:',command);}
  });
  load();
 }
