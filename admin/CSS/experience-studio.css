@@ -95,3 +95,15 @@
 .studio-instructions>b{color:#ffb477;font-size:13px;letter-spacing:.04em}
 .studio-instructions>span{color:#aebbd0}
 .studio-instructions .studio-live-note{color:#7de0b3;font-weight:700}
+/* P20 · Keep the real-site preview in view while editing long control panels. */
+.studio .studio-global-preview{position:sticky;top:76px;z-index:24;margin:0 0 18px!important;max-height:calc(100vh - 94px);overflow:hidden;box-shadow:0 14px 38px #0006}
+.studio .studio-global-preview>h3{display:inline-block;margin:0 12px 8px 0;font-size:16px}
+.studio .studio-global-preview>p:not(.hint){display:none}
+.studio .studio-global-preview .website-preview-toolbar{position:relative;top:auto;min-height:34px}
+.studio .studio-global-preview .website-preview-shell iframe{height:clamp(260px,38vh,440px);min-height:260px}
+.studio .studio-global-preview .hint{margin:7px 0 0;font-size:10px!important}
+.studio .studio-global-preview .preview-change-state{color:#7de0b3;font-weight:700}
+.studio .studio-global-preview .preview-change-state[data-state="waiting"]{color:#ffc477}
+.studio .studio-global-preview .preview-change-state[data-state="error"]{color:#ff9a9a}
+@media(max-width:900px){.studio .studio-global-preview{top:62px;max-height:calc(100vh - 72px)}.studio .studio-global-preview .website-preview-shell iframe{height:30vh;min-height:210px}}
+@media(max-width:600px){.studio .studio-global-preview{top:0;margin:0 -4px 12px!important;border-radius:12px}.studio .studio-global-preview .website-preview-shell iframe{height:25vh;min-height:170px}.studio .studio-global-preview .hint{display:none}}
