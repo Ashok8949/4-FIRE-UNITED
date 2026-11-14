@@ -6,7 +6,7 @@
     holi:{emoji:"✦",title:"A Celebration of Colours",label:"HAPPY HOLI",message:"Let every colour bring a new reason to celebrate.",particle:"fu-holi-splash",count:18,caption:"COLOUR • ENERGY • UNITY"},
     christmas:{emoji:"✦",title:"The Season of Giving",label:"MERRY CHRISTMAS",message:"Wishing the entire 4FU family warmth and wonder.",particle:"fu-snow",count:38,caption:"PEACE • JOY • GOODWILL"},
     newyear:{emoji:"✦",title:"A New Chapter Begins",label:"HAPPY NEW YEAR",message:"New goals. New victories. One united 4FU.",particle:"fu-confetti",count:42,caption:"NEW BEGINNINGS • BIG WINS"},
-    eid:{emoji:"✦",title:"A Time for Togetherness",label:"EID MUBARAK",message:"May peace, prosperity and happiness be with you.",particle:"fu-lantern",count:22,caption:"PEACE • GRATITUDE • UNITY"},
+    eid:{emoji:"🌙",title:"A Time for Togetherness",label:"EID MUBARAK",message:"May peace, prosperity and happiness be with you.",particle:"fu-lantern",count:22,caption:"PEACE • GRATITUDE • UNITY"},
     independence:{emoji:"✦",title:"Pride in Every Tricolour",label:"HAPPY INDEPENDENCE DAY",message:"Honouring courage, freedom and the spirit of India.",particle:"fu-confetti",count:30,caption:"COURAGE • FREEDOM • UNITY"},
     halloween:{emoji:"✦",title:"Enter the Night",label:"HAPPY HALLOWEEN",message:"A little mystery. A lot of 4FU spirit.",particle:"fu-web",count:22,caption:"MYSTERY • MAGIC • MAYHEM"}
   };
@@ -36,7 +36,7 @@
     intro.innerHTML='<div class="fu-intro-content"><div class="fu-intro-art">'+rangoliSvg+'</div><p class="fu-intro-kicker">4 FIRE UNITED PRESENTS</p><h1 class="fu-intro-title">'+theme.title+'</h1><p class="fu-intro-caption">'+theme.caption+'</p></div><button class="fu-intro-skip" type="button">Skip intro</button>';
     document.body.appendChild(intro);
     const close=()=>{intro.classList.add("is-leaving");window.setTimeout(()=>intro.remove(),800);};
-    intro.querySelector("button").addEventListener("click",close,{once:true});
+    const skip=intro.querySelector?.("button");if(skip)skip.addEventListener("click",close,{once:true});
     window.setTimeout(close,3200);
   }
   function addRangoli(){
