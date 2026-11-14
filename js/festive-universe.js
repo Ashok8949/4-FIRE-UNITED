@@ -99,7 +99,11 @@
     if(boundaries.length){const next=Math.min(...boundaries);boundaryTimer=window.setTimeout(applyLiveConfig,Math.min(MAX_TIMER,Math.max(0,next-now+25)));}
   }
   function start(){
-    if(params.has("festivalPreview")){if(valid(preview))build(preview,true);return;}
+    if(params.has("festivalPreview")){
+      const raw=params.get("festivalPreviewData");
+      if(raw&&raw.length<=6000){try{const f=JSON.parse(raw);if(f&&typeof f==="object"&&typeof f.id==="string"&&f.id===preview&&/^[a-z0-9-]{2,40}$/.test(f.id)){f.custom=f.custom===true;f.name=String(f.name||"Celebration").slice(0,60);f.label=String(f.label||"CELEBRATION").slice(0,70);f.message=String(f.message||"A new celebration begins.").slice(0,150);if(!/^#[0-9a-f]{6}$/i.test(f.accent||""))f.accent="";if(!/^#[0-9a-f]{6}$/i.test(f.atmosphere||""))f.atmosphere="";liveLibrary=[...liveLibrary.filter(x=>x.id!==f.id),f];} }catch(_){}}
+      if(valid(preview))build(preview,true);return;
+    }
     if(typeof db==="undefined"||!db.collection)return;
     db.collection("settings").doc("website").get().then(doc=>{if(!doc.exists)return;liveConfig=doc.data().festival||null;liveLibrary=Array.isArray(doc.data().experience?.festivalLibrary)?doc.data().experience.festivalLibrary:[];applyLiveConfig();}).catch(err=>console.warn("[4FU Festive Universe] Could not load festival settings:",err));
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")applyLiveConfig();});
