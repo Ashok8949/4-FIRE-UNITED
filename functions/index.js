@@ -298,16 +298,38 @@ exports.getFreeFirePlayer = onRequest(
                         signal: controller.signal
                     });
 
-                    const text = await response.text();
+                    const declaredLength = Number(response.headers.get("content-length") || 0);
+                    const MAX_RESPONSE_BYTES = 512 * 1024;
+                    if (declaredLength > MAX_RESPONSE_BYTES) {
+                        throw new Error("Upstream response exceeded the allowed size.");
+                    }
 
+                    const reader = response.body?.getReader();
+                    if (!reader) throw new Error("Upstream response body unavailable.");
+
+                    const chunks = [];
+                    let totalBytes = 0;
+                    try {
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            totalBytes += value.byteLength;
+                            if (totalBytes > MAX_RESPONSE_BYTES) {
+                                await reader.cancel();
+                                throw new Error("Upstream response exceeded the allowed size.");
+                            }
+                            chunks.push(Buffer.from(value));
+                        }
+                    } finally {
+                        reader.releaseLock();
+                    }
+
+                    const text = Buffer.concat(chunks, totalBytes).toString("utf8");
                     let data = null;
-
                     try {
                         data = JSON.parse(text);
                     } catch (parseError) {
-                        throw new Error(
-                            `Invalid JSON response (${response.status})`
-                        );
+                        throw new Error("Upstream returned invalid JSON.");
                     }
 
                     if (!response.ok) {
@@ -351,7 +373,6 @@ exports.getFreeFirePlayer = onRequest(
                     success: false,
                     source: "freefire-api",
                     message: "Free Fire account API unavailable",
-                    error: error.message
                 });
 
             }
@@ -416,9 +437,7 @@ exports.getFreeFirePlayer = onRequest(
                     statsData ||
                     null,
 
-                rawAccount: accountData,
-
-                rawStats: statsData
+                // Only normalized fields consumed by the website are exposed.
             });
 
         } catch (error) {
@@ -430,9 +449,7 @@ exports.getFreeFirePlayer = onRequest(
 
             return res.status(500).json({
                 success: false,
-                message:
-                    error.message ||
-                    "Unable to fetch Free Fire player data"
+                message: "Unable to fetch Free Fire player data"
             });
 
         }
