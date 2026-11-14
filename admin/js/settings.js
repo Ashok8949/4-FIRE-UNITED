@@ -24,6 +24,18 @@ settingsRef.get()
     document.getElementById("discord").value = s.discord || "";
     document.getElementById("facebook").value = s.facebook || "";
 
+    const festival = s.festival || {};
+    document.getElementById("festivalEnabled").value = String(festival.enabled === true);
+    document.getElementById("festivalMode").value = festival.mode || "manual";
+    document.getElementById("festivalName").value = festival.festival || "diwali";
+    const toIndiaInput = value => {
+        if (!value) return "";
+        try { return new Date(value).toLocaleString("sv-SE", { timeZone: "Asia/Kolkata", hour12: false }).replace(" ", "T").slice(0, 16); }
+        catch (_) { return ""; }
+    };
+    document.getElementById("festivalStart").value = toIndiaInput(festival.startAt);
+    document.getElementById("festivalEnd").value = toIndiaInput(festival.endAt);
+
 })
 
 .catch((err) => {
@@ -110,4 +122,12 @@ document.getElementById("saveSettings").addEventListener("click", () => {
 
     });
 
+});
+
+// =====================================
+// FESTIVAL PREVIEW (does not publish)
+// =====================================
+document.getElementById("previewFestival").addEventListener("click", () => {
+    const festival = document.getElementById("festivalName").value;
+    window.open("../index.html?festivalPreview=" + encodeURIComponent(festival), "_blank", "noopener");
 });
