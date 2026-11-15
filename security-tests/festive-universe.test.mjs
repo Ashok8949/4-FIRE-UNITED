@@ -12,7 +12,7 @@ function harness({ search = '', config = null, now = Date.parse('2026-11-14T00:0
   const storage = new Map();
   class Element {
     constructor(tag) {
-      this.tagName = tag; this.children = []; this.attributes = {}; this.style = { setProperty() {}, removeProperty() {} };
+      this.tagName = tag; this.children = []; this.attributes = {}; this.style = { values: {}, setProperty(name, value) { this.values[name] = value; }, removeProperty(name) { delete this.values[name]; } };
       this.className = ''; this.id = ''; this.textContent = ''; this.innerHTML = ''; this.parent = null;
       this.classList = {
         add: name => { this._classes ??= new Set(); this._classes.add(name); },
@@ -123,12 +123,14 @@ test('preview is read-only with respect to live Firestore and welcome session st
 
 test('custom preview text stays text and cannot inject markup', async () => {
   const message = '<img src=x onerror=alert(1)>';
-  const data = encodeURIComponent(JSON.stringify({ id: 'custom-safe', custom: true, name: '<svg onload=alert(1)>', label: '<script>alert(1)</script>', message, particle: 'spark', intensity: 'low' }));
+  const data = encodeURIComponent(JSON.stringify({ id: 'custom-safe', custom: true, name: { html: '<svg onload=alert(1)>' }, label: '<script>alert(1)</script>', message, accent: 'red; background:url(https://evil.example/x)', atmosphere: 'url(javascript:alert(1))', particle: 'spark', intensity: 'low' }));
   const h = harness({ search: '?festivalPreview=custom-safe&festivalPreviewData=' + data }); await h.flush();
   const toast = h.document.getElementById('fourfu-festival-toast');
   assert.ok(toast);
   assert.equal(toast.textContent.includes(message), true);
   assert.equal(toast.innerHTML, '');
+  assert.equal(h.html.style.values['--fu-accent'], '#ffb35c');
+  assert.equal(h.html.style.values['--fu-wash'], '#24170c');
   assert.equal(h.body.children.some(node => node.tagName === 'img' || node.tagName === 'script'), false);
   assert.equal(h.dbReads.count, 0);
 });

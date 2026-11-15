@@ -34,7 +34,17 @@
     return Number.isFinite(instant)?instant:NaN;
   }
   let activeKey=null,boundaryTimer=null,liveConfig=null;
-  const themeFor=key=>{const base=FESTIVALS[key]||{emoji:"✦",title:"A New Celebration",label:"CELEBRATION",message:"A new celebration begins.",particle:"fu-spark",count:18,caption:"CELEBRATION • UNITY • JOY"};const f=liveLibrary.find(x=>x.id===key);if(!f)return base;const p={spark:"fu-spark",splash:"fu-holi-splash",snow:"fu-snow",lantern:"fu-lantern",confetti:"fu-confetti",web:"fu-web",none:"fu-none"};const n={low:9,medium:19,high:32};return {...base,title:f.name||base.title,label:f.label||base.label,message:f.message||base.message,particle:p[f.particle]||base.particle,count:n[f.intensity]||base.count,caption:(f.name||base.title).toUpperCase()+" • 4FU UNITED",style:["diwali","holi","winter","celestial","tricolour","midnight","fireworks","custom"].includes(f.style)?f.style:"custom",accent:f.accent,atmosphere:f.atmosphere};};
+  const safeText=(value,fallback,max)=>typeof value==="string"&&value.trim()?value.trim().slice(0,max):fallback;
+  const safeColor=(value,fallback)=>typeof value==="string"&&/^#[0-9a-f]{6}$/i.test(value)?value:fallback;
+  const themeFor=key=>{
+    const base=FESTIVALS[key]||{emoji:"✦",title:"A New Celebration",label:"CELEBRATION",message:"A new celebration begins.",particle:"fu-spark",count:18,caption:"CELEBRATION • UNITY • JOY",accent:"#ffb35c",atmosphere:"#24170c"};
+    const f=liveLibrary.find(x=>x.id===key);
+    if(!f)return base;
+    const name=safeText(f.name,base.title,60);
+    const particles={spark:"fu-spark",splash:"fu-holi-splash",snow:"fu-snow",lantern:"fu-lantern",confetti:"fu-confetti",web:"fu-web",none:"fu-none"};
+    const intensities={low:9,medium:19,high:32};
+    return {...base,title:name,label:safeText(f.label,base.label,70),message:safeText(f.message,base.message,150),particle:Object.prototype.hasOwnProperty.call(particles,f.particle)?particles[f.particle]:base.particle,count:Object.prototype.hasOwnProperty.call(intensities,f.intensity)?intensities[f.intensity]:base.count,caption:name.toUpperCase()+" • 4FU UNITED",style:["diwali","holi","winter","celestial","tricolour","midnight","fireworks","custom"].includes(f.style)?f.style:"custom",accent:safeColor(f.accent,base.accent||"#ffb35c"),atmosphere:safeColor(f.atmosphere,base.atmosphere||"#24170c")};
+  };
   function activeForDate(config,now=Date.now()){
     const scheduled=liveLibrary.filter(f=>{
       if(!f||f.enabled!==true||!valid(f.id))return false;
