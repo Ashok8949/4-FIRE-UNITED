@@ -50,15 +50,15 @@ test('unsupported festival preview IDs never open a URL',async()=>{
 function studioValidationHarness(library,current){
  const status={textContent:''};
  const helperStart=studioSource.indexOf('function collectFestivalLibraryForSave(){');
- const helperEnd=studioSource.indexOf('\\nfunction applyFestival()',helperStart);
+ const helperEnd=studioSource.indexOf('\nfunction applyFestival()',helperStart);
  assert.ok(helperStart>=0&&helperEnd>helperStart,'Studio schedule validation helper must exist');
  const helper=studioSource.slice(helperStart,helperEnd);
  const context={festivalLibrary:library,collectFestival:()=>current,indiaDateTime:window.FourFUIndiaDateTime,$:()=>status};
- try{return{result:vm.runInNewContext(helper+'\\ncollectFestivalLibraryForSave()',context),status,error:null}}
+ try{return{result:vm.runInNewContext(helper+'\ncollectFestivalLibraryForSave()',context),status,error:null}}
  catch(error){return{result:null,status,error}}
 }
 test('Experience Studio save and publish both invoke festival schedule validation',()=>{
- const saveStart=studioSource.indexOf('async function save(){'),publishStart=studioSource.indexOf('async function publish(){',saveStart),end=studioSource.indexOf('\\nfunction normaliseFestivals',publishStart);
+ const saveStart=studioSource.indexOf('async function save(){'),publishStart=studioSource.indexOf('async function publish(){',saveStart),end=studioSource.indexOf('\nfunction normaliseFestivals',publishStart);
  assert.ok(saveStart>=0&&publishStart>saveStart&&end>publishStart);
  assert.ok(studioSource.slice(saveStart,publishStart).includes('collectFestivalLibraryForSave()'));
  assert.ok(studioSource.slice(publishStart,end).includes('collectFestivalLibraryForSave()'));
