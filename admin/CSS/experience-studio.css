@@ -142,3 +142,24 @@
  .studio-workspace{gap:8px}
  .studio-preview-rail .studio-global-preview .website-preview-shell iframe{height:48vh;min-height:280px}
 }
+
+/* P24 · Curated preset marketplace */
+.preset-filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.preset-filters button{border:1px solid #39465a;background:#111a27;color:#d9e2ef;border-radius:999px;padding:9px 15px;font-size:11px;font-weight:700;cursor:pointer}
+.preset-filters button[aria-pressed=true]{background:linear-gradient(120deg,#f2a94a,#d97835);border-color:transparent;color:#17110a}
+.preset-library{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:13px}
+.preset-card{min-width:0;overflow:hidden;border:1px solid #303c50;border-radius:15px;background:linear-gradient(150deg,#172131,#0e141e);transition:transform .2s,border-color .2s,box-shadow .2s}
+.preset-card:hover{transform:translateY(-3px);border-color:#b17b43;box-shadow:0 14px 34px #0005}
+.preset-swatch{height:82px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 78% 20%,color-mix(in srgb,var(--preset-secondary) 58%,transparent),transparent 42%),linear-gradient(120deg,var(--preset-accent),var(--preset-bg) 72%);border-bottom:1px solid #ffffff18}
+.preset-swatch:before,.preset-swatch:after{content:"";position:absolute;border:1px solid color-mix(in srgb,var(--preset-secondary) 70%,transparent);border-radius:50%;width:110px;height:110px;right:24px;top:-52px;box-shadow:0 0 28px color-mix(in srgb,var(--preset-accent) 45%,transparent)}
+.preset-swatch:after{width:68px;height:68px;right:45px;top:-30px}
+.preset-card-copy{padding:13px 14px 2px;display:block}
+.preset-card-copy small{color:#f0b56c;font-size:9px;letter-spacing:1.4px;font-weight:800}
+.preset-card-copy h4{font:700 16px "Space Grotesk",sans-serif;margin:7px 0 5px;color:#f5f7fb}
+.preset-card-copy p{min-height:48px;margin:0;color:#9daabd;font-size:11px;line-height:1.55}
+.preset-card-actions{display:flex;gap:7px;padding:12px 14px 14px}
+.preset-card-actions .btn{flex:1;padding:9px 7px;font-size:10px}
+.preset-card-actions .primary{background:linear-gradient(120deg,#ffb35d,#e87535);color:#17100a}
+#presetActionStatus{margin-top:14px;padding:11px 13px;border-radius:10px;background:#0d1723;border:1px solid #2c3b50}
+@media(max-width:600px){.preset-library{grid-template-columns:1fr 1fr}.preset-card-copy p{min-height:66px}.preset-card-actions{flex-direction:column}}
+@media(max-width:390px){.preset-library{grid-template-columns:1fr}}
