@@ -51,10 +51,11 @@ function renderPresetLibrary(filter="all"){
   const card=document.createElement("article"),swatch=document.createElement("div"),copy=document.createElement("div"),tag=document.createElement("small"),title=document.createElement("h4"),desc=document.createElement("p"),actions=document.createElement("div"),preview=document.createElement("button"),apply=document.createElement("button"),v=p.values||p.profile;
   card.className="preset-card preset-"+p.category;swatch.className="preset-swatch";swatch.style.setProperty("--preset-accent",v.accent);swatch.style.setProperty("--preset-secondary",v.secondary||v.atmosphere);swatch.style.setProperty("--preset-bg",v.background||v.atmosphere);
   copy.className="preset-card-copy";tag.textContent=p.tag;title.textContent=p.name;desc.textContent=p.description;copy.append(tag,title,desc);actions.className="preset-card-actions";
-  preview.type=apply.type="button";preview.className="btn";preview.textContent="Preview";apply.className="btn primary";apply.textContent="Apply & Save Draft";
+  const publishNow=document.createElement("button");preview.type=apply.type=publishNow.type="button";preview.className="btn";preview.textContent="Preview";apply.className="btn";apply.textContent="Save Draft";publishNow.className="btn primary";publishNow.textContent="Apply & Publish";
   preview.addEventListener("click",()=>{try{applyPreset(p);$("presetActionStatus").textContent=p.name+" loaded into the actual website preview. Not saved or published yet."}catch(e){$("presetActionStatus").textContent=e.message}});
   apply.addEventListener("click",async()=>{try{applyPreset(p);await save();$("presetActionStatus").textContent=p.name+" saved to your private draft. Review the right-side preview, then use Publish when ready."}catch(e){$("presetActionStatus").textContent=e.message||"Could not apply this preset."}});
-  actions.append(preview,apply);card.append(swatch,copy,actions);root.append(card);
+  publishNow.addEventListener("click",async()=>{try{if(!confirm("Apply and publish "+p.name+" to the public 4FU website now? This updates settings/website.experience. Hosting files and existing festival settings remain untouched."))return;applyPreset(p);await save();if($("draftStatus").textContent!=="Private draft saved.")throw Error($("draftStatus").textContent||"Draft save failed.");await publish();$("presetActionStatus").textContent=p.name+" published. Refresh the public website to see the new experience."}catch(e){$("presetActionStatus").textContent=e.message||"Publish failed."}});
+  actions.append(preview,apply,publishNow);card.append(swatch,copy,actions);root.append(card);
  });
 }
 function applyPreset(p){
