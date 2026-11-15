@@ -60,7 +60,7 @@
   if(!previous||JSON.stringify(previous.loader||{})!==JSON.stringify(p.loader||{}))showStudioLoaderPreview(p.loader||{});
  }
  window.__4FU_STUDIO_PREVIEW_APPLY__=apply;
- window.addEventListener("message",e=>{if(e.origin!==allowedOrigin||e.source!==window.parent)return;const previous=window.__4FU_STUDIO_PREVIEW_LAST__;window.__4FU_STUDIO_PREVIEW_LAST__=e.data;apply(e.data,previous)});
+ window.addEventListener("message",e=>{if(e.origin!==allowedOrigin||e.source!==window.parent||!e.data||e.data.type!=="4FU_STUDIO_PREVIEW")return;const previous=window.__4FU_STUDIO_PREVIEW_LAST__;window.__4FU_STUDIO_PREVIEW_LAST__=e.data;apply(e.data,previous)});
 })();
 
 db.collection("settings")

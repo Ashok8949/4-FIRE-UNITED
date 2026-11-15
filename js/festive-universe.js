@@ -21,15 +21,33 @@
   const preview=params.get("festivalPreview");
   let liveLibrary=[];
   const valid=key=>Object.prototype.hasOwnProperty.call(FESTIVALS,key)||(/^[a-z0-9-]{2,40}$/.test(key)&&liveLibrary.some(f=>f.id===key&&f.custom===true));
+  function parseScheduleInstant(value){
+    if(typeof value!=="string"||!value.trim())return NaN;
+    const normalized=value.trim();
+    const local=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?$/.exec(normalized);
+    if(!local){const parsed=Date.parse(normalized);return Number.isFinite(parsed)?parsed:NaN;}
+    const year=Number(local[1]),month=Number(local[2]),day=Number(local[3]),hour=Number(local[4]),minute=Number(local[5]),second=Number(local[6]||0),millisecond=local[7]?Number(local[7].padEnd(3,"0")):0;
+    if(year<1000||month<1||month>12||hour>23||minute>59||second>59||millisecond>999)return NaN;
+    const calendar=new Date(Date.UTC(year,month-1,day));
+    if(calendar.getUTCFullYear()!==year||calendar.getUTCMonth()!==month-1||calendar.getUTCDate()!==day)return NaN;
+    const instant=Date.UTC(year,month-1,day,hour,minute,second,millisecond)-330*60*1000;
+    return Number.isFinite(instant)?instant:NaN;
+  }
   let activeKey=null,boundaryTimer=null,liveConfig=null;
   const themeFor=key=>{const base=FESTIVALS[key]||{emoji:"✦",title:"A New Celebration",label:"CELEBRATION",message:"A new celebration begins.",particle:"fu-spark",count:18,caption:"CELEBRATION • UNITY • JOY"};const f=liveLibrary.find(x=>x.id===key);if(!f)return base;const p={spark:"fu-spark",splash:"fu-holi-splash",snow:"fu-snow",lantern:"fu-lantern",confetti:"fu-confetti",web:"fu-web",none:"fu-none"};const n={low:9,medium:19,high:32};return {...base,title:f.name||base.title,label:f.label||base.label,message:f.message||base.message,particle:p[f.particle]||base.particle,count:n[f.intensity]||base.count,caption:(f.name||base.title).toUpperCase()+" • 4FU UNITED",style:["diwali","holi","winter","celestial","tricolour","midnight","fireworks","custom"].includes(f.style)?f.style:"custom",accent:f.accent,atmosphere:f.atmosphere};};
   function activeForDate(config,now=Date.now()){
-    const scheduled=liveLibrary.filter(f=>f&&f.enabled===true&&valid(f.id)).filter(f=>f.mode==="manual"||(f.mode==="scheduled"&&Number.isFinite(Date.parse(f.startAt||""))&&Number.isFinite(Date.parse(f.endAt||""))&&Date.parse(f.endAt)>Date.parse(f.startAt)&&now>=Date.parse(f.startAt)&&now<Date.parse(f.endAt))).sort((a,b)=>(Number(b.priority)||0)-(Number(a.priority)||0));
+    const scheduled=liveLibrary.filter(f=>{
+      if(!f||f.enabled!==true||!valid(f.id))return false;
+      if(f.mode==="manual")return true;
+      if(f.mode!=="scheduled")return false;
+      const start=parseScheduleInstant(f.startAt),end=parseScheduleInstant(f.endAt);
+      return Number.isFinite(start)&&Number.isFinite(end)&&end>start&&now>=start&&now<end;
+    }).sort((a,b)=>(Number(b.priority)||0)-(Number(a.priority)||0));
     if(scheduled.length)return scheduled[0].id;
     if(!config||config.enabled!==true||!valid(config.festival))return null;
     if(config.mode==="manual")return config.festival;
     if(config.mode!=="scheduled")return null;
-    const start=Date.parse(config.startAt||""),end=Date.parse(config.endAt||"");
+    const start=parseScheduleInstant(config.startAt),end=parseScheduleInstant(config.endAt);
     if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start||now<start||now>=end)return null;
     return config.festival;
   }
@@ -120,8 +138,8 @@
     if(boundaryTimer!==null)window.clearTimeout(boundaryTimer);boundaryTimer=null;
     const now=Date.now(),nextKey=activeForDate(liveConfig,now);
     if(nextKey)build(nextKey);else if(activeKey)removeExperience();
-    const boundaries=[];(liveLibrary||[]).forEach(f=>{if(f.enabled&&f.mode==="scheduled"){const a=Date.parse(f.startAt||""),b=Date.parse(f.endAt||"");if(Number.isFinite(a)&&a>now)boundaries.push(a);if(Number.isFinite(b)&&b>now)boundaries.push(b);}});
-    if(liveConfig&&liveConfig.enabled===true&&liveConfig.mode==="scheduled"){const a=Date.parse(liveConfig.startAt||""),b=Date.parse(liveConfig.endAt||"");if(Number.isFinite(a)&&a>now)boundaries.push(a);if(Number.isFinite(b)&&b>now)boundaries.push(b);}
+    const boundaries=[];(liveLibrary||[]).forEach(f=>{if(f.enabled&&f.mode==="scheduled"){const a=parseScheduleInstant(f.startAt),b=parseScheduleInstant(f.endAt);if(Number.isFinite(a)&&a>now)boundaries.push(a);if(Number.isFinite(b)&&b>now)boundaries.push(b);}});
+    if(liveConfig&&liveConfig.enabled===true&&liveConfig.mode==="scheduled"){const a=parseScheduleInstant(liveConfig.startAt),b=parseScheduleInstant(liveConfig.endAt);if(Number.isFinite(a)&&a>now)boundaries.push(a);if(Number.isFinite(b)&&b>now)boundaries.push(b);}
     if(boundaries.length){const next=Math.min(...boundaries);boundaryTimer=window.setTimeout(applyLiveConfig,Math.min(MAX_TIMER,Math.max(0,next-now+25)));}
   }
   window.addEventListener("4fu:studio-preview",event=>{

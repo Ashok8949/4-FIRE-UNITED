@@ -42,6 +42,11 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check js/main.js
+          node --check js/festive-universe.js
+          node --check admin/js/india-datetime.js
+          node --check admin/js/settings.js
+          node --check admin/js/auth-guard.js
+          node --check admin/js/experience-studio.js
           node --check functions/index.js
           node --check functions/security-guards.js
           node --check functions/visitor-counter.js

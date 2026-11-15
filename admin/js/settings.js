@@ -5,15 +5,8 @@ const FESTIVAL_IDS = new Set([
 ]);
 
 function parseIndiaDateTime(value) {
-    const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(value || "");
-    if (!match) return null;
-    const [, y, m, d, h, min] = match;
-    const year = Number(y), month = Number(m), day = Number(d), hour = Number(h), minute = Number(min);
-    if (year < 1000 || month < 1 || month > 12 || hour > 23 || minute > 59) return null;
-    const calendar = new Date(Date.UTC(year, month - 1, day));
-    if (calendar.getUTCFullYear() !== year || calendar.getUTCMonth() !== month - 1 || calendar.getUTCDate() !== day) return null;
-    const instant = Date.parse(value + ":00+05:30");
-    return Number.isFinite(instant) ? new Date(instant) : null;
+    const helper = window.FourFUIndiaDateTime;
+    return helper && typeof helper.parse === "function" ? helper.parse(value) : null;
 }
 
 function validateFestivalSchedule() {
@@ -48,6 +41,25 @@ function validateFestivalSchedule() {
     return { valid: true, startAt: start.toISOString(), endAt: end.toISOString() };
 }
 
+function refreshFestivalScheduleFeedback() {
+    const enabled = document.getElementById("festivalEnabled").value === "true";
+    const mode = document.getElementById("festivalMode").value;
+    const startInput = document.getElementById("festivalStart");
+    const endInput = document.getElementById("festivalEnd");
+    const error = document.getElementById("festivalScheduleError");
+    if (!enabled || mode === "manual") {
+        startInput.removeAttribute("aria-invalid");
+        endInput.removeAttribute("aria-invalid");
+        error.textContent = "";
+        return;
+    }
+    validateFestivalSchedule();
+}
+document.getElementById("festivalEnabled").addEventListener("change", refreshFestivalScheduleFeedback);
+document.getElementById("festivalMode").addEventListener("change", refreshFestivalScheduleFeedback);
+document.getElementById("festivalStart").addEventListener("input", refreshFestivalScheduleFeedback);
+document.getElementById("festivalEnd").addEventListener("input", refreshFestivalScheduleFeedback);
+
 // =====================================
 // LOAD SETTINGS
 // =====================================
@@ -76,13 +88,10 @@ settingsRef.get()
     document.getElementById("festivalEnabled").value = String(festival.enabled === true);
     document.getElementById("festivalMode").value = festival.mode || "manual";
     document.getElementById("festivalName").value = festival.festival || "diwali";
-    const toIndiaInput = value => {
-        if (!value) return "";
-        try { return new Date(value).toLocaleString("sv-SE", { timeZone: "Asia/Kolkata", hour12: false }).replace(" ", "T").slice(0, 16); }
-        catch (_) { return ""; }
-    };
+    const toIndiaInput = value => window.FourFUIndiaDateTime.format(value);
     document.getElementById("festivalStart").value = toIndiaInput(festival.startAt);
     document.getElementById("festivalEnd").value = toIndiaInput(festival.endAt);
+    refreshFestivalScheduleFeedback();
 
 })
 
@@ -181,7 +190,11 @@ document.getElementById("saveSettings").addEventListener("click", () => {
     db.runTransaction((transaction) => {
         return transaction.get(settingsRef).then((doc) => {
             const existingSettings = doc.exists ? doc.data() : {};
-            const existingFestival = existingSettings.festival || {};
+            const existingFestival = existingSettings.festival &&
+                typeof existingSettings.festival === "object" &&
+                !Array.isArray(existingSettings.festival)
+                ? existingSettings.festival
+                : {};
 
             const mergedSettings = {
                 ...existingSettings,
@@ -222,27 +235,41 @@ document.getElementById("saveSettings").addEventListener("click", () => {
 });
 
 // =====================================
-// FESTIVAL PREVIEW (does not publish)
+// FESTIVAL PREVIEW (public, read-only; never publishes)
 // =====================================
 document.getElementById("previewFestival").addEventListener("click", () => {
     const festival = document.getElementById("festivalName").value;
     const status = document.getElementById("festivalPreviewStatus");
     const fallback = document.getElementById("festivalPreviewFallback");
     fallback.hidden = true;
+    fallback.removeAttribute("href");
     status.textContent = "";
     if (!FESTIVAL_IDS.has(festival)) {
         status.textContent = "Select a supported festival theme before previewing.";
         return;
     }
-    const previewUrl = new URL("../index.html", window.location.href);
-    previewUrl.searchParams.set("festivalPreview", festival);
-    const previewWindow = window.open(previewUrl.href, "_blank");
-    if (previewWindow) {
-        previewWindow.opener = null;
-        status.textContent = "Preview opened. This is a public, read-only demo; anyone with its URL can view it. It does not publish settings.";
-    } else {
-        fallback.href = previewUrl.href;
-        fallback.hidden = false;
-        status.textContent = "Your browser blocked the preview popup. Use the link below to open the public demo.";
+    let previewUrl;
+    try {
+        previewUrl = new URL("../index.html", window.location.href);
+        previewUrl.searchParams.set("festivalPreview", festival);
+        if (previewUrl.origin !== window.location.origin) throw new Error("Preview must stay on this website.");
+    } catch (_) {
+        status.textContent = "Could not build a safe preview link. Reload Settings and try again.";
+        return;
     }
+    let previewWindow = null;
+    try { previewWindow = window.open("about:blank", "_blank"); } catch (_) {}
+    if (previewWindow) {
+        try {
+            previewWindow.opener = null;
+            previewWindow.location.replace(previewUrl.href);
+            status.textContent = "Preview opened. This is a public, read-only demo; anyone with its URL can view it. It does not publish settings.";
+            return;
+        } catch (_) {
+            try { previewWindow.close(); } catch (_) {}
+        }
+    }
+    fallback.href = previewUrl.href;
+    fallback.hidden = false;
+    status.textContent = "Your browser blocked the preview popup. Use the link below to open the public read-only demo.";
 });

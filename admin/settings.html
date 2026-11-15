@@ -585,12 +585,12 @@ body{
                     <div class="input-group"><label><i class="fa-solid fa-toggle-on"></i> Enable Festival Experience</label><select id="festivalEnabled" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:#111;color:#fff;font-family:Poppins,sans-serif"><option value="false">Disabled</option><option value="true">Enabled</option></select></div>
                     <div class="input-group"><label><i class="fa-solid fa-calendar-check"></i> Activation Mode</label><select id="festivalMode" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:#111;color:#fff;font-family:Poppins,sans-serif"><option value="manual">Manual — show immediately</option><option value="scheduled">Schedule — use start/end dates</option></select></div>
                     <div class="input-group"><label><i class="fa-solid fa-champagne-glasses"></i> Festival Theme</label><select id="festivalName" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:#111;color:#fff;font-family:Poppins,sans-serif"><option value="diwali">🪔 Diwali — diyas & rangoli</option><option value="holi">🎨 Holi — colour bursts</option><option value="eid">🌙 Eid — moon & warm glow</option><option value="christmas">🎄 Christmas — snowfall</option><option value="newyear">🎆 New Year — confetti</option><option value="independence">🇮🇳 Independence Day — tricolour</option><option value="halloween">🎃 Halloween — spooky sparks</option></select></div>
-                    <div class="input-group"><label><i class="fa-solid fa-calendar-plus"></i> Start Date & Time (India local time)</label><input type="datetime-local" id="festivalStart"></div>
-                    <div class="input-group"><label><i class="fa-solid fa-calendar-xmark"></i> End Date & Time (India local time)</label><input type="datetime-local" id="festivalEnd"></div>
+                    <div class="input-group"><label><i class="fa-solid fa-calendar-plus"></i> Start Date & Time (India local time)</label><input type="datetime-local" id="festivalStart" aria-describedby="festivalScheduleError"></div>
+                    <div class="input-group"><label><i class="fa-solid fa-calendar-xmark"></i> End Date & Time (India local time)</label><input type="datetime-local" id="festivalEnd" aria-describedby="festivalScheduleError"></div>
                 </div>
                 <p id="festivalScheduleError" role="alert" aria-live="polite" style="color:#ff8a80;font-size:12px;min-height:18px;margin:12px 0 0"></p>
                 <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px"><button type="button" id="previewFestival" class="save-btn" style="background:linear-gradient(135deg,#333,#171717);box-shadow:none;border:1px solid #444"><i class="fa-solid fa-eye"></i> Preview Theme</button><span id="festivalPreviewStatus" role="status" aria-live="polite" style="align-self:center;color:#aaa;font-size:11px"></span><a id="festivalPreviewFallback" hidden target="_blank" rel="noopener noreferrer" style="align-self:center;color:#ffad66;font-size:12px">Open preview</a></div>
-                <p style="color:#777;font-size:11px;line-height:1.5;margin:8px 0 0">Preview is a public read-only demo link. It never saves or publishes your selection.</p>
+                <p style="color:#777;font-size:11px;line-height:1.5;margin:8px 0 0">The preview link is public: anyone who has it can view the read-only demo. It never saves or publishes your selection.</p>
             </div>
 
         </div>
@@ -629,9 +629,11 @@ body{
 
 <script src="js/firebase.js"></script>
 
+<script src="js/india-datetime.js?v=20261115-1"></script>
+
 <script src="js/auth-guard.js"></script>
 
-<script src="js/settings.js?v=20260907-2"></script>
+<script src="js/settings.js?v=20261115-1"></script>
 
 <script src="js/admin-shell.js?v=p14"></script>
 </body>
