@@ -10,7 +10,8 @@ function mount(){
  const siteRef=db.collection("settings").doc("website");
  const versions=db.collection("adminStudioVersions");
  async function check(){try{const snap=await baselineRef.get();if(snap.exists){button.disabled=false;status.textContent="Original baseline protected · one-click restore available."}else{button.disabled=true;status.textContent="Baseline not captured yet. The first successful Studio publish will create it automatically."}}catch(e){button.disabled=true;status.textContent="Rollback status unavailable. Check private admin storage permissions.";console.warn("[4FU Studio rollback]",e)}}
- window.addEventListener("4fu:studio-baseline-ready",check);\n button.addEventListener("click",async()=>{
+ window.addEventListener("4fu:studio-baseline-ready",check);
+ button.addEventListener("click",async()=>{
   if(button.disabled)return;
   if(!auth.currentUser||String(auth.currentUser.email||"").toLowerCase()!==ADMIN){status.textContent="Only the authorised Studio administrator can restore the website.";return}
   const ok=confirm("Restore the original website experience captured before the first Studio publish? This changes the live website configuration immediately. Your current private draft will remain untouched, and the current live version will be saved to history first.");
