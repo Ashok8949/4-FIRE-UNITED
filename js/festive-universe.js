@@ -140,9 +140,9 @@
       if(!isPreview){try{sessionStorage.setItem(welcomeKey,"1");}catch(_){}}
       window.setTimeout(()=>toast.remove(),6500);
     }
-    if(key==="diwali"||key==="holi"||key==="christmas"||key==="newyear"||key==="eid"||key==="independence"||key==="halloween"){
+    if(["diwali","holi","christmas","newyear","eid","independence","halloween"].includes(styleKey)){
       let seen=false;if(!isPreview){try{seen=sessionStorage.getItem("fu-festival-intro:"+key)==="1";}catch(_){}}
-      if(!seen){addIntro(key);if(!isPreview){try{sessionStorage.setItem("fu-festival-intro:"+key,"1");}catch(_){}}}
+      if(!seen){addIntro(styleKey);if(!isPreview){try{sessionStorage.setItem("fu-festival-intro:"+key,"1");}catch(_){}}}
     }
   }
   function applyLiveConfig(){
