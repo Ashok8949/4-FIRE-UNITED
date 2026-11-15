@@ -15,16 +15,26 @@
     const instant=Date.UTC(year,month-1,day,hour,minute,second,millisecond)-INDIA_OFFSET_MINUTES*60000;
     return Number.isFinite(instant)?new Date(instant):null;
   }
-  function format(value) {
-    if(typeof value!=="string"||!value.trim())return "";
+  function parseInstant(value) {
+    if(typeof value!=="string"||!value.trim())return null;
     const normalized=value.trim();
-    let instant=null;
-    if(LOCAL_DATETIME_PATTERN.test(normalized))instant=parse(normalized);
-    else{const timestamp=Date.parse(normalized);if(Number.isFinite(timestamp))instant=new Date(timestamp);}
+    if(LOCAL_DATETIME_PATTERN.test(normalized))return parse(normalized);
+    if(!/(?:Z|[+-]\\d{2}:?\\d{2})$/i.test(normalized))return null;
+    const timestamp=Date.parse(normalized);
+    return Number.isFinite(timestamp)?new Date(timestamp):null;
+  }
+  function validateRange(startValue,endValue) {
+    const start=parseInstant(startValue),end=parseInstant(endValue);
+    if(!start||!end)return {valid:false,reason:"missing-or-invalid",start,end};
+    if(end.getTime()<=start.getTime())return {valid:false,reason:"end-not-after-start",start,end};
+    return {valid:true,reason:"",start,end};
+  }
+  function format(value) {
+    const instant=parseInstant(value);
     if(!instant||!Number.isFinite(instant.getTime()))return "";
     const local=new Date(instant.getTime()+INDIA_OFFSET_MINUTES*60000);
     const pad=n=>String(n).padStart(2,"0");
     return local.getUTCFullYear()+"-"+pad(local.getUTCMonth()+1)+"-"+pad(local.getUTCDate())+"T"+pad(local.getUTCHours())+":"+pad(local.getUTCMinutes());
   }
-  root.FourFUIndiaDateTime=Object.freeze({parse,format,offsetMinutes:INDIA_OFFSET_MINUTES});
+  root.FourFUIndiaDateTime=Object.freeze({parse,parseInstant,validateRange,format,offsetMinutes:INDIA_OFFSET_MINUTES});
 })(typeof window!=="undefined"?window:globalThis);

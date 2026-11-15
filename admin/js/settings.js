@@ -4,9 +4,11 @@ const FESTIVAL_IDS = new Set([
     "diwali", "holi", "eid", "christmas", "newyear", "independence", "halloween"
 ]);
 
-function parseIndiaDateTime(value) {
+function validateIndiaDateRange(startValue, endValue) {
     const helper = window.FourFUIndiaDateTime;
-    return helper && typeof helper.parse === "function" ? helper.parse(value) : null;
+    return helper && typeof helper.validateRange === "function"
+        ? helper.validateRange(startValue, endValue)
+        : { valid: false, reason: "missing-or-invalid", start: null, end: null };
 }
 
 function validateFestivalSchedule() {
@@ -24,21 +26,16 @@ function validateFestivalSchedule() {
     }
     if (mode === "manual") return { valid: true, startAt: "", endAt: "" };
 
-    const start = parseIndiaDateTime(startInput.value);
-    const end = parseIndiaDateTime(endInput.value);
-    if (!startInput.value || !endInput.value || !start || !end) {
-        if (!start) startInput.setAttribute("aria-invalid", "true");
-        if (!end) endInput.setAttribute("aria-invalid", "true");
-        error.textContent = "Scheduled mode requires valid start and end date/time values (India time).";
+    const range = validateIndiaDateRange(startInput.value, endInput.value);
+    if (!range.valid) {
+        if (!range.start) startInput.setAttribute("aria-invalid", "true");
+        if (!range.end) endInput.setAttribute("aria-invalid", "true");
+        error.textContent = range.reason === "end-not-after-start"
+            ? "End date and time must be later than the start date and time."
+            : "Scheduled mode requires valid start and end date/time values (India time).";
         return { valid: false };
     }
-    if (end.getTime() <= start.getTime()) {
-        startInput.setAttribute("aria-invalid", "true");
-        endInput.setAttribute("aria-invalid", "true");
-        error.textContent = "End date and time must be later than the start date and time.";
-        return { valid: false };
-    }
-    return { valid: true, startAt: start.toISOString(), endAt: end.toISOString() };
+    return { valid: true, startAt: range.start.toISOString(), endAt: range.end.toISOString() };
 }
 
 function refreshFestivalScheduleFeedback() {
