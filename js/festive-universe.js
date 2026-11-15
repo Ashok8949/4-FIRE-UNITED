@@ -41,7 +41,7 @@
     const f=liveLibrary.find(x=>x.id===key);
     if(!f)return base;
     const name=safeText(f.name,base.title,60);
-    const particles={spark:"fu-spark",splash:"fu-holi-splash",snow:"fu-snow",lantern:"fu-lantern",confetti:"fu-confetti",web:"fu-web",none:"fu-none"};
+    const particles={spark:"fu-spark",splash:"fu-holi-splash",snow:"fu-snow",lantern:"fu-lantern",confetti:"fu-confetti",web:"fu-web",leaf:"fu-leaf",none:"fu-none"};
     const intensities={low:9,medium:19,high:32};
     return {...base,title:name,label:safeText(f.label,base.label,70),message:safeText(f.message,base.message,150),particle:Object.prototype.hasOwnProperty.call(particles,f.particle)?particles[f.particle]:base.particle,count:Object.prototype.hasOwnProperty.call(intensities,f.intensity)?intensities[f.intensity]:base.count,caption:name.toUpperCase()+" • 4FU UNITED",style:["diwali","holi","winter","celestial","tricolour","midnight","fireworks","custom"].includes(f.style)?f.style:"custom",accent:safeColor(f.accent,base.accent||"#ffb35c"),atmosphere:safeColor(f.atmosphere,base.atmosphere||"#24170c")};
   };
@@ -114,23 +114,25 @@
   function build(key,isPreview=false){
     if(!valid(key)||activeKey===key)return;
     removeExperience();
-    const theme=themeFor(key);activeKey=key;document.documentElement.classList.add("fu-festival-"+key);
+    const theme=themeFor(key),styleKey=({diwali:"diwali",holi:"holi",winter:"christmas",celestial:"eid",tricolour:"independence",midnight:"halloween",fireworks:"newyear"})[theme.style]||key;
+    activeKey=key;document.documentElement.classList.add("fu-festival-"+key);
+    if(styleKey!==key&&/^[a-z0-9-]{2,40}$/.test(styleKey))document.documentElement.classList.add("fu-festival-"+styleKey);
     if(theme.accent&&/^#[0-9a-f]{6}$/i.test(theme.accent))document.documentElement.style.setProperty("--fu-accent",theme.accent);
     if(theme.atmosphere&&/^#[0-9a-f]{6}$/i.test(theme.atmosphere))document.documentElement.style.setProperty("--fu-wash",theme.atmosphere);
     if(theme.style)document.documentElement.classList.add("fu-style-"+theme.style);
     const layer=document.createElement("div");layer.id="fourfu-festival-layer";layer.setAttribute("aria-hidden","true");
-    if(!reducedMotion&&key!=="holi"){
+    if(!reducedMotion&&styleKey!=="holi"){
       for(let i=0;i<theme.count;i++){
         const p=document.createElement("span");p.className="fu-festival-particle "+theme.particle;
         p.style.setProperty("--x",Math.random()*100+"vw");p.style.setProperty("--duration",10+Math.random()*15+"s");p.style.setProperty("--delay",-Math.random()*20+"s");p.style.setProperty("--drift",-75+Math.random()*150+"px");p.style.setProperty("--alpha",(0.2+Math.random()*.42).toFixed(2));p.style.setProperty("--rot",Math.round(Math.random()*180)+"deg");
-        if(key==="holi")p.style.background=["#ff4e9b","#ffc247","#38d8c5","#8c75ff","#ff794d"][i%5];
-        if(key==="newyear"||key==="independence")p.style.background=key==="independence"?["#ff9933","#fff","#138808"][i%3]:["#ffca55","#8fd7ff","#ff7eb6","#b49aff"][i%4];
-        if(key==="eid")p.style.animationDuration=(14+Math.random()*9)+"s";
+        if(styleKey==="holi")p.style.background=["#ff4e9b","#ffc247","#38d8c5","#8c75ff","#ff794d"][i%5];
+        if(styleKey==="newyear"||styleKey==="independence")p.style.background=styleKey==="independence"?["#ff9933","#fff","#138808"][i%3]:["#ffca55","#8fd7ff","#ff7eb6","#b49aff"][i%4];
+        if(styleKey==="eid")p.style.animationDuration=(14+Math.random()*9)+"s";
         layer.appendChild(p);
       }
     }
     document.body.appendChild(layer);
-    addFestivalArt(key);
+    addFestivalArt(styleKey);
     let welcomed=false;const welcomeKey="fu-festival-welcomed:"+key;
     if(!isPreview){try{welcomed=sessionStorage.getItem(welcomeKey)==="1";}catch(_){}}
     if(!welcomed){
