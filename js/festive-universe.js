@@ -171,5 +171,63 @@
     db.collection("settings").doc("website").get().then(doc=>{if(!doc.exists)return;liveConfig=doc.data().festival||null;liveLibrary=Array.isArray(doc.data().experience?.festivalLibrary)?doc.data().experience.festivalLibrary:[];applyLiveConfig();}).catch(err=>console.warn("[4FU Festive Universe] Could not load festival settings:",err));
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")applyLiveConfig();});
   }
+
+  // FESTIVAL INTERACTIONS — contextual celebrations on real user actions.
+  // Effects are decorative only: they never block clicks, navigation, or form controls.
+  function installFestivalInteractions(){
+    if(window.__4fuFestivalInteractionsInstalled)return;
+    window.__4fuFestivalInteractionsInstalled=true;
+    const style=document.createElement("style");style.id="fu-interaction-style";
+    style.textContent=`
+      .fu-interaction-fx{position:fixed;inset:0;z-index:1200;pointer-events:none;overflow:hidden}
+      .fu-burst-particle{position:absolute;left:var(--sx);top:var(--sy);width:var(--size);height:var(--size);border-radius:var(--shape,50%);background:var(--color);box-shadow:0 0 12px var(--color);opacity:0;animation:fuBurstFly var(--life,950ms) cubic-bezier(.12,.72,.22,1) forwards}
+      @keyframes fuBurstFly{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.12) rotate(var(--turn,240deg))}}
+      .fu-rocket{position:absolute;width:4px;height:34px;border-radius:9px;background:linear-gradient(#fff7b0,#ff9c36);box-shadow:0 0 14px #ffc65c;animation:fuRocket 430ms ease-out forwards}
+      @keyframes fuRocket{to{transform:translate(var(--rx),var(--ry));opacity:.25}}
+      .fu-card-celebrate{animation:fuCardCelebrate 720ms cubic-bezier(.2,.8,.2,1)}
+      @keyframes fuCardCelebrate{0%,100%{filter:none}25%{filter:drop-shadow(0 0 16px var(--fu-accent,#ffc15b))}55%{filter:brightness(1.13) saturate(1.25)}}
+      .fu-holi-splash{position:absolute;width:clamp(90px,18vw,210px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,var(--splash) 0 9%,color-mix(in srgb,var(--splash),transparent 28%) 18%,transparent 72%);filter:blur(5px);transform:translate(-50%,-50%) scale(.2);animation:fuHoliSplash 850ms ease-out forwards}
+      @keyframes fuHoliSplash{45%{opacity:.8}100%{opacity:0;transform:translate(-50%,-50%) scale(1.8)}}
+      .fu-balloon{position:absolute;width:20px;height:26px;border-radius:50% 50% 46% 46%;background:var(--color);box-shadow:inset -4px -5px 8px #0002;animation:fuBalloonPop 650ms ease-out forwards}
+      @keyframes fuBalloonPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}35%{opacity:1;transform:translate(-50%,-80%) scale(1.25)}100%{opacity:0;transform:translate(-50%,-160%) scale(.1)}}
+      .fu-fx-sparkle{position:absolute;font-size:22px;color:var(--color);text-shadow:0 0 16px var(--color);animation:fuSparkle 850ms ease-out forwards}
+      @keyframes fuSparkle{0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-35deg)}25%{opacity:1}100%{opacity:0;transform:translate(-50%,-110%) scale(1.5) rotate(45deg)}}
+      @media(prefers-reduced-motion:reduce){.fu-interaction-fx,.fu-card-celebrate{display:none!important}}
+    `;document.head.appendChild(style);
+    const palettes={diwali:["#ffd36e","#fff0bf","#ff8b36","#f7b5e9"],holi:["#ff3e91","#ffc52e","#22d5c1","#8a68ff","#ff7548"],christmas:["#d9fff1","#e84d62","#f4d27a","#9ad7ff"],newyear:["#ffcf64","#7edbff","#ff78bd","#bba2ff"],eid:["#c9f4d9","#e9c77b","#a4d9ef"],independence:["#ff9933","#ffffff","#138808"],"republic-day":["#ff9933","#ffffff","#138808"],halloween:["#a77bff","#ff8b42","#c7d1ff"],navratri:["#ffb1d8","#ffc45c","#8d70ff"],"raksha-bandhan":["#f2a9c7","#f6d18b","#fff0d6"]};
+    const symbols={christmas:["❄","✦","✧"],eid:["☾","✦","✧"],halloween:["✦","☠","✧"],navratri:["✦","✺","✧"],"raksha-bandhan":["♡","✦","❀"],independence:["✦","✧","❖"],"republic-day":["✦","✧","❖"]};
+    function makeLayer(){let node=document.querySelector(".fu-interaction-fx");if(!node){node=document.createElement("div");node.className="fu-interaction-fx";node.setAttribute("aria-hidden","true");document.body.appendChild(node)}return node}
+    function burst(x,y,key,target){
+      if(reducedMotion||!key)return;
+      const palette=palettes[key]||palettes.diwali,layer=makeLayer(),card=target?.closest("article,.player-card,.team-card,.card,[class*='player-card'],[class*='team-card']");
+      if(card){card.classList.remove("fu-card-celebrate");void card.offsetWidth;card.classList.add("fu-card-celebrate");window.setTimeout(()=>card.classList.remove("fu-card-celebrate"),800)}
+      const add=(el)=>{layer.appendChild(el);window.setTimeout(()=>el.remove(),1500)};
+      if(key==="holi"){
+        const splash=document.createElement("i");splash.className="fu-holi-splash";splash.style.left=x+"px";splash.style.top=y+"px";splash.style.setProperty("--splash",palette[Math.floor(Math.random()*palette.length)]);add(splash);
+        for(let b=0;b<2;b++){const balloon=document.createElement("i");balloon.className="fu-balloon";balloon.style.left=(x+(Math.random()-.5)*90)+"px";balloon.style.top=(y+(Math.random()-.5)*65)+"px";balloon.style.setProperty("--color",palette[Math.floor(Math.random()*palette.length)]);add(balloon)}
+      }else if(key==="diwali"||key==="newyear"){
+        const rocket=document.createElement("i");rocket.className="fu-rocket";rocket.style.left=x+"px";rocket.style.top=(Math.min(innerHeight-30,y+Math.min(150,innerHeight*.22)))+"px";rocket.style.setProperty("--rx",(Math.random()-.5)*90+"px");rocket.style.setProperty("--ry",(y-parseFloat(rocket.style.top))+"px");add(rocket);
+      }
+      const count=key==="diwali"||key==="newyear"?42: key==="holi"?20:24;
+      for(let i=0;i<count;i++){
+        const p=document.createElement("i"),angle=Math.PI*2*i/count+(Math.random()-.5)*.22,distance=(key==="holi"?45:34)+Math.random()*(key==="holi"?105:92);
+        p.className=(key==="holi"?"fu-burst-particle":"fu-burst-particle");p.style.left=x+"px";p.style.top=y+"px";p.style.setProperty("--sx","0px");p.style.setProperty("--sy","0px");p.style.setProperty("--dx",Math.cos(angle)*distance+"px");p.style.setProperty("--dy",Math.sin(angle)*distance+"px");p.style.setProperty("--size",(2+Math.random()*4)+"px");p.style.setProperty("--color",palette[i%palette.length]);p.style.setProperty("--life",(650+Math.random()*550)+"ms");if(key==="holi")p.style.setProperty("--shape",Math.random()>.5?"50%":"2px");add(p);
+      }
+      const glyphs=symbols[key]||["✦","✧","❖"];
+      for(let i=0;i<3;i++){const s=document.createElement("b");s.className="fu-fx-sparkle";s.textContent=glyphs[i%glyphs.length];s.style.left=(x+(Math.random()-.5)*70)+"px";s.style.top=(y+(Math.random()-.5)*45)+"px";s.style.setProperty("--color",palette[i%palette.length]);add(s)}
+    }
+    document.addEventListener("click",event=>{
+      if(!activeKey||!document.body)return;
+      const target=event.target instanceof Element?event.target:null;if(!target)return;
+      const trigger=target.closest("button,a,[role='button'],.player-card,.team-card,.card,[class*='player-card'],[class*='team-card']");
+      if(!trigger||trigger.closest("#fourfu-festival-intro,.studio-preview-rail,.studio-global-preview"))return;
+      if(trigger.matches("input,select,textarea")||trigger.closest("input,select,textarea"))return;
+      const rect=trigger.getBoundingClientRect(),x=Math.max(8,Math.min(innerWidth-8,event.clientX||rect.left+rect.width/2)),y=Math.max(8,Math.min(innerHeight-8,event.clientY||rect.top+rect.height/2));
+      const styleKey=({diwali:"diwali",holi:"holi",winter:"christmas",celestial:"eid",tricolour:"independence",midnight:"halloween",fireworks:"newyear"})[themeFor(activeKey).style]||activeKey;
+      burst(x,y,styleKey,trigger);
+    },{passive:true});
+  }
+  installFestivalInteractions();
+
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
