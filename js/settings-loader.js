@@ -2,6 +2,22 @@
 // WEBSITE SETTINGS LOADER
 // ===============================
 // ===============================
+// 4FU FESTIVE UNIVERSE — shared public-page bootstrap
+// Load the same festival runtime and art direction on every public page
+// that uses the central settings loader. Existing page assets are respected.
+// ===============================
+(()=>{
+ const loadSharedAssets=()=>{
+  const css=["CSS/festive-universe.css","CSS/festive-art-direction.css"];
+  css.forEach(href=>{if(![...document.querySelectorAll('link[rel="stylesheet"]')].some(n=>n.getAttribute("href")?.split("?")[0]===href)){const link=document.createElement("link");link.rel="stylesheet";link.href=href+"?v=shared-20261115";document.head.appendChild(link)}});
+  const js="js/festive-universe.js";
+  const already=[...document.scripts].some(n=>n.getAttribute("src")?.split("?")[0]===js);
+  if(!already&&!window.__4FU_FESTIVE_RUNTIME_LOADING__){window.__4FU_FESTIVE_RUNTIME_LOADING__=true;const script=document.createElement("script");script.src=js+"?v=shared-20261115";script.async=false;script.onload=()=>{window.__4FU_FESTIVE_RUNTIME_READY__=true};script.onerror=()=>{window.__4FU_FESTIVE_RUNTIME_LOADING__=false};document.body.appendChild(script)}
+ };
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",loadSharedAssets,{once:true});else loadSharedAssets();
+})();
+
+// ===============================
 // PRIVATE EXPERIENCE STUDIO LIVE PREVIEW
 // ===============================
 (()=>{
