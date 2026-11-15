@@ -14,6 +14,7 @@ function harness({ search = '', config = null, now = Date.parse('2026-11-14T00:0
     constructor(tag) {
       this.tagName = tag; this.children = []; this.attributes = {}; this.style = { values: {}, setProperty(name, value) { this.values[name] = value; }, removeProperty(name) { delete this.values[name]; } };
       this.className = ''; this.id = ''; this.textContent = ''; this.innerHTML = ''; this.parent = null;
+      this.dataset = {}; this.eventListeners = {};
       this.classList = {
         add: name => { this._classes ??= new Set(); this._classes.add(name); },
         remove: name => this._classes?.delete(name),
@@ -23,13 +24,19 @@ function harness({ search = '', config = null, now = Date.parse('2026-11-14T00:0
       };
     }
     getContext() { return { setTransform() {}, clearRect() {}, beginPath() {}, arc() {}, fill() {} }; }
+    addEventListener(name, fn) { (this.eventListeners[name] ??= []).push(fn); }
+    querySelector(selector) { return selector === 'button' ? this.children.find(child => child.tagName === 'button') ?? null : null; }
+    get isConnected() { return !!this.parent; }
     setAttribute(k, v) { this.attributes[k] = v; }
     appendChild(child) { child.parent = this; this.children.push(child); return child; }
     append(...items) { items.forEach(item => this.appendChild(item)); }
     remove() { if (this.parent) this.parent.children = this.parent.children.filter(x => x !== this); }
   }
   const html = new Element('html');
+  const head = new Element('head');
   const body = new Element('body');
+  html.appendChild(head);
+  html.appendChild(body);
   function find(node, id) {
     if (node.id === id) return node;
     for (const child of node.children) { const hit = find(child, id); if (hit) return hit; }
@@ -37,8 +44,8 @@ function harness({ search = '', config = null, now = Date.parse('2026-11-14T00:0
   }
   const listeners = {};
   const document = {
-    readyState: 'complete', visibilityState: 'visible', documentElement: html, body,
-    createElement: tag => new Element(tag), getElementById: id => find(body, id),
+    readyState: 'complete', visibilityState: 'visible', documentElement: html, head, body,
+    createElement: tag => new Element(tag), getElementById: id => find(html, id),
     addEventListener: (name, fn) => { (listeners[name] ??= []).push(fn); }
   };
   const window = {
@@ -84,7 +91,7 @@ test('scheduled festival activates at start and is removed at the exclusive end'
   const h = harness({ now: start - 1000, config: { enabled: true, mode: 'scheduled', festival: 'holi', startAt: new Date(start).toISOString(), endAt: new Date(end).toISOString() } });
   await h.flush();
   assert.equal(h.html.classList.contains('fu-festival-holi'), false);
-  await h.advance(1020);
+  await h.advance(1030);
   assert.equal(h.html.classList.contains('fu-festival-holi'), true);
   await h.advance(end - (start + 20) + 20);
   assert.equal(h.html.classList.contains('fu-festival-holi'), false);

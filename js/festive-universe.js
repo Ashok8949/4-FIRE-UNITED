@@ -36,6 +36,8 @@
   let activeKey=null,boundaryTimer=null,liveConfig=null;
   const safeText=(value,fallback,max)=>typeof value==="string"&&value.trim()?value.trim().slice(0,max):fallback;
   const safeColor=(value,fallback)=>typeof value==="string"&&/^#[0-9a-f]{6}$/i.test(value)?value:fallback;
+  const safeText=(value,fallback,max)=>typeof value==="string"&&value.trim()?value.trim().slice(0,max):fallback;
+  const safeColor=(value,fallback)=>typeof value==="string"&&/^#[0-9a-f]{6}$/i.test(value)?value:fallback;
   const themeFor=key=>{
     const base=FESTIVALS[key]||{emoji:"✦",title:"A New Celebration",label:"CELEBRATION",message:"A new celebration begins.",particle:"fu-spark",count:18,caption:"CELEBRATION • UNITY • JOY",accent:"#ffb35c",atmosphere:"#24170c"};
     const f=liveLibrary.find(x=>x.id===key);
