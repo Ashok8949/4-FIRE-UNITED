@@ -5,6 +5,9 @@ import vm from 'node:vm';
 const settingsSource=fs.readFileSync(new URL('../admin/js/settings.js',import.meta.url),'utf8');
 const helperSource=fs.readFileSync(new URL('../admin/js/india-datetime.js',import.meta.url),'utf8');
 const studioSource=fs.readFileSync(new URL('../admin/js/experience-studio.js',import.meta.url),'utf8');
+const studioWindow={};
+vm.runInNewContext(helperSource,{window:studioWindow,Date,String,Number,Object,globalThis:{}});
+const studioIndiaDateTime=studioWindow.FourFUIndiaDateTime;
 function makeElement(value=''){return{value,textContent:'',innerHTML:'',hidden:true,disabled:false,href:'',attributes:{},listeners:{},addEventListener(type,handler){(this.listeners[type]??=[]).push(handler)},setAttribute(name,value){this.attributes[name]=value},removeAttribute(name){delete this.attributes[name]}}}
 async function harness({values={},popup=null,existingSettings={}}={}){
  const ids=['teamName','email','phone','address','logo','heroTitle','heroSubtitle','instagram','youtube','discord','facebook','festivalEnabled','festivalMode','festivalName','festivalStart','festivalEnd','festivalScheduleError','saveSettings','previewFestival','festivalPreviewStatus','festivalPreviewFallback'];
@@ -59,7 +62,7 @@ function studioValidationHarness(library,current){
  const helperEnd=studioSource.indexOf('\nfunction applyFestival()',helperStart);
  assert.ok(helperStart>=0&&helperEnd>helperStart,'Studio schedule validation helper must exist');
  const helper=studioSource.slice(helperStart,helperEnd);
- const context={festivalLibrary:library,collectFestival:()=>current,indiaDateTime:window.FourFUIndiaDateTime,$:()=>status};
+ const context={festivalLibrary:library,collectFestival:()=>current,indiaDateTime:studioIndiaDateTime,$:()=>status};
  try{return{result:vm.runInNewContext(helper+'\ncollectFestivalLibraryForSave()',context),status,error:null}}
  catch(error){return{result:null,status,error}}
 }
