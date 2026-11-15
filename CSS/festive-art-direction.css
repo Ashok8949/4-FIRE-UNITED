@@ -50,3 +50,70 @@ html.fu-festival-independence #fourfu-festival-intro .fu-intro-art{filter:hue-ro
 html.fu-festival-halloween #fourfu-festival-intro .fu-intro-art{filter:hue-rotate(235deg) drop-shadow(0 0 30px var(--fu-wash))}
 @media(max-width:700px){html[class*="fu-festival-"] .team-card:hover,html[class*="fu-festival-"] .player-card:hover,html[class*="fu-festival-"] .tournament-card:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){html[class*="fu-festival-"] *,html[class*="fu-festival-"] *:before,html[class*="fu-festival-"] *:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+
+/* =========================================================
+   4FU FESTIVE DESIGN SYSTEM — shared polish for every page
+   Restrained, theme-aware details; no full-page clutter.
+========================================================= */
+html[class*="fu-festival-"]{
+  --fu-festival-border:color-mix(in srgb,var(--fu-accent) 24%,rgba(255,255,255,.08));
+  --fu-festival-soft:color-mix(in srgb,var(--fu-accent) 8%,rgba(15,17,23,.94));
+}
+html[class*="fu-festival-"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),select,textarea){
+  border-color:var(--fu-festival-border);
+  accent-color:var(--fu-accent);
+  transition:border-color .22s ease,box-shadow .22s ease,background-color .22s ease;
+}
+html[class*="fu-festival-"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),select,textarea):focus-visible{
+  outline:2px solid color-mix(in srgb,var(--fu-accent) 72%,transparent);
+  outline-offset:2px;
+  border-color:var(--fu-accent);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--fu-accent) 12%,transparent);
+}
+html[class*="fu-festival-"] :is(table,.table,.data-table){
+  border-color:var(--fu-festival-border);
+}
+html[class*="fu-festival-"] :is(table,.table,.data-table) :is(th,thead){
+  background:var(--fu-festival-soft);
+  color:var(--fu-accent);
+}
+html[class*="fu-festival-"] :is(table,.table,.data-table) tbody tr{
+  border-bottom:1px solid var(--fu-festival-border);
+  transition:background-color .2s ease;
+}
+html[class*="fu-festival-"] :is(table,.table,.data-table) tbody tr:hover{
+  background:color-mix(in srgb,var(--fu-accent) 6%,transparent);
+}
+html[class*="fu-festival-"] :is(.tab-btn,.filter-btn,.pagination a,.pagination button,.page-link,[role="tab"]){
+  transition:color .2s ease,border-color .2s ease,background-color .2s ease,box-shadow .2s ease;
+}
+html[class*="fu-festival-"] :is(.tab-btn.active,.filter-btn.active,.pagination .active .page-link,.page-link.active,[role="tab"][aria-selected="true"]){
+  border-color:var(--fu-accent);
+  color:var(--fu-accent);
+  box-shadow:inset 0 -2px 0 var(--fu-accent);
+}
+html[class*="fu-festival-"] :is(.badge,.status-badge,.tag,.chip){
+  border-color:var(--fu-festival-border);
+}
+html[class*="fu-festival-"] :is(.upload-area,.drop-zone,.file-dropzone){
+  border-color:var(--fu-festival-border);
+  background:linear-gradient(145deg,var(--fu-festival-soft),rgba(10,11,15,.72));
+}
+html[class*="fu-festival-"] :is(.section-title,.page-title,.team-header h1) :is(span,strong,em){
+  color:var(--fu-accent);
+}
+html[class*="fu-festival-"] img:not(.logo img):not(.loader-logo){
+  transition:filter .3s ease;
+}
+html[class*="fu-festival-"] :is(.gallery-item,.gallery-box,.clip-card,.media-card):hover img{
+  filter:saturate(1.08) contrast(1.03);
+}
+html[class*="fu-festival-"] :is(.navbar,.team-card,.player-card,.tournament-card,.gallery-item,.clip-card,.feature-card,.about-card,.stats-card){
+  border-color:var(--fu-festival-border);
+}
+@media(prefers-reduced-motion:reduce){
+ html[class*="fu-festival-"] *,html[class*="fu-festival-"] *::before,html[class*="fu-festival-"] *::after{
+  animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important;
+ }
+}
