@@ -117,3 +117,53 @@ html[class*="fu-festival-"] :is(.navbar,.team-card,.player-card,.tournament-card
   animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important;
  }
 }
+
+
+/* Route-specific finishing — home, team, events, media and community forms */
+html[class*="fu-festival-"] :is(.team-header,.clips-section,.join-section,.contact-section){
+  position:relative;
+  isolation:isolate;
+}
+html[class*="fu-festival-"] :is(.team-header,.clips-section,.join-section,.contact-section)::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--fu-accent) 11%,transparent),transparent 68%);
+}
+html[class*="fu-festival-"] :is(.team-header h1,.clips-title){
+  text-shadow:0 8px 36px var(--fu-wash);
+}
+html[class*="fu-festival-"] .gallery-page :is(.gallery-box,.gallery-item){
+  overflow:hidden;
+  border:1px solid var(--fu-festival-border);
+  border-radius:16px;
+  background:var(--fu-panel);
+  box-shadow:0 16px 42px rgba(0,0,0,.22);
+}
+html[class*="fu-festival-"] .gallery-page :is(.gallery-box,.gallery-item):hover{
+  border-color:var(--fu-accent);
+  box-shadow:0 18px 48px rgba(0,0,0,.3),0 0 22px var(--fu-wash);
+}
+html[class*="fu-festival-"] :is(.join-left,.join-right,.info-card,.contact-form-box,.featured-clip,.clips-grid>*){
+  border-color:var(--fu-festival-border);
+}
+html[class*="fu-festival-"] :is(.join-right,.info-card,.contact-form-box,.featured-clip){
+  box-shadow:0 18px 48px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.025);
+}
+html[class*="fu-festival-"] :is(.join-form,.contact-form) button[type="submit"],
+html[class*="fu-festival-"] :is(.join-form,.contact-form) input[type="submit"]{
+  border-color:var(--fu-accent);
+  box-shadow:0 8px 24px var(--fu-wash);
+}
+html[class*="fu-festival-"] .tournament-grid>*{
+  border-color:var(--fu-festival-border);
+}
+html[class*="fu-festival-"] .clips-tools :is(button,select,input){
+  border-color:var(--fu-festival-border);
+}
+html[class*="fu-festival-"] .player-profile .card{
+  border-color:var(--fu-festival-border);
+  background:linear-gradient(145deg,var(--fu-festival-soft),rgba(10,11,15,.92));
+}
