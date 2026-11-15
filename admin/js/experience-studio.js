@@ -10,7 +10,7 @@ function payload(d,b,f,status,m=motionConfig,l=loaderConfig){return{schemaVersio
 
 const designPreset=(id,name,tag,description,accent,secondary,background,surface,text,radius,fontFamily,headerStyle,footerStyle,cardStyle,buttonStyle,shadowStyle,contentWidth,sectionSpacing,borderStyle,motionLevel)=>({category:"design",id,name,tag,description,values:{accent,secondary,background,surface,text,radius,fontFamily,headerStyle,footerStyle,cardStyle,buttonStyle,shadowStyle,contentWidth,sectionSpacing,borderStyle,motionLevel,preset:"custom"}});
 const brandPreset=(id,name,tag,description,...args)=>({...designPreset(id,name,tag,description,...args),category:"brand"});
-const festivalPreset=(id,name,tag,description,style,accent,atmosphere,particle,intensity)=>({category:"festival",id:"custom-"+id,name,tag,description,profile:{id:"custom-"+id,custom:true,name,label:name.toUpperCase(),message:"Celebrate together. Move forward as one.",style,accent,atmosphere,particle,intensity,enabled:true,mode:"manual",priority:100,sound:false}});
+const festivalPreset=(id,name,tag,description,style,accent,atmosphere,particle,intensity)=>({category:"festival",id:"custom-"+id,name,tag,description,values:{accent,secondary:style==="holi"?"#f6d36f":style==="celestial"?"#d9f4e9":"#f4d59a",background:"#080a10",surface:atmosphere,text:"#f7f4ed",radius:"soft",fontFamily:"modern",headerStyle:"glass",footerStyle:"gradient",cardStyle:"elevated",buttonStyle:"gradient",shadowStyle:"soft",contentWidth:"wide",sectionSpacing:"comfortable",borderStyle:"subtle",motionLevel:"balanced",preset:"custom"},profile:{id:"custom-"+id,custom:true,name,label:name.toUpperCase(),message:"Celebrate together. Move forward as one.",style,accent,atmosphere,particle,intensity,enabled:true,mode:"manual",priority:100,sound:false}});
 const PRESET_CATALOG=[
 designPreset("royal-ember","Royal Ember","ESPORTS SIGNATURE","Metallic amber, deep charcoal and a confident championship finish.","#f0a94a","#f7d98b","#090b10","#191714","#fff7e8","round","modern","glass","gradient","elevated","gradient","strong","wide","comfortable","subtle","balanced"),
 designPreset("obsidian-luxe","Obsidian Luxe","PREMIUM DARK","Quiet black, champagne gold and refined editorial typography.","#c9a66b","#f0dfb5","#070707","#141414","#f7f1e5","soft","editorial","solid","gradient","outlined","outline","soft","standard","spacious","defined","reduced"),
@@ -59,8 +59,9 @@ function renderPresetLibrary(filter="all"){
  });
 }
 function applyPreset(p){
+ if(p.values)paint({...values(),...p.values,preset:"custom"});
  if(p.category==="festival"){const f={...p.profile,startAt:"",endAt:"",mode:"manual",enabled:true,priority:100,sound:false};festivalLibrary=festivalLibrary.filter(x=>x.id!==f.id).map(x=>x.mode==="manual"?{...x,enabled:false}:x);festivalLibrary.push(f);selectedFestival=f.id;renderFestivalOptions();selectFestival(f.id);queueWebsitePreview();return;}
- paint({...values(),...p.values,preset:"custom"});queueWebsitePreview();
+ queueWebsitePreview();
 }
 
 function normaliseFestivals(input){if(!Array.isArray(input))return BUILTIN_FESTIVALS.map(x=>({...x}));const map=new Map(BUILTIN_FESTIVALS.map(x=>[x.id,{...x}]));input.forEach(x=>{if(x&&typeof x.id==="string"&&/^[a-z0-9-]{2,40}$/.test(x.id)&&map.has(x.id))map.set(x.id,{...map.get(x.id),...x});else if(x&&typeof x.id==="string"&&/^[a-z0-9-]{2,40}$/.test(x.id)&&x.custom===true)map.set(x.id,{...x})});return [...map.values()].slice(0,40)}
