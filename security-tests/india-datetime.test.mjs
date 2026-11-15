@@ -33,6 +33,7 @@ test('validates India-local ranges across midnight and stored UTC instants',()=>
  const stored=india.validateRange('2026-11-15T18:00:00.000Z','2026-11-15T18:45:00.000Z');
  assert.equal(stored.valid,true);
  assert.equal(stored.start.toISOString(),local.start.toISOString());
+ assert.equal(india.parseInstant('2026-11-15T00:15:00+05:30').toISOString(),'2026-11-14T18:45:00.000Z');
 });
 test('formats stored UTC instants back to India-local input values',()=>{
  assert.equal(india.format('2026-11-14T18:45:00.000Z'),'2026-11-15T00:15');

@@ -22,6 +22,12 @@ test('scheduled save rejects missing, invalid, equal and reversed India-local ra
  const cases=[{start:'',end:'2026-11-15T10:00'},{start:'2026-11-15T09:00',end:''},{start:'2026-02-30T09:00',end:'2026-03-01T09:00'},{start:'2026-11-15T09:00',end:'2026-02-30T10:00'},{start:'2026-11-15T09:00',end:'2026-11-15T09:00'},{start:'2026-11-15T10:00',end:'2026-11-15T09:59'}];
  for(const item of cases){const h=await harness({values:{festivalEnabled:'true',festivalMode:'scheduled',festivalName:'diwali',festivalStart:item.start,festivalEnd:item.end}});h.elements.get('saveSettings').listeners.click[0]();assert.equal(h.transactions,0);assert.ok(h.elements.get('festivalScheduleError').textContent.length>0)}
 });
+test('invalid ordering marks both schedule inputs invalid for assistive technology',async()=>{
+ const h=await harness({values:{festivalEnabled:'true',festivalMode:'scheduled',festivalName:'diwali',festivalStart:'2026-11-15T10:00',festivalEnd:'2026-11-15T10:00'}});
+ h.elements.get('saveSettings').listeners.click[0]();
+ assert.equal(h.elements.get('festivalStart').attributes['aria-invalid'],'true');
+ assert.equal(h.elements.get('festivalEnd').attributes['aria-invalid'],'true');
+});
 test('manual mode does not require schedule dates',async()=>{
  const h=await harness({values:{festivalEnabled:'true',festivalMode:'manual',festivalName:'diwali',festivalStart:'',festivalEnd:''}});
  h.elements.get('saveSettings').listeners.click[0]();await flushWrites();
@@ -68,7 +74,7 @@ test('Experience Studio includes the current unsaved profile and rejects invalid
  const h=studioValidationHarness([{id:'diwali',name:'Old Diwali',mode:'scheduled',enabled:true,startAt:current.startAt,endAt:current.endAt}],current);
  assert.equal(h.error,null);assert.equal(h.result[0].name,'Edited Diwali');
  const bad=studioValidationHarness([{id:'diwali',mode:'manual',enabled:false},{id:'holi',name:'Holi',mode:'scheduled',enabled:true,startAt:'',endAt:''}],{id:'diwali',name:'Diwali',mode:'manual',enabled:false,startAt:'',endAt:''});
- assert.match(bad.error?.message||'','Holi');assert.match(bad.status.textContent,/Holi.*Scheduled mode requires/);
+ assert.match(bad.error?.message||'',/Holi/);assert.match(bad.status.textContent,/Holi.*Scheduled mode requires/);
 });
 test('Experience Studio allows manual mode without dates and disabled empty schedules',()=>{
  const current={id:'diwali',name:'Diwali',mode:'manual',enabled:true,startAt:'',endAt:''};

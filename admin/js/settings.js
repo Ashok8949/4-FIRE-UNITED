@@ -28,8 +28,13 @@ function validateFestivalSchedule() {
 
     const range = validateIndiaDateRange(startInput.value, endInput.value);
     if (!range.valid) {
-        if (!range.start) startInput.setAttribute("aria-invalid", "true");
-        if (!range.end) endInput.setAttribute("aria-invalid", "true");
+        if (range.reason === "end-not-after-start") {
+            startInput.setAttribute("aria-invalid", "true");
+            endInput.setAttribute("aria-invalid", "true");
+        } else {
+            if (!range.start) startInput.setAttribute("aria-invalid", "true");
+            if (!range.end) endInput.setAttribute("aria-invalid", "true");
+        }
         error.textContent = range.reason === "end-not-after-start"
             ? "End date and time must be later than the start date and time."
             : "Scheduled mode requires valid start and end date/time values (India time).";
