@@ -33,3 +33,42 @@ body.admin-shell-page>.main{flex:1 1 auto!important;min-width:0!important}
 @media(max-width:900px){.admin-shell-sidebar{flex-basis:238px!important;width:238px!important;padding:18px 11px!important}.admin-shell-brand span{font-size:15px}.admin-shell-main,.admin-shell-page>.main{padding:22px 20px 36px!important}}
 @media(max-width:680px){body.admin-shell-page{display:block!important}.admin-shell-sidebar{position:relative!important;top:auto!important;width:100%!important;height:auto!important;max-height:none!important;padding:12px 12px 10px!important;border-right:0!important;border-bottom:1px solid rgba(255,129,40,.28)!important}.admin-shell-brand{justify-content:flex-start;padding:0 7px 10px;margin-bottom:10px}.admin-shell-brand img{width:40px;height:40px}.admin-shell-brand span{font-size:15px}.admin-shell-group{display:none}.admin-shell-nav{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:thin}.admin-shell-link{flex:0 0 auto;min-height:37px;padding:9px 11px;font-size:11px;white-space:nowrap}.admin-shell-main,.admin-shell-page>.main{padding:18px 14px 30px!important}.admin-shell-page .topbar{align-items:flex-start;flex-wrap:wrap}.admin-shell-page .topbar h1{font-size:25px!important}}
 @media(prefers-reduced-motion:reduce){.admin-shell-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* P12 · Shared admin application layout and component system.
+   Applied after legacy page styles so every admin route uses one visual language. */
+.admin-shell-page>.main{display:block!important;min-height:100vh}
+.admin-shell-page>.main>*{box-sizing:border-box}
+.admin-shell-page>.main>:is(.dashboard-section,.settings-page,.clips-content,.announcement-content,.messages-content,.applications-content,.push-notification-section,.notification-toolbar,.challenge-toolbar){width:100%;max-width:1600px;margin-left:auto!important;margin-right:auto!important}
+.admin-shell-page .settings-page{padding:0!important}
+.admin-shell-page :is(.dashboard-section,.settings-page,.clips-content,.announcement-content,.messages-content,.applications-content,.push-notification-section){min-width:0}
+.admin-shell-page :is(.player-toolbar,.tournament-toolbar,.gallery-toolbar,.clips-toolbar,.announcement-toolbar,.messages-toolbar,.applications-toolbar,.challenge-toolbar,.notification-toolbar){display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:0 0 20px;padding:15px 17px;border:1px solid var(--admin-border);border-radius:14px;background:linear-gradient(145deg,#171f2c,#101722)}
+.admin-shell-page :is(.search-box,.cc-search-box){flex:1 1 260px;min-width:min(100%,220px);max-width:520px}
+.admin-shell-page :is(.search-box, .cc-search-box) input{width:100%;min-height:42px;box-sizing:border-box}
+.admin-shell-page :is(.gallery-grid,.clips-grid,.announcement-grid,.cc-grid,.action-grid,.settings-grid){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}
+.admin-shell-page :is(.gallery-grid,.clips-grid,.announcement-grid){grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.admin-shell-page :is(.settings-card,.cc-panel,.action-card,.card,.table-box,.push-notification-form,.notification-send-box){min-width:0;box-sizing:border-box;border:1px solid var(--admin-border)!important;border-radius:16px!important;background:linear-gradient(145deg,#171f2c,#101722)!important;box-shadow:0 12px 32px #0003}
+.admin-shell-page :is(.settings-card,.cc-panel,.action-card,.card,.push-notification-form,.notification-send-box){padding:clamp(16px,2vw,24px)}
+.admin-shell-page :is(.settings-heading,.cc-heading-row){display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 22px}
+.admin-shell-page :is(.settings-heading h2,.cc-heading-row h2){margin:0;color:#f5f7fb;font:700 clamp(22px,2.4vw,30px)/1.2 'Space Grotesk',sans-serif}
+.admin-shell-page :is(.settings-heading p,.cc-subtitle){margin:5px 0 0;color:var(--admin-muted);font-size:12px;line-height:1.6}
+.admin-shell-page :is(.card-title,.cc-panel-head){display:flex;align-items:center;gap:10px;padding-bottom:13px;margin-bottom:16px;border-bottom:1px solid #ffffff14}
+.admin-shell-page :is(.card-title h3,.cc-panel-head h3){margin:0;color:#f3f6fb;font:700 15px 'Space Grotesk',sans-serif}
+.admin-shell-page :is(.input-group, .form-group){min-width:0;margin-bottom:15px}
+.admin-shell-page :is(.input-group label,.form-group label){display:block;margin:0 0 7px;color:#b8c4d4;font-size:11px;font-weight:700}
+.admin-shell-page :is(.input-group input,.input-group select,.input-group textarea,.form-group input,.form-group select,.form-group textarea){width:100%;min-height:42px;box-sizing:border-box;padding:10px 12px}
+.admin-shell-page :is(.settings-card.full,.cc-panel.full,.push-notification-form.full){grid-column:1/-1}
+.admin-shell-page :is(.table-box,.messages-table-box,.applications-table-box){width:100%;max-width:100%;overflow:auto}
+.admin-shell-page table{width:100%;border-collapse:collapse;min-width:620px}
+.admin-shell-page :is(.save-btn,.add-btn,.upload-btn,.edit-btn,.join-btn,.primary-btn){min-height:40px;padding:10px 16px}
+.admin-shell-page img{max-width:100%}
+@media(max-width:1050px){.admin-shell-page :is(.gallery-grid,.clips-grid,.announcement-grid,.cc-grid,.action-grid,.settings-grid){gap:13px}.admin-shell-page :is(.dashboard-section,.settings-page,.clips-content,.announcement-content,.messages-content,.applications-content){max-width:none}}
+@media(max-width:720px){
+ .admin-shell-page>.main{padding:16px 12px 28px!important}
+ .admin-shell-page :is(.player-toolbar,.tournament-toolbar,.gallery-toolbar,.clips-toolbar,.announcement-toolbar,.messages-toolbar,.applications-toolbar,.challenge-toolbar,.notification-toolbar){align-items:stretch;padding:12px;gap:10px}
+ .admin-shell-page :is(.search-box,.cc-search-box){max-width:none;flex-basis:100%}
+ .admin-shell-page :is(.gallery-grid,.clips-grid,.announcement-grid,.cc-grid,.action-grid,.settings-grid){grid-template-columns:minmax(0,1fr)!important;gap:12px}
+ .admin-shell-page :is(.settings-card,.cc-panel,.action-card,.card,.push-notification-form,.notification-send-box){padding:15px}
+ .admin-shell-page :is(.settings-heading,.cc-heading-row){align-items:flex-start;margin-bottom:16px}
+ .admin-shell-page :is(.table-box,.messages-table-box,.applications-table-box){border-radius:12px!important}
+}
