@@ -5,7 +5,9 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**",
-      "app/4FireUnited.apk"
+      "app/4FireUnited.apk",
+      ".git/**",
+      "**/.git/**"
     ],
     "headers": [
       {
