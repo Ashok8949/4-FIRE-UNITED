@@ -1,0 +1,37 @@
+name: DiwaliVerse smoke checks
+
+on:
+  push:
+    branches:
+      - feature/diwaliverse-public-experience
+    paths:
+      - "diwaliverse/**"
+      - ".github/workflows/diwaliverse-smoke.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "diwaliverse/**"
+      - ".github/workflows/diwaliverse-smoke.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Static and interaction smoke tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check browser JavaScript syntax
+        run: node --check diwaliverse/assets/diwaliverse.js
+
+      - name: Run dependency-free smoke tests
+        run: node --test diwaliverse/tests/smoke.test.mjs
