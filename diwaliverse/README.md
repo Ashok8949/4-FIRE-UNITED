@@ -9,7 +9,14 @@ Because the main Firebase Hosting root is the repository root, the page is avail
 - Local static server: `/diwaliverse/`
 - Firebase Hosting after a separate approved deployment: `https://fire-united.web.app/diwaliverse/`
 
-For a quick local preview, open `index.html` in a modern browser or run a local static server from the repository root.
+For a quick local preview, open `index.html` in a modern browser or run a local static server from the repository root. In VS Code, open `diwaliverse/index.html` with Live Server.
+
+Run the dependency-free checks from the repository root:
+
+```powershell
+node --check .\diwaliverse\assets\diwaliverse.js
+node --test .\diwaliverse\tests\smoke.test.mjs
+```
 
 ## Current milestone: frontend preview
 
