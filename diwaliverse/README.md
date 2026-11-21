@@ -6,10 +6,10 @@ A standalone, mobile-first Diwali celebration experience inside the 4 FIRE UNITE
 
 Because the main Firebase Hosting root is the repository root, the page is available at:
 
-- Local static server: \`/diwaliverse/\`
-- Firebase Hosting after a separate approved deployment: \`https://fire-united.web.app/diwaliverse/\`
+- Local static server: `/diwaliverse/`
+- Firebase Hosting after a separate approved deployment: `https://fire-united.web.app/diwaliverse/`
 
-For a quick local preview, open \`index.html\` directly in a modern browser or run a local static server from the repository root.
+For a quick local preview, open `index.html` in a modern browser or run a local static server from the repository root.
 
 ## Current milestone: frontend preview
 
@@ -31,7 +31,7 @@ These limits are stated in the UI. No names or wish text are sent to a server in
 
 ## Next engineering milestones
 
-1. Add isolated \`/diwali/*\` routes to the existing Cloudflare Worker in \`4fu-freefire-backend/src/index.js\`; do not change existing PRO, Free Fire or YouTube routes.
+1. Add isolated `/diwali/*` routes to the existing Cloudflare Worker in `4fu-freefire-backend/src/index.js`; do not change existing PRO, Free Fire or YouTube routes.
 2. Reuse the existing Worker-to-Firestore service-account pattern only after reviewing its exact permissions and secrets. Do not expose service-account credentials to the browser.
 3. Add server-side validation, rate limiting, idempotency and moderation before enabling public wishes.
 4. Add a low-cost aggregate counter and bounded public reads; do not create an unbounded real-time listener.
