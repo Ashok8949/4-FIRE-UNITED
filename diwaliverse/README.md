@@ -44,6 +44,21 @@ These limits are stated in the UI. No names or wish text are sent to a server in
 4. Add a low-cost aggregate counter and bounded public reads; do not create an unbounded real-time listener.
 5. Add automated Worker tests and manual mobile/accessibility checks before deployment.
 
+
+## Free-tier design assumptions (checked 21 Nov 2026)
+
+- Cloudflare Workers Free currently includes 100,000 Worker requests per day and 10 ms CPU time per invocation. Static assets should stay on Firebase Hosting; only dynamic Diwali API calls should invoke the Worker.
+- Cloud Firestore Standard currently lists 1 GiB stored data, 50,000 document reads/day, 20,000 writes/day, 20,000 deletes/day and 10 GiB/month outbound transfer in its free quota. The free quota applies to one database per project.
+- The existing Worker has a KV namespace named `PROFILE_CACHE`. Workers KV Free currently allows 100,000 reads/day but only 1,000 writes/day, so it must not be used as the per-diya event store or high-volume wish database.
+- Prefer bounded Firestore reads and a small aggregate document; avoid one live listener per visitor. Enforce request limits and moderation before accepting public writes.
+
+Official references:
+- [Cloudflare Workers limits](https://developers.cloudflare.com/workers/platform/limits/)
+- [Cloudflare Workers KV pricing](https://developers.cloudflare.com/kv/platform/pricing/)
+- [Cloud Firestore pricing and free quota](https://firebase.google.com/docs/firestore/pricing)
+
+These are planning figures, not a promise that the launch will remain free at any traffic level. Re-check provider dashboards before enabling public writes.
+
 ## Safety and cost
 
 - This folder is static and adds no new hosting service or dependency.
