@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const folder = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (name) => readFile(path.join(folder, name), "utf8");
 const [html, css, js, readme] = await Promise.all([
-  read("../index.html"),
+  read("index.html"),
   read("assets/diwaliverse.css"),
   read("assets/diwaliverse.js"),
   read("README.md")
